@@ -1,0 +1,26 @@
+<%= simple_form_for @auto, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :number, label: t(:car_number) %>
+  <%= f.input :vin, label: t(:VIN) %>
+  <%= f.association :users, collection: User.where(role: "customer"), label: t('customer'), as: :check_boxes, label_method: :name %>
+  
+  <div class="control-group select">
+    <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+    </div>
+  </div>
+
+  <div class="control-group select">
+    <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+    </div>
+  </div>
+
+  <%= f.association :auto_submodel, collection: AutoBrand.first.auto_models.all.first.auto_submodels.all, label: t('auto_model'), label_method: :name %>
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                autos_path, :class => 'btn' %>
+  </div>
+<% end %>

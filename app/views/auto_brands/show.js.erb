@@ -1,0 +1,4 @@
+$("#auto_submodel_model_id").html("<%= escape_javascript( options_for_select(@auto_brand.auto_models.map {|p| [p.name, p.id]})) %>");
+$("#auto_auto_submodel_id, #order_auto_attributes_auto_submodel_id").html("<%= escape_javascript( options_for_select(@auto_brand.auto_models.first.auto_submodels.map {|p| [p.name, p.id]})) %>").prop('selectedIndex',0);
+$("#service_type_auto_model_id").html("<%= escape_javascript( options_for_select(@auto_brand.auto_models.map {|p| [p.name, p.id]})) %>");
+$("#auto_submodels").html("<%= escape_javascript(render("auto_submodels/auto_submodels")) %>");

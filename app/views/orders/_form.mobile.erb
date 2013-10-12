@@ -1,0 +1,179 @@
+<%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
+<div data-role="page" id="page0">
+  <div data-role="header">
+    <h1><%= t(:orders) %></h1>
+    <%= link_to t(:log_out), destroy_user_session_path, "class" => "ui-btn-left", :method=>'delete', "data-ajax" => true %>
+    <a href="#" id="refresh-page-btn" class = "ui-btn-right" data-ajax="false"><%= t(:refresh) %></a>
+  </div>
+  
+  <div data-role="content">
+    <ul data-role="listview">
+    <% @orders.each do |order| %>
+      <li>
+      <%= link_to order, :"data-ajax" => false do %>
+        <p>
+          <%= l order.serve_date if order.serve_date %>&nbsp
+          <span><%= order.service_items.first.service_type.name if order.service_items.first %></span>
+        </p>
+        <p>京N000M3</span></p>
+        <h5><%= t(order.state) %></h5>
+      </a>
+      <% end %>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li>
+          <a href="#page1-1" class="ui-btn-active" data-icon="plus" data-transition="slide"><%= t('new_order') %></a>
+        </li>
+        </ul>
+    </div>
+  </div>
+</div>
+
+<div data-role="page" id="page1-1">
+  <div data-role="header">
+    <h1><%= t(:new_order) %></h1>
+    <a href="#page0" class="ui-btn-left" data-transition="slide"><%= t('cancel') %></a>
+    <a href="#page1-2" class="ui-btn-right" data-transition="slide"><%= t('basic_infos') %></a>
+  </div>
+  
+  <div data-role="content">
+    <%= f.association :auto, collection: Auto.all, label: t('auto'), label_method: :number %>
+    <div class="control-group select">
+      <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
+      <div class="controls">
+        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+      </div>
+    </div>
+    
+    <div class="control-group select">
+      <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
+      <div class="controls">
+        <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+      </div>
+    </div>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#page0" data-icon="home" data-transition="slide"><%= t(:orders) %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div data-role="page" id="page1-2">
+  <div data-role="header">
+    <h1><%= t(:new_order) %></h1>
+    <a href="#page1-1" class="ui-btn-left" data-transition="slide"><%= t('car_infos') %></a>
+    <a href="#page2" class="ui-btn-right" data-transition="slide"><%= t('service_types') %></a>
+  </div>
+  
+  <div data-role="content">
+    <%= f.input :address, label: t(:address) %>
+    <%= f.input :phone_num, label: t(:phone_num) %>
+    <label for="datetime-l"><%= t(:serve_date) %></label>
+    <input type="datetime-local" name="datetime-l" id="datetime-l" value="" />
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#page0" data-icon="home" data-transition="slide"><%= t(:orders) %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div data-role="page" id="page2">
+  <div data-role="header">
+    <h1><%= t(:service_types) %></h1>
+    <a href="#page1-2" class="ui-btn-left" data-transition="slide"><%= t('basic_infos') %></a>
+    <a href="#page3" class="ui-btn-right" data-transition="slide"><%= t('part_infos') %></a>
+  </div>
+  
+  <div data-role="content">
+    <fieldset data-role="controlgroup">
+      <% @order.service_items.each do |si| %>
+        <input type="checkbox" name="checkbox-1" id="<%= si.service_type.id %>" class="custom" />
+        <label for="<%= si.service_type.id %>"><%= si.service_type.name %></label>
+      <% end %>
+    </fieldset>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#page0" data-icon="home" data-transition="slide"><%= t(:orders) %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div data-role="page" id="page3">
+  <div data-role="header">
+    <h1><%= t(:part_infos) %></h1>
+    <a href="#page2" class="ui-btn-left" data-transition="slide"><%= t('service_types') %></a>
+    <a href="#page4" class="ui-btn-right" data-transition="slide"><%= t('summary_infos') %></a>
+  </div>
+  
+  <div data-role="content">
+    <input type="checkbox" name="radio-choice" id="buymyself_cb" class="custom" />
+    <label for="buymyself_cb"><%= t(:buymyself) %></label>
+    <h5><%= t(:part_brands) %></p>
+    <fieldset data-role="controlgroup">
+      <% PartBrand.all.each do |pb| %>
+     	<input type="radio" name="radio-choice" id="<%= pb.id %>_checkbox" value="<%= pb.id %>"/>
+     	<label for="<%= pb.id %>_checkbox"><%= pb.name %></label>
+      <% end %>
+    </fieldset>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#page0" data-icon="home" data-transition="slide"><%= t(:orders) %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+  
+<div data-role="page" id="page4">
+  <div data-role="header">
+    <h1><%= t(:new_order) %></h1>
+    <a href="#page3" class="ui-btn-left" data-transition="slide"><%= t('part_infos') %></a>
+    <%= f.button :submit, t('submit'), :class => 'ui-btn-right' %>
+  </div>
+
+  <div data-role="content">
+    <h5 id="discount_info_pos"><%= t(:discount_info) %></h5>
+    <fieldset data-role="controlgroup">
+      <% Discount.all.each do |d| %>
+     	<input type="checkbox" name="radio-choice" id="<%= d.id %>_cb" value="<%= d.id %>"/>
+     	<label for="<%= d.id %>_cb"><%= d.name %></label>
+      <% end %>
+    </fieldset>
+    <h5><%= t(:summary_infos) %></h5>
+    <div class = "well">
+      <%= t(:summary_price) + humanized_money_with_symbol(Money.new(120.0)) %>
+    </div>
+    <fieldset class="ui-grid">
+      <div class="ui-block"><button type="submit" data-theme="a">Submit</button></div>
+    </fieldset>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#page0" data-icon="home" data-transition="slide"><%= t(:orders) %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<% end %>

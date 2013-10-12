@@ -1,0 +1,3 @@
+$("#pic-list").html("<%= escape_javascript(render("pics")) %>");
+$("#pic-list").listview('refresh');
+$("#pic-count").text("<%= @order.pictures.size %>");

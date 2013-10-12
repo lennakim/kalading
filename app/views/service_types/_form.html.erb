@@ -1,0 +1,25 @@
+<%= simple_nested_form_for @service_type, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name, label: t(:name) %>
+  <%= f.fields_for :sell_prices do |sf| %>
+    <%= sf.input :price, label: t('price')%>
+    <%= sf.link_to_remove t('remove_sell_price') %>
+  <% end %>
+  <p><%= f.link_to_add t('add_sell_price'), :sell_prices %></p>
+
+  <%= f.input :specific_auto_model, label: t(:specific_auto_model), as: :boolean %>
+  <div id="service_type_auto_model_div">
+    <div class="control-group select">
+      <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
+      <div class="controls">
+        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+      </div>
+    </div>
+    <%= f.association :auto_model, collection: AutoBrand.first.auto_models.all, label: t('auto_model'), label_method: :name %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                service_types_path, :class => 'btn' %>
+  </div>
+<% end %>

@@ -1,0 +1,370 @@
+#encoding: UTF-8
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+zh-CN:
+  admin:
+    home:
+      name: "首页"
+    form:
+      required: "必填"
+      optional: "可选"
+      char_length_up_to: "最长"
+      bulk_delete: "删除"
+      confirmation: "确认"
+      cancel: "删除"
+      basic_info: '基本信息'
+    misc:
+      ago: "以前"
+      refresh: "刷新"
+      bulk_menu_title: "批量操作"
+      log_out: '注销'
+      navigation: "菜单"
+    flash:
+      noaction: "请先勾选一些项目"
+      successful: "操作成功"
+    actions:
+      history_show:
+        menu: "操作历史"
+        title: "操作历史"
+        breadcrumb: "操作历史"
+      show:
+        menu: "查看"
+        breadcrumb: "查看"
+      edit:
+        menu: "编辑"
+      dashboard:
+        menu: "仪表盘"
+        title: "仪表盘"
+        breadcrumb: "仪表盘"
+      index:
+        menu: "列表"
+        title: "列表"
+        breadcrumb: "列表"
+      new:
+        menu: "新建"
+        title: "新建"
+        breadcrumb: "新建"
+      export:
+        menu: "导出"
+        title: "导出"
+        breadcrumb: "导出"
+        link: "导出"
+        bulk_link: "导出"
+      delete:
+        menu: "删除"
+      bulk_delete:
+        bulk_link: "删除"
+        breadcrumb: "批量删除"
+      history_index:
+        menu: "历史"
+        title: "历史"
+        breadcrumb: "历史"
+    table_headers:
+      model_name: "类别"
+      last_used: "上次使用"
+      records: "数目"
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      long: "%m/%d %H:%M"
+  datetime:
+    distance_in_words:
+      less_than_x_minutes:
+        one: "小于一分钟"
+        other: "小于 %{count} 分钟"
+      x_minutes:
+        one: "1分钟"
+        other: "%{count} 分钟"
+      about_x_hours:
+        one: "大约一小时"
+        other: "大约 %{count} 小时"
+      x_days: "%{count}天"
+  repository_menu: '仓储系统'
+  order_menu: '订单系统'
+  Kalading: '卡拉丁'
+  user_menu: '员工管理'
+  log_out: '注销'
+  classes: '分类'
+  auto_brands: '汽车品牌'
+  auto_models: '汽车型号'
+  owner_auto_model: '所属车型'
+  auto_models_list: '车型列表'
+  auto_submodels: '汽车款式'
+  auto_brand_list: '汽车品牌列表'
+  auto_model_list: '汽车型号列表'
+  auto_submodel_list: '汽车具体型号列表'
+  choose_brand: '请选择品牌'
+  auto_submodel_list: '款式列表'
+  choose_model: '请选择型号'
+  customer_menu: '客户管理'
+  owner_auto_brand: '所属品牌'
+  name: '名称'
+  edit_model: '编辑车型'
+  save: '保存'
+  part_brands: '配件品牌'
+  part_types: '配件类型'
+  part_type: '类型'
+  modelyear_displacement: '品牌/型号/年代/款式'
+  part_stock: '配件信息库'
+  manuf_number: '制造商型号'
+  stock_quantity: '库存数量'
+  jd_url: '京东链接'
+  last_inout: '上次出入库时间'
+  part_brand: '制造商'
+  choose_part_brand: '请选择'
+  choose_part_type: '请选择'
+  new_part_title: '新建配件'
+  price: '单价(元)'
+  part: '配件'
+  applicable_auto_models: '适用车型'
+  auto_submodel_title: '汽车款式'
+  search_by_number: '根据制造商型号搜索'
+  default_unit: '个'
+  unit: '单位'
+  match_rule: '特殊匹配规则'
+  capacity: '容量'
+  capacity_all: '容量（升，个）'
+  submodel_count: '款式个数'
+  auto_menu: '车辆管理'
+  search_by_model: '搜索型号'
+  auto_parts: '适用配件'
+  manager: '经理'
+  customer: '客户'
+  engineer: '技师'
+  choose_role: '请选择角色'
+  administrator: '管理员'
+  role: '角色'
+  phone_num: '手机号'
+  autos: '汽车'
+  car_number: '车牌号'
+  new_user: '新建用户'
+  owner_users: '所属用户'
+  auto_count: '车辆数'
+  search_by_car_number: '搜索车牌号'
+  motoroil_capacity: '机油容量（升）'
+  auto_modelyear: '车型/款式'
+  remark: '备注'
+  phone_num: '电话号码'
+  phone_num2: '第二电话'
+  password: '密码'
+  password_confirmation: '确认密码'
+  mongoid:
+    errors:
+      models:
+        auto_model:
+          attributes:
+            name:
+              blank: '名字不能为空'
+              taken: '车型已经存在'
+            auto_brand_id:
+              blank: '品牌尚未选择'
+        auto_submodel:
+          attributes:
+            name:
+              blank: '名字不能为空'
+              taken: '型号已经存在'
+            auto_model_id:
+              blank: '车型尚未选择'
+        part:
+          attributes:
+            price:
+              not_a_number: '价格必须是数字'
+            stock_quantity:
+              inclusion: '数量必须是0到999999'
+        user:
+          attributes:
+            password:
+              blank: '密码不能为空'
+              confirmation: '密码和密码确认不匹配'
+              too_short: '密码不能少于8个字符'
+        service_type:
+          attributes:
+            name:
+              blank: '服务名字不能为空'
+              taken: '服务名字已经存在'
+        partbatch:
+          attributes:
+            part_id:
+              blank: '请选择配件型号'
+            supplier_id:
+              blank: '请选择供应商'
+            user_id:
+              blank: '请选择操作员'
+            price:
+              greater_than_or_equal_to: '价格必须大于%{count}元'
+            quantity:
+              inclusion: '数量必须是1到100000之间'
+  devise:
+    failure:
+      user:
+        unauthenticated: '请登录'
+    registrations:
+      user:
+        signed_up: '登录成功'
+  errors:
+    messages:
+      not_saved: '未保存'
+  helpers:
+    links:
+      cancel: '取消'
+  weixin_num: '微信号'
+  engine_displacement: '排量'
+  engine_model: '发动机型号'
+  choose_serv_level: '请选择服务等级'
+  service_level: '服务等级'
+  maintain: '可做保养'
+  cantmaintain: '不可做保养'
+  needconfirm: '需要确认'
+  spec: '规格'
+  urls: '网站价格'
+  supplier: '供应商'
+  address: '地址'
+  remove_buy_price: '删除进货价格'
+  add_buy_price: '添加进货价格'
+  remove_sell_price: '删除售价'
+  add_sell_price: '添加售价'
+  views:
+    pagination:
+      truncate: '...'
+      first: '首页'
+      next: '下页'
+      previous: '上页'
+      last: '末页'
+  brand: '品牌'
+  total: "共 %{count} 个"
+  owner_auto_brand: '品牌'
+  applicable_auto_submodels: '适用车型款式'
+  buy_price_history: '进货信息'
+  sell_price_history: '售价'
+  add_url: '添加url'
+  remove_url: '删除url'
+  urlname: '网站名称'
+  common_info: '基本属性'
+  applicable_auto_submodels_num: '适用车型个数'
+  total_models: "共%{count}款"
+  date:
+    formats:
+      default: "%Y/%m/%d"
+  buy_price: '进价'
+  quantity: '数量'
+  storehouse: '库房'
+  storehouses: '仓库'
+  buy_date: '购买日期'
+  storehouse_in: '进货'
+  brand_own_parts: '所属配件'
+  choose_supplier: '请选择供应商'
+  choose_part_number: '请选择配件型号'
+  storehouse_out: '出库'
+  storehouse_back: '回库'
+  remained_quantity: '可用数量'
+  ok: '确定'
+  cancel: '取消'
+  out_quantity: '出库数量'
+  unassigned: '未分配'
+  unscheduled: '未预约'
+  scheduled: '已预约'
+  serve_done: '服务完成'
+  handovered: '已交接'
+  revisited: '已回访'
+  buymyself: '自购配件'
+  create_order_time: '下单时间'
+  yes: '是'
+  no: '否'
+  serve_date: '服务日期'
+  state: '状态'
+  orders: '订单列表'
+  new_order: '新建订单'
+  new_storehouse: '新建仓库'
+  choose_auto_model: '请选择系列'
+  auto_model: '请选择型号'
+  serve_date: '服务日期'
+  service_types: '服务项目'
+  sell_price: '价格'
+  created_at: '创建时间'
+  new_service_type: '新建服务项目'
+  add_service_item: '添加服务项目'
+  remove_service_item: '删除服务项目'
+  service_item: '服务项目'
+  specific_auto_model: '只适用于某款车型'
+  user_info: '用户信息'
+  auto_info: '车辆信息'
+  service_info: '服务'
+  all: '所有'
+  auto_model_should_be_choosed: '请选择车型'
+  discount_card: '优惠劵'
+  discount: '减现金'
+  discount_percent: '减半分比'
+  customer_name: '客户姓名'
+  engineer_name: '技师'
+  unassigned: '未分配'
+  discount_info: '折扣'
+  auto_submodel: '车型'
+  car_num: '车牌号'
+  basic_infos: '基本信息'
+  part_infos: '配件信息'
+  submit: '提交'
+  summary_infos: '付费信息'
+  summary_price: '总价: '
+  auto: '车牌号'
+  part_brand_choose: '配件品牌选择'
+  car_infos: '车辆信息'
+  view_order: '订单详情'
+  view_order_pics: '订单图片'
+  return: '返回'
+  refresh: '刷新'
+  view_pic: '查看图片'
+  upload_pic: '上传图片'
+  please_sign_in: '请登录'
+  sign_in: '登录'
+  name: '用户名'
+  password: '密码'
+  pic_infos: '附件'
+  search_by_part: '按配件查询'
+  search_by_automodel: '按车型查询'
+  search_by_order: '按订单查询'
+  all_part_types: '所有类型'
+  all_part_brands: '所有厂商'
+  all_part_numbers: '所有型号'
+  partbatch_id: '批次号'
+  partbatch_info: '进货信息'
+  batch_price: '进货价格'
+  add_part_item: '添加配件'
+  remove_part_item: '删除配件'
+  add_pic: '添加图片'
+  remove_pic: '删除图片'
+  picture: '图片'
+  part_brand_number: '配件类型品牌型号'
+  total_price: '总价（元）'
+  storehouse_name: '名称'
+  order_id: '订单号'
+  operator: '操作人员'
+  partbatch_created: '进货完成'
+  partbatch_create_time: '进货日期'
+  please_select: '请选择'
+  op_history: '操作历史'
+  user_id_empty: '请选择操作人员'
+  error: '错误'
+  quantity_error: '数量必须是%{min}到%{max}之间'
+  in_quantity: '进货数量'
+  back_quantity: '回库数量'
+  search_by_partbatch: '按批次号搜索'
+  actions: '操作'
+  edit: '编辑'
+  destroy: '删除'
+  edit_part_automodel: '编辑车型'
+  edit_applicable_automodel: '匹配车型列表'
+  new_part: '新建配件'
+  confirm_delete_part_automodel: '您确认删除适用车型：%{name} ？'
+  total_models: '共%{count}款'
+  destroy_match: '取消匹配'
+  part_auto_submodel_exists: '车型 %{name} 已经存在'
+  add_match: '添加匹配'
+  print: '打印'
+  out_quantity: '出库数量'
+  part_type_name: '名称'
+  new_part_type: '新建配件类型'
+  part_brand_name: '名称'
+  new_part_brand: '新建配件品牌'
+  supplier_name: '名称'
+  new_supplier: '新建供应商'

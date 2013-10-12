@@ -1,0 +1,2 @@
+$("#<%= params[:auto_submodel_id] %>").remove();
+$("#auto_submodels_count").text("<%= t(:total_models, count: @part.auto_submodels.size) %>");

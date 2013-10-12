@@ -1,0 +1,32 @@
+<%- model_class = AutoModel -%>
+<div class="page-header">
+  <h1><%= @auto_model.name %></h1>
+</div>
+
+<h3><%= t 'auto_submodel_list' %></h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @auto_model.auto_submodels.each do |auto_submodel| %>
+      <tr>
+        <td><%= link_to auto_submodel.name, auto_submodel_path(auto_submodel) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              auto_models_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_auto_model_path(@auto_model), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              auto_model_path(@auto_model),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

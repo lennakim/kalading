@@ -1,0 +1,16 @@
+<%- model_class = Auto -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+
+<%= form_tag autos_path, :method => 'get', :id => "autos_search" do %>
+  <p>
+    <%= label_tag :search, t('search_by_car_number'), class: 'control-label' %>
+    <%= text_field_tag :search, params[:search], class: 'control' %>
+  </p>
+  <div id="autos"><%= render 'autos' %></div>
+<% end %>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_auto_path,
+            :class => 'btn btn-primary' %>

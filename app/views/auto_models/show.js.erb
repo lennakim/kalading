@@ -1,0 +1,3 @@
+$("#auto_auto_submodel_id").html("<%= escape_javascript( options_for_select(@auto_model.auto_submodels.map {|p| [p.name, p.id]})) %>");
+$("#order_auto_attributes_auto_submodel_id").html("<%= escape_javascript( options_for_select(@auto_model.auto_submodels.map {|p| [p.name, p.id]})) %>");
+$("#auto_submodels").html("<%= escape_javascript(render("auto_submodels/auto_submodels")) %>");

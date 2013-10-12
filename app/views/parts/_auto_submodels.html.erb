@@ -1,0 +1,28 @@
+<%= form_tag add_part_auto_submodel_path(@part), :method => 'post', :id => "add_part_auto_submodel", :class => 'form-inline', :remote => true do %>
+<div class="controls">
+  <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+  <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+  <%= collection_select :auto, :auto_submodel_id, AutoBrand.first.auto_models.all.first.auto_submodels.all, :id, :name, {}, {:class => 'control'} %>
+  <%= submit_tag t(:add_match), class: 'btn btn-primary' %>
+</div>
+<% end %>
+<div class="alert" id="error-div" style="display: none;"></div>
+<p><strong id="auto_submodels_count"><%= t('total', count: @auto_submodels.count )%></strong></p>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th><%= t 'modelyear_displacement' %></th>
+      <th><%= t 'motoroil_capacity' %></th>
+      <th><%= t 'engine_displacement' %></th>
+      <th><%= t 'engine_model' %></th>
+      <th><%= t 'auto_parts' %></th>
+      <th><%= t 'auto_count' %></th>
+      <th><%= t('actions') %></th>
+    </tr>
+  </thead>
+  <tbody id="auto_submodels-tbody">
+    <% @auto_submodels.each do |auto_submodel| %>
+      <%= render 'auto_submodel', auto_submodel: auto_submodel %>
+    <% end %>
+  </tbody>
+</table>

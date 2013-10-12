@@ -1,0 +1,56 @@
+<div data-role="page" id="show-page0">
+  <div data-role="header">
+    <h1><%= t(:view_order) %></h1>
+  </div>
+  
+  <div data-role="content">
+    <ul data-role="listview">
+      <li data-role="list-divider"><%= t(:basic_infos) %></li>
+      <li>
+        <dl class="dl-horizontal">
+          <dt><strong><%= t(:state) %>:</strong></dt>
+          <dd><%= t(@order.state) %></dd>
+          <dt><strong><%= t(:address) %>:</strong></dt>
+          <dd><%= t(@order.address) %></dd>
+          <dt><strong><%= t(:phone_num) %>:</strong></dt>
+          <dd><%= t(@order.state) %></dd>
+          <dt><strong><%= t(:serve_date) %>:</strong></dt>
+          <dd><%= t(@order.state) %></dd>
+        </dl>
+      </li>
+      <li data-role="list-divider"><%= t(:pic_infos) %></li>
+      <li><a href="#show-page1" data-transition="slide"><%= t(:view_pic) %><span class="ui-li-count" id="pic-count"><%= @order.pictures.size %></span></a></li>
+      <li><a href="#" onclick="window.uploadPic.clickOnAndroid('<%= @order.id.to_s %>');" data-transition="slide" id="upload-pic-btn"><%= t(:upload_pic) %></a></li>
+    </ul>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><%= link_to t(:orders), orders_path, :"data-icon" => "home", :"data-iconpos" => "top", :"data-ajax" => true %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div data-role="page" id="show-page1">
+  <div data-role="header">
+    <h1><%= t(:view_order_pics) %></h1>
+    <a href="#show-page0" class="ui-btn-left" data-transition="slide"><%= t(:return) %></a>
+    <%= link_to t(:refresh), @order, id: "refresh-btn", class: "ui-btn-right", rel: "external" %>
+  </div>
+  
+  <div data-role="content">
+    <ul data-role="listview" id="pic-list">
+      <%= render 'pics' %>
+    </ul>
+  </div>
+  
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><%= link_to t(:orders), orders_path, :"data-icon" => "home", :"data-iconpos" => "top", :"data-ajax" => true %></li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<%= simple_form_for @auto_submodel, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name, label: t('name') %>
+  <%= f.input :motoroil_cap, label: t('motoroil_capacity') %>
+  <%= f.input :service_level, label: t('service_level'), collection: AutoSubmodel::SERV_LEVEL, value_method: :to_s, label_method:  :to_friendly, prompt: t('choose_serv_level') %>
+  <%= f.input :engine_displacement, label: t('engine_displacement') %>
+  <%= f.input :engine_model, label: t('engine_model') %>
+  <%= f.association :auto_model, collection: AutoModel.all, prompt: t('choose_model'), label: t('owner_auto_model') %>
+  <%= f.association :parts, collection: Part.all, label: t('part'), as: :check_boxes, label_method: :number %>
+  <%= f.input :match_rule, label: t('match_rule'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
+  <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
+  <div class="form-actions">
+    <%= f.button :submit, t('save'), :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                auto_submodels_path, :class => 'btn' %>
+  </div>
+<% end %>

@@ -1,0 +1,84 @@
+<%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
+  <%= f.input :state, label: t(:state), collection: Order::STATES, value_method: :to_s, label_method:  :to_friendly %>
+<h5 id="user_info_pos"><%= t(:user_info) %></h5>
+  <%= f.association :customer, collection: User.where(role: "customer"), label: t('customer'), label_method: :name %>
+  <%= f.input :address, label: t(:address) %>
+  <%= f.input :phone_num, label: t(:phone_num) %>
+  <%= f.input :serve_date, label: t(:serve_date), :as => :date_picker %>
+
+<h5 id="auto_info_pos"><%= t(:auto_info) %></h5>
+  <%= f.fields_for :auto do |a| %>
+    <%= a.input :number, label: t(:car_number) %>
+    <%= a.input :vin, label: t(:VIN) %>
+
+    <div class="control-group select">
+      <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
+      <div class="controls">
+        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
+      <div class="controls">
+        <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+      </div>
+    </div>
+
+    <%= a.association :auto_submodel, collection: AutoBrand.first.auto_models.first.auto_submodels.first, label: t('auto_model'), label_method: :name %>
+  <% end %>
+
+<h5 id="service_info_pos"><%= t(:service_info) %></h5>
+  <div id="service_items" class="form-inline">
+  <%= f.fields_for :service_items do |sf| %>
+    <%= sf.association :service_type, label: t('service_item'), collection: ServiceType.all, label_method: :name %>
+    <%= sf.input :price, label: t('price') %>
+    <%= sf.link_to_remove t('remove_service_item') %>
+  <% end %>
+  </div>
+  <p><%= f.link_to_add t('add_service_item'), :service_items, :data => { :target => "#service_items" } %></p>
+
+  <%= f.input :buymyself, label: t(:buymyself), as: :boolean %>
+  <div id="part_items">
+  <%= f.fields_for :part_items do |sf| %>
+      <%= sf.association :part, label: t(:part_brand_number), collection: PartType.first.parts, label_method: :number %>
+      <%= sf.input :quantity, input_html: {type: 'number', value: '1', step:'1', min: '1', max: '1000'}, label: t(:quantity) %>
+      <%= sf.link_to_remove t('remove_part_item'), class: 'btn btn-small btn-warning' %>
+  <% end %>
+  <p><%= f.link_to_add t('add_part_item'), :part_items, :data => { :target => "#part_items" }, class: 'btn btn-small btn-info' %></p>
+  </div>
+
+<!--<h5 id="discount_info_pos"><%= t(:discount_info) %></h5>
+  <%= f.association :discounts, collection: Discount.all, label: t('discount_card'), as: :check_boxes, label_method: :name %>
+-->
+
+  <!--<div id="pictures">
+  <%= f.fields_for :pictures do |sf| %>
+      <%= sf.input :p, label: t(:picture) %>
+      <%= sf.link_to_remove t('remove_pic') %>
+  <% end %>
+  <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures" } %></p>
+  </div>-->
+
+  <table id="pictures" class="table table-hover table-small">
+    <tbody>
+      <%= f.fields_for :pictures, :wrapper => false do |sf| %>
+        <tr class="fields">
+          <td>
+            <%= sf.input :p, label: t(:picture) %>
+          </td>
+          <td>
+            <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
+
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                orders_path, :class => 'btn' %>
+  </div>
+<% end %>

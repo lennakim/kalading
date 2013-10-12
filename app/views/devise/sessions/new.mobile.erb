@@ -1,0 +1,12 @@
+<div data-role="header">
+  <h1><%= t(:please_sign_in) %></h1>
+</div>
+
+<div data-role="content">
+  <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name) + '.mobile',  :html=> { :"data-ajax" => true} ) do |f| %>
+    <%= f.input :phone_num, :label => t(:phone_num), :required => false, :autofocus => true %>
+    <%= f.input :password, :label => t(:password), :required => false %>
+  
+    <button type="submit" data-theme="b" name="submit" value="submit-value"><%= t(:sign_in) %></button>
+  <% end %>
+</div>

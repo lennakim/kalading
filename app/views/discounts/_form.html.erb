@@ -1,0 +1,10 @@
+<%= simple_form_for @discount, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name, label: t(:name) %>
+  <%= f.input :discount, label: t(:discount) %>
+  <%= f.input :percent, label: t(:discount_percent) %>
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                discounts_path, :class => 'btn' %>
+  </div>
+<% end %>

@@ -1,0 +1,12 @@
+<%- model_class = Part -%>
+<div class="page-header">
+  <%= link_to t('new_part'), new_part_path, :class => 'btn btn-primary pull-right' %>
+  <%= form_tag parts_path, :method => 'get', :id => "parts_search" do %>
+    <p>
+      <%= label_tag :search, t('search_by_number'), class: 'control-label' %>
+      <%= text_field_tag :search, params[:search], class: 'control' %>
+    </p>
+    <div id="parts"><%= render 'parts' %></div>
+  <% end %>
+</div>
+

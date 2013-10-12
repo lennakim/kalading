@@ -1,0 +1,31 @@
+<%- model_class = Partbatch -%>
+<div class="page-header">
+  <h1><%= t 'partbatch_info' %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= t(:part_type) %>:</strong></dt>
+  <dd><%= @partbatch.part.part_type.name %></dd>
+  <dt><strong><%= t(:manuf_number) %>:</strong></dt>
+  <dd><%= @partbatch.part.number %></dd>
+  <dt><strong><%= t(:supplier) %>:</strong></dt>
+  <dd><%= @partbatch.supplier.name %></dd>
+  <dt><strong><%= t(:quantity) %>:</strong></dt>
+  <dd><%= @partbatch.quantity %></dd>
+  <dt><strong><%= t(:remained_quantity) %>:</strong></dt>
+  <dd><%= @partbatch.remained_quantity %></dd>
+  <dt><strong><%= t(:batch_price) %>:</strong></dt>
+  <dd><%= humanized_money_with_symbol @partbatch.price %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              partbatches_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_partbatch_path(@partbatch), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              partbatch_path(@partbatch),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

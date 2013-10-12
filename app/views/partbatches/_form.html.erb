@@ -1,0 +1,21 @@
+
+<%= simple_form_for @partbatch, :url => storehouse_partbatches_path(@storehouse), :html => { :class => 'form-horizontal' } do |f| %>
+
+  <div class="control-group select">
+    <%= label_tag :part_brand_id, t('choose_brand'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :part, :brand_id, PartBrand.all, :id, :name, {}, {:rel => "/part_brands", :class => 'control'} %>
+    </div>
+  </div>
+
+  <%= f.association :part, collection: PartBrand.first.parts.asc(:number), label: t('choose_part_number'), label_method: :number %>
+  <%= f.association :supplier, collection: Supplier.all, label: t('choose_supplier') %>
+  <%= f.input :price, label: t('buy_price') %>
+  <%= f.input :quantity, input_html: {type: 'number', value: '1', step:'1', min: '1', max: '99999'}, label: t('quantity') %>
+  <%= f.association :user, collection: User.all, label: t('operator') %>
+<div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                partbatches_path, :class => 'btn' %>
+  </div>
+<% end %>

@@ -1,0 +1,8 @@
+<dl>
+<% auto_submodel.parts_by_type.each do |k, v| %>
+   <dt><%= link_to k.name, part_type_path(k) %></dt>
+    <% v.each do |part| %>
+      <dd><%= link_to part.number, part_path(part) %></dd>
+    <% end %>
+<% end %>
+</dl>

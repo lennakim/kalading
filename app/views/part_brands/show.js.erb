@@ -1,0 +1,1 @@
+$("#partbatch_part_id").html("<%= escape_javascript( options_for_select(@part_brand.parts.asc(:number).map {|p| [p.number, p.id]})) %>");

@@ -1,0 +1,2 @@
+module AutoSubmodelsHelper
+end

@@ -1,0 +1,16 @@
+<tr id="<%= auto_submodel.id.to_s %>">
+  <td><%= link_to (auto_submodel.auto_model.auto_brand.name + ' ' + auto_submodel.auto_model.name + ' ' + auto_submodel.name), auto_submodel_path(auto_submodel) %></td>
+  <td><%= auto_submodel.motoroil_cap %></td>
+  <td><%= auto_submodel.engine_displacement %></td>
+  <td><%= auto_submodel.engine_model %></td>
+  <td><%= t(:total_models, count: auto_submodel.parts.size) %></td>
+  <td><%= auto_submodel.autos.count %></td>
+  <td>
+    <%= link_to t('destroy_match'),
+                delete_part_auto_submodel_path(@part, auto_submodel),
+                :remote => true,
+                :method => :delete,
+                :data => { :confirm => t('confirm_delete_part_automodel', name: (auto_submodel.auto_model.auto_brand.name + ' ' + auto_submodel.auto_model.name + ' ' + auto_submodel.name) ) },
+                :class => 'btn btn-mini btn-danger' %>
+  </td>
+</tr>

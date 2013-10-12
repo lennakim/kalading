@@ -1,0 +1,2 @@
+module StorehousesHelper
+end

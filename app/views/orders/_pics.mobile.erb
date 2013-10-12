@@ -1,0 +1,7 @@
+<% @order.pictures.each do |p| %>
+  <li><a href="<%= p.p.url %>" data-ajax="false">
+    <%= image_tag( p.p.url(:small), :class => "pull-left") %>
+    <h3><%= p.p_file_name %></h3>
+    <p><%= l p.p_updated_at if p.p_updated_at %></p>
+  </a></li>
+<% end %>

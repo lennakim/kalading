@@ -1,0 +1,23 @@
+== Create Project
+
+rails g mongoid:config
+rails g bootstrap:install static
+rails g bootstrap:layout application fluid
+rails g devise:install
+rails g devise User
+rails g rails_admin:install
+rails g cancan:ability
+rails g simple_form:install --bootstrap
+rails g rspec:install
+
+rails g scaffold auto_brand name:string --skip-stylesheets
+rails g bootstrap:themed AutoBrands
+
+== Install MongoDb on windows
+D:\TDDownload\mongodb-win32-x86_64-2.4.6\mongodb-win32-x86_64-2.4.6\bin>mongod --install --logpath=d:\data\mongodb.log --dbpath d:\data\db\
+
+Capture raw http request (number of pre/post lines (-B and -A args)):
+sudo tcpdump -n -S -s 0 -A 'tcp dst port 8002' -i eth0 | grep -B3 -A10 "GET /orders"
+
+Show POST requests in log:
+tail -n 1000 kalading/log/development.log | grep -B2 -A10 "POST"

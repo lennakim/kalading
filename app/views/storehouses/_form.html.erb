@@ -1,0 +1,10 @@
+<%= simple_form_for @storehouse, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name %>
+  <%= f.input :address %>
+  <%= f.input :phone_num %>
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                storehouses_path, :class => 'btn' %>
+  </div>
+<% end %>

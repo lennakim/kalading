@@ -1,0 +1,8 @@
+<% if @error %>
+    $("#error-div").html("<strong><%= @error %></strong>").fadeOut().fadeIn();
+<% else %>
+    $("#error-div").html("").fadeOut();
+    $("#auto_submodels-tbody").prepend("<%= escape_javascript(render("auto_submodel", auto_submodel: @auto_submodel )) %>");
+    $("#<%= @auto_submodel.id.to_s %>").fadeOut().fadeIn();;
+    $("#auto_submodels_count").text("<%= t(:total_models, count: @part.auto_submodels.size) %>");
+<% end %>
