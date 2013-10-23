@@ -1,5 +1,5 @@
 <%= simple_nested_form_for @service_type, :html => { :class => 'form-horizontal' } do |f| %>
-  <%= f.input :name, label: t(:name) %>
+  <%= f.input :name, label: t(:service_name) %>
   <%= f.fields_for :sell_prices do |sf| %>
     <%= sf.input :price, label: t('price')%>
     <%= sf.link_to_remove t('remove_sell_price') %>

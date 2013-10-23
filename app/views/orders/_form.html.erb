@@ -1,32 +1,10 @@
 <%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
-  <%= f.input :state, label: t(:state), collection: Order::STATES, value_method: :to_s, label_method:  :to_friendly %>
+  <%= f.input :state, label: t(:state), collection: Order::STATES, label_method:  lambda { |s| t(Order::STATE_STRINGS[s]) } %>
 <h5 id="user_info_pos"><%= t(:user_info) %></h5>
   <%= f.association :customer, collection: User.where(role: "customer"), label: t('customer'), label_method: :name %>
   <%= f.input :address, label: t(:address) %>
   <%= f.input :phone_num, label: t(:phone_num) %>
-  <%= f.input :serve_date, label: t(:serve_date), :as => :date_picker %>
-
-<h5 id="auto_info_pos"><%= t(:auto_info) %></h5>
-  <%= f.fields_for :auto do |a| %>
-    <%= a.input :number, label: t(:car_number) %>
-    <%= a.input :vin, label: t(:VIN) %>
-
-    <div class="control-group select">
-      <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
-      <div class="controls">
-        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
-      </div>
-    </div>
-
-    <div class="control-group select">
-      <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
-      <div class="controls">
-        <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
-      </div>
-    </div>
-
-    <%= a.association :auto_submodel, collection: AutoBrand.first.auto_models.first.auto_submodels.first, label: t('auto_model'), label_method: :name %>
-  <% end %>
+  <%= f.input :serve_datetime, label: t(:serve_datetime), :as => :datetime_picker %>
 
 <h5 id="service_info_pos"><%= t(:service_info) %></h5>
   <div id="service_items" class="form-inline">
@@ -67,6 +45,7 @@
           <td>
             <%= sf.input :p, label: t(:picture) %>
           </td>
+          <td><%= image_tag sf.object.p.url(:small) %></td>
           <td>
             <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
           </td>

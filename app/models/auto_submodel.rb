@@ -27,13 +27,17 @@ class AutoSubmodel
     end
   end
 
-  attr_accessible :name, :auto_model_id, :part_ids, :auto_ids, :motoroil_cap, :engine_displacement,
-    :remark, :engine_model, :service_level, :match_rule
-  
   belongs_to :auto_model
   has_and_belongs_to_many :parts
   has_many :autos, dependent: :delete
+  has_many :orders
+  embeds_many :pictures, :cascade_callbacks => true
   
+  accepts_nested_attributes_for :pictures, :allow_destroy => true
+  
+  attr_accessible :name, :auto_model_id, :part_ids, :auto_ids, :motoroil_cap, :engine_displacement,
+    :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes
+
   validates :name, presence: true
   validates :auto_model_id, presence: true
 
@@ -54,5 +58,5 @@ class AutoSubmodel
     part_type_to_parts
   end
 
-  paginates_per 5
+  paginates_per 30
 end

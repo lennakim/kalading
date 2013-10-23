@@ -36,7 +36,8 @@ class Part
   
   def self.search(k, v)
     if k && v && v.size > 0
-      any_of({ k => /.*#{v}.*/i })
+      vv = v.scan(/[A-Z,a-z]+|\d+/i).join '.*'
+      any_of({ k => /.*#{vv}.*/i })
     else
       all
     end

@@ -1,5 +1,5 @@
 class PartTypesController < ApplicationController
-  before_filter :authenticate_user!
+  #before_filter :authenticate_user!
   before_filter :set_default_operator
   
   # GET /part_types

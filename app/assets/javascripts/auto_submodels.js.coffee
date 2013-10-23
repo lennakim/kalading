@@ -5,6 +5,6 @@ $ ->
     $(document).on "click", "#auto_submodels .pagination a", ->
         $.getScript(this.href)
         return false
-    $("#auto_submodels_search input").keyup ->
+    $("#auto_submodels_search input").keyup $.debounce 1000, ->
         $.get($("#auto_submodels_search").attr("action"), $("#auto_submodels_search").serialize(), null, "script")
         return false

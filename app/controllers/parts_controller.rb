@@ -5,7 +5,21 @@ class PartsController < ApplicationController
   # GET /parts
   # GET /parts.json
   def index
-    @parts = Part.search(:number, params[:search]).page params[:page]
+    if params[:search] != ''
+      @parts = Part.search(:number, params[:search])
+    else
+      @parts = Part.all
+    end
+    
+    if params[:part_search]
+      if params[:part_search][:type_id] != ''
+        @parts = @parts.where(part_type: PartType.find(params[:part_search][:type_id]))
+      end
+      if params[:part_search][:brand_id] != ''
+        @parts = @parts.where(part_brand: PartBrand.find(params[:part_search][:brand_id]))
+      end
+    end
+    @parts = @parts.page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb

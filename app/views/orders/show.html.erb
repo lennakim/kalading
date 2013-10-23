@@ -12,8 +12,8 @@
   <dd><%= @order.phone_num %></dd>
   <dt><strong><%= t(:buymyself) %>:</strong></dt>
   <dd><%= @order.buymyself ? t(:yes) : t(:no)  %></dd>
-  <dt><strong><%= t(:serve_date) %>:</strong></dt>
-  <dd><%= @order.serve_date %></dd>
+  <dt><strong><%= t(:serve_datetime) %>:</strong></dt>
+  <dd><%= l @order.serve_datetime %></dd>
   
   <table class="table">
   <% @order.pictures.each do |p| %>

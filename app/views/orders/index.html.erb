@@ -7,7 +7,7 @@
     <tr>
       <th><%= t(:order_id) %></th>
       <th><%= t(:state) %></th>
-      <th><%= t(:serve_date) %></th>
+      <th><%= t(:serve_datetime) %></th>
       <th><%= t(:engineer_name) %></th>
       <th><%= t(:car_num) %></th>
       <th><%= t(:auto_submodel) %></th>
@@ -26,8 +26,8 @@
     <% @orders.each do |order| %>
       <tr>
         <td><%= link_to order.id.to_s, order %></td>
-        <td><%= t(order.state) %></td>
-        <td><%= l order.serve_date if order.serve_date %></td>
+        <td><%= t(Order::STATE_STRINGS[order.state]) %></td>
+        <td><%= l order.serve_datetime if order.serve_datetime %></td>
         <td>
           <% if order.engineer %>
             <%= order.engineer.name %>

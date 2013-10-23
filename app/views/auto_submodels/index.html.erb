@@ -3,17 +3,13 @@
   <h1><%=t 'auto_submodel_list' %></h1>
 </div>
 
-<div class="control-group select">
-  <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
+<div class="control-group select form-inline">
   <div class="controls">
     <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
-  </div>
-</div>
-
-<div class="control-group select">
-  <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
-  <div class="controls">
     <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+    <span><%= t(:year) %></span>
+    <%= collection_select :auto_submodel, :year, [t(:all)] + Array(1990..2014), :to_s, :to_s, {}, {:rel => "/auto_submodels", :class => 'control'} %>
+    <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
   </div>
 </div>
 

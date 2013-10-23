@@ -77,9 +77,15 @@ class PicturesController < ApplicationController
   # DELETE /pictures/1
   # DELETE /pictures/1.json
   def destroy
-    o = Order.find(params[:order_id])
-    @picture = o.pictures.find(params[:id])
-    @picture.destroy
+    if params[:order_id]
+      o = Order.find(params[:order_id])
+      @picture = o.pictures.find(params[:id])
+      @picture.destroy
+    elsif params[:auto_submodel_id]
+      a = AutoSubmodel.find(params[:auto_submodel_id])
+      @picture = a.pictures.find(params[:id])
+      @picture.destroy
+    end
 
     respond_to do |format|
       format.html { redirect_to o }

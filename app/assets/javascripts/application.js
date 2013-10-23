@@ -15,4 +15,7 @@
 //= require twitter/bootstrap
 //= require jquery_nested_form
 //= require bootstrap-datetimepicker
+//= require jquery.ba-throttle-debounce.min
 //= require_directory .
+
+

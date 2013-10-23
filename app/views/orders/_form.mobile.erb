@@ -12,11 +12,11 @@
       <li>
       <%= link_to order, :"data-ajax" => false do %>
         <p>
-          <%= l order.serve_date if order.serve_date %>&nbsp
+          <%= l order.serve_datetime if order.serve_datetime %>&nbsp
           <span><%= order.service_items.first.service_type.name if order.service_items.first %></span>
         </p>
-        <p>京N000M3</span></p>
-        <h5><%= t(order.state) %></h5>
+        <p><%= order.car_location + order.car_num %></span></p>
+        <h5><%= t(Order::STATE_STRINGS[order.state]) %></h5>
       </a>
       <% end %>
       </li>
@@ -28,33 +28,31 @@
     <div data-role="navbar">
       <ul>
         <li>
-          <a href="#page1-1" class="ui-btn-active" data-icon="plus" data-transition="slide"><%= t('new_order') %></a>
+          <a href="#page_new1" class="ui-btn-active" data-icon="plus" data-transition="slide"><%= t('new_order') %></a>
         </li>
         </ul>
     </div>
   </div>
 </div>
 
-<div data-role="page" id="page1-1">
+<div data-role="page" id="page_new1">
   <div data-role="header">
-    <h1><%= t(:new_order) %></h1>
-    <a href="#page0" class="ui-btn-left" data-transition="slide"><%= t('cancel') %></a>
-    <a href="#page1-2" class="ui-btn-right" data-transition="slide"><%= t('basic_infos') %></a>
+    <h1><%= t(:auto_num_info) %></h1>
+    <a href="#page0" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t('cancel') %></a>
+    <a href="#page_new2" id="new1_to_new2" class="ui-btn-right" data-transition="slide"><%= t(:next) %></a>
   </div>
   
   <div data-role="content">
-    <%= f.association :auto, collection: Auto.all, label: t('auto'), label_method: :number %>
-    <div class="control-group select">
-      <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
-      <div class="controls">
-        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+    <div class="ui-grid-a">
+      <div class="ui-block-a" style="width:30%">
+        <div data-role="fieldcontain" class="ui-hide-label">
+          <%= f.input :car_location, collection: t(:locations).split  %>
+        </div>
       </div>
-    </div>
-    
-    <div class="control-group select">
-      <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
-      <div class="controls">
-        <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+      <div class="ui-block-b" style="width:70%">
+        <div data-role="fieldcontain" class="ui-hide-label">
+          <input type="text" name="order[car_num]" minlength="6" maxlength="6" required data-msg-required="<%= t(:car_num_required) %>" data-msg-minlength="<%= t(:car_num_minlength) %>" data-msg-maxlength="<%= t(:car_num_minlength) %>" style="height: 30px" placeholder="<%= t(:five_bits_num) %>"/>
+        </div>
       </div>
     </div>
   </div>
@@ -68,18 +66,34 @@
   </div>
 </div>
 
-<div data-role="page" id="page1-2">
+<div data-role="page" id="page_new2">
   <div data-role="header">
-    <h1><%= t(:new_order) %></h1>
-    <a href="#page1-1" class="ui-btn-left" data-transition="slide"><%= t('car_infos') %></a>
-    <a href="#page2" class="ui-btn-right" data-transition="slide"><%= t('service_types') %></a>
+    <h1><%= t(:auto_submodel_info) %></h1>
+    <a href="#page_new1" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+    <a href="#page_new3" class="ui-btn-right" data-transition="slide"><%= t(:next) %></a>
   </div>
   
   <div data-role="content">
-    <%= f.input :address, label: t(:address) %>
-    <%= f.input :phone_num, label: t(:phone_num) %>
-    <label for="datetime-l"><%= t(:serve_date) %></label>
-    <input type="datetime-local" name="datetime-l" id="datetime-l" value="" />
+      <div>
+        <span><%= t(:choose_brand) %></span>
+      </div>
+      <div class="controls">
+        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, { :selected => AutoBrand.first.name }, {:rel => "/auto_brands", :class => 'control'}  %>
+      </div>
+      
+      <div>
+        <span><%= t(:choose_auto_model) %></span>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+      <div class="controls">
+        <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, { :selected => AutoBrand.first.auto_models.first.name }, {:rel => "/auto_models", :class => 'control', "data-native-menu" => "true"} %>
+      </div>
+  
+      <div>
+        <span><%= t(:model_year) %></span>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+      <%= f.association :auto_submodel, collection: AutoBrand.first.auto_models.first.auto_submodels.all, label: false, label_method: :name  %>
   </div>
 
   <div data-role="footer" data-position="fixed">
@@ -91,17 +105,41 @@
   </div>
 </div>
 
-<div data-role="page" id="page2">
+<div data-role="page" id="page_new3">
+  <div data-role="header">
+    <h1><%= t(:basic_infos) %></h1>
+    <a href="#page_new2" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+    <a href="#page_new4" id="new3_to_new4" class="ui-btn-right" data-transition="slide"><%= t(:next)  %></a>
+  </div>
+  
+  <div data-role="content">
+    <%= f.input :phone_num, label: t(:phone_num), input_html: { :class => 'numeric', :numeric => '', :minlength => "8", :maxlength => "13", :required => '', "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) } %>
+    <%= f.input :address, label: t(:address), input_html: {:minlength => "4", :maxlength => "128", :required => '', "data-msg-required" => t(:address_required), "data-msg-minlength" => t(:address_minlength), "data-msg-maxlength" => t(:address_minlength) } %>
+    <label for="datetime-l"><%= t(:serve_datetime) %></label>
+    <input type="datetime-local" name="order[serve_datetime]" id="datetime-l" value="<%= Time.zone.now.since(1.days).strftime('%Y-%m-%dT%H:%M:%S') %>" />
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#page0" data-icon="home" data-transition="slide"><%= t(:orders) %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div data-role="page" id="page_new4">
   <div data-role="header">
     <h1><%= t(:service_types) %></h1>
-    <a href="#page1-2" class="ui-btn-left" data-transition="slide"><%= t('basic_infos') %></a>
-    <a href="#page3" class="ui-btn-right" data-transition="slide"><%= t('part_infos') %></a>
+    <a href="#page_new3" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+    <a href="#page_new5" class="ui-btn-right" data-transition="slide"><%= t(:next) %></a>
   </div>
   
   <div data-role="content">
     <fieldset data-role="controlgroup">
+      <legend><%= t(:choose_service_item) %></legend>
       <% @order.service_items.each do |si| %>
-        <input type="checkbox" name="checkbox-1" id="<%= si.service_type.id %>" class="custom" />
+        <input type="checkbox" name="order_service_items[<%= si.service_type.id %>]" id="<%= si.service_type.id %>" class="custom" />
         <label for="<%= si.service_type.id %>"><%= si.service_type.name %></label>
       <% end %>
     </fieldset>
@@ -116,23 +154,21 @@
   </div>
 </div>
 
-<div data-role="page" id="page3">
+<div data-role="page" id="page_new5">
   <div data-role="header">
     <h1><%= t(:part_infos) %></h1>
-    <a href="#page2" class="ui-btn-left" data-transition="slide"><%= t('service_types') %></a>
-    <a href="#page4" class="ui-btn-right" data-transition="slide"><%= t('summary_infos') %></a>
+    <a href="#page_new4" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+    <a href="#page_new6" class="ui-btn-right" data-transition="slide"><%= t(:next) %></a>
   </div>
   
   <div data-role="content">
-    <input type="checkbox" name="radio-choice" id="buymyself_cb" class="custom" />
-    <label for="buymyself_cb"><%= t(:buymyself) %></label>
-    <h5><%= t(:part_brands) %></p>
     <fieldset data-role="controlgroup">
-      <% PartBrand.all.each do |pb| %>
-     	<input type="radio" name="radio-choice" id="<%= pb.id %>_checkbox" value="<%= pb.id %>"/>
-     	<label for="<%= pb.id %>_checkbox"><%= pb.name %></label>
-      <% end %>
+      <input type="radio" name="order[buymyself]" id="buy" value="0" checked="checked" />
+      <label for="buy"><%= t(:buy_from_kalading) %></label>
+      <input type="radio" name="order[buymyself]" id="order_buymyself" value="1"  />
+      <label for="order_buymyself"><%= t(:buymyself) %></label>
     </fieldset>
+    <div id="parts"><%= render 'parts' %></div>
   </div>
 
   <div data-role="footer" data-position="fixed">
@@ -144,14 +180,24 @@
   </div>
 </div>
   
-<div data-role="page" id="page4">
+<div data-role="page" id="page_new6">
   <div data-role="header">
-    <h1><%= t(:new_order) %></h1>
-    <a href="#page3" class="ui-btn-left" data-transition="slide"><%= t('part_infos') %></a>
+    <h1><%= t(:pay_info) %></h1>
+    <a href="#page_new5" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
     <%= f.button :submit, t('submit'), :class => 'ui-btn-right' %>
   </div>
 
   <div data-role="content">
+    <p>
+      <%= t(:services_price) + @order.service_prices + " = " + humanized_money_with_symbol(@order.calc_service_price) %>
+    </p>
+    <p>
+      <%= t(:parts_price) + @order.part_prices + " = " + humanized_money_with_symbol(@order.calc_parts_price) %>
+    </p>
+    <p>
+      <%= t(:summary_price) + @order.service_prices + "+" + @order.part_prices + " = " + humanized_money_with_symbol(@order.calc_price) %>
+    </p>
+
     <h5 id="discount_info_pos"><%= t(:discount_info) %></h5>
     <fieldset data-role="controlgroup">
       <% Discount.all.each do |d| %>
@@ -159,12 +205,9 @@
      	<label for="<%= d.id %>_cb"><%= d.name %></label>
       <% end %>
     </fieldset>
-    <h5><%= t(:summary_infos) %></h5>
-    <div class = "well">
-      <%= t(:summary_price) + humanized_money_with_symbol(Money.new(120.0)) %>
-    </div>
+
     <fieldset class="ui-grid">
-      <div class="ui-block"><button type="submit" data-theme="a">Submit</button></div>
+      <div class="ui-block"><button type="submit" data-theme="a"><%= t(:submit) %></button></div>
     </fieldset>
   </div>
 

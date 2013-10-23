@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:new, :edit, :index, :show]
-  before_filter :authenticate_user!
+  #before_filter :authenticate_user!
   before_filter :set_default_operator
 
   # GET /orders
@@ -9,14 +9,15 @@ class OrdersController < ApplicationController
     @orders = Order.all.page params[:page]
 
     @order = Order.new
-    @order.auto = Auto.first
-    @order.auto.users << User.first
+    @order.auto_submodel = AutoBrand.first.auto_models.first.auto_submodels.first
+    @submodel = @order.auto_submodel
     @order.customer = User.first
     ServiceType.all.each do |st|
-      @order.service_items.build(service_type_id: st.id)
+      si = @order.service_items.build(service_type_id: st.id)
+      si.price = st.sell_prices.last.price if st.sell_prices.exists?
     end
     @order.discounts << Discount.first
-    
+    @order.car_location = I18n.t(:jing)
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @orders }
@@ -42,8 +43,7 @@ class OrdersController < ApplicationController
   # GET /orders/new.json
   def new
     @order = Order.new
-    @order.auto = Auto.first
-    @order.auto.users << User.first
+    @order.auto_submodel = AutoBrand.first.auto_models.first.auto_submodels.first
     @order.customer = User.first
     ServiceType.all.each do |st|
       @order.service_items.build(service_type_id: st.id, price: st.sell_prices.last.price)
@@ -64,10 +64,18 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(params[:order])
+    params[:order_service_items].each do |k, v|
+      if v == 'on'
+        st = ServiceType.find(k)
+        si = @order.service_items.build(service_type: st)
+        si.price = st.sell_prices.last.price if st.sell_prices.exists?
+        si.save
+      end
+    end
 
     respond_to do |format|
       if @order.save
-        format.html { redirect_to orders_url, notice: 'Order was successfully created.' }
+        format.html { redirect_to orders_url, notice: I18n.t(:order_created) }
         format.json { render json: @order, status: :created, location: @order }
       else
         format.html { render action: "new" }
@@ -110,6 +118,15 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html { head :no_content }
       format.json { render json: {result: 'ok', url: pic.p.url }, status: :ok }
+    end
+  end
+  
+  def query_parts
+    @submodel = AutoSubmodel.find(params[:model])
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { head :no_content }
     end
   end
 end

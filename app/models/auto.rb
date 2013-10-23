@@ -19,5 +19,5 @@ class Auto
     end
   end
 
-  paginates_per 5
+  paginates_per 40
 end

@@ -1,5 +1,5 @@
 class AutoModelsController < ApplicationController
-  before_filter :authenticate_user!
+  #before_filter :authenticate_user!
   before_filter :set_default_operator
   
   # GET /auto_models
@@ -18,7 +18,7 @@ class AutoModelsController < ApplicationController
   # GET /auto_models/1.json
   def show
     @auto_model = AutoModel.find(params[:id])
-    @auto_submodels = @auto_model.auto_submodels.page params[:page]
+    @auto_submodels = @auto_model.auto_submodels.asc(:name).page params[:page]
     respond_to do |format|
       format.html # show.html.erb
       format.js

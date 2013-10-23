@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   end
 
   def mobile_device?
+    #return 1
     if session[:mobile_override]
       session[:mobile_override] == "1"
     else

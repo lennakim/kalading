@@ -9,18 +9,45 @@
       <li>
         <dl class="dl-horizontal">
           <dt><strong><%= t(:state) %>:</strong></dt>
-          <dd><%= t(@order.state) %></dd>
+          <dd><%= t(Order::STATE_STRINGS[@order.state]) %></dd>
+          <dt><strong><%= t(:car_num) %>:</strong></dt>
+          <dd><%= @order.car_location + @order.car_num %></dd>
+          <dt><strong><%= t(:auto_submodel) %>:</strong></dt>
+          <dd><%= @order.auto_submodel.auto_model.auto_brand.name + @order.auto_submodel.auto_model.name + @order.auto_submodel.name %></dd>
+          <dt><strong><%= t(:service_item) %>:</strong></dt>
+          <dd>
+            <ul>
+              <% @order.service_items.each do |si| %>
+              <li><%= si.service_type.name %></li>
+              <% end %>
+            </ul>
+          </dd>
+          <% if !@order.buymyself %>
+            <dt><strong><%= t(:part_purchased) %>:</strong></dt>
+            <dd>
+              <ul>
+                <% @order.part_items.each do |pi| %>
+                <li><%= pi.part.number %></li>
+                <% end %>
+              </ul>
+            </dd>
+          <% end %>
+          <dt><strong><%= t(:total_price) %>:</strong></dt>
+          <dd><%= humanized_money_with_symbol @order.price %>
+          </dd>
           <dt><strong><%= t(:address) %>:</strong></dt>
           <dd><%= t(@order.address) %></dd>
           <dt><strong><%= t(:phone_num) %>:</strong></dt>
-          <dd><%= t(@order.state) %></dd>
-          <dt><strong><%= t(:serve_date) %>:</strong></dt>
-          <dd><%= t(@order.state) %></dd>
+          <dd><%= t(@order.phone_num) %></dd>
+          <dt><strong><%= t(:serve_datetime) %>:</strong></dt>
+          <dd><%= l @order.serve_datetime %></dd>
         </dl>
       </li>
-      <li data-role="list-divider"><%= t(:pic_infos) %></li>
-      <li><a href="#show-page1" data-transition="slide"><%= t(:view_pic) %><span class="ui-li-count" id="pic-count"><%= @order.pictures.size %></span></a></li>
-      <li><a href="#" onclick="window.uploadPic.clickOnAndroid('<%= @order.id.to_s %>');" data-transition="slide" id="upload-pic-btn"><%= t(:upload_pic) %></a></li>
+      <% if current_user && current_user.role != 'customer' %>
+        <li data-role="list-divider"><%= t(:pic_infos) %></li>
+        <li><a href="#show-page1" data-transition="slide"><%= t(:view_pic) %><span class="ui-li-count" id="pic-count"><%= @order.pictures.size %></span></a></li>
+        <li><a href="#" onclick="window.uploadPic.clickOnAndroid('<%= @order.id.to_s %>');" data-transition="slide" id="upload-pic-btn"><%= t(:upload_pic) %></a></li>
+      <% end %>
     </ul>
   </div>
 
@@ -33,6 +60,7 @@
   </div>
 </div>
 
+<% if current_user && current_user.role != 'customer' %>
 <div data-role="page" id="show-page1">
   <div data-role="header">
     <h1><%= t(:view_order_pics) %></h1>
@@ -54,3 +82,4 @@
     </div>
   </div>
 </div>
+<% end %>
