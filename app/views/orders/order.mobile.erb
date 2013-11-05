@@ -1,0 +1,28 @@
+<%= simple_nested_form_for @order, :html => { class: "form-horizontal" }, :url => {:action => :order2} do |f| %>
+<div data-role="page" id="page_new1">
+  <div data-role="header">
+    <h1><%= t(:auto_num_info) %></h1>
+    <a href="#page0" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t('cancel') %></a>
+  </div>
+  
+  <div data-role="content">
+    <label for="div-location"><%= t(:car_num) %></label>
+    <div class="ui-grid-a" id="div-location">
+      <div class="ui-block-a" style="width:30%">
+        <div data-role="fieldcontain" class="ui-hide-label">
+          <%= f.input :car_location, collection: t(:locations).split  %>
+        </div>
+      </div>
+      <div class="ui-block-b" style="width:70%">
+        <div data-role="fieldcontain" class="ui-hide-label">
+          <input type="text" name="order[car_num]" minlength="6" maxlength="6" required data-msg-required="<%= t(:car_num_required) %>" data-msg-minlength="<%= t(:car_num_minlength) %>" data-msg-maxlength="<%= t(:car_num_minlength) %>" style="height: 30px" placeholder="<%= t(:five_bits_num) %>"/>
+        </div>
+      </div>
+    </div>
+    <p><label for="div-link-to-autobrand"><%= t(:auto_submodel) %></label></p>
+    <%= f.input :auto_submodel, :as => :hidden, :input_html => { :value => @order.auto_submodel.id } %>
+    <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: @order.auto_submodel.full_name %></p>
+    <p><%= f.button :submit, t(:next), "data-role" => "button", "data-theme" => 'b' %></p>
+  </div>
+</div>
+<% end %>

@@ -1,23 +1,33 @@
 <%- model_class = Discount -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%= t :discount %></h1>
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dt><strong><%= t(:discount_num) %>:</strong></dt>
+  <dd><%= @discount.id %></dd>
+  <dt><strong><%= t(:discount_name) %>:</strong></dt>
   <dd><%= @discount.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:discount) %>:</strong></dt>
+  <dt><strong><%= t(:discount) %>:</strong></dt>
   <dd><%= @discount.discount %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:percent) %>:</strong></dt>
+  <dt><strong><%= t(:discount_percent) %>:</strong></dt>
   <dd><%= @discount.percent %></dd>
+  <dt><strong><%= t(:expire_date) %>:</strong></dt>
+  <dd>
+    <% if @discount.expire_date < Date.today %>
+      <span class="text-error"><%= t(:discount_expired, s: (l @discount.expire_date ) ) %></span>
+    <% else %>
+      <%= l @discount.expire_date %>
+    <% end %>
+  </dd>
 </dl>
 
 <div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
+  <%= link_to t('back'),
               discounts_path, :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+  <%= link_to t('edit'),
               edit_discount_path(@discount), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+  <%= link_to t('destroy'),
               discount_path(@discount),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },

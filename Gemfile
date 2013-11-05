@@ -62,3 +62,5 @@ gem 'datetimepicker-rails', :require => 'datetimepicker-rails', :git => 'git://g
 gem 'jquery_mobile_rails'
 gem 'mongoid-history'
 gem 'jquery-validation-rails'
+gem 'ruby-pinyin'
+gem 'mongoid_auto_increment', :git => 'git://github.com/teriyakisan/mongoid_auto_increment.git'

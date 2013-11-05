@@ -1,11 +1,7 @@
 <%= simple_form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :role, label: t('role'), collection: User::ROLES, value_method: :to_s, label_method:  :to_friendly, prompt: t('choose_role') %>
-  <%= f.input :email, label: t('email') %>
   <%= f.input :name, label: t('name') %>
   <%= f.input :phone_num, label: t('phone_num') %>
-  <%= f.input :phone_num2, label: t('phone_num2') %>
-  <%= f.input :weixin_num, label: t('weixin_num') %>
-  <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
   <div class="form-actions">
     <%= f.button :submit, :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

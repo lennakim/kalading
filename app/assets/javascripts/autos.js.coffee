@@ -5,15 +5,17 @@ $ ->
     $(document).on "click", "#autos .pagination a", ->
         $.getScript(this.href);
         return false
+
     $("#autos_search input").keyup $.debounce 1000, ->
         $.get($("#autos_search").attr("action"), $("#autos_search").serialize(), null, "script")
         return false
+
     $("#auto_model_brand_id, #auto_submodel_model_id").change ->
         $.get($(this).attr('rel') + '/' + $(this).val(), null, null, "script")
-        return false
+
     $("#auto_submodel_year").change ->
         $.getScript($(this).attr('rel') + '?year=' + $(this).val() + '&model=' + $('#auto_submodel_model_id').val())
-        return false
+
     $(document).ajaxSend (event, request, settings) ->
         $('.loading-indicator').show()
     

@@ -1,49 +1,13 @@
 <%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
-<div data-role="page" id="page0">
-  <div data-role="header">
-    <h1><%= t(:orders) %></h1>
-    <%= link_to t(:log_out), destroy_user_session_path, "class" => "ui-btn-left", :method=>'delete', "data-ajax" => true %>
-    <a href="#" id="refresh-page-btn" class = "ui-btn-right" data-ajax="false"><%= t(:refresh) %></a>
-  </div>
-  
-  <div data-role="content">
-    <ul data-role="listview">
-    <% @orders.each do |order| %>
-      <li>
-      <%= link_to order, :"data-ajax" => false do %>
-        <p>
-          <%= l order.serve_datetime if order.serve_datetime %>&nbsp
-          <span><%= order.service_items.first.service_type.name if order.service_items.first %></span>
-        </p>
-        <p><%= order.car_location + order.car_num %></span></p>
-        <h5><%= t(Order::STATE_STRINGS[order.state]) %></h5>
-      </a>
-      <% end %>
-      </li>
-    <% end %>
-    </ul>
-  </div>
-
-  <div data-role="footer" data-position="fixed">
-    <div data-role="navbar">
-      <ul>
-        <li>
-          <a href="#page_new1" class="ui-btn-active" data-icon="plus" data-transition="slide"><%= t('new_order') %></a>
-        </li>
-        </ul>
-    </div>
-  </div>
-</div>
-
 <div data-role="page" id="page_new1">
   <div data-role="header">
     <h1><%= t(:auto_num_info) %></h1>
     <a href="#page0" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t('cancel') %></a>
-    <a href="#page_new2" id="new1_to_new2" class="ui-btn-right" data-transition="slide"><%= t(:next) %></a>
   </div>
   
   <div data-role="content">
-    <div class="ui-grid-a">
+    <label for="div-location"><%= t(:car_num) %></label>
+    <div class="ui-grid-a" id="div-location">
       <div class="ui-block-a" style="width:30%">
         <div data-role="fieldcontain" class="ui-hide-label">
           <%= f.input :car_location, collection: t(:locations).split  %>
@@ -55,6 +19,9 @@
         </div>
       </div>
     </div>
+    <p><label for="div-link-to-autobrand"><%= t(:auto_submodel) %></label></p>
+    <p><a href="#page-autobrand" data-role="button" data-icon="arrow-r" data-iconpos="right"><%= @order.auto_submodel.auto_model.name + ' ' + @order.auto_submodel.name %></a></p>
+    <p><a href="#page_new2" id="new1_to_new2" data-role="button" data-theme="b"><%= t(:next) %></a></p>
   </div>
 
   <div data-role="footer" data-position="fixed">
@@ -78,7 +45,7 @@
         <span><%= t(:choose_brand) %></span>
       </div>
       <div class="controls">
-        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, { :selected => AutoBrand.first.name }, {:rel => "/auto_brands", :class => 'control'}  %>
+        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name_pinyin, { :selected => AutoBrand.first.name }, {:rel => "/auto_brands", :class => 'control'}  %>
       </div>
       
       <div>
@@ -138,9 +105,9 @@
   <div data-role="content">
     <fieldset data-role="controlgroup">
       <legend><%= t(:choose_service_item) %></legend>
-      <% @order.service_items.each do |si| %>
-        <input type="checkbox" name="order_service_items[<%= si.service_type.id %>]" id="<%= si.service_type.id %>" class="custom" />
-        <label for="<%= si.service_type.id %>"><%= si.service_type.name %></label>
+      <% @order.auto_submodel.applicable_service_types.each do |st| %>
+        <input type="checkbox" name="order[service_types][]" value="<%= st.id %>" id="<%= st.id %>" class="custom" />
+        <label for="<%= st.id %>"><%= st.name %></label>
       <% end %>
     </fieldset>
   </div>
@@ -188,15 +155,7 @@
   </div>
 
   <div data-role="content">
-    <p>
-      <%= t(:services_price) + @order.service_prices + " = " + humanized_money_with_symbol(@order.calc_service_price) %>
-    </p>
-    <p>
-      <%= t(:parts_price) + @order.part_prices + " = " + humanized_money_with_symbol(@order.calc_parts_price) %>
-    </p>
-    <p>
-      <%= t(:summary_price) + @order.service_prices + "+" + @order.part_prices + " = " + humanized_money_with_symbol(@order.calc_price) %>
-    </p>
+    <div id="price-detail"><%= render 'price_detail' %></div>
 
     <h5 id="discount_info_pos"><%= t(:discount_info) %></h5>
     <fieldset data-role="controlgroup">

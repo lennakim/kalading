@@ -81,7 +81,7 @@ test:
 production:
   sessions:
     default:
-      database: kalading_production
+      database: kalading_development
       hosts:
         - localhost:27017
   options:

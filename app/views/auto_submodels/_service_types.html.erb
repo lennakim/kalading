@@ -1,0 +1,11 @@
+<table class="table table-striped">
+  <% for st in @auto_submodel.applicable_service_types %>
+    <tr>
+      <td>
+        <%= check_box_tag "order[service_type_ids][]", "#{st.id}", false, {:id => "st_#{st.id}"} %>
+        <%= label_tag "st_#{st.id}", st.name, {class: "checkbox inline"} %>
+      </td>
+      <td><%= humanized_money_with_symbol st.price %></td>
+    </tr>
+  <% end %>
+</table>

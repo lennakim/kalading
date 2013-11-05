@@ -18,7 +18,7 @@ class AutoBrandsController < ApplicationController
   def show
     @auto_brand = AutoBrand.find(params[:id])
     @auto_submodels = @auto_brand.auto_models.first.auto_submodels.asc(:name).page params[:page]
-
+    @auto_submodel = @auto_submodels.first
     respond_to do |format|
       format.html # show.html.erb
       format.js

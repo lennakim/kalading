@@ -1,0 +1,136 @@
+<%- model_class = Order -%>
+<h5 id="basic_infos"><%= t(:basic_infos) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:state) %></td>
+      <td><%= t(Order::STATE_STRINGS[@order.state]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:car_number) %></td>
+      <td><%= @order.car_location+ @order.car_num %></td>
+    </tr>
+    <tr>
+      <td><%= t(:phone_num) %></td>
+      <td><%= @order.phone_num %></td>
+    </tr>
+    <tr>
+      <td><%= t(:address) %></td>
+      <td><%= @order.address %></td>
+    </tr>
+    <tr>
+      <td><%= t(:client_name) %></td>
+      <td><%= @order.name %></td>
+    </tr>
+    <tr>
+      <td><%= t(:serve_datetime) %></td>
+      <td><%= l @order.serve_datetime %></td>
+    </tr>
+    <tr>
+      <td><%= t(:auto_submodel) %></td>
+      <td><%= @order.auto_submodel.full_name %></td>
+    </tr>
+    <tr>
+      <td><%= t(:vin) %></td>
+      <td><%= @order.vin %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="service_types"><%= t(:service_types) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <% for st in @order.service_types %>
+    <tr>
+      <td><%= st.name%></td>
+      <td><%= humanized_money_with_symbol st.price %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<h5 id="parts"><%= t(:part) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:buymyself) %></td>
+      <td>
+        <% if @order.buymyself? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <% if !@order.buymyself %>
+    <tr>
+      <td><%= t(:part_infos) %></td>
+      <td>
+        <table class="table table-striped">
+          <tbody>
+            <% for p in @order.parts %>
+            <tr>
+              <td><%= p.part_type.name %></td>
+              <td><%= p.part_brand.name %></td>
+              <td><%= p.number %></td>
+              <td><%= humanized_money_with_symbol p.price %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h5 id="pay-infos"><%= t(:pay_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:discount) %></td>
+      <td><%=@order.discounts.first.name  if @order.discounts.exists? %></td>
+    </tr>
+    <tr>
+      <td><%= t(:price_info) %></td>
+      <td><%= render 'price_detail' %></td>
+    </tr>
+    <tr>
+      <td><%= t(:pay_type) %></td>
+      <td><%= t(Order::PAY_TYPE_STRINGS[@order.pay_type]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:reciept_type) %></td>
+      <td><%= t(Order::RECIEPT_TYPE_STRINGS[@order.reciept_type]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:reciept_title) %></td>
+      <td><%= @order.reciept_title %></td>
+    </tr>
+  </tbody>
+</table>
+  
+<h5 id="others"><%= t(:others) %></h5>
+  <table class="table table-striped">
+    <tbody>
+      <tr>
+        <td><%= t(:comment) %></td>
+        <td><%= text_area_tag 'comment', @order.comment, {:size => '80x3', :disabled => true} %></td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-strped">
+    <tbody>
+    <% @order.pictures.each do |p| %>
+      <tr>
+        <td><%= image_tag( p.p.url(:small)) %></td>
+        <td><%= p.p_file_name %></td>
+        <td><%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                order_picture_path(@order, p),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                :class => 'btn btn-danger' %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>

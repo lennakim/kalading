@@ -1,0 +1,5 @@
+<% if params[:phone_num] %>
+    $("#order-list-by-phone-num").html("<%= escape_javascript(render("orders")) %>");
+<% else %>
+    $("#order-list").html("<%= escape_javascript(render("orders")) %>");
+<% end %>

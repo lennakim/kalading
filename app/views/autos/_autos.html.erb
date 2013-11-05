@@ -12,7 +12,7 @@
   <tbody>
     <% @autos.each do |auto| %>
       <tr>
-        <td><%= link_to auto.number, auto_path(auto) %></td>
+        <td><%= link_to auto.car_location + auto.car_num, auto_path(auto) %></td>
         <td><%= link_to auto.auto_submodel.name, auto_submodel_path(auto.auto_submodel) if auto.auto_submodel %></td>
         <td><%= auto.vin %></td>
         <td>

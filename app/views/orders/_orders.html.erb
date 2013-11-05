@@ -1,0 +1,103 @@
+<% if @orders.exists? %>
+  <% if params[:phone_num] %>
+  <p><strong><%= t(:history_orders_of, s: params[:phone_num]) %></strong></p>
+  <% elsif params[:car_location] %>
+  <p><strong><%= t(:history_orders_of, s: params[:car_location] + params[:car_num]) %></strong></p>
+  <% end %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= t(:order_id) %></th>
+        <th><%= t(:state) %></th>
+        <th><%= t(:serve_datetime) %></th>
+        <th><%= t(:engineer_name) %></th>
+        <th><%= t(:car_num) %></th>
+        <th><%= t(:auto_submodel) %></th>
+        <th><%= t(:address) %></th>
+        <th><%= t(:phone_num) %></th>
+        <th><%= t(:customer_name) %></th>
+        <th><%= t(:service_item) %></th>
+        <th><%= t(:part) %></th>
+        <th><%= t(:total_price) %></th>
+        <th><%= t(:create_order_time) %></th>
+        <th><%=t 'actions' %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @orders.each do |order| %>
+        <tr>
+          <td><%= link_to order.seq, order, {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window' } %></td>
+          <td><%= t(Order::STATE_STRINGS[order.state]) %></td>
+          <td><%= l order.serve_datetime if order.serve_datetime %></td>
+          <td>
+            <% if order.engineer %>
+              <%= order.engineer.name %>
+            <% else %>
+              <%= t(:unassigned) %>
+            <% end %>
+          </td>
+          <td><%= order.car_location + order.car_num %></td>
+          <td><%= order.auto_submodel.full_name if order.auto_submodel %></td>
+          <td><%= order.address %></td>
+          <td><%= order.phone_num %></td>
+          <td><%= order.name %></td>
+          <td>
+            <a class="btn btn-link" data-toggle="collapse" data-target="#<%= order.id %>_sts"><%= t(:view) %></a>
+            <div id="<%= order.id %>_sts" class="collapse">
+            <% order.service_types.each do |st| %>
+            <p><%= link_to st.name, service_type_path(st) %></p>
+            <% end %>
+            </div>
+          </td>
+          <td>
+            <% if order.buymyself %>
+              <%= t(:buymyself) %>
+            <% elsif order.parts.empty? %>
+              <%= t(:nothing) %>
+            <% else %>
+              <a class="btn btn-link" data-toggle="collapse" data-target="#<%= order.id %>_parts"><%= t(:view) %></a>
+              <div id="<%= order.id %>_parts" class="collapse">
+                <table class="table table-condensed">
+                  <tbody>
+                  <% order.parts.each do |part| %>
+                    <tr>
+                      <td><%= link_to part.part_type.name, part_type_path(part.part_type) %></td>
+                      <td><%= link_to part.part_brand.name %><%= link_to part.number, part_path(part) %></td>
+                    </tr>
+                  <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% end %>
+          </td>
+          <td><%= humanized_money_with_symbol order.price %></td>
+          <td><%=l order.created_at %></td>
+          <td>
+            <% if params[:phone_num] or params[:car_location] %>
+              <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
+            <% else %>
+              <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-order-form" colspan="14" style="display: none;" id="td-<%= order.id.to_s %>"></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= paginate @orders %>
+  <p><strong><%= t('total', count: @orders.count )%></strong></p>
+<% else %>
+  <% if params[:phone_num] or params[:car_location] %>
+  <div class="alert alert-error">
+    <a class="close" data-dismiss="alert">&#215;</a>
+    <strong><%= t(:no_orders_found) %></strong>
+  </div>
+  <% else %>
+  <div class="alert alert-info">
+    <strong><%= t(:no_orders) %></strong>
+  </div>
+  <% end %>
+<% end %>
+<div id="modal-window" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true"></div>

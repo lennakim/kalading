@@ -1,11 +1,11 @@
 class Auto
   include Mongoid::Document
   include Mongoid::Timestamps
-  field :number, type: String
+  field :car_location, type: String, default: I18n.t(:jing)
+  field :car_num, type: String, default: ''
   field :vin, type: String
   
-  validates :number, uniqueness:  {case_sensitive: false}, presence: true
-  attr_accessible :number, :vin, :user_ids, :auto_submodel_id
+  attr_accessible :car_location, :car_num, :vin, :user_ids, :auto_submodel_id
   
   has_and_belongs_to_many :users
   belongs_to :auto_submodel

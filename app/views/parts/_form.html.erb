@@ -2,11 +2,7 @@
   <%= f.association :part_brand, collection: PartBrand.all, prompt: t('choose_part_brand'), label: t('part_brand') %>
   <%= f.association :part_type, collection: PartType.all, prompt: t('choose_part_type'), label: t('part_type') %>
   <%= f.input :number, label: t('manuf_number') %>
-  <%= f.fields_for :sell_prices do |sf| %>
-    <%= sf.input :price, label: t('price')%>
-    <%= sf.link_to_remove t('remove_sell_price') %>
-  <% end %>
-  <p><%= f.link_to_add t('add_sell_price'), :sell_prices %></p>
+  <%= f.input :price, label: t('price') %>
   <%= f.input :capacity, label: t('capacity_all') %>
   <%= f.input :spec, label: t('spec') %>
   <%= f.fields_for :urlinfos do |sf| %>

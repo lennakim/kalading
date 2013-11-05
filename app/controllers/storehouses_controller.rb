@@ -45,9 +45,9 @@ class StorehousesController < ApplicationController
         end
       end
   
-      if params[:order] # search by order id
-        o = Order.find(params[:order])
-        pbs = pbs.select { |pb| o.part_items.where(part: pb.part).exists? } if o
+      if params[:order] # search by order seq
+        o = Order.where(seq: params[:order])
+        pbs = pbs.select { |pb| o.parts.find(pb.part) } if o
       end
     end
 

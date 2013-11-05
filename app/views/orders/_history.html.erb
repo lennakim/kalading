@@ -1,0 +1,25 @@
+<ul class="media">
+  <% @history_trackers.each do |ht| %>
+    <% if ht.action == 'create' %>
+      <li class="media-body"><i class="icon-plus-sign"></i>
+      <%= l ht.created_at %>&nbsp
+      <% if o = Order.find(ht.association_chain[0]['id']) %>
+        <%= t(:order_created, seq: o.seq) %>&nbsp
+      <% end %>
+      <%= link_to ht.modifier.name, ht.modifier %>
+    <% elsif ht.action == 'update' %>  
+      <li class="media-body">
+        <i class="icon-chevron-right"></i>&nbsp<%= l ht.created_at %>&nbsp
+        <% if o = Order.find(ht.association_chain[0]['id']) %>
+          <%= t(:order_seq, seq: o.seq) %>
+        <% end %>
+        <% if ht.modified['state'] != ht.original['state'] %>
+          <%= t(Order::STATE_CHANGED_STRS[ht.original['state']]) %>&nbsp
+        <% end %>
+      <%= link_to ht.modifier.name, ht.modifier if ht.modifier %>
+      </li>
+    <% end %>    
+  <% end %>
+</ul>
+<%= paginate @history_trackers, :remote => true, :param_name => :pagina, :params => {:controller => 'orders', :action => 'history'} %>
+

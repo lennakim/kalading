@@ -117,7 +117,7 @@ class PartsController < ApplicationController
     @part = Part.find(params[:id])
     if @auto_submodel = @part.auto_submodels.find(params[:auto][:auto_submodel_id])
       @error = I18n.t(:part_auto_submodel_exists,
-                      name: @auto_submodel.auto_model.auto_brand.name + ' ' + @auto_submodel.auto_model.name + ' ' + @auto_submodel.name)
+                      name: @auto_submodel.full_name)
       return
     end
 

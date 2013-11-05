@@ -63,4 +63,8 @@ class User
       I18n.t(self)
     end
   end
+  
+  def name_and_order_num
+    self.name + I18n.t(:order_num, n: self.serve_orders.where(:state.lt => 6).count )
+  end
 end

@@ -16,7 +16,7 @@
     <% @service_types.each do |service_type| %>
       <tr>
         <td><%= link_to service_type.name, service_type_path(service_type) %></td>
-        <td><%= humanized_money_with_symbol service_type.sell_prices.last.price if service_type.sell_prices.exists? %></td>
+        <td><%= humanized_money_with_symbol service_type.price %></td>
         <td>
           <% if service_type.specific_auto_model %>
             <%= link_to service_type.auto_model.name, auto_model_path(service_type.auto_model) %>
@@ -39,6 +39,6 @@
   </tbody>
 </table>
 
-<%= link_to t('new_service_type'),
+<%= link_to t('create_service_type'),
             new_service_type_path,
             :class => 'btn btn-primary' %>

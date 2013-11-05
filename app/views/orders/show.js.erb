@@ -1,3 +1,7 @@
-$("#pic-list").html("<%= escape_javascript(render("pics")) %>");
-$("#pic-list").listview('refresh');
-$("#pic-count").text("<%= @order.pictures.size %>");
+<% if mobile_device? %>
+    $("#pic-list").html("<%= escape_javascript(render("pics")) %>");
+    $("#pic-list").listview('refresh');
+    $("#pic-count").text("<%= @order.pictures.size %>");
+<% else %>
+    $("#modal-window").html("<%= escape_javascript(render 'show') %>");
+<% end %>

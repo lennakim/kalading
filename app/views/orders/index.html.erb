@@ -1,80 +1,19 @@
 <%- model_class = Order -%>
 <div class="page-header">
-  <h1><%=t 'orders' %></h1>
+  <h4>
+  <% if params[:state] %>
+    <%= t(:orders) + ' - ' + t(Order::STATE_STRINGS[params[:state].to_i])  %>
+  <% else %>
+    <%= t(:orders) %>
+  <% end %>
+  <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary pull-right' %>
+  </h4>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= t(:order_id) %></th>
-      <th><%= t(:state) %></th>
-      <th><%= t(:serve_datetime) %></th>
-      <th><%= t(:engineer_name) %></th>
-      <th><%= t(:car_num) %></th>
-      <th><%= t(:auto_submodel) %></th>
-      <th><%= t(:service_item) %></th>
-      <th><%= t(:address) %></th>
-      <th><%= t(:phone_num) %></th>
-      <th><%= t(:customer_name) %></th>
-      <th><%= t(:buymyself) %></th>
-      <th><%= t(:total_price) %></th>
-      <th><%= t(:discount_card) %></th>
-      <th><%= t(:create_order_time) %></th>
-      <th><%=t 'actions' %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @orders.each do |order| %>
-      <tr>
-        <td><%= link_to order.id.to_s, order %></td>
-        <td><%= t(Order::STATE_STRINGS[order.state]) %></td>
-        <td><%= l order.serve_datetime if order.serve_datetime %></td>
-        <td>
-          <% if order.engineer %>
-            <%= order.engineer.name %>
-          <% else %>
-            <%= t(:unassigned) %>
-          <% end %>
-        </td>
-        <td><%= order.customer.autos.first.number if order.customer %></td>
-        <td><%= order.customer.autos.first.auto_submodel.auto_model.name if order.customer %></td>
-        <td>
-          <% order.service_items.each do |si| %>
-          <p><%= link_to si.service_type.name, service_type_path(si.service_type) %></p>
-          <% end %>
-        </td>
-        <td><%= order.address %></td>
-        <td><%= order.phone_num %></td>
-        <td><%= order.customer.name if order.customer %></td>
-        <td>
-          <% if order.buymyself %>
-          <%= t('yes') %>
-          <% else %>
-          <%= t('no') %>
-          <% end %>
-        </td>
-        <td><%= humanized_money_with_symbol order.price %></td>
-        <td>
-          <% order.discounts.each do |d| %>
-          <p><%= link_to d.name, discount_path(d) %></p>
-          <% end %>
-        </td>
-        <td><%=l order.created_at %></td>
-        <td>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      order_path(order), :class => 'btn btn-mini' %>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_order_path(order), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      order_path(order),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div>
+  <%= render 'orders' %>
+</div>
 
-<%= link_to t('new_order'),
-            new_order_path,
-            :class => 'btn btn-primary' %>
+<div class="well">
+  <h4><%= t(:op_history) %></h4>
+  <div id="history_trackers"><%= render 'history' %></div>
+</div>

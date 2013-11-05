@@ -11,22 +11,21 @@ class Part
   field :capacity, type: Integer, default: 1
   field :match_rule, type: String
   field :spec, type: String
+  field :price, type: Money, default: 0.0
   
-  attr_accessible :capacity, :number, :match_rule, :spec,
-    :part_brand_id, :part_type_id,
-    :auto_submodel_ids,
-    :urlinfo_ids, :urlinfos_attributes,
-    :sell_prices_attributes, :sell_price_ids
-
   belongs_to :part_brand
   belongs_to :part_type
   has_and_belongs_to_many :auto_submodels
   has_many :urlinfos
-  has_many :sell_prices
   has_many :partbatches
+  has_and_belongs_to_many :orders
+
+  attr_accessible :capacity, :number, :match_rule, :spec,
+    :part_brand_id, :part_type_id,
+    :auto_submodel_ids,
+    :urlinfo_ids, :urlinfos_attributes, :price, :order_ids
   
   accepts_nested_attributes_for :urlinfos, :allow_destroy => true
-  accepts_nested_attributes_for :sell_prices, :allow_destroy => true
   
   validates :number, uniqueness:  {case_sensitive: false}, presence: true
   #validates :stock_quantity, inclusion: { in: 0..999999 }, presence: true
@@ -43,5 +42,12 @@ class Part
     end
   end
 
+  def total_remained_quantity
+    rq = 0
+    self.partbatches.each do |pb|
+      rq += pb.remained_quantity
+    end
+    rq
+  end
   paginates_per 5
 end

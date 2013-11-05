@@ -16,7 +16,7 @@
   <tbody>
     <% @auto_submodels.each do |auto_submodel| %>
       <tr>
-        <td><%= link_to (auto_submodel.auto_model.auto_brand.name + ' ' + auto_submodel.auto_model.name + ' ' + auto_submodel.name), auto_submodel_path(auto_submodel) %></td>
+        <td><%= link_to auto_submodel.full_name, auto_submodel_path(auto_submodel) %></td>
         <td><%= auto_submodel.motoroil_cap %></td>
         <td><%= auto_submodel.engine_displacement %></td>
         <td><%= auto_submodel.engine_model %></td>

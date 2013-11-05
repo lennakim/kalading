@@ -1,0 +1,35 @@
+<div data-role="page" id="page0">
+  <div data-role="header">
+    <h1><%= t(:orders) %></h1>
+    <%= link_to t(:log_out), destroy_user_session_path, "class" => "ui-btn-left", :method=>'delete', "data-ajax" => true %>
+    <a href="#" id="refresh-page-btn" class = "ui-btn-right" data-ajax="false"><%= t(:refresh) %></a>
+  </div>
+  
+  <div data-role="content">
+    <ul data-role="listview">
+    <% @orders.each do |order| %>
+      <li>
+      <%= link_to order, :"data-ajax" => false do %>
+        <p>
+          <%= l order.serve_datetime if order.serve_datetime %>&nbsp
+          <span><%= order.service_types.first.name if order.service_types.first %></span>
+        </p>
+        <p><%= order.car_location + order.car_num %></span></p>
+        <h5><%= t(Order::STATE_STRINGS[order.state]) %></h5>
+      </a>
+      <% end %>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li>
+          <a href="#page_new1" class="ui-btn-active" data-icon="plus" data-transition="slide"><%= t('new_order') %></a>
+        </li>
+        </ul>
+    </div>
+  </div>
+</div>

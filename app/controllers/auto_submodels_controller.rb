@@ -38,6 +38,7 @@ class AutoSubmodelsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
+      format.js
       format.json { render json: @auto_submodel }
     end
   end

@@ -17,8 +17,8 @@
           <dt><strong><%= t(:service_item) %>:</strong></dt>
           <dd>
             <ul>
-              <% @order.service_items.each do |si| %>
-              <li><%= si.service_type.name %></li>
+              <% @order.service_types.each do |st| %>
+              <li><%= st.name %></li>
               <% end %>
             </ul>
           </dd>
@@ -26,8 +26,8 @@
             <dt><strong><%= t(:part_purchased) %>:</strong></dt>
             <dd>
               <ul>
-                <% @order.part_items.each do |pi| %>
-                <li><%= pi.part.number %></li>
+                <% @order.parts.each do |pi| %>
+                <li><%= pi.number %></li>
                 <% end %>
               </ul>
             </dd>
@@ -43,11 +43,9 @@
           <dd><%= l @order.serve_datetime %></dd>
         </dl>
       </li>
-      <% if current_user && current_user.role != 'customer' %>
-        <li data-role="list-divider"><%= t(:pic_infos) %></li>
-        <li><a href="#show-page1" data-transition="slide"><%= t(:view_pic) %><span class="ui-li-count" id="pic-count"><%= @order.pictures.size %></span></a></li>
-        <li><a href="#" onclick="window.uploadPic.clickOnAndroid('<%= @order.id.to_s %>');" data-transition="slide" id="upload-pic-btn"><%= t(:upload_pic) %></a></li>
-      <% end %>
+      <li data-role="list-divider"><%= t(:pic_infos) %></li>
+      <li><a href="#show-page1" data-transition="slide"><%= t(:view_pic) %><span class="ui-li-count" id="pic-count"><%= @order.pictures.size %></span></a></li>
+      <li><a href="#" onclick="window.uploadPic.clickOnAndroid('<%= @order.id.to_s %>');" data-transition="slide" id="upload-pic-btn"><%= t(:upload_pic) %></a></li>
     </ul>
   </div>
 
@@ -60,7 +58,6 @@
   </div>
 </div>
 
-<% if current_user && current_user.role != 'customer' %>
 <div data-role="page" id="show-page1">
   <div data-role="header">
     <h1><%= t(:view_order_pics) %></h1>
@@ -82,4 +79,3 @@
     </div>
   </div>
 </div>
-<% end %>

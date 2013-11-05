@@ -1,10 +1,6 @@
 Kalading::Application.routes.draw do
   resources :discounts
 
-
-  resources :service_items
-
-
   resources :service_types
 
 
@@ -47,19 +43,26 @@ Kalading::Application.routes.draw do
   get 'users' => 'users#index', :as => :users
   get 'users/:id/edit' => 'users#edit', :as => :edit_user
   get 'users/:id' => 'users#show', :as => :user
-  get 'users/new' => 'users#new', :as => :new_user
+  get 'users_new' => 'users#new', :as => :new_user
   put 'users/:id' => 'users#update', :as => :update_user
   post 'partbatches/:id' => 'partbatches#inout', :as => :inout_partbatch
-  post 'orders/:id/uploadpic' => 'orders#uploadpic', :as => :uploadpic_orders
   get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
   get 'parts/:id/edit_part_automodel' => 'parts#edit_part_automodel', :as => :edit_part_automodel
   delete 'parts/:id/automodels/:auto_submodel_id' => 'parts#delete_auto_submodel', :as => :delete_part_auto_submodel
   post 'parts/:id/automodels' => 'parts#add_auto_submodel', :as => :add_part_auto_submodel
   get 'storehouses/:id/print_storehouse_out/:ht_id' => 'storehouses#print_storehouse_out', :as => :print_storehouse_out
+
   get 'auto_parts' => 'orders#query_parts', :as => :query_parts
-  
+  get 'orders_history' => 'orders#history', :as => :order_history
+  post 'orders/:id/uploadpic' => 'orders#uploadpic', :as => :uploadpic_orders
+  get 'orders/:id/duplicate' => 'orders#duplicate', :as => :duplicate_order
+  match 'orders_calcprice' => 'orders#calcprice', via: [:put, :post], :as => :calcprice_order
+  # singular for weixin app
+  get 'o' => 'orders#order', :as => :o
+  post 'order2' => 'orders#order2', :as => :o2
+
   resources :auto_brands
-  root :to => 'storehouses#index'
+  root :to => 'orders#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

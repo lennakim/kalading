@@ -28,7 +28,8 @@ class ServiceTypesController < ApplicationController
   # GET /service_types/new.json
   def new
     @service_type = ServiceType.new
-    @service_type.sell_prices.build(price: 1.0)
+    @service_type.price = Money.new(1.0)
+    @service_type.auto_model = AutoBrand.first.auto_models.first
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @service_type }
@@ -38,6 +39,7 @@ class ServiceTypesController < ApplicationController
   # GET /service_types/1/edit
   def edit
     @service_type = ServiceType.find(params[:id])
+    @service_type.auto_model = AutoBrand.first.auto_models.first if !@service_type.auto_model
   end
 
   # POST /service_types

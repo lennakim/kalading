@@ -1,0 +1,8 @@
+$(".td-order-form").hide();
+$("#td-<%= @order.id.to_s %>").html("<%= escape_javascript(render("form")) %>").fadeIn();
+$("form[id^=edit_order]").validate();
+$(".order_serve_datetime, .order_serve_datetime_next").datetimepicker();
+$(".cancel-edit-btn").click(function() {
+    $(".td-order-form").fadeOut();
+    return false;
+});

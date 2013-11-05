@@ -10,7 +10,7 @@
                 delete_part_auto_submodel_path(@part, auto_submodel),
                 :remote => true,
                 :method => :delete,
-                :data => { :confirm => t('confirm_delete_part_automodel', name: (auto_submodel.auto_model.auto_brand.name + ' ' + auto_submodel.auto_model.name + ' ' + auto_submodel.name) ) },
+                :data => { :confirm => t('confirm_delete_part_automodel', name: (auto_submodel.full_name) ) },
                 :class => 'btn btn-mini btn-danger' %>
   </td>
 </tr>

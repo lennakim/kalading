@@ -26,5 +26,8 @@ class AutoBrand
       all
     end
   end
-
+  
+  def name_pinyin
+    PinYin.of_string(self.name)[0]
+  end
 end

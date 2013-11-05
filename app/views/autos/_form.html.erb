@@ -1,7 +1,13 @@
 <%= simple_form_for @auto, :html => { :class => 'form-horizontal' } do |f| %>
-  <%= f.input :number, label: t(:car_number) %>
+  <div class="control-group">
+    <label for="select-car-location" class="control-label"><%= t(:car_num) %></label>
+    <div class="controls form-inline">
+      <%= collection_select(:auto, :car_location, t(:locations).split, :to_s, :to_s, {:prompt=>true}, {:class=>'input-small control', :id => 'select-car-location'}) %>
+      <%= f.input_field :car_num, class: "input-small", minlength: "6", maxlength: "6", "data-msg-required" => t(:car_num_required), "data-msg-minlength" => t(:car_num_minlength), "data-msg-maxlength" => t(:car_num_minlength), placeholder: t(:five_bits_num) %>
+    </div>
+  </div>
   <%= f.input :vin, label: t(:VIN) %>
-  <%= f.association :users, collection: User.where(role: "customer"), label: t('customer'), as: :check_boxes, label_method: :name %>
+  <!--<%= f.association :users, collection: User.where(role: "customer"), label: t('customer'), as: :check_boxes, label_method: :name %>-->
   
   <div class="control-group select">
     <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
@@ -17,7 +23,7 @@
     </div>
   </div>
 
-  <%= f.association :auto_submodel, collection: AutoBrand.first.auto_models.all.first.auto_submodels.all, label: t('auto_model'), label_method: :name %>
+  <%= f.association :auto_submodel, collection: AutoBrand.first.auto_models.all.first.auto_submodels.all, label: t('auto_model'), label_method: :name, include_blank: false %>
   <div class="form-actions">
     <%= f.button :submit, :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

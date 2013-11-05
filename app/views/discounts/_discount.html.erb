@@ -1,0 +1,20 @@
+<% if @discount %>
+<dl class="dl-horizontal">
+  <dt><strong><%= t(:discount_name) %>:</strong></dt>
+  <dd><%= @discount.name %></dd>
+  <dt><strong><%= t(:discount) %>:</strong></dt>
+  <dd><%= @discount.discount %></dd>
+  <dt><strong><%= t(:discount_percent) %>:</strong></dt>
+  <dd><%= @discount.percent %></dd>
+  <dt><strong><%= t(:expire_date) %>:</strong></dt>
+  <dd>
+    <% if @discount.expire_date < Date.today %>
+      <span class="text-error"><%= t(:discount_expired, s: (l @discount.expire_date ) ) %></span>
+    <% else %>
+      <%= l @discount.expire_date %>
+    <% end %>
+  </dd>
+</dl>
+<% else %>
+  <span class="alert"><%= t(:discount_not_exist) %></span>
+<% end %>

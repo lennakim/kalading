@@ -1,0 +1,19 @@
+<%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
+<div data-role="page" id="page_new4">
+  <div data-role="header">
+    <h1><%= t(:service_types) %></h1>
+    <a href="#page_new3" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+    <a href="#page_new5" class="ui-btn-right" data-transition="slide"><%= t(:next) %></a>
+  </div>
+  
+  <div data-role="content">
+    <fieldset data-role="controlgroup">
+      <legend><%= t(:choose_service_item) %></legend>
+      <% @order.auto_submodel.applicable_service_types.each do |st| %>
+        <input type="checkbox" name="order[service_types][]" value="<%= st.id %>" id="<%= st.id %>" class="custom" />
+        <label for="<%= st.id %>"><%= st.name %></label>
+      <% end %>
+    </fieldset>
+  </div>
+</div>
+<% end %>

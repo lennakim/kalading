@@ -21,3 +21,18 @@ sudo tcpdump -n -S -s 0 -A 'tcp dst port 8002' -i eth0 | grep -B3 -A10 "GET /ord
 
 Show POST requests in log:
 tail -n 1000 kalading/log/development.log | grep -B2 -A10 "POST"
+
+sudo foreman export --app kalading --user ubuntu upstart /etc/init
+
+== nginx config for static assets
+location ~ ^/(assets)/  {
+  root /home/ubuntu/kalading/public;
+  gzip_static on; # to serve pre-gzipped version
+  expires max;
+  add_header Cache-Control public;
+}
+
+== Deployment of new assets
+RAILS_ENV=production bundle exec rake assets:precompile
+
+

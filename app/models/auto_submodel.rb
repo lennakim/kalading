@@ -50,13 +50,23 @@ class AutoSubmodel
   end
   
   def parts_by_type
-    part_type_to_parts = {}
-    self.parts.each do |part|
-      part_type_to_parts[part.part_type] ||= []
-      part_type_to_parts[part.part_type] << part
-    end
-    part_type_to_parts
+    self.parts.group_by {|part| part.part_type}
   end
 
+  def full_name
+    self.auto_model.auto_brand.name + ' ' + self.auto_model.name.delete(self.auto_model.auto_brand.name) + ' ' + self.name
+  end
+  
+  def applicable_service_types
+    sts = []
+    ServiceType.all.each do |st|
+      if st.specific_auto_model
+        sts << st if self.auto_model == st.auto_model
+      else
+        sts << st
+      end
+    end
+    sts
+  end
   paginates_per 30
 end

@@ -43,17 +43,7 @@
             </tbody>
           </table>
         </td>
-        <td>
-          <table>
-            <tbody>
-            <% part.sell_prices.each do |p| %>
-              <tr>
-                <td><%= humanized_money_with_symbol p.price %></td><td><%= l p.created_at.to_date %></td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </td>
+        <td><%= humanized_money_with_symbol part.price if part.price %></td>
         <td><%= part.capacity.to_s + ' ' + part.part_type.unit %></td>
         <td><%= part.spec %></td>
         <td>

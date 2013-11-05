@@ -1,63 +1,170 @@
 <%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
-  <%= f.input :state, label: t(:state), collection: Order::STATES, label_method:  lambda { |s| t(Order::STATE_STRINGS[s]) } %>
-<h5 id="user_info_pos"><%= t(:user_info) %></h5>
-  <%= f.association :customer, collection: User.where(role: "customer"), label: t('customer'), label_method: :name %>
-  <%= f.input :address, label: t(:address) %>
-  <%= f.input :phone_num, label: t(:phone_num) %>
-  <%= f.input :serve_datetime, label: t(:serve_datetime), :as => :datetime_picker %>
-
-<h5 id="service_info_pos"><%= t(:service_info) %></h5>
-  <div id="service_items" class="form-inline">
-  <%= f.fields_for :service_items do |sf| %>
-    <%= sf.association :service_type, label: t('service_item'), collection: ServiceType.all, label_method: :name %>
-    <%= sf.input :price, label: t('price') %>
-    <%= sf.link_to_remove t('remove_service_item') %>
-  <% end %>
-  </div>
-  <p><%= f.link_to_add t('add_service_item'), :service_items, :data => { :target => "#service_items" } %></p>
-
-  <%= f.input :buymyself, label: t(:buymyself), as: :boolean %>
-  <div id="part_items">
-  <%= f.fields_for :part_items do |sf| %>
-      <%= sf.association :part, label: t(:part_brand_number), collection: PartType.first.parts, label_method: :number %>
-      <%= sf.input :quantity, input_html: {type: 'number', value: '1', step:'1', min: '1', max: '1000'}, label: t(:quantity) %>
-      <%= sf.link_to_remove t('remove_part_item'), class: 'btn btn-small btn-warning' %>
-  <% end %>
-  <p><%= f.link_to_add t('add_part_item'), :part_items, :data => { :target => "#part_items" }, class: 'btn btn-small btn-info' %></p>
-  </div>
-
-<!--<h5 id="discount_info_pos"><%= t(:discount_info) %></h5>
-  <%= f.association :discounts, collection: Discount.all, label: t('discount_card'), as: :check_boxes, label_method: :name %>
--->
-
-  <!--<div id="pictures">
-  <%= f.fields_for :pictures do |sf| %>
-      <%= sf.input :p, label: t(:picture) %>
-      <%= sf.link_to_remove t('remove_pic') %>
-  <% end %>
-  <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures" } %></p>
-  </div>-->
-
-  <table id="pictures" class="table table-hover table-small">
-    <tbody>
-      <%= f.fields_for :pictures, :wrapper => false do |sf| %>
-        <tr class="fields">
-          <td>
-            <%= sf.input :p, label: t(:picture) %>
-          </td>
-          <td><%= image_tag sf.object.p.url(:small) %></td>
-          <td>
-            <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
-          </td>
-        </tr>
+  <% if %w[unverified verify_error].include? Order::STATE_STRINGS[@order.state] %>
+  <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
+    <div class="control-group">
+      <label for="select-car-location" class="control-label"><%= t(:car_num) %></label>
+      <div class="controls form-inline">
+        <%= collection_select(:order, :car_location, t(:locations).split, :to_s, :to_s, {:prompt=>true}, {:class=>'input-small control', :id => 'select-car-location'}) %>
+        <%= f.input_field :car_num, class: "input-small", minlength: "6", maxlength: "6", "data-msg-required" => t(:car_num_required), "data-msg-minlength" => t(:car_num_minlength), "data-msg-maxlength" => t(:car_num_minlength), placeholder: t(:five_bits_num) %>
+        <%= link_to t(:search_order_history), orders_path(), :class => 'btn', :id => 'search-by-car-num' %>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+      <div id="order-list"></div>
+    </div>
+  
+    <div class="control-group">
+      <label for="order_phone_num" class="control-label"><%= t(:phone_num) %></label>
+      <div class="controls form-inline">
+        <%= f.input_field :phone_num, :class => 'numeric', :numeric => '', minlength: "8", maxlength: "13", "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) %>
+        <%= link_to t(:search_order_history), orders_path(), :class => 'btn', :id => 'search-by-phone-num' %>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+      <div id="order-list-by-phone-num" class="order-list"></div>
+    </div>
+  
+    <%= f.input :address, label: t(:address) %>
+    <%= f.input :name, label: t(:client_name) %>
+    <%= f.input :serve_datetime, label: t(:serve_datetime), :as => :datetime_picker %>
+    <%= f.input :vin %>
+    <div class="control-group">
+      <label for="select-car-brand" class="control-label"><%= t(:choose_brand) %></label>
+      <div class="controls" id="select-car-brand">
+        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, { :selected => @order.auto_submodel.auto_model.auto_brand.id }, {:rel => "/auto_brands", :class => 'control'}  %>
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <label for="select-car-model" class="control-label"><%= t(:choose_auto_model) %></label>
+      <div class="controls" id="select-car-model">
+        <%= collection_select :auto_submodel, :model_id, @order.auto_submodel.auto_model.auto_brand.auto_models, :id, :name, { :selected => @order.auto_submodel.auto_model.id }, {:rel => "/auto_models", :class => 'control'} %>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+    </div>
+    
+    <%= f.association :auto_submodel, label: t(:model_year), collection: @order.auto_submodel.auto_model.auto_submodels, label_method: :name, selected: @order.auto_submodel.id, include_blank: false, input_html: {rel: auto_submodels_path} %>
+    
+  <h5 id="service_types"><%= t(:service_types) %></h5>
+    <label for="select-service-types" class="control-label"><%= t(:service_item) %></label>
+    <div class="controls" id="select-service-types">
+      <%= render 'service_types' %>
+    </div>
+  
+  <h5 id="parts"><%= t(:part) %></h5>
+    <%= f.input :buymyself, label: t(:buymyself), as: :boolean %>
+    <div class="control-group">
+      <label for="select-parts" class="control-label"><%= t(:applicable_parts) %></label>
+      <div class="controls" id="select-parts">
+        <%= render 'parts' %>
+      </div>
+    </div>
+  
+    <div class="control-group">
+      <label for="div-discount" class="control-label"><%= t(:discount_num) %></label>
+      <div class="controls form-inline" id="div-discount">
+        <%= f.input_field :discount_num %>
+        <%= link_to t(:verify_discount_num), discounts_path, class: 'btn', id: 'verify-discount-num-btn' %>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+    </div>
+    <div id="discount-info"></div>
+    
+  <h5 id="pay-infos"><%= t(:pay_info) %></h5>
+    <div class="control-group">
+      <label for="price-info" class="control-label"><%= t(:price_info) %></label>
+      <div class="controls form-inline" id="price-info">
+        <%= link_to t(:calc_price), calcprice_order_path, class: 'btn', id: 'calcprice-btn', method: :post %>
+      </div>
+    </div>
+    <div id="price-detail"><%= render 'price_detail' %></div>
+    
+    <%= f.input :pay_type, label: t(:pay_type), collection: Order::PAY_TYPES, label_method:  lambda { |s| t(Order::PAY_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :reciept_type, label: t(:reciept_type), collection: Order::RECIEPT_TYPES, label_method:  lambda { |s| t(Order::RECIEPT_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :reciept_title, label: t(:reciept_title) %>
+  
+  <h5 id="others"><%= t(:others) %></h5>
+    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <div class="form-actions">
+      <% if %w[new duplicate].include? params[:action] %>
+        <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+      <% else %>
+        <%= f.button :submit, t(:verify_ok), :class => 'btn-primary' %>
+        <%= f.button :submit, t(:verify_failed), :class => 'btn-warning', name: "verify_failed", value: t(:verify_failed) %>
       <% end %>
-    </tbody>
-  </table>
-  <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
-
-  <div class="form-actions">
-    <%= f.button :submit, :class => 'btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                orders_path, :class => 'btn' %>
-  </div>
+      <%= link_to t('cancel'), orders_path(state: 0), :class => 'btn' %>
+    </div>
+  <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
+    <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.where(role: 'engineer'), label_method: :name_and_order_num, include_blank: false %>
+    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:assign_ok), :class => 'btn-primary' %>
+    </div>
+  <% elsif Order::STATE_STRINGS[@order.state] == 'unscheduled' %>
+    <%= f.input :phone_num, label: t(:confirmed_phone_num), input_html: { :class => 'numeric', :numeric => '', minlength: "8", maxlength: "13", "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) } %>
+    <%= f.input :address, label: t(:confirmed_address) %>
+    <%= f.input :name, label: t(:confirmed_client_name) %>
+    <%= f.input :serve_datetime, label: t(:confirmed_serve_datetime), :as => :datetime_picker %>
+    <div id="price-detail"><%= render 'price_detail' %></div>
+    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:schedule_ok), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% elsif Order::STATE_STRINGS[@order.state] == 'scheduled' %>
+    <h5><%= t(:gather_auto_info) %></h5>
+      <%= f.input :auto_km, label: t(:auto_km) %>
+      <%= f.input :oil_out, label: t(:oil_out) %>
+      <%= f.input :oil_in, label: t(:oil_in) %>
+      <%= f.input :front_wheels, label: t(:front_wheels) %>
+      <%= f.input :back_wheels, label: t(:back_wheels) %>
+      <%= f.input :auto_km_next, label: t(:auto_km_next) %>
+      <%= f.input :serve_datetime_next, label: t(:serve_datetime_next), :as => :datetime_picker %>
+    <h5><%= t(:finished_service_types) %></h5>
+    <%= f.input :oil_filter_changed, label: t(:oil_filter_changed), :as => :boolean %>
+    <%= f.input :air_filter_changed, label: t(:air_filter_changed), :as => :boolean %>
+    <%= f.input :cabin_filter_changed, label: t(:cabin_filter_changed), :as => :boolean %>
+    <%= f.input :charged, label: t(:charged, p: (humanized_money_with_symbol @order.price) ), :as => :boolean %>
+    <%= f.input :oil_gathered, label: t(:oil_gathered), :as => :boolean %>
+    <h5 id="others"><%= t(:others) %></h5>
+    <table id="pictures" class="table table-hover table-small">
+      <tbody>
+        <%= f.fields_for :pictures, :wrapper => false do |sf| %>
+          <tr class="fields">
+            <td>
+              <%= sf.input :p, label: t(:picture) %>
+            </td>
+            <td><%= image_tag sf.object.p.url(:small) %></td>
+            <td>
+              <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
+    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:serve_ok), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% elsif Order::STATE_STRINGS[@order.state] == 'serve_done' %>
+    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:handover_ok), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% elsif Order::STATE_STRINGS[@order.state] == 'handovered' %>
+    <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
+    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:revisit_ok), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% elsif Order::STATE_STRINGS[@order.state] == 'revisited' %>
+    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% end %>
 <% end %>
+<span id="service-type-at-least-one" class="hide"><%= t(:service_type_at_least_one) %></span>

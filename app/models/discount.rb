@@ -10,9 +10,10 @@ class Discount
   field :name, type: String
   field :discount, type: Money, default: 0
   field :percent, type: Integer, default: 0
-
+  field :expire_date, type: Date, default: Date.today.since(1.years)
+  
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
   validates :percent, inclusion: { in: 0..99 }, presence: true
-  attr_accessible :name, :discount, :percent, :order_ids
-  belongs_to :order
+  has_and_belongs_to_many :orders
+  attr_accessible :name, :discount, :percent, :order_ids, :expire_date
 end
