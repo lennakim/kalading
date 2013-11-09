@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_filter :authenticate_user! if !Rails.env.importdata?
   # GET /users
   # GET /users.json
   def index

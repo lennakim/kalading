@@ -11,7 +11,8 @@ class AutoModel
   paginates_per 5
 
   field :name, type: String
-  attr_accessible :name, :auto_brand_id, :auto_submodels_attributes
+  field :full_name_pinyin, type: String, default: ''
+  attr_accessible :name, :auto_brand_id, :auto_submodels_attributes, :full_name_pinyin
   
   belongs_to :auto_brand
   has_many :auto_submodels, dependent: :delete
@@ -33,4 +34,9 @@ class AutoModel
     end
   end
 
+  def as_json(options = nil)
+    h = super :except => [:updated_at, :created_at, :auto_brand_id, :version, :modifier_id, :name]
+    h[:name] = self.auto_brand.name + ' ' + self.name.delete(self.auto_brand.name)
+    h
+  end
 end

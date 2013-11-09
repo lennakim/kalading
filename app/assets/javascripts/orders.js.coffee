@@ -37,3 +37,23 @@ $ ->
     $("#verify-discount-num-btn").click ->
         $.getScript(this.href + '/' + $("#order_discount_num").val()) if $("#order_discount_num").val().length > 0
         return false
+
+    car_model_table = {}
+    $('#car-model-search').typeahead
+        source: (query, process) ->
+            return $.getJSON $('#car-model-search').data('link'),
+                {query: query},
+                (data) ->
+                    car_model_table = {}
+                    newData = []
+                    $.each data, ->
+                        newData.push(this.name)
+                        car_model_table[this.name] = this._id
+                    return process(newData)
+        matcher: (item) ->
+            return true
+        highlighter: (item) ->
+            return '<strong>' + item + '</strong>'
+        updater: (item) ->
+            $.get('/auto_models/' + car_model_table[item], null, null, "script")
+            return item

@@ -68,8 +68,8 @@ model_to_parts = JSON.parse(d)
 model_to_parts.each do |m2p|
 
   response_json = RestClient.get(
-                                 server_address + 'auto_submodels?' + URI::encode('brand=' + m2p['brand_name']) + URI::encode('&model=' + m2p['series_name']) + URI::encode('&submodel=' + m2p['model_name']),
-                                 :content_type => :json, :accept => :json){|response, request, result| response }
+                                server_address + 'auto_submodels?' + 'brand=' + CGI::escape(m2p['brand_name']) + '&model=' + CGI::escape( m2p['series_name']) + '&submodel=' + CGI::escape(m2p['model_name']),
+                                :content_type => :json, :accept => :json){|response, request, result| response }
   puts "get auto_submodel error #{response_json.code}" or exit if response_json.code != 200
   #puts JSON.pretty_generate(JSON.parse(response_json))
   auto_submodels = JSON.parse(response_json)

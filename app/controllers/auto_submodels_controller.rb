@@ -1,5 +1,5 @@
 class AutoSubmodelsController < ApplicationController
-  #before_filter :authenticate_user!
+  before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
   
   # GET /auto_submodels
@@ -22,7 +22,7 @@ class AutoSubmodelsController < ApplicationController
       }
       format.json {
         begin
-          @auto_submodels = AutoBrand.where(name: params[:brand]).first.auto_models.where(name: params[:model]).first.auto_submodels.where(name: params[:submodel])
+          @auto_submodels = AutoBrand.find_by(name: params[:brand]).auto_models.find_by(name: params[:model]).auto_submodels.where(name: params[:submodel])
           render json: @auto_submodels
         rescue
           render json: []

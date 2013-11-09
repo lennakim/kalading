@@ -1,5 +1,5 @@
 class PartBrandsController < ApplicationController
-  #before_filter :authenticate_user!
+  before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
   
   # GET /part_brands
@@ -48,7 +48,7 @@ class PartBrandsController < ApplicationController
 
     respond_to do |format|
       if @part_brand.save
-        format.html { redirect_to @part_brands_url, notice: 'Part brand was successfully created.' }
+        format.html { redirect_to part_brands_url, notice: I18n.t(:part_rand_created, n: @part_brand.name ) }
         format.json { render json: @part_brand, status: :created, location: @part_brand }
       else
         format.html { render action: "new" }

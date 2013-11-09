@@ -1,5 +1,5 @@
 class PartbatchesController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
   
   # GET /partbatches

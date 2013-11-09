@@ -16,4 +16,4 @@
 /public/system
 
 m2f.TXT
-model2filter.json
+*.json

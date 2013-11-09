@@ -6,7 +6,7 @@
       <% if o = Order.find(ht.association_chain[0]['id']) %>
         <%= t(:order_created, seq: o.seq) %>&nbsp
       <% end %>
-      <%= link_to ht.modifier.name, ht.modifier %>
+      <%= link_to ht.modifier.name, ht.modifier if ht.modifier%>
     <% elsif ht.action == 'update' %>  
       <li class="media-body">
         <i class="icon-chevron-right"></i>&nbsp<%= l ht.created_at %>&nbsp

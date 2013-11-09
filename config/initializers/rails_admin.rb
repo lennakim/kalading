@@ -33,6 +33,10 @@ RailsAdmin.config do |config|
   # Include specific models (exclude the others):
   # config.included_models = ['User']
 
+  config.authorize_with do
+    redirect_to main_app.root_path unless warden.user.phone_num == '13810190339'
+  end
+
   # Label methods for model instances:
   # config.label_methods << :description # Default is [:name, :title]
 

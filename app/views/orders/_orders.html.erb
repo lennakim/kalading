@@ -24,8 +24,11 @@
       </tr>
     </thead>
     <tbody>
+      <% colors = %w[success error info warning] %>
+      <% i = 0 %>
       <% @orders.each do |order| %>
-        <tr>
+        <tr class="<%= colors[ i % colors.length] %>">
+        <% i += 1 %>
           <td><%= link_to order.seq, order, {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window' } %></td>
           <td><%= t(Order::STATE_STRINGS[order.state]) %></td>
           <td><%= l order.serve_datetime if order.serve_datetime %></td>

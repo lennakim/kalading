@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:order, :order2]
-  #before_filter :authenticate_user!
+  before_filter :authenticate_user!,  :except => [:uploadpic] if !Rails.env.importdata?
   before_filter :set_default_operator
 
   # GET /orders
@@ -57,6 +57,7 @@ class OrdersController < ApplicationController
   def duplicate
     o = Order.find(params[:id])
     @order = o.clone
+    @order.state = 0
     @order.serve_datetime = DateTime.now.since(1.days)
     @order.discounts = nil
     @order.calc_price

@@ -35,4 +35,10 @@ location ~ ^/(assets)/  {
 == Deployment of new assets
 RAILS_ENV=production bundle exec rake assets:precompile
 
+== Test environment
+sudo foreman export -f Procfile.fun --app kalading_fun --user ubuntu upstart /etc/init
 
+== Import part data
+gem install mysql2xxxx
+Export autohome auto models
+mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * from ah_model" > ah_models.jso

@@ -10,7 +10,7 @@ server_address = 'http://54.248.126.168:8002/'
 
 # 查找车型力帆620，排量1.6L， 发动机型号为LF481Q3的所有车型
 # 使用正则表达式匹配关键字 力帆620 和 1.6L, .*表示任意字符串
-response_json = RestClient.get(server_address + 'auto_submodels?' + URI::encode('search=力帆620.*1.6L'), :content_type => :json, :accept => :json){|response, request, result| response }
+response_json = RestClient.get(server_address + 'auto_submodels?' + 'search=' + CGI::escape('力帆620.*1.6L'), :content_type => :json, :accept => :json){|response, request, result| response }
 puts "get auto_submodel error #{response_json.code}" or exit if response_json.code != 200
 #puts JSON.pretty_generate(JSON.parse(response_json))
 auto_submodels = JSON.parse(response_json)

@@ -9,7 +9,7 @@ class PartBrand
   field :name, type: String
   attr_accessible :name
   
-  has_many :parts
+  has_many :parts, dependent: :delete
  
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
 end

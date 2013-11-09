@@ -14,10 +14,13 @@
     </tr>
   </thead>
   <tbody>
+    <% colors = %w[success error info warning] %>
+    <% i = 0 %>
     <% @parts.each do |part| %>
-      <tr>
+      <tr class="<%= colors[ i % colors.length] %>">
+      <% i += 1 %>
         <td><%= link_to part.number, part_path(part) %></td>
-        <td><%= link_to part.part_brand.name, part_brand_path(part.part_brand) %></td>
+        <td><%= link_to part.part_brand.name, part_brand_path(part.part_brand) if part.part_brand %></td>
         <td><%= link_to part.part_type.name, part_type_path(part.part_type) %></td>
         <td>
           <%= t('total_models', count: part.auto_submodels.count) %>&nbsp

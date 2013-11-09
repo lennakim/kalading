@@ -14,8 +14,11 @@
     </tr>
   </thead>
   <tbody>
+    <% colors = %w[success error info warning] %>
+    <% i = 0 %>
     <% @auto_submodels.each do |auto_submodel| %>
-      <tr>
+      <tr class="<%= colors[ i % colors.length] %>">
+      <% i += 1 %>
         <td><%= link_to auto_submodel.full_name, auto_submodel_path(auto_submodel) %></td>
         <td><%= auto_submodel.motoroil_cap %></td>
         <td><%= auto_submodel.engine_displacement %></td>

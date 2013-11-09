@@ -1,11 +1,28 @@
 class AutoModelsController < ApplicationController
-  #before_filter :authenticate_user!
+  before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
+  
+  def convert_to_pinyin
+    AutoModel.all.each do |m|
+      full_name = m.auto_brand.name + ' ' + m.name.delete(m.auto_brand.name)
+      full_name.gsub!(/\s+/, "")
+      m.update_attributes({
+                      full_name_pinyin: PinYin.of_string(full_name).join
+                    })
+    end
+  end
   
   # GET /auto_models
   # GET /auto_models.json
   def index
-    @auto_models = AutoModel.all.page params[:page]
+    if params[:query] && params[:query] != ''
+      params[:query] = PinYin.of_string(params[:query]).join
+      params[:query].gsub!(/\s+/, "")
+      s = params[:query].split('').join(".*")
+      @auto_models = AutoModel.any_of({ full_name_pinyin: /.*#{s}.*/i })
+    else
+      @auto_models = AutoModel.all.page params[:page]
+    end
 
     respond_to do |format|
       format.html # index.html.erb
