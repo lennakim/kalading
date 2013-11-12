@@ -1,3 +1,4 @@
+<%= paginate @auto_submodels %>
 <table class="table table-striped table-bordered">
   <thead>
     <tr>
@@ -9,7 +10,7 @@
       <th><%= t 'auto_count' %></th>
       <th><%= t 'service_level' %></th>
       <th><%= t 'match_rule' %></th>
-      <th><%= t 'remark' %></th>
+      <th><%= t 'update_time' %></th>
       <th><%= t('actions') %></th>
     </tr>
   </thead>
@@ -27,7 +28,7 @@
         <td><%= auto_submodel.autos.count %></td>
         <td><%= t(auto_submodel.service_level) %></td>
         <td><%= auto_submodel.match_rule %></td>
-        <td><%= auto_submodel.remark %></td>
+        <td><%= l auto_submodel.updated_at %></td>
         <td>
           <%= link_to t('edit'),
                       edit_auto_submodel_path(auto_submodel), :class => 'btn btn-mini' %>

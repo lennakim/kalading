@@ -4,7 +4,7 @@
   <% v.each do |p| %>
     <tr>
       <td>
-        <%= check_box_tag "order[part_ids][]", "#{p.id}", false, {:id => "part_#{p.id}", :disabled => (p.total_remained_quantity <= 0)} %>
+        <%= check_box_tag "order[part_ids][]", "#{p.id}", false, {:id => "part_#{p.id}"} %>
         <%= label_tag "part_#{p.id}", p.part_brand.name + ' ' + p.number, {class: "checkbox inline"} %>
       </td>
       <td><%= humanized_money_with_symbol p.price %></td>

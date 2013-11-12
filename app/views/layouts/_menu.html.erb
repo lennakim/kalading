@@ -42,23 +42,24 @@
           <%= link_to t('user_menu'), users_path  %>
           </li>
           
-          <% if ['service_types', 'discounts'].include? params[:controller] %>
+          <% if ['service_types'].include? params[:controller] %>
           <li class="active">
           <% else %>
           <li>
           <% end %>
-            <div class="btn-group">
-              <a class="btn btn-link btn-inverse dropdown-toggle" data-toggle="dropdown" href="#"><%= t :others %><span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><%= link_to t('service_types'), service_types_path %></li>
-                <li><%= link_to t('discount_card'), discounts_path %></li>
-              </ul>
-            </div>
+          <%= link_to t('service_types'), service_types_path %>
+          </li>
+          <% if ['discounts'].include? params[:controller] %>
+          <li class="active">
+          <% else %>
+          <li>
+          <% end %>
+          <%= link_to t('discount_card'), discounts_path %></li>
           </li>
         </ul>
         <%= link_to t('log_out'), destroy_user_session_path, :method => :delete, :class => 'btn btn-info btn-small pull-right' if current_user %>
-        <%= link_to t(:welcome_user, n: current_user.name), edit_user_registration_path, :class => 'btn btn-inverse btn-link active btn-small pull-right' if current_user %>
+        <%= link_to t(:edit_account), edit_user_registration_path, :class => 'btn btn-info btn-small pull-right' if current_user %>
+        <%= link_to t(:welcome_user, n: current_user.name), orders_path, :class => 'btn btn-inverse btn-link active btn-small pull-right' if current_user %>
       </div><!--/.nav-collapse -->
     </div>
   </div>

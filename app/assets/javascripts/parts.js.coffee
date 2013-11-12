@@ -12,3 +12,6 @@ $ ->
     $("#part_search_brand_id, #part_search_type_id").change ->
         $.get($("#parts_search").attr("action"), $("#parts_search").serialize(), null, "script")
         return false
+    $(document).on "submit", "#page-num-form", ->
+        $.get($("#parts_search").attr("action"), $("#parts_search").serialize() + '&' + $(this).serialize(), null, "script")
+        return false

@@ -1,3 +1,4 @@
+<% if @order.auto_submodel %>
 <table class="table table-striped">
   <% for st in @order.auto_submodel.applicable_service_types %>
     <tr>
@@ -9,3 +10,6 @@
     </tr>
   <% end %>
 </table>
+<% else %>
+  <div><p><%= t(:auto_model_nil) %></p></div>
+<% end %>

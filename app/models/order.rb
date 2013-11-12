@@ -68,6 +68,9 @@ class Order
   index({ car_location: 1, car_num: 1})
 
   validates :car_num, length: { in: 6..6 }, presence: true
+  validates :phone_num, length: { in: 8..13 }, presence: true
+  validates :address, length: { in: 4..512 }, presence: true
+  validates :auto_submodel_id, presence: true
   
   STATES = [0, 1, 2, 3, 4, 5, 6, 7]
   STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited]

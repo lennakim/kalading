@@ -5,6 +5,7 @@
   </div>
   
   <div data-role="content">
+    <%= debug session %>
     <label for="div-location"><%= t(:car_num) %></label>
     <div class="ui-grid-a" id="div-location">
       <div class="ui-block-a" style="width:30%">
@@ -14,13 +15,17 @@
       </div>
       <div class="ui-block-b" style="width:70%">
         <div data-role="fieldcontain" class="ui-hide-label">
-          <input type="text" name="order[car_num]" minlength="6" maxlength="6" required data-msg-required="<%= t(:car_num_required) %>" data-msg-minlength="<%= t(:car_num_minlength) %>" data-msg-maxlength="<%= t(:car_num_minlength) %>" style="height: 30px" placeholder="<%= t(:five_bits_num) %>"/>
+          <%= f.input_field :car_num, class: "input-small", minlength: "6", maxlength: "6", "data-msg-required" => t(:car_num_required), "data-msg-minlength" => t(:car_num_minlength), "data-msg-maxlength" => t(:car_num_minlength), placeholder: t(:five_bits_num) %>
         </div>
       </div>
     </div>
     <p><label for="div-link-to-autobrand"><%= t(:auto_submodel) %></label></p>
-    <%= f.input :auto_submodel, :as => :hidden, :input_html => { :value => @order.auto_submodel.id } %>
+    <%= f.input :auto_submodel, :as => :hidden %>
+    <% if @order.auto_submodel %>
     <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: @order.auto_submodel.full_name %></p>
+    <% else %>
+    <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: t(:choose_auto_model) %></p>
+    <% end %>
     <p><%= f.button :submit, t(:next), "data-role" => "button", "data-theme" => 'b' %></p>
   </div>
 </div>

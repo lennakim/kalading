@@ -39,7 +39,12 @@ Kalading::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-  devise_for :users
+  devise_for :users, :skip => [:registrations]                                          
+  as :user do
+    get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'    
+    put 'users/:id' => 'devise/registrations#update', :as => 'user_registration'            
+  end
+    
   get 'users' => 'users#index', :as => :users
   get 'users/:id/edit' => 'users#edit', :as => :edit_user
   get 'users/:id' => 'users#show', :as => :user

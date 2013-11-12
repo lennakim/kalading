@@ -85,5 +85,13 @@ $(document).bind('pageinit', function() {
         else
             $("#parts").fadeIn();
     });
+    
+    $("#auto-brand-list").listview({
+		    autodividers: true,
+		    autodividersSelector: function (li) {
+		        var out = li.attr('pinyin');
+		        return out;
+		    }
+		}).listview('refresh');
 });
 

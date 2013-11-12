@@ -34,6 +34,10 @@ class AutoModel
     end
   end
 
+  def full_name
+    self.auto_brand.name + ' ' + self.name.delete(self.auto_brand.name)
+  end
+
   def as_json(options = nil)
     h = super :except => [:updated_at, :created_at, :auto_brand_id, :version, :modifier_id, :name]
     h[:name] = self.auto_brand.name + ' ' + self.name.delete(self.auto_brand.name)

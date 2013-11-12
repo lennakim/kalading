@@ -7,7 +7,7 @@ class AutoSubmodelsController < ApplicationController
   def index
     respond_to do |format|
       format.html {
-        @auto_submodels = AutoSubmodel.all.page params[:page]
+        @auto_submodels = AutoSubmodel.asc(:created_at).page params[:page]
       }
       format.js{
         if params[:search]
@@ -18,6 +18,8 @@ class AutoSubmodelsController < ApplicationController
           else
             @auto_submodels = AutoModel.find(params[:model]).auto_submodels.any_of({ :name => /.*#{params[:year]}.*/i }).asc(:name).page params[:page]
           end
+        else
+          @auto_submodels = AutoSubmodel.all.page params[:page]
         end
       }
       format.json {

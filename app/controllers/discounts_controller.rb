@@ -5,7 +5,7 @@ class DiscountsController < ApplicationController
   # GET /discounts
   # GET /discounts.json
   def index
-    @discounts = Discount.all
+    @discounts = Discount.asc(:name)
 
     respond_to do |format|
       format.html # index.html.erb

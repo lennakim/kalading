@@ -4,6 +4,14 @@
   <% elsif params[:car_location] %>
   <p><strong><%= t(:history_orders_of, s: params[:car_location] + params[:car_num]) %></strong></p>
   <% end %>
+
+  <%= paginate @orders, remote: true %>
+  <% if !params[:phone_num] && !params[:car_location] %>
+    <%= simple_form_for orders_path, method: :get, remote: true, :html => { :class => 'form-inline', :id => 'order-page-num-form' } do |f| %>
+      <span><%= t(:di) %></span><input type="text" class="input-mini" name="page" placeholder="<%= t(:page_num) %>" value="<%= params[:page] %>"/><span><%= t(:page) %></span>
+    <% end %>
+  <% end %>
+
   <table class="table table-striped">
     <thead>
       <tr>
@@ -89,7 +97,7 @@
       <% end %>
     </tbody>
   </table>
-  <%= paginate @orders %>
+  <%= paginate @orders, remote: true %>
   <p><strong><%= t('total', count: @orders.count )%></strong></p>
 <% else %>
   <% if params[:phone_num] or params[:car_location] %>

@@ -45,8 +45,6 @@ class OrdersController < ApplicationController
   # GET /orders/new.json
   def new
     @order = Order.new
-    @order.auto_submodel = AutoBrand.first.auto_models.first.auto_submodels.first
-    @submodel = @order.auto_submodel
     @order.serve_datetime = DateTime.now.since(1.days)
     respond_to do |format|
       format.html # new.html.erb
@@ -210,7 +208,7 @@ class OrdersController < ApplicationController
 
   def order
     init_order_from_session
-    @order.auto_submodel = AutoBrand.first.auto_models.first.auto_submodels.first if @order.auto_submodel.nil?
+    @order.serve_datetime = DateTime.now.since(1.days)
   end
   
   def order2
@@ -221,5 +219,8 @@ class OrdersController < ApplicationController
     session[:auto_m_id] = params[:order][:auto_submodel_id]
     session[:car_l] = params[:order][:car_location]
     session[:car_n] = params[:order][:car_num]
+    if params[:choose_auto_brand]
+      return render 'choose_auto_brand'
+    end
   end
 end

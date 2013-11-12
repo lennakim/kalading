@@ -1,38 +1,40 @@
-<% @submodel.parts_by_type.each do |k, v| %>
-  <h5><%= k.name %></h5>
-  <table class="table table-striped">
-  <% v.each do |p| %>
-    <tr>
-      <td>
-        <%= check_box_tag "order[part_ids][]", "#{p.id}", @order.parts.include?(p), {:id => "part_#{p.id}" } %>
-        <%= label_tag "part_#{p.id}", p.part_brand.name + ' ' + p.number, {class: "checkbox inline"} %>
-      </td>
-      <td><%= humanized_money_with_symbol p.price %></td>
-      <td>
-        <% if p.total_remained_quantity <= 0 %>
-          <strong class="alert"><%= t(:sellout) %></strong>
-        <% else %>
-        <table>
-          <thead>
-            <tr>
-              <th><%= t 'storehouse' %></th>
-              <th><%= t 'remained_quantity' %></th>
-            </tr>
-          </thead>
-          <tbody>
-          <% p.partbatches.each do |pb| %>
-            <tr>
-              <td><%= pb.storehouse.name %></td>
-              <td><%= pb.remained_quantity %></td>
-            </tr>
+<% if @submodel %>
+  <% @submodel.parts_by_type.each do |k, v| %>
+    <h5><%= k.name %></h5>
+    <table class="table table-striped">
+    <% v.each do |p| %>
+      <tr>
+        <td>
+          <%= check_box_tag "order[part_ids][]", "#{p.id}", @order.parts.include?(p), {:id => "part_#{p.id}" } %>
+          <%= label_tag "part_#{p.id}", p.part_brand.name + ' ' + p.number, {class: "checkbox inline"} %>
+        </td>
+        <td><%= humanized_money_with_symbol p.price %></td>
+        <td>
+          <% if p.total_remained_quantity <= 0 %>
+            <strong class="alert"><%= t(:sellout) %></strong>
+          <% else %>
+          <table>
+            <thead>
+              <tr>
+                <th><%= t 'storehouse' %></th>
+                <th><%= t 'remained_quantity' %></th>
+              </tr>
+            </thead>
+            <tbody>
+            <% p.partbatches.each do |pb| %>
+              <tr>
+                <td><%= pb.storehouse.name %></td>
+                <td><%= pb.remained_quantity %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
           <% end %>
-          </tbody>
-        </table>
-        <% end %>
-      </td>
-    </tr>
+        </td>
+      </tr>
+    <% end %>
+    </table>
   <% end %>
-  </table>
+<% else %>
+  <div><p><%= t(:auto_model_nil) %></p></div>
 <% end %>
-
-

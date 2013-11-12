@@ -57,3 +57,5 @@ $ ->
         updater: (item) ->
             $.get('/auto_models/' + car_model_table[item], null, null, "script")
             return item
+    $('a.datetime-shortcut').click ->
+        $('#order_serve_datetime').val($(this).data('msg'))

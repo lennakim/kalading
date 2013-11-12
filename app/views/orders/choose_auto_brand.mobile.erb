@@ -1,0 +1,19 @@
+<%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
+<div data-role="page" id="page_new4">
+  <div data-role="header">
+    <h1><%= t(:service_types) %></h1>
+    <a href="<%= o_path %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+  </div>
+  
+  <div data-role="content">
+    <%= debug session %>
+    <ul data-role="listview" id="auto-brand-list" data-autodividers="true">
+      <% AutoBrand.all.each do |ab| %>
+      <li pinyin="<%= ab.name_pinyin.capitalize[0] %>">
+        <%= link_to ab.name, o_path %>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<% end %>
