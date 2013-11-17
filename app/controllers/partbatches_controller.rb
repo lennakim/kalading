@@ -1,6 +1,7 @@
 class PartbatchesController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
+  load_and_authorize_resource
   
   # GET /partbatches
   # GET /partbatches.json
@@ -29,7 +30,7 @@ class PartbatchesController < ApplicationController
   def new
     @storehouse = Storehouse.find(params[:storehouse_id])
     @partbatch = @storehouse.partbatches.new
-
+    @part = Part.first
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @partbatch }
@@ -40,6 +41,7 @@ class PartbatchesController < ApplicationController
   def edit
     @partbatch = Partbatch.find(params[:id])
     @storehouse = @partbatch.storehouse
+    @part = @partbatch.part
   end
 
   # POST /partbatches
@@ -48,6 +50,7 @@ class PartbatchesController < ApplicationController
     self.current_operator = User.find(params[:partbatch][:user_id]) if params[:partbatch][:user_id]
     @storehouse = Storehouse.find(params[:storehouse_id])
     @partbatch = @storehouse.partbatches.new(params[:partbatch])
+    @part = Part.find(params[:partbatch][:part_id])
 
     respond_to do |format|
       if @partbatch.save
@@ -64,7 +67,7 @@ class PartbatchesController < ApplicationController
   # PUT /partbatches/1.json
   def update
     @partbatch = Partbatch.find(params[:id])
-
+    @part = Part.find(params[:partbatch][:part_id])
     respond_to do |format|
       if @partbatch.update_attributes(params[:partbatch])
         format.html { redirect_to @partbatch, notice: 'Partbatch was successfully updated.' }

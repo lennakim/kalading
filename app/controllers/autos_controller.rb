@@ -1,11 +1,12 @@
 class AutosController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
+  load_and_authorize_resource
   
   # GET /autos
   # GET /autos.json
   def index
-    @autos = Auto.search(:number, params[:search]).page params[:page]
+    @autos = Auto.search(:car_num, params[:search]).page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb

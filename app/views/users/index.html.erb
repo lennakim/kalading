@@ -1,13 +1,14 @@
 <%- model_class = User -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1><%= t 'employees' %><%= link_to t('new_user'), new_user_path, :class => 'btn btn-primary pull-right' if can? :create, User %></h1>
 </div>
+<%= paginate @users %>
 <table class="table table-striped">
   <thead>
     <tr>
       <th><%= t(:name) %></th>
       <th><%= t(:phone_num) %></th>
-      <th><%= t(:autos) %></th>
+      <th><%= t(:email) %></th>
       <th><%= t(:role) %></th>
       <th><%= t 'remark' %></th>
       <th><%=t 'actions' %></th>
@@ -18,29 +19,27 @@
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.phone_num %></td>
+        <td><%= user.email %></td>
         <td>
           <ul>
-          <% user.autos.each do |auto| %>
-            <li><%= link_to auto.number, auto_path(auto) %></;i>
+          <% user.roles.each do |r| %>
+            <li><%= t(User::ROLE_STRINGS[r.to_i]) %></li>
           <% end %>
           </ul>
         </td>
-        <td><%= t(user.role) %></td>
         <td><%= user.remark %></td>
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_user_path(user), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          <%= link_to t('edit'),
+                      edit_user_path(user), :class => 'btn btn-mini' if can? :update, user %>
+          <%= link_to t('destroy'),
                       user_path(user),
                       :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
+                      :data => { :confirm => t('confirm_user_delete', n: user.name) },
+                      :class => 'btn btn-mini btn-danger' if can? :destroy, user %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<%= link_to t('.new', :default => t("helpers.links.new")),
-             new_user_path,
-            :class => 'btn btn-primary' %>
+<%= paginate @users %>
+<p><strong><%= t('total', count: @users.count )%></strong></p>

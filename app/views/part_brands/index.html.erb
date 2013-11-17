@@ -13,20 +13,15 @@
         <td><%= link_to part_brand.name, part_brand_path(part_brand) %></td>
         <td>
           <%= t(:total, count: part_brand.parts.size) %><br/>
-          <ul>
-          <% part_brand.parts.limit(5).each do |part| %>
-            <li><%= link_to part.number, part_path(part) %></li>
-          <% end %>
-          </ul>
         </td>
         <td>
           <%= link_to t('edit'),
-                      edit_part_brand_path(part_brand), :class => 'btn btn-mini' %>
+                      edit_part_brand_path(part_brand), :class => 'btn btn-mini' if can? :update, part_brand %>
           <%= link_to t('destroy'),
                       part_brand_path(part_brand),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
+                      :class => 'btn btn-mini btn-danger' if can? :destroy, part_brand %>
         </td>
       </tr>
     <% end %>
@@ -35,4 +30,4 @@
 
 <%= link_to t('new_part_brand'),
             new_part_brand_path,
-            :class => 'btn btn-primary' %>
+            :class => 'btn btn-primary' if can? :create, PartBrand %>

@@ -11,7 +11,7 @@ class AutoSubmodel
   paginates_per 5
 
   field :name, type: String
-  field :motoroil_cap, type: Integer, default: 4
+  field :motoroil_cap, type: Float, default: 4
   field :engine_displacement, type: String
   field :remark, type: String
   field :engine_model, type: String
@@ -68,5 +68,16 @@ class AutoSubmodel
     end
     sts
   end
+  
+  def hengst_filters(filter_type)
+    hengst_brand = PartBrand.find_or_create_by name: I18n.t(:hengst)
+    filter_type = PartType.find_or_create_by name: I18n.t(filter_type)
+    s = ''
+    self.parts.where( part_brand_id: hengst_brand.id, part_type_id: filter_type.id ).each do |p|
+      s += p.number + ';'
+    end
+    s
+  end
+  
   paginates_per 30
 end

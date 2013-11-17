@@ -7,8 +7,10 @@
     <li><a href="#tab3" data-toggle="tab"><%= t(:search_by_order) %></a></li>
     <li><a href="#tab4" data-toggle="tab"><%= t(:search_by_partbatch) %></a></li>
     <div class="pull-right">
-      <%= link_to new_storehouse_partbatches_path(@storehouse), :class => 'btn btn-success' do %>
-        <i class="icon-plus-sign"></i>&nbsp<%= t('storehouse_in') %>
+      <% if can? :create, Partbatch %>
+        <%= link_to new_storehouse_partbatches_path(@storehouse), :class => 'btn btn-success', :target => '_blank' do %>
+          <i class="icon-plus-sign"></i>&nbsp<%= t('storehouse_in') %>
+        <% end %>
       <% end %>
     </div>
   </ul>
@@ -16,9 +18,9 @@
     <div class="tab-pane active" id="tab1">
       <%= form_tag @storehouse, :method => 'get', :id => "partbatches_search_by_part", :class => 'form-inline' do %>
       <div class="controls">
-        <%= collection_select :part, :type_id, PartType.all, :id, :name, {:include_blank => t(:all_part_types)}, {:rel => part_types_path, :class => 'control'} %>
-        <%= collection_select :part, :brand_id, PartBrand.all, :id, :name, {:include_blank => t(:all_part_brands)}, {:class => 'control'} %>
-        <%= collection_select :part, :id, Part.all.asc(:number), :id, :number, {:include_blank => t(:all_part_numbers)}, {:class => 'control'} %>
+        <%= collection_select :partbatch_part, :type_id, PartType.all, :id, :name, {:include_blank => t(:all_part_types)}, {:rel => part_types_path, :class => 'control'} %>
+        <%= collection_select :partbatch_part, :brand_id, PartBrand.all, :id, :name, {:include_blank => t(:all_part_brands)}, {:class => 'control'} %>
+        <%= render 'partbatches/part_number_search' %>
         <%= submit_tag t(:submit), class: 'btn btn-primary' %>
       </div>
       <% end %>

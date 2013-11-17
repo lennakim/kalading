@@ -24,7 +24,7 @@
     <% if @order.auto_submodel %>
     <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: @order.auto_submodel.full_name %></p>
     <% else %>
-    <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: t(:choose_auto_model) %></p>
+    <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: t(:choose_auto_submodel) %></p>
     <% end %>
     <p><%= f.button :submit, t(:next), "data-role" => "button", "data-theme" => 'b' %></p>
   </div>

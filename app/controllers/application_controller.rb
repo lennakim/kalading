@@ -22,19 +22,11 @@ class ApplicationController < ActionController::Base
   helper_method :mobile_device?
   
   def after_sign_in_path_for(user)
-    if mobile_device?
-      orders_path
-    else
-      storehouses_path
-    end
+    orders_path
   end
 
   def after_sign_out_path_for(user)
-    if mobile_device?
-      orders_path
-    else
-      storehouses_path
-    end
+    orders_path
   end
   
   attr_accessor :current_operator

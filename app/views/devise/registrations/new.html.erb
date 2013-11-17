@@ -4,7 +4,7 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :role, collection: User::ROLES, value_method: :to_s, label_method:  :to_friendly, prompt: t('choose_role') %>
+    <%= f.input :roles, collection: User::ROLES, label_method: lambda { |s| t(User::ROLE_STRINGS[s]) }, value_method: :to_i, prompt: t('choose_role'), as: :check_boxes %>
     <%= f.input :name, :required => true %>
     <%= f.input :phone_num, :required => true %>
     <%= f.input :email, :required => true, :autofocus => true %>

@@ -1,12 +1,14 @@
 class PartsController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
+  load_and_authorize_resource
   
   # GET /parts
   # GET /parts.json
   def index
-    if params[:search] != ''
-      @parts = Part.search(:number, params[:search])
+    if params[:search] && params[:search] != ''
+      s = params[:search].split('').join(".*")
+      @parts = Part.any_of({ :number => /.*#{s}.*/i })
     else
       @parts = Part.all
     end
@@ -19,11 +21,11 @@ class PartsController < ApplicationController
         @parts = @parts.where(part_brand: PartBrand.find(params[:part_search][:brand_id]))
       end
     end
-    @parts = @parts.page params[:page]
-
+    @parts = @parts.any_in( _id: Urlinfo.all.distinct("part_id") ) if params[:has_urlinfo]
+    
     respond_to do |format|
-      format.html # index.html.erb
-      format.js # index.html.erb
+      format.html {@parts = @parts.page params[:page]}
+      format.js   {@parts = @parts.page params[:page]}
       format.json { render json: @parts }
     end
   end
@@ -35,7 +37,8 @@ class PartsController < ApplicationController
     @auto_submodels = @part.auto_submodels.page(params[:page])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
+      format.js
       format.json { render json: @part }
     end
   end
@@ -79,7 +82,7 @@ class PartsController < ApplicationController
 
     respond_to do |format|
       if @part.update_attributes(params[:part])
-        format.html { redirect_to @part, notice: 'Part was successfully updated.' }
+        format.html { redirect_to parts_url, notice: 'Part was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -122,7 +125,6 @@ class PartsController < ApplicationController
     end
 
     @auto_submodel = AutoSubmodel.find(params[:auto][:auto_submodel_id])
-    @part.auto_submodels << @auto_submodel
     @auto_submodel.parts << @part
     @auto_submodels = @part.auto_submodels
   end

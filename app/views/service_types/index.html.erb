@@ -26,13 +26,13 @@
         </td>
         <td><%=l service_type.created_at %></td>
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_service_type_path(service_type), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          <%= link_to t('edit'),
+                      edit_service_type_path(service_type), :class => 'btn btn-mini' if can? :update, service_type %>
+          <%= link_to t('destroy'),
                       service_type_path(service_type),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
+                      :class => 'btn btn-mini btn-danger' if can? :destroy, service_type %>
         </td>
       </tr>
     <% end %>
@@ -41,4 +41,4 @@
 
 <%= link_to t('create_service_type'),
             new_service_type_path,
-            :class => 'btn btn-primary' %>
+            :class => 'btn btn-primary' if can? :create, ServiceType  %>

@@ -1,6 +1,7 @@
 class PartBrandsController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
+  load_and_authorize_resource
   
   # GET /part_brands
   # GET /part_brands.json

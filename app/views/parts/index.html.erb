@@ -1,6 +1,6 @@
 <%- model_class = Part -%>
 <div class="page-header">
-  <%= link_to t('new_part'), new_part_path, :class => 'btn btn-primary pull-right' %>
+  <%= link_to t('new_part'), new_part_path, :class => 'btn btn-primary pull-right', :target => '_blank' if can? :create, Part %>
   
   <%= form_tag parts_path, :method => 'get', :id => "parts_search", :class => 'form-inline' do %>
     <%= collection_select :part_search, :type_id, PartType.all, :id, :name, {:include_blank => t(:all_part_types)}, {:rel => part_types_path, :class => 'control'} %>
@@ -8,6 +8,10 @@
     <%= label_tag :search, t('part_number'), class: 'control-label' %>
     <%= text_field_tag :search, params[:search], class: 'control' %>
     <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
+    <p>
+      <%= check_box_tag "has_urlinfo", "1", false, {:id => "checkbox-urlinfo"} %>
+      <%= label_tag "checkbox-urlinfo", t(:view_has_urlinfo), {class: "checkbox inline"} %>
+    </p>
   <% end %>
   <div id="parts"><%= render 'parts' %></div>
 </div>

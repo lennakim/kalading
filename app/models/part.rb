@@ -33,21 +33,19 @@ class Part
   validates :part_type_id, presence: true
   validates :capacity, presence: true
   
-  def self.search(k, v)
-    if k && v && v.size > 0
-      vv = v.scan(/[A-Z,a-z]+|\d+/i).join '.*'
-      any_of({ k => /.*#{vv}.*/i })
-    else
-      all
-    end
-  end
-
   def total_remained_quantity
     rq = 0
     self.partbatches.each do |pb|
       rq += pb.remained_quantity
     end
     rq
+  end
+  
+  def as_json(options = nil)
+    h = super :except => [:updated_at, :created_at, :auto_submodel_ids, :version, :modifier_id, :price, :part_brand_id, :part_type_id, :match_rule, :spec, :order_ids, :capacity]
+    h[:urlinfos_attributes] = self.urlinfos
+    h[:brand_name] = self.part_brand.name
+    h
   end
   paginates_per 10
 end

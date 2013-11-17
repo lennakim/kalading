@@ -1,0 +1,3 @@
+$("#part_part_brand_id, #partbatch_part_brand_id").val("<%= @part.part_brand._id %>");
+$("#partbatch_part_type_id").val("<%= @part.part_type._id %>");
+$("#partbatch_part_id").html("<%= escape_javascript( options_for_select(@part.part_brand.parts.asc(:number).map {|p| [p.number, p.id]})) %>").val("<%= @part._id %>");

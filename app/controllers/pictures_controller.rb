@@ -2,7 +2,7 @@ class PicturesController < ApplicationController
   before_filter :check_for_mobile, :only => [:new, :edit, :index, :show]
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
-  
+  load_and_authorize_resource
   
   # GET /pictures
   # GET /pictures.json

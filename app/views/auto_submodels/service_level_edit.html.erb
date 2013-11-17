@@ -1,0 +1,33 @@
+<div class="page-header">
+  <h2><%= t(:batch_edit_service_level) %></h2>
+</div>
+
+<%= form_tag auto_submodels_service_level_modify_path, :method => :post do %>
+  <div class="control-group select">
+    <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+    </div>
+  </div>
+  <div class="control-group select">
+    <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+      <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
+    </div>
+  </div>
+
+    <div class="control-group select">
+    <%= label_tag :auto_model_service_level, t('choose_serv_level'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :auto_model, :service_level, AutoSubmodel::SERV_LEVEL, :to_s, :to_friendly, {}, {:class => 'control'} %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <input type="submit" value="<%= t(:save) %>" class="btn btn-primary"/>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                auto_submodels_path, :class => 'btn' %>
+  </div>
+
+<% end %>

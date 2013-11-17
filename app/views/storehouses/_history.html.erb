@@ -7,7 +7,7 @@
         <%= pb.part.part_type.name + ': ' + pb.part.part_brand.name + ' ' + pb.part.number + ', ' %>
         <%= t(:total, count: ht.modified['quantity']) %>&nbsp
       <% end %>
-      <%= link_to ht.modifier.name, ht.modifier %>
+      <%= link_to ht.modifier.name, ht.modifier if ht.modifier %>
     <% elsif ht.action == 'update' %>  
       <li class="media-body">
       <% if ht.modified['remained_quantity'] > ht.original['remained_quantity'] %>
@@ -19,7 +19,7 @@
         <%= pb.part.part_type.name + ': ' + pb.part.part_brand.name + ' ' + pb.part.number + ', ' %>
       <% end %>
       <%= t(:total, count: (ht.modified['remained_quantity'] - ht.original['remained_quantity']).abs) %>&nbsp
-      <%= link_to ht.modifier.name, ht.modifier %>
+      <%= link_to ht.modifier.name, ht.modifier if ht.modifier %>
       <%= link_to t(:print), print_storehouse_out_path(@storehouse, ht), {:class => 'btn btn-mini btn-info'} if ht.modified['remained_quantity'] < ht.original['remained_quantity'] %></a>
       </li>
     <% end %>    

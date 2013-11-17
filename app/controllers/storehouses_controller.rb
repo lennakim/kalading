@@ -1,7 +1,7 @@
 class StorehousesController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
-  
+  load_and_authorize_resource
 
   # GET /storehouses
   # GET /storehouses.json
@@ -24,18 +24,18 @@ class StorehousesController < ApplicationController
       pbs << pb if pb
     else
       pbs = @storehouse.partbatches.desc(:created_at)
-      if params[:part] # search by part
-        if params[:part][:type_id] != ''
-          part_type = PartType.find params[:part][:type_id]
+      if params[:partbatch_part] # search by part
+        if params[:partbatch_part][:type_id] != ''
+          part_type = PartType.find params[:partbatch_part][:type_id]
           pbs = pbs.select { |pb| pb.part.part_type == part_type } if part_type
         end
-        if params[:part][:brand_id] != ''
-          part_brand = PartBrand.find params[:part][:brand_id]
+        if params[:partbatch_part][:brand_id] != ''
+          part_brand = PartBrand.find params[:partbatch_part][:brand_id]
           pbs = pbs.select { |pb| pb.part.part_brand == part_brand } if part_brand
         end
-        if params[:part][:id] != ''
-          part = Part.find params[:part][:id]
-          pbs = pbs.select { |pb| pb.part == part } if part
+        if params[:part_number] && params[:part_number] != ''
+          parts = Part.where(number: params[:part_number])
+          pbs = pbs.select { |pb| parts.include? pb.part }
         end
       end
   

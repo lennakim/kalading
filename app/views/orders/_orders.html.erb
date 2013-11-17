@@ -6,7 +6,7 @@
   <% end %>
 
   <%= paginate @orders, remote: true %>
-  <% if !params[:phone_num] && !params[:car_location] %>
+  <% if !params[:phone_num] && !params[:car_location] && Order.count > 10 %>
     <%= simple_form_for orders_path, method: :get, remote: true, :html => { :class => 'form-inline', :id => 'order-page-num-form' } do |f| %>
       <span><%= t(:di) %></span><input type="text" class="input-mini" name="page" placeholder="<%= t(:page_num) %>" value="<%= params[:page] %>"/><span><%= t(:page) %></span>
     <% end %>
@@ -37,7 +37,7 @@
       <% @orders.each do |order| %>
         <tr class="<%= colors[ i % colors.length] %>">
         <% i += 1 %>
-          <td><%= link_to order.seq, order, {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window' } %></td>
+          <td><%= order.seq %></td>
           <td><%= t(Order::STATE_STRINGS[order.state]) %></td>
           <td><%= l order.serve_datetime if order.serve_datetime %></td>
           <td>
@@ -84,10 +84,13 @@
           <td><%= humanized_money_with_symbol order.price %></td>
           <td><%=l order.created_at %></td>
           <td>
-            <% if params[:phone_num] or params[:car_location] %>
-              <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
-            <% else %>
-              <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
+            <%= link_to t(:detail), order, {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window', :class => 'btn btn-info btn-mini' } %>
+            <% if can? :update, Order %>
+              <% if params[:phone_num] or params[:car_location] %>
+                <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
+              <% else %>
+                <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
+              <% end %>
             <% end %>
           </td>
         </tr>

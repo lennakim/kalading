@@ -10,7 +10,7 @@
       <a class="brand" href="#">Kalading</a>
       <div class="container-fluid nav-collapse">
         <ul class="nav">
-          <% if ['storehouses', 'parts', 'part_types', 'part_brands', 'suppliers'].include? params[:controller] %>
+          <% if ['storehouses', 'parts', 'part_types', 'part_brands', 'suppliers', 'partbatches'].include? params[:controller] %>
           <li class="active">
           <% else %>
           <li>
@@ -39,7 +39,7 @@
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('user_menu'), users_path  %>
+          <%= link_to t('employees_menu'), users_path  %>
           </li>
           
           <% if ['service_types'].include? params[:controller] %>
@@ -59,7 +59,7 @@
         </ul>
         <%= link_to t('log_out'), destroy_user_session_path, :method => :delete, :class => 'btn btn-info btn-small pull-right' if current_user %>
         <%= link_to t(:edit_account), edit_user_registration_path, :class => 'btn btn-info btn-small pull-right' if current_user %>
-        <%= link_to t(:welcome_user, n: current_user.name), orders_path, :class => 'btn btn-inverse btn-link active btn-small pull-right' if current_user %>
+        <%= link_to t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ), orders_path, :class => 'btn btn-inverse btn-link active btn-small pull-right' if current_user %>
       </div><!--/.nav-collapse -->
     </div>
   </div>

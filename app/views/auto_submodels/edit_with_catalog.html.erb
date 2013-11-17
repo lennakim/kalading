@@ -1,0 +1,76 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? yield(:title) : "Kalading" %></title>
+  <%= csrf_meta_tags %>
+
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+  <![endif]-->
+
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <style>
+    body {
+      padding-top: 0px;
+      padding-bottom: 50px;
+    }
+  </style>
+
+  <!-- For all other devices -->
+  <!-- Size should be 32 x 32 pixels -->
+  <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+
+  <%= javascript_include_tag "application" %>
+</head>
+
+<body>
+  <div class="navbar navbar-fixed-bottom">
+    <div class="navbar-inner">
+      <div class="container-fluid">
+        <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <div class="container-fluid nav-collapse">
+          <a id="submit-form-btn" class="btn btn-primary pull-left"><%= t(:save_auto_model) %></a>
+          <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+          <span id="ajax-message" class="pull-right"><%= t(:cross_domain_script_enable_hint) %></span>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+  
+  <h4><%= t(:auto_submodels_edit_with_catalog) %></h4>
+
+  <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span3">
+            <div class="control-group">
+              <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
+              <div class="controls" id="search-car-model">
+                <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_models_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" minlength="4" , data-msg-required="<%= t(:auto_model_required) %>", data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
+                <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+              </div>
+              <label for="car-model-info" class="control-label"><%= t(:choose_auto_model) %></label>
+              <div class="controls" id="car-model-info">
+                <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+                <%= collection_select :auto, :auto_model, @auto_submodel.auto_model.auto_brand.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+                <%= collection_select :auto, :auto_submodel_id, @auto_submodel.auto_model.auto_submodels.all, :id, :name, {}, {:rel => "/auto_submodels", :class => 'control'} %>
+              </div>
+            </div>
+            
+            <div id="submodel-form">
+              <%= render 'form1' %>
+            </div>
+          </div>
+          <div class="span9">
+          <iframe src="http://www.hengst-katalog.de/zh-hans/search/extended" width="100%" height="900" id='catalog-frame'></iframe>
+          </div>
+        </div>
+  </div>
+  <span id="copy-btn-text" style="display: none;"><%= t(:copy_catalog_model_attrs) %></span>
+  <span id="chrome-not-used" style="display: none;"><%= t(:chrome_not_used) %></span>
+</body>

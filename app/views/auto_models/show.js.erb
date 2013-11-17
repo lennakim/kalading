@@ -1,8 +1,14 @@
-$("#auto_auto_submodel_id, #order_auto_submodel_id").html("<%= escape_javascript( options_for_select(@auto_model.auto_submodels.map {|p| [p.name, p.id]})) %>").prop('selectedIndex',0);;
 $("#auto_submodels").html("<%= escape_javascript(render("auto_submodels/auto_submodels")) %>");
+$("#auto_submodel_year").val("<%= t(:all) %>");
+
+$("#auto_auto_submodel_id, #order_auto_submodel_id, #auto_submodel_id").html("<%= escape_javascript( options_for_select(@auto_model.auto_submodels.asc(:name).map {|p| [p.name, p.id]})) %>").prop('selectedIndex',0);
+$("#auto_model_brand_id").val("<%= @auto_model.auto_brand.id %>")
+$("#auto_auto_model").html("<%= escape_javascript( options_for_select(@auto_model.auto_brand.auto_models.asc(:name).map {|p| [p.name, p.id]})) %>").val("<%= @auto_model.id %>")
+$("#submodel-form").html("<%= escape_javascript(render("auto_submodels/form1")) %>");
+
 $("#select-parts").html("<%= escape_javascript(render("auto_submodels/parts")) %>");
 $("#select-service-types").html("<%= escape_javascript(render("auto_submodels/service_types")) %>");
-$("#auto_submodel_year").val("<%= t(:all) %>");
+
 <% if mobile_device? %>
 $("#order_auto_submodel_id").selectmenu('refresh');
 <% end %>

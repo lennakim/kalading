@@ -41,15 +41,18 @@ Kalading::Application.routes.draw do
 
   devise_for :users, :skip => [:registrations]                                          
   as :user do
-    get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'    
-    put 'users/:id' => 'devise/registrations#update', :as => 'user_registration'            
+    get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
+    put 'users_update/:id' => 'devise/registrations#update', :as => 'user_registration'
   end
     
   get 'users' => 'users#index', :as => :users
   get 'users/:id/edit' => 'users#edit', :as => :edit_user
   get 'users/:id' => 'users#show', :as => :user
-  get 'users_new' => 'users#new', :as => :new_user
   put 'users/:id' => 'users#update', :as => :update_user
+  get 'users_new' => 'users#new', :as => :new_user
+  post 'users' => 'users#create', :as => :create_user
+  delete 'users/:id' => 'users#destroy', :as => :user
+  
   post 'partbatches/:id' => 'partbatches#inout', :as => :inout_partbatch
   get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
   get 'parts/:id/edit_part_automodel' => 'parts#edit_part_automodel', :as => :edit_part_automodel
@@ -62,6 +65,14 @@ Kalading::Application.routes.draw do
   post 'orders/:id/uploadpic' => 'orders#uploadpic', :as => :uploadpic_orders
   get 'orders/:id/duplicate' => 'orders#duplicate', :as => :duplicate_order
   match 'orders_calcprice' => 'orders#calcprice', via: [:put, :post], :as => :calcprice_order
+
+  get 'auto_submodels_oil_cap_edit' => 'auto_submodels#oil_cap_edit', :as => :auto_submodels_oil_cap_edit
+  post 'auto_submodels_oil_cap_modify' => 'auto_submodels#oil_cap_modify', :as => :auto_submodels_oil_cap_modify
+  get 'auto_submodels_service_level_edit' => 'auto_submodels#service_level_edit', :as => :auto_submodels_service_level_edit
+  post 'auto_submodels_service_level_modify' => 'auto_submodels#service_level_modify', :as => :auto_submodels_service_level_modify
+
+  get 'auto_submodels_edit_with_catalog' => 'auto_submodels#edit_with_catalog', :as => :auto_submodels_edit_with_catalog
+
   # singular for weixin app
   get 'o' => 'orders#order', :as => :o
   post 'order2' => 'orders#order2', :as => :o2

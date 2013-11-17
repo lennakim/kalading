@@ -1,0 +1,33 @@
+<div>
+  <%= simple_nested_form_for @auto_submodel, :html => { :class => 'form-vertical' }, remote: true do |f| %>
+    <%= label_tag :auto_model_name, t('auto_model_name'), class: 'control-label' %>
+    <div class="controls">
+      <input type="text" class="string optional" id="auto_model_name" name="auto_model_name" value="<%= @auto_submodel.auto_model.name %>"/>
+    </div>
+
+    <%= f.input :name, label: t(:auto_submodel_name)  %>
+    <%= f.input :motoroil_cap, label: t('motoroil_capacity') %>
+    <%= f.input :engine_displacement, label: t('engine_displacement') %>
+    <%= f.input :engine_model, label: t('engine_model') %>
+
+    <%= label_tag :hengst_oil_filter, t(:hengst_oil_filter), class: 'control-label' %>
+    <div class="controls">
+      <input type="text" class="string optional" id="hengst_oil_filter" name="hengst_oil_filter" value="<%= @auto_submodel.hengst_filters(:oil_filter) %>"/>
+    </div>
+    <%= label_tag :hengst_fuel_filter, t(:hengst_fuel_filter), class: 'control-label' %>
+    <div class="controls">
+      <input type="text" class="string optional" id="hengst_fuel_filter" name="hengst_fuel_filter" value="<%= @auto_submodel.hengst_filters(:fuel_filter) %>"/>
+    </div>
+    <%= label_tag :hengst_air_filter, t(:hengst_air_filter), class: 'control-label' %>
+    <div class="controls">
+      <input type="text" class="string optional" id="hengst_air_filter" name="hengst_air_filter" value="<%= @auto_submodel.hengst_filters(:air_filter) %>"/>
+    </div>
+    <%= label_tag :hengst_cabin_filter, t(:hengst_cabin_filter), class: 'control-label' %>
+    <div class="controls">
+      <input type="text" class="string optional" id="hengst_cabin_filter" name="hengst_cabin_filter" value="<%= @auto_submodel.hengst_filters(:cabin_filter) %>"/>
+    </div>
+
+
+    <%= f.input :match_rule, label: t('match_rule'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
+  <% end %>
+</div>

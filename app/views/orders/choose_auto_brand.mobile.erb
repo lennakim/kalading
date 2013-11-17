@@ -7,13 +7,24 @@
   
   <div data-role="content">
     <%= debug session %>
+    <% letter_to_li = {} %>
+    <% i = 0 %>
     <ul data-role="listview" id="auto-brand-list" data-autodividers="true">
-      <% AutoBrand.all.each do |ab| %>
-      <li pinyin="<%= ab.name_pinyin.capitalize[0] %>">
+      <% AutoBrand.asc(:name_pinyin).each do |ab| %>
+      <li pinyin="<%= ab.name_pinyin.capitalize[0] %>" id="brand-li-<%= i %>">
         <%= link_to ab.name, o_path %>
+        <% letter_to_li[ab.name_pinyin.capitalize[0]] = "brand-li-#{i}" if !letter_to_li[ab.name_pinyin.capitalize[0]] %>
+        <% i += 1 %>
       </li>
       <% end %>
     </ul>
   </div>
+
+  <div style="position:fixed; left:95%; top:15px; height: 100%; opacity: 0.5; z-index: 30;" id="">
+    <% letter_to_li.each do |k, v| %>
+      <span data-target="#<%= v %>" class="first-letter-nav"><%= k %></span><br>
+    <% end %>
+  </div>
+  
 </div>
 <% end %>

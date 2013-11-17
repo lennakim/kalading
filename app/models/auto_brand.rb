@@ -11,7 +11,8 @@ class AutoBrand
   paginates_per 5
 
   field :name, type: String
-  attr_accessible :name
+  field :name_pinyin, type: String
+  attr_accessible :name, :name_pinyin
   
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
   
@@ -27,7 +28,4 @@ class AutoBrand
     end
   end
   
-  def name_pinyin
-    PinYin.of_string(self.name)[0]
-  end
 end

@@ -13,5 +13,13 @@ $ ->
         $.get($("#parts_search").attr("action"), $("#parts_search").serialize(), null, "script")
         return false
     $(document).on "submit", "#page-num-form", ->
-        $.get($("#parts_search").attr("action"), $("#parts_search").serialize() + '&' + $(this).serialize(), null, "script")
+        s = $("#parts_search").serialize() + '&' + $(this).serialize()
+        s += ('&' + $('#checkbox-urlinfo').prop('name') + '=1') if $('#checkbox-urlinfo').is(':checked')
+        $.get($("#parts_search").attr("action"), s, null, "script")
         return false
+    $(document).on "submit", "#parts_search", ->
+        return false
+    $(document).on "click", "#checkbox-urlinfo", ->
+        s = $("#parts_search").serialize() + '&' + $("#page-num-form").serialize()
+        s += ('&' + $(this).prop('name') + '=1') if $(this).is(':checked')
+        $.get($("#parts_search").attr("action"), s, null, "script")

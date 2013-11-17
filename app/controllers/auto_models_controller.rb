@@ -1,6 +1,7 @@
 class AutoModelsController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
+  load_and_authorize_resource
   
   def convert_to_pinyin
     AutoModel.all.each do |m|

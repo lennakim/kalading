@@ -1,0 +1,27 @@
+<div class="page-header">
+  <h2><%= t(:batch_edit_oil_cap) %></h2>
+</div>
+
+<%= form_tag auto_submodels_oil_cap_modify_path, :method => :post do %>
+  <div class="control-group select">
+    <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+    </div>
+  </div>
+  <p>
+    <%= label_tag :engine_displacement, t('engine_displacement'), class: 'control-label' %>
+    <%= text_field_tag :engine_displacement, '', class: 'control' %>
+  </p>
+  <p>
+    <%= label_tag :motoroil_cap, t('motoroil_capacity'), class: 'control-label' %>
+    <%= text_field_tag :motoroil_cap, '', class: 'control' %>
+  </p>
+  
+  <div class="form-actions">
+    <input type="submit" value="<%= t(:save) %>" class="btn btn-primary"/>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                auto_submodels_path, :class => 'btn' %>
+  </div>
+
+<% end %>

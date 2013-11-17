@@ -32,6 +32,11 @@ location ~ ^/(assets)/  {
   add_header Cache-Control public;
 }
 
+rake db:reseed
+import...
+rake db:mongoid:create_indexes
+
+
 == Deployment of new assets
 rm -rf public/assets
 RAILS_ENV=production bundle exec rake assets:precompile

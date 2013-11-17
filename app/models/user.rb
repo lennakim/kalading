@@ -40,12 +40,12 @@ class User
 
   field :name,    :type => String
   field :phone_num,    :type => String
-  field :role,    :type => String, :default => 'customer'
   field :phone_num2,    :type => String
   field :remark,    :type => String
   field :weixin_num,    :type => String
-
-  attr_accessible :name, :phone_num, :email, :role, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num
+  field :roles,    :type => Array, :default => [0]
+  
+  attr_accessible :name, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num
   
   has_and_belongs_to_many :autos
   accepts_nested_attributes_for :autos, :allow_destroy => true
@@ -56,14 +56,16 @@ class User
   
   validates_uniqueness_of :phone_num, :allow_blank => true
 
-  ROLES = %w[manager customer engineer administrator]
-  ROLES.each do |name|
-    def name.to_friendly
-      I18n.t(self)
-    end
+  ROLES = [0, 1, 2, 3, 4, 5, 6]
+  ROLE_STRINGS = %w[customer role_admin manager storehouse_admin data_admin engineer dispatcher]
+  
+  def role_str
+    self.roles.map {|s| I18n.t(User::ROLE_STRINGS[s.to_i])}.join(',')
   end
   
   def name_and_order_num
     self.name + I18n.t(:order_num, n: self.serve_orders.where(:state.lt => 6).count )
   end
+  
+  paginates_per 10
 end

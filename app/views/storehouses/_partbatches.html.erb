@@ -13,17 +13,17 @@
   <tbody>
     <% @partbatches.each do |pb| %>
       <tr>
-        <td><%= link_to pb.part.number, part_path(pb.part) %></td>
+        <td><%= link_to pb.part.number, part_path(pb.part), :target => '_blank' %></td>
         <td><%= pb.part.part_brand.name %></td>
         <td><%= pb.part.part_type.name %></td>
         <td id="<%= pb.id %>"><%= pb.remained_quantity %></td>
-        <td><%= link_to pb.id.to_s, pb %></td>
+        <td><%= link_to pb.id.to_s, pb, :target => '_blank' %></td>
         <td><%= l pb.created_at %></td>
         <td>
           <%= link_to t('storehouse_out'), edit_partbatch_path(pb),
-              {:class => 'btn btn-mini', :remote => true, :disabled => (pb.remained_quantity <= 0), 'data-toggle' => "modal", 'data-target' => '#modal-window'} %>
+              {:class => 'btn btn-mini', :remote => true, :disabled => (pb.remained_quantity <= 0), 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can? :update, pb %>
           <%= link_to t('storehouse_back'), edit_partbatch_path(pb, back: true),
-              {:class => 'btn btn-mini', :remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window'} %>
+              {:class => 'btn btn-mini', :remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can? :update, pb %>
         </td>
       </tr>
     <% end %>

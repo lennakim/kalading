@@ -1,9 +1,11 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
+  load_and_authorize_resource
+  
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
+    @users = User.page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb
@@ -42,10 +44,11 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
-
+    # rails 3 bug
+    params[:user][:roles].reject!(&:blank?)
     respond_to do |format|
       if @user.save
-        format.html { redirect_to users_url, notice: I18n.t(:new_user_notify, name: @user.name, role: t(@user.role) ) }
+        format.html { redirect_to users_url, notice: I18n.t(:new_user_notify, name: @user.name, role: @user.roles.map(&:t) ) }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
@@ -58,10 +61,10 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find(params[:id])
-
+    params[:user][:roles].reject!(&:blank?)
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to users_url, notice: 'User was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

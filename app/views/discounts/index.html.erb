@@ -1,6 +1,6 @@
 <%- model_class = Discount -%>
 <div>
-  <%= link_to t(:new_discount), new_discount_path, :class => 'btn btn-primary pull-right' %>
+  <%= link_to t(:new_discount), new_discount_path, :class => 'btn btn-primary pull-right' if can? :create, Discount %>
 </div>
 <table class="table table-striped">
   <thead>
@@ -27,12 +27,12 @@
         <% end %>
         <td>
           <%= link_to t('edit'),
-                      edit_discount_path(discount), :class => 'btn btn-mini' %>
+                      edit_discount_path(discount), :class => 'btn btn-mini' if can? :update, discount %>
           <%= link_to t('destroy'),
                       discount_path(discount),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
+                      :class => 'btn btn-mini btn-danger' if can? :destroy, discount %>
         </td>
       </tr>
     <% end %>

@@ -1,6 +1,7 @@
 class ServiceTypesController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
+  load_and_authorize_resource
   
   # GET /service_types
   # GET /service_types.json

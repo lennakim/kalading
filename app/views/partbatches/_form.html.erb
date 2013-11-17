@@ -1,20 +1,24 @@
-
 <%= simple_form_for @partbatch, :url => storehouse_partbatches_path(@storehouse), :html => { :class => 'form-horizontal' } do |f| %>
-
+  <div class="control-group">
+    <label for="search-part-number" class="control-label"><%= t(:number_query) %></label>
+    <div class="controls" id="search-part-number">
+      <%= render 'part_number_search' %>
+    </div>
+  </div>
   <div class="control-group select">
-    <%= label_tag :part_brand_id, t('choose_brand'), class: 'control-label' %>
+    <%= label_tag :part_part_brand_id, t('choose_brand'), class: 'control-label' %>
     <div class="controls">
-      <%= collection_select :part, :brand_id, PartBrand.all, :id, :name, {}, {:rel => "/part_brands", :class => 'control'} %>
+      <%= collection_select :part, :part_brand_id, PartBrand.all, :id, :name, {}, {:rel => "/part_brands", :class => 'control'} %>
     </div>
   </div>
 
-  <%= f.association :part, collection: PartBrand.first.parts.asc(:number), label: t('choose_part_number'), label_method: :number %>
+  <%= f.association :part, collection: @part.part_brand.parts.asc(:number), label: t('choose_part_number'), label_method: :number, include_blank: false %>
   <%= f.association :supplier, collection: Supplier.all, label: t('choose_supplier') %>
   <%= f.input :price, label: t('buy_price') %>
   <%= f.input :quantity, input_html: {type: 'number', value: '1', step:'1', min: '1', max: '99999'}, label: t('quantity') %>
   <%= f.association :user, collection: User.all, label: t('operator') %>
 <div class="form-actions">
-    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= f.button :submit, t(:ok), :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 partbatches_path, :class => 'btn' %>
   </div>

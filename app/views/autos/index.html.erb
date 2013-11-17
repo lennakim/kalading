@@ -1,6 +1,6 @@
 <%- model_class = Auto -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1><%=t 'auto' %></h1>
 </div>
 
 <%= form_tag autos_path, :method => 'get', :id => "autos_search" do %>
@@ -13,4 +13,4 @@
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_auto_path,
-            :class => 'btn btn-primary' %>
+            :class => 'btn btn-primary' if can? :create, Auto %>

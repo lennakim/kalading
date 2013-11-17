@@ -1,8 +1,8 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:order, :order2]
-  before_filter :authenticate_user!,  :except => [:uploadpic] if !Rails.env.importdata?
+  before_filter :authenticate_user!,  :except => [:uploadpic, :order, :order2] if !Rails.env.importdata?
   before_filter :set_default_operator
-
+  
   # GET /orders
   # GET /orders.json
   def index
