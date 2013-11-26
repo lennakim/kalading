@@ -1,0 +1,24 @@
+<div data-role="page">
+  <div data-role="header">
+    <h1><%= t(:service_types) %></h1>
+    <a href="<%= order_begin_path(format: :mobile) %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+  </div>
+  
+  <div data-role="content">
+  <%= simple_nested_form_for @order, :html => { class: "form-horizontal", data: {transition: 'slide'} },  :method => 'get', :url => order_pay_path(format: :mobile) do |f| %>
+    <fieldset data-role="controlgroup" data-iconpos="right">
+      <% @order.auto_submodel.applicable_service_types.each do |st| %>
+        <%= check_box_tag "order[service_type_ids][]", "#{st.id}", @order.service_types.include?(st), {:id => "#{st.id}"} %>
+        <label for="<%= st.id %>"><%= st.name + ' ' + (humanized_money_with_symbol st.price)%></label>
+      <% end %>
+    </fieldset>
+    <fieldset class="ui-grid-a">
+      <div class="ui-block-a"><%= f.button :submit, t(:service_only), "data-role" => "button", "data-theme" => 'b', name: "service_only", value: t(:service_only) %></div>	   
+      <div class="ui-block-b"><%= f.button :submit, t(:puchase_part), "data-role" => "button", "data-theme" => 'b', name: "choose_parts", value: t(:puchase_part) %></div>
+    </fieldset>
+    <div class="ui-bar ui-bar-e"><%= t(:puchase_part_hint) %></div>
+    </fieldset>
+  <% end %>
+  <span id="service-type-at-least-one" style="display: none;"><%= t(:service_type_at_least_one) %></span>
+  </div>
+</div>

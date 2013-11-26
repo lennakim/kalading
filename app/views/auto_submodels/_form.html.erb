@@ -6,7 +6,7 @@
     <%= f.input :name, label: t('auto_submodel_name')  %>
     <%= f.association :auto_model, collection: AutoModel.all, prompt: t('choose_model'), label: t('owner_auto_model') %>
   <% end %>
-  <%= f.input :service_level, label: t('service_level'), collection: AutoSubmodel::SERV_LEVEL, value_method: :to_s, label_method:  :to_friendly, prompt: t('choose_serv_level') %>
+  <%= f.input :service_level, collection: AutoSubmodel::SERV_LEVEL, label_method: lambda { |s| t(AutoSubmodel::SERV_LEVEL_STRINGS[s]) }, value_method: :to_i, prompt: t('choose_serv_level') %>
   <%= f.input :motoroil_cap, label: t('motoroil_capacity') %>
   <%= f.input :engine_displacement, label: t('engine_displacement') %>
   <%= f.input :engine_model, label: t('engine_model') %>

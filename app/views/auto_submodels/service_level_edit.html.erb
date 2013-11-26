@@ -20,7 +20,7 @@
     <div class="control-group select">
     <%= label_tag :auto_model_service_level, t('choose_serv_level'), class: 'control-label' %>
     <div class="controls">
-      <%= collection_select :auto_model, :service_level, AutoSubmodel::SERV_LEVEL, :to_s, :to_friendly, {}, {:class => 'control'} %>
+      <%= collection_select :auto_model, :service_level, AutoSubmodel::SERV_LEVEL, :to_i, lambda { |s| t(AutoSubmodel::SERV_LEVEL_STRINGS[s]) }, {}, {:class => 'control'} %>
     </div>
   </div>
 

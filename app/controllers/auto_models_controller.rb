@@ -5,7 +5,7 @@ class AutoModelsController < ApplicationController
   
   def convert_to_pinyin
     AutoModel.all.each do |m|
-      full_name = m.auto_brand.name + ' ' + m.name.delete(m.auto_brand.name)
+      full_name = m.auto_brand.name + ' ' + m.name
       full_name.gsub!(/\s+/, "")
       m.update_attributes({
                       full_name_pinyin: PinYin.of_string(full_name).join

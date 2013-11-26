@@ -1,0 +1,14 @@
+<div data-role="page">
+  <div data-role="header">
+    <h1><%= @auto_brand.name_with_jinkou %></h1>
+    <a href="<%= order_choose_service_path(format: :mobile, choose_auto_brand: 1) %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+  </div>
+  
+  <div data-role="content" class="ui-content">
+    <ul data-role="listview">
+      <% @auto_brand.auto_models.asc(:full_name_pinyin).each do |am| %>
+      <li><%= link_to am.name, order_choose_auto_submodel_path(format: :mobile, auto_model: am.id), {"data-transition" => "slide"}  %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

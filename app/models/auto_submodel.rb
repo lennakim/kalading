@@ -15,17 +15,15 @@ class AutoSubmodel
   field :engine_displacement, type: String
   field :remark, type: String
   field :engine_model, type: String
-  field :service_level, type: String, default: 'maintain'
+  field :service_level, type: Integer, default: 0
   field :match_rule, type: String
+  field :year_range, type: String
   
   index({ name: 1 })
-        
-  SERV_LEVEL = %w[maintain cantmaintain needconfirm]
-  SERV_LEVEL.each do |name|
-    def name.to_friendly
-      I18n.t(self)
-    end
-  end
+  index({ service_level: 1 })
+
+  SERV_LEVEL = [0, 1, 2]
+  SERV_LEVEL_STRINGS = %w[maintain cantmaintain needconfirm]
 
   belongs_to :auto_model
   has_and_belongs_to_many :parts
@@ -36,7 +34,7 @@ class AutoSubmodel
   accepts_nested_attributes_for :pictures, :allow_destroy => true
   
   attr_accessible :name, :auto_model_id, :part_ids, :auto_ids, :motoroil_cap, :engine_displacement,
-    :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes
+    :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes, :year_range
 
   validates :name, presence: true
   validates :auto_model_id, presence: true
@@ -54,7 +52,7 @@ class AutoSubmodel
   end
 
   def full_name
-    self.auto_model.auto_brand.name + ' ' + self.auto_model.name.delete(self.auto_model.auto_brand.name) + ' ' + self.name
+    self.auto_model.auto_brand.name_with_jinkou + ' ' + self.auto_model.name + ' ' + self.name
   end
   
   def applicable_service_types

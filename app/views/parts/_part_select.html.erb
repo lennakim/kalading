@@ -1,0 +1,18 @@
+<div>
+  <%= form_tag update_part_select_path, :method => 'post', :id => "parts_select", :class => 'form-inline', :remote => true do %>
+    <div class="control-group select">
+      <div class="controls">
+        <%= collection_select :part_match, :brand_id, @part_brands, :id, :name, {:include_blank => false}, {:rel => parts_by_brand_and_type_path, :class => 'control'} %>
+        <%= collection_select :part_match, :id, @parts, :id, :number, {:include_blank => false}, {:class => 'control'} %>
+        <input type="text" name="part_match[new_number]" value="" placeholder="<%= t(:new_part_hint) %>" class="input-large"/>
+        <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
+        <input type="hidden" name="part_match[part_type_id]" value="<%= @part.part_type_id %>" id="part-match-type"/>
+      </div>
+    </div>
+    <div class="form-actions">
+      <input type="submit" value="<%= t(:ok) %>" class="btn btn-primary"/>
+      <a class="btn cancel-part-select-btn"><%= t(:cancel) %></a>
+    </div>
+  <% end %>
+</div>
+

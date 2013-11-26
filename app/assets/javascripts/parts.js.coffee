@@ -23,3 +23,6 @@ $ ->
         s = $("#parts_search").serialize() + '&' + $("#page-num-form").serialize()
         s += ('&' + $(this).prop('name') + '=1') if $(this).is(':checked')
         $.get($("#parts_search").attr("action"), s, null, "script")
+    $(document).on "change", "#part_match_brand_id", ->
+        s = 'brand_id=' + $(this).val() + '&type_id=' + $("#part-match-type").prop('value')
+        $.get($(this).attr("rel"), s, null, "script")

@@ -28,4 +28,9 @@ class AutoBrand
     end
   end
   
+  def name_with_jinkou
+    n = self.name.split[0]
+    n += ('(' + I18n.t(:jinkou) + ')') if self.name.index I18n.t(:jinkou)
+    n
+  end
 end

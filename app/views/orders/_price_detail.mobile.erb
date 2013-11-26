@@ -1,0 +1,23 @@
+<div class="ui-grid-a">
+  <div class="ui-block-a"><div class="ui-bar ui-bar-e"><%= t(:services_price) %></div></div>
+  <div class="ui-block-b"><div class="ui-bar ui-bar-e"><%= humanized_money_with_symbol(@order.calc_service_price) %></div></div>
+</div>
+
+<% if @order.parts.exists? %>
+<div class="ui-grid-a">
+  <div class="ui-block-a"><div class="ui-bar ui-bar-e"><%= t(:parts_price) %></div></div>
+  <div class="ui-block-b"><div class="ui-bar ui-bar-e"><%= humanized_money_with_symbol(@order.calc_parts_price) %></div></div>
+</div>
+<% end %>
+
+<% if @order.discounts.exists? %>
+<div class="ui-grid-a">
+  <div class="ui-block-a"><div class="ui-bar ui-bar-e"><%= t(:discount_info) %></div></div>
+  <div class="ui-block-b"><div class="ui-bar ui-bar-e"><%= @order.discounts.first.name %></div></div>
+</div>
+<% end %>
+
+<div class="ui-grid-a">
+  <div class="ui-block-a"><div class="ui-bar ui-bar-e"><%= t(:summary_price) %></div></div>
+  <div class="ui-block-b"><div class="ui-bar ui-bar-e"><%= humanized_money_with_symbol(@order.calc_price) %></div></div>
+</div>

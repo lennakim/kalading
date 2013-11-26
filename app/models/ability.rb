@@ -27,7 +27,10 @@ class Ability
 
     if user.roles.include? ROLE_ID('data_admin')
       can :read, :all
-      can [:create, :update, :destroy], [Auto, AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier]
+      can [:create, :update, :destroy], [Auto, AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier, Storehouse, Discount]
+      can :inout, Partbatch
+      can [:match, :part_select, :update_part_select, :parts_by_brand_and_type, :delete_match], Part
+      
     end
 
     if user.roles.include? ROLE_ID('engineer')

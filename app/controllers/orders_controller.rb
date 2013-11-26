@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
-  before_filter :check_for_mobile, :only => [:order, :order2]
-  before_filter :authenticate_user!,  :except => [:uploadpic, :order, :order2] if !Rails.env.importdata?
+  before_filter :check_for_mobile, :only => [:order_begin, :choose_service]
+  before_filter :authenticate_user!, :except => [:uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview] if !Rails.env.importdata?
   before_filter :set_default_operator
   
   # GET /orders
@@ -81,17 +81,21 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    params[:order][:car_num].upcase! if params[:order][:car_num]
     @order = Order.new(params[:order])
+    init_order_from_session
+    save_order_to_session
+    @order.car_num.upcase!
     @order.discounts << Discount.find(@order.discount_num)
     respond_to do |format|
       if @order.save
-        Auto.find_or_create_by(car_location: params[:order][:car_location], car_num: params[:order][:car_num], auto_submodel_id: @order.auto_submodel.id )
+        Auto.find_or_create_by(car_location: @order.car_location, car_num: @order.car_num, auto_submodel_id: @order.auto_submodel.id )
         format.html { redirect_to orders_url, notice: I18n.t(:order_created, seq: @order.seq) }
         format.json { render json: @order, status: :created, location: @order }
+        format.mobile { render  :action => "show.mobile.erb"}
       else
         format.html { render action: "new" }
         format.json { render json: @order.errors, status: :unprocessable_entity }
+        format.mobile { return render json: t(:order_create_failed), status: :bad_request }
       end
     end
   end
@@ -200,27 +204,114 @@ class OrdersController < ApplicationController
   end
  
   def init_order_from_session
-    @order = Order.new
+    @order ||= Order.new
     @order.auto_submodel = AutoSubmodel.find(session[:auto_m_id]) if session[:auto_m_id]
     @order.car_location = session[:car_l] if session[:car_l]
     @order.car_num = session[:car_n] if session[:car_n]
+    @order.service_type_ids = session[:svc_type_ids] if session[:svc_type_ids]
+    @order.serve_datetime = session[:serve_datetime] if session[:serve_datetime]
+    @order.address = session[:address] if session[:address]
+    @order.phone_num = session[:phone_num] if session[:phone_num]
+    @order.name = session[:name] if session[:name]
+    @order.pay_type = session[:pay_type] if session[:pay_type]
+    @order.reciept_type = session[:reciept_type] if session[:reciept_type]
+    @order.reciept_title = session[:reciept_title] if session[:reciept_title]
+    @order.part_ids = session[:part_ids] if session[:part_ids]
   end
 
-  def order
+  def save_order_to_session
+    session[:auto_m_id] = @order.auto_submodel.id if @order.auto_submodel
+    session[:car_l] = @order.car_location if @order.car_location
+    session[:car_n] =  @order.car_num if @order.car_num 
+    session[:svc_type_ids] =  @order.service_type_ids
+    session[:address] =  @order.address if @order.address
+    session[:phone_num] =  @order.phone_num if @order.phone_num
+    session[:name] =  @order.name if @order.name
+    session[:serve_datetime] =  @order.serve_datetime if @order.serve_datetime
+    session[:pay_type] =  @order.pay_type if @order.pay_type
+    session[:reciept_type] =  @order.reciept_type if @order.reciept_type
+    session[:reciept_title] =  @order.reciept_title if @order.reciept_title
+    session[:part_ids] =  @order.part_ids
+  end
+
+  def order_begin
     init_order_from_session
-    @order.serve_datetime = DateTime.now.since(1.days)
+    @order.auto_submodel = AutoSubmodel.find(params[:auto_submodel]) if params[:auto_submodel]
   end
   
-  def order2
-    @order = Order.new
-    @order.auto_submodel = AutoSubmodel.find(params[:order][:auto_submodel])
-    @order.car_location = params[:order][:car_location]
-    @order.car_num = params[:order][:car_num]
-    session[:auto_m_id] = params[:order][:auto_submodel_id]
-    session[:car_l] = params[:order][:car_location]
-    session[:car_n] = params[:order][:car_num]
+  def choose_service
+    init_order_from_session
+    if params[:order]
+      @order.car_location = params[:order][:car_location] if params[:order][:car_location]
+      @order.car_num = params[:order][:car_num] if params[:order][:car_num]
+      @order.auto_submodel = AutoSubmodel.find(params[:order][:auto_submodel]) if params[:order][:auto_submodel]
+    end
+    save_order_to_session
+    if @order.car_num.length != 6
+      return render json: t(:car_num_required), status: :bad_request
+    end
+
     if params[:choose_auto_brand]
       return render 'choose_auto_brand'
     end
+  end
+
+  def choose_auto_model
+    @auto_brand = AutoBrand.find params[:auto_brand]
+  end
+
+  def choose_auto_submodel
+    @auto_model = AutoModel.find params[:auto_model]
+  end
+
+  def pay
+    init_order_from_session
+    @order.service_type_ids = nil if params[:service_only]
+    @order.service_type_ids = params[:order][:service_type_ids] if params[:order] && params[:order][:service_type_ids]
+    @order.part_ids = params[:order][:part_ids] if params[:order] && params[:order][:part_ids]
+    @order.part_ids = nil if params[:service_only]
+    save_order_to_session
+    if @order.service_type_ids.empty?
+      return render json: t(:service_type_at_least_one), status: :bad_request
+    end
+
+    if params[:choose_parts]
+      return render 'choose_parts'
+    end
+  end
+  
+  def discount_apply
+    init_order_from_session
+    @discount = Discount.find params[:discount]
+    @order.discounts << @discount if @discount
+  end
+  
+  def order_preview
+    init_order_from_session
+    if params[:order]
+      @order.phone_num = params[:order][:phone_num]
+      @order.name = params[:order][:name]
+      @order.address = params[:order][:address]
+      @order.serve_datetime = params[:order][:serve_datetime]
+    end
+    save_order_to_session
+    if @order.phone_num.length <= 0
+      return render json: t(:phone_num_required), status: :bad_request
+    end
+    if @order.address.length <= 0
+      return render json: t(:address_required), status: :bad_request
+    end
+  end
+
+  def order_finish
+    init_order_from_session
+    if params[:order]
+      @order.discount_num = params[:order][:discount_num]
+      @order.pay_type = params[:order][:pay_type]
+      @order.reciept_type = params[:order][:reciept_type]
+      @order.reciept_title = params[:order][:reciept_title]
+    end
+    @order.serve_datetime = DateTime.now.since(1.days) if !@order.serve_datetime
+    save_order_to_session
   end
 end

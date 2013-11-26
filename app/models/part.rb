@@ -9,7 +9,6 @@ class Part
 
   field :number, type: String
   field :capacity, type: Integer, default: 1
-  field :match_rule, type: String
   field :spec, type: String
   field :price, type: Money, default: 0.0
   

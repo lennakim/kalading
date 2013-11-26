@@ -28,7 +28,7 @@
           <%= link_to t(:view), auto_submodel, :target => '_blank' %>
         </td>
         <td><%= auto_submodel.autos.count %></td>
-        <td><%= t(auto_submodel.service_level) %></td>
+        <td><%= t(AutoSubmodel::SERV_LEVEL_STRINGS[auto_submodel.service_level]) %></td>
         <td><%= auto_submodel.match_rule %></td>
         <td><%= l auto_submodel.updated_at %></td>
         <td>

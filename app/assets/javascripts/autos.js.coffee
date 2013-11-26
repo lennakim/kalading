@@ -21,9 +21,3 @@ $ ->
     
     $(document).ajaxComplete (event, request, settings) ->
         $('.loading-indicator').hide()
-
-$(document).bind 'pageinit', ->
-    $("span.first-letter-nav").click ->
-        $('html,body').animate 
-            scrollTop: $($(this).data('target')).offset().top,
-            'slow'

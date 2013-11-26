@@ -1,0 +1,129 @@
+<ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="e">
+  <% if preview %>
+  <li data-role="list-divider">
+      <h2><%= t(:order_preview_hint) %></h2>
+  </li>
+  <% else %>
+    <li>
+      <div class="ui-grid-a">
+        <div class="ui-block-a"><%= t(:order_id) %></div>
+        <div class="ui-block-b"><%= @order.seq %></div>
+      </div>
+    </li>
+  <% end %>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:car_num) %></div>
+      <div class="ui-block-b"><%= @order.car_location + @order.car_num %></div>
+    </div>
+  </li>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:auto_submodel) %></div>
+      <div class="ui-block-b"><%= @order.auto_submodel.full_name %></div>
+    </div>
+  </li>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:service_types) %></div>
+      <div class="ui-block-b">
+        <% @order.service_types.each do |st| %>
+        <h2><%= st.name %></h2>
+        <% end %>
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:services_price) %></div>
+      <div class="ui-block-b"><%= humanized_money_with_symbol(@order.calc_service_price) %></div>
+    </div>
+  </li>
+
+  <% if @order.parts.exists? %>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:part_infos) %></div>
+      <div class="ui-block-b">
+        <% @order.parts_by_type.each do |k, v| %>
+          <h2><%= k.name %></h2>
+          <% v.each do |part| %>
+            <p><%= part.part_brand.name + part.number + ' ' + (humanized_money_with_symbol part.price)%></p>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </li>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:parts_price) %></div>
+      <div class="ui-block-b"><%= humanized_money_with_symbol(@order.calc_parts_price) %></div>
+    </div>
+  </li>
+  <% end %>
+  
+  <% if @order.discounts.exists? %>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><div class="ui-bar ui-bar-e"><%= t(:discount_info) %></div>
+      <div class="ui-block-b"><%= @order.discounts.first.name %></div>
+    </div>
+  </li>
+  <% end %>
+
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:summary_price) %></div>
+      <div class="ui-block-b"><%= humanized_money_with_symbol(@order.calc_price) %></div>
+    </div>
+  </li>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:pay_type) %></div>
+      <div class="ui-block-b"><%= t(Order::PAY_TYPE_STRINGS[@order.pay_type]) %></div>
+    </div>
+  </li>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:reciept_type) %></div>
+      <div class="ui-block-b"><%= t(Order::RECIEPT_TYPE_STRINGS[@order.reciept_type]) %></div>
+    </div>
+  </li>
+  <% if @order.reciept_type != 0 %>
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:reciept_type) %></div>
+      <div class="ui-block-b"><%=  @order.reciept_title %></div>
+    </div>
+  </li>
+  <% end %>
+  
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:phone_num) %></div>
+      <div class="ui-block-b"><%=  @order.phone_num %></div>
+    </div>
+  </li>
+
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:client_given_name) %></div>
+      <div class="ui-block-b"><%=  @order.name %></div>
+    </div>
+  </li>
+
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:address) %></div>
+      <div class="ui-block-b"><%=  @order.address %></div>
+    </div>
+  </li>
+
+  <li>
+    <div class="ui-grid-a">
+      <div class="ui-block-a"><%= t(:serve_datetime) %></div>
+      <div class="ui-block-b"><%=  l @order.serve_datetime %></div>
+    </div>
+  </li>
+</ul>

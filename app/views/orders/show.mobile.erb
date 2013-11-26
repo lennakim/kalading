@@ -1,81 +1,10 @@
-<div data-role="page" id="show-page0">
+<div data-role="page">
   <div data-role="header">
-    <h1><%= t(:view_order) %></h1>
+    <h1><%= t(:order_detail) %></h1>
   </div>
   
   <div data-role="content">
-    <ul data-role="listview">
-      <li data-role="list-divider"><%= t(:basic_infos) %></li>
-      <li>
-        <dl class="dl-horizontal">
-          <dt><strong><%= t(:state) %>:</strong></dt>
-          <dd><%= t(Order::STATE_STRINGS[@order.state]) %></dd>
-          <dt><strong><%= t(:car_num) %>:</strong></dt>
-          <dd><%= @order.car_location + @order.car_num %></dd>
-          <dt><strong><%= t(:auto_submodel) %>:</strong></dt>
-          <dd><%= @order.auto_submodel.auto_model.auto_brand.name + @order.auto_submodel.auto_model.name + @order.auto_submodel.name %></dd>
-          <dt><strong><%= t(:service_item) %>:</strong></dt>
-          <dd>
-            <ul>
-              <% @order.service_types.each do |st| %>
-              <li><%= st.name %></li>
-              <% end %>
-            </ul>
-          </dd>
-          <% if !@order.buymyself %>
-            <dt><strong><%= t(:part_purchased) %>:</strong></dt>
-            <dd>
-              <ul>
-                <% @order.parts.each do |pi| %>
-                <li><%= pi.number %></li>
-                <% end %>
-              </ul>
-            </dd>
-          <% end %>
-          <dt><strong><%= t(:total_price) %>:</strong></dt>
-          <dd><%= humanized_money_with_symbol @order.price %>
-          </dd>
-          <dt><strong><%= t(:address) %>:</strong></dt>
-          <dd><%= t(@order.address) %></dd>
-          <dt><strong><%= t(:phone_num) %>:</strong></dt>
-          <dd><%= t(@order.phone_num) %></dd>
-          <dt><strong><%= t(:serve_datetime) %>:</strong></dt>
-          <dd><%= l @order.serve_datetime %></dd>
-        </dl>
-      </li>
-      <li data-role="list-divider"><%= t(:pic_infos) %></li>
-      <li><a href="#show-page1" data-transition="slide"><%= t(:view_pic) %><span class="ui-li-count" id="pic-count"><%= @order.pictures.size %></span></a></li>
-      <li><a href="#" onclick="window.uploadPic.clickOnAndroid('<%= @order.id.to_s %>');" data-transition="slide" id="upload-pic-btn"><%= t(:upload_pic) %></a></li>
-    </ul>
-  </div>
-
-  <div data-role="footer" data-position="fixed">
-    <div data-role="navbar">
-      <ul>
-        <li><%= link_to t(:orders), orders_path, :"data-icon" => "home", :"data-iconpos" => "top", :"data-ajax" => true %></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div data-role="page" id="show-page1">
-  <div data-role="header">
-    <h1><%= t(:view_order_pics) %></h1>
-    <a href="#show-page0" class="ui-btn-left" data-transition="slide"><%= t(:return) %></a>
-    <%= link_to t(:refresh), @order, id: "refresh-btn", class: "ui-btn-right", rel: "external" %>
-  </div>
-  
-  <div data-role="content">
-    <ul data-role="listview" id="pic-list">
-      <%= render 'pics' %>
-    </ul>
-  </div>
-  
-  <div data-role="footer" data-position="fixed">
-    <div data-role="navbar">
-      <ul>
-        <li><%= link_to t(:orders), orders_path, :"data-icon" => "home", :"data-iconpos" => "top", :"data-ajax" => true %></li>
-      </ul>
-    </div>
+    <div class="ui-bar ui-bar-e"><%= t(:order_created) %></div>
+    <%= render  :partial => 'order', locals: { preview: false } %>  
   </div>
 </div>

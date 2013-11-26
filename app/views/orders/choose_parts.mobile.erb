@@ -1,0 +1,23 @@
+<div data-role="page">
+  <div data-role="header">
+    <h1><%= t(:choose_parts) %></h1>
+    <a href="<%= order_choose_service_path(format: :mobile) %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+  </div>
+  
+  <div data-role="content">
+    <%= simple_nested_form_for @order, :html => { class: "form-horizontal", data: {transition: 'slide'} },  :method => 'get', :url => order_pay_path(format: :mobile) do |f| %>
+      <% @order.auto_submodel.parts_by_type.each do |k, v| %>
+        <h5><%= k.name %></h5>
+        <fieldset data-role="controlgroup" data-iconpos="right">
+        <% v.each do |part| %>
+          <%= check_box_tag "order[part_ids][]", "#{part.id}", @order.parts.include?(part), {:id => "#{part.id}"} %>
+          <label for="<%= part.id %>"><%= part.part_brand.name + part.number + ' ' + (humanized_money_with_symbol part.price)%></label>
+        <% end %>
+        </fieldset>
+      <% end %>
+
+      <%= f.button :submit, t(:next), "data-role" => "button", "data-theme" => 'b' %>
+    <% end %>
+    <span id="service-type-at-least-one" style="display: none;"><%= t(:service_type_at_least_one) %></span>
+  </div>
+</div>

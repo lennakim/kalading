@@ -1,30 +1,25 @@
-<%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
-<div data-role="page" id="page_new4">
+<div data-role="page">
   <div data-role="header">
-    <h1><%= t(:service_types) %></h1>
-    <a href="<%= o_path %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+    <h1><%= t(:choose_auto_brand) %></h1>
+    <a href="<%= order_begin_path(format: :mobile) %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
   </div>
   
-  <div data-role="content">
-    <%= debug session %>
+  <div data-role="content" class="ui-content-auro-brands">
     <% letter_to_li = {} %>
     <% i = 0 %>
     <ul data-role="listview" id="auto-brand-list" data-autodividers="true">
       <% AutoBrand.asc(:name_pinyin).each do |ab| %>
       <li pinyin="<%= ab.name_pinyin.capitalize[0] %>" id="brand-li-<%= i %>">
-        <%= link_to ab.name, o_path %>
+        <%= link_to ab.name_with_jinkou, order_choose_auto_model_path(format: :mobile, auto_brand: ab.id), {"data-transition" => "slide"} %>
         <% letter_to_li[ab.name_pinyin.capitalize[0]] = "brand-li-#{i}" if !letter_to_li[ab.name_pinyin.capitalize[0]] %>
         <% i += 1 %>
       </li>
       <% end %>
     </ul>
+    <div class="right-nav" id="">
+      <% letter_to_li.each do |k, v| %>
+        <span data-target="#<%= v %>" class="first-letter-nav"><%= k %></span><br>
+      <% end %>
+    </div>
   </div>
-
-  <div style="position:fixed; left:95%; top:15px; height: 100%; opacity: 0.5; z-index: 30;" id="">
-    <% letter_to_li.each do |k, v| %>
-      <span data-target="#<%= v %>" class="first-letter-nav"><%= k %></span><br>
-    <% end %>
-  </div>
-  
 </div>
-<% end %>

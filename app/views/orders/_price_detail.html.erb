@@ -3,13 +3,17 @@
     <p><strong>
       <%= t(:services_price) + ' ' + humanized_money_with_symbol(@order.calc_service_price) %>
     </strong></p>
+    <% if @order.calc_parts_price > 0 %>
     <p><strong>
       <%= t(:parts_price) + ' ' + humanized_money_with_symbol(@order.calc_parts_price) %>
     </strong></p>
+    <% end %>
+    <% if @order.discounts.exists? %>  
     <p><strong>
       <%= t(:discount_info) + ': ' %>
       <%= @order.discounts.first.name if @order.discounts.exists? %>
     </strong></p>
+    <% end %>
     <p><strong>
       <%= t(:summary_price) + " " + humanized_money_with_symbol(@order.calc_price) %>
     </strong></p>

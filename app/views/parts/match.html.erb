@@ -1,0 +1,11 @@
+<div class="page-header">
+  <h3><%=t 'match_part' %></h3>
+</div>
+<%= form_tag part_match_path, :method => 'get', :id => "parts_search", :class => 'form-inline' do %>
+  <%= label_tag :search, t('search_part_number'), class: 'control-label' %>
+  <%= text_field_tag :search, params[:search], class: 'control' %>
+  <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
+<% end %>
+<div id="part-match-table">
+  <%= render 'match' %>  
+</div>

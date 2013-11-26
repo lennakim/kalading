@@ -70,12 +70,24 @@ Kalading::Application.routes.draw do
   post 'auto_submodels_oil_cap_modify' => 'auto_submodels#oil_cap_modify', :as => :auto_submodels_oil_cap_modify
   get 'auto_submodels_service_level_edit' => 'auto_submodels#service_level_edit', :as => :auto_submodels_service_level_edit
   post 'auto_submodels_service_level_modify' => 'auto_submodels#service_level_modify', :as => :auto_submodels_service_level_modify
+  post 'auto_submodels_import' => 'auto_submodels#import', :as => :auto_submodels_import
 
   get 'auto_submodels_edit_with_catalog' => 'auto_submodels#edit_with_catalog', :as => :auto_submodels_edit_with_catalog
+  get 'part_match' => 'parts#match', :as => :part_match
+  get 'part_select/:id' => 'parts#part_select', :as => :part_select
+  post 'part_select/:id' => 'parts#update_part_select', :as => :update_part_select
+  get 'part_delete_match/:id' => 'parts#delete_match', :as => :part_delete_match
+  get 'parts_by_brand_and_type' => 'parts#parts_by_brand_and_type', :as => :parts_by_brand_and_type
 
   # singular for weixin app
-  get 'o' => 'orders#order', :as => :o
-  post 'order2' => 'orders#order2', :as => :o2
+  get 'm' => 'orders#order_begin', :as => :order_begin
+  get 'choose_service' => 'orders#choose_service', :as => :order_choose_service
+  get 'choose_auto_model' => 'orders#choose_auto_model', :as => :order_choose_auto_model
+  get 'choose_auto_submodel' => 'orders#choose_auto_submodel', :as => :order_choose_auto_submodel
+  get 'pay' => 'orders#pay', :as => :order_pay
+  get 'discount_apply' => 'orders#discount_apply', :as => :discount_apply
+  get 'order_preview' => 'orders#order_preview', :as => :order_preview
+  get 'order_finish' => 'orders#order_finish', :as => :order_finish
 
   resources :auto_brands
   root :to => 'orders#index'

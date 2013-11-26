@@ -1,9 +1,0 @@
-<% @submodel.parts_by_type.each do |k, v| %>
-  <h5><%= k.name %></h5>
-  <fieldset data-role="controlgroup">
-  <% v.each do |part| %>
-    <input type="radio" name="order_parts[<%= k.name %>]" id="<%= part.id %>_radio"/>
-    <label for="<%= part.id %>_radio"><%= part.part_brand.name + part.number %></label>
-  <% end %>
-  </fieldset>
-<% end %>

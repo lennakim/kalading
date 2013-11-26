@@ -112,5 +112,9 @@ class Order
     self.price
   end
 
+  def parts_by_type
+    self.parts.group_by {|part| part.part_type}
+  end
+
   paginates_per 10
 end

@@ -1,0 +1,1 @@
+$("#tr-<%= @part.id.to_s %>").html("<%= escape_javascript(render("part_match_row", part: @part)) %>");

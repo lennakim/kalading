@@ -8,20 +8,22 @@
         <%= t(:total, count: ht.modified['quantity']) %>&nbsp
       <% end %>
       <%= link_to ht.modifier.name, ht.modifier if ht.modifier %>
-    <% elsif ht.action == 'update' %>  
-      <li class="media-body">
-      <% if ht.modified['remained_quantity'] > ht.original['remained_quantity'] %>
-        <i class="icon-repeat"></i>&nbsp<%= l ht.created_at %>&nbsp<%= t(:storehouse_back) %>
-      <% else %>
-        <i class="icon-minus-sign"></i>&nbsp<%= l ht.created_at %>&nbsp<%= t(:storehouse_out) %>
+    <% elsif ht.action == 'update' %>
+      <% if ht.modified['remained_quantity'] && ht.original['remained_quantity'] %>
+        <li class="media-body">
+        <% if ht.modified['remained_quantity'] > ht.original['remained_quantity'] %>
+          <i class="icon-repeat"></i>&nbsp<%= l ht.created_at %>&nbsp<%= t(:storehouse_back) %>
+        <% else %>
+          <i class="icon-minus-sign"></i>&nbsp<%= l ht.created_at %>&nbsp<%= t(:storehouse_out) %>
+        <% end %>
+        <% if pb = Partbatch.find(ht.association_chain[0]['id']) %>
+          <%= pb.part.part_type.name + ': ' + pb.part.part_brand.name + ' ' + pb.part.number + ', ' %>
+        <% end %>
+        <%= t(:total, count: (ht.modified['remained_quantity'] - ht.original['remained_quantity']).abs) %>&nbsp
+        <%= link_to ht.modifier.name, ht.modifier if ht.modifier %>
+        <%= link_to t(:print), print_storehouse_out_path(@storehouse, ht), {:class => 'btn btn-mini btn-info'} if ht.modified['remained_quantity'] < ht.original['remained_quantity'] %></a>
+        </li>
       <% end %>
-      <% if pb = Partbatch.find(ht.association_chain[0]['id']) %>
-        <%= pb.part.part_type.name + ': ' + pb.part.part_brand.name + ' ' + pb.part.number + ', ' %>
-      <% end %>
-      <%= t(:total, count: (ht.modified['remained_quantity'] - ht.original['remained_quantity']).abs) %>&nbsp
-      <%= link_to ht.modifier.name, ht.modifier if ht.modifier %>
-      <%= link_to t(:print), print_storehouse_out_path(@storehouse, ht), {:class => 'btn btn-mini btn-info'} if ht.modified['remained_quantity'] < ht.original['remained_quantity'] %></a>
-      </li>
     <% end %>    
   <% end %>
 </ul>

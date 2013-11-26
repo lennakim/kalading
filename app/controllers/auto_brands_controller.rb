@@ -6,6 +6,13 @@ class AutoBrandsController < ApplicationController
   # GET /auto_brands
   # GET /auto_brands.json
   def index
+    #if AutoBrand.first.name_pinyin.nil?
+      AutoBrand.each do |ab|
+        ab.update_attributes({ name_pinyin: PinYin.of_string(ab.name).join} ) if ab.name_pinyin.nil?
+      end
+      #AutoBrand.find_by(name: '长城汽车(中国) / GREATWALL').update_attributes({name_pinyin: 'changchengqichezhongguoGREATWALL'})
+      #AutoBrand.find_by(name: '长安汽车(中国) / CHANGAN').update_attributes({name_pinyin: 'changanqichezhongguoCHANGAN'})
+    #end
     @auto_brands = AutoBrand.all.page params[:page]
 
     respond_to do |format|

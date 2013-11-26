@@ -1,11 +1,10 @@
-<%= simple_nested_form_for @order, :html => { class: "form-horizontal" }, :url => {:action => :order2} do |f| %>
-<div data-role="page" id="page_new1">
+<div data-role="page">
   <div data-role="header">
-    <h1><%= t(:auto_num_info) %></h1>
+    <h1><%= t(:Kalading) %></h1>
   </div>
   
   <div data-role="content">
-    <%= debug session %>
+  <%= simple_nested_form_for @order, :html => { class: "form-horizontal", data: {transition: 'slide'} },  :method => 'get', :url => order_choose_service_path(format: :mobile) do |f| %>
     <label for="div-location"><%= t(:car_num) %></label>
     <div class="ui-grid-a" id="div-location">
       <div class="ui-block-a" style="width:30%">
@@ -20,13 +19,13 @@
       </div>
     </div>
     <p><label for="div-link-to-autobrand"><%= t(:auto_submodel) %></label></p>
-    <%= f.input :auto_submodel, :as => :hidden %>
     <% if @order.auto_submodel %>
+    <%= f.input :auto_submodel, :as => :hidden, :input_html => { :value => @order.auto_submodel.id } %>
     <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: @order.auto_submodel.full_name %></p>
+    <p><%= f.button :submit, t(:next), "data-role" => "button", "data-theme" => 'b' %></p>
     <% else %>
     <p><%= f.button :submit, '', "data-role" => "button", "data-icon" => "arrow-r", "data-iconpos" => "right", name: "choose_auto_brand", value: t(:choose_auto_submodel) %></p>
     <% end %>
-    <p><%= f.button :submit, t(:next), "data-role" => "button", "data-theme" => 'b' %></p>
+  <% end %>
   </div>
 </div>
-<% end %>

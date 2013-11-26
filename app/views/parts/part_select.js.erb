@@ -1,0 +1,6 @@
+$(".td-part-match-form").hide();
+$("#td-<%= @part.id.to_s %>").html("<%= escape_javascript(render("part_select")) %>").fadeIn();
+$(".cancel-part-select-btn").click(function() {
+    $(".td-part-match-form").fadeOut();
+    return false;
+});

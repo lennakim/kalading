@@ -1,7 +1,7 @@
 class AutoSubmodelsController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:import]
   
   # GET /auto_submodels
   # GET /auto_submodels.json
@@ -178,16 +178,46 @@ class AutoSubmodelsController < ApplicationController
     return if !m
     if m
       m.auto_submodels.each do |sm|
-        sm.update_attributes({service_level: params[:auto_model][:service_level]})
+        sm.update_attributes({service_level: params[:auto_model][:service_level].to_i})
       end
     end
     respond_to do |format|
-      format.html { redirect_to auto_submodels_url, notice: t(:service_type_modified, n: m.full_name, c: m.auto_submodels.count, d: t(params[:auto_model][:service_level]) ) }
+      format.html { redirect_to auto_submodels_url, notice: t(:service_type_modified, n: m.full_name, c: m.auto_submodels.count, d: t(AutoSubmodel::SERV_LEVEL_STRINGS[params[:auto_model][:service_level].to_i]) ) }
       format.json { render json: {}, status: :created }
     end
   end
   
   def edit_with_catalog
     @auto_submodel = AutoSubmodel.first
+  end
+  
+  def import
+    ab = AutoBrand.find_or_create_by name: params[:brand_name]
+    
+    am = AutoModel.find_or_create_by name: params[:model_name], auto_brand_id: ab.id
+    full_name = am.auto_brand.name + ' ' + am.name
+    full_name.gsub!(/\s+/, "")
+    am.update_attributes({
+                    full_name_pinyin: PinYin.of_string(full_name).join
+                  })
+    
+    asm = AutoSubmodel.find_or_create_by :name => params[:submodel_name],
+      :auto_model_id => am.id,
+      :engine_model => params[:engine_model],
+      :year_range => params[:year]
+
+    if params[:parts]
+      params[:parts].each do |part_data|
+        pb = PartBrand.find_or_create_by name: part_data[:part_brand_name]
+        pt = PartType.find_or_create_by name: part_data[:part_type_name]
+        p = Part.find_or_create_by number: part_data[:number], part_brand_id: pb.id, part_type_id: pt.id
+        p.auto_submodels << asm
+        asm.parts << p
+      end
+    end
+    respond_to do |format|
+      format.html { redirect_to auto_submodels_url }
+      format.json { head :no_content }
+    end
   end
 end

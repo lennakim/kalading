@@ -1,6 +1,7 @@
 <%- model_class = Part -%>
 <div class="page-header">
   <%= link_to t('new_part'), new_part_path, :class => 'btn btn-primary pull-right', :target => '_blank' if can? :create, Part %>
+  <%= link_to t('match_part'), part_match_path, :class => 'btn pull-right', :target => '_blank' if can? :update, Part %>
   
   <%= form_tag parts_path, :method => 'get', :id => "parts_search", :class => 'form-inline' do %>
     <%= collection_select :part_search, :type_id, PartType.all, :id, :name, {:include_blank => t(:all_part_types)}, {:rel => part_types_path, :class => 'control'} %>

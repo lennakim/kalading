@@ -1,0 +1,34 @@
+<div data-role="page">
+  <div data-role="header">
+    <h1><%= t(:confirm_pay) %></h1>
+    <a href="<%= order_choose_service_path(format: :mobile) %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+  </div>
+  
+  <div data-role="content">
+    <div id="price-detail">
+      <%= render 'price_detail' %>
+    </div>
+    <%= simple_nested_form_for @order, :html => { class: "form-horizontal", data: {transition: 'slide'} },  :method => 'get', :url => order_finish_path(format: :mobile) do |f| %>
+      <fieldset data-role="controlgroup">
+        <p><%= t(:discount_num) %><%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%></p>
+        <%= f.input :discount_num, :label => false, input_html: { rel: discount_apply_path } %>
+      </fieldset>
+      <div id="discount-info"></div>
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <%= f.input :pay_type, label: t(:pay_type), collection: Order::PAY_TYPES, label_method:  lambda { |s| t(Order::PAY_TYPE_STRINGS[s]) }, include_blank: false, as: :radio_buttons %>
+      </fieldset>
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <%= f.input :reciept_type, label: t(:reciept_type), collection: Order::RECIEPT_TYPES, label_method:  lambda { |s| t(Order::RECIEPT_TYPE_STRINGS[s]) }, include_blank: false, as: :radio_buttons %>
+      </fieldset>
+      <fieldset data-role="controlgroup">
+        <% if @order.reciept_type == 0 %>
+          <%= f.input :reciept_title, label: t(:reciept_title), :wrapper_html => { :style => "display: none;" } %>
+        <% else %>
+          <%= f.input :reciept_title, label: t(:reciept_title) %>
+        <% end %>
+      </fieldset>
+      <%= f.button :submit, t(:next), "data-role" => "button", "data-theme" => 'b' %>
+    <% end %>
+    <span id="service-type-at-least-one" style="display: none;"><%= t(:service_type_at_least_one) %></span>
+  </div>
+</div>

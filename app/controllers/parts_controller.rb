@@ -128,4 +128,50 @@ class PartsController < ApplicationController
     @auto_submodel.parts << @part
     @auto_submodels = @part.auto_submodels
   end
+  
+  def match
+    pb = PartBrand.find_by name: I18n.t(:mann)
+    @parts = Part.where(part_brand_id: pb.id)
+    if params[:search] && params[:search] != ''
+      s = params[:search].split('').join(".*")
+      @parts = @parts.any_of({ :number => /.*#{s}.*/i })
+    end
+    @parts = @parts.asc(:part_type_id).page params[:page]
+  end
+  
+  def part_select
+    @part = Part.find(params[:id])
+    @part_brands = PartBrand.all.excludes(id: @part.part_brand.id)
+    #.select {|pb| pb.parts.where(part_type_id: @part.part_type.id).exists? }
+    @parts = @part_brands.first.parts.where(part_type_id: @part.part_type.id)
+  end
+  
+  def update_part_select
+    @part = Part.find(params[:id])
+    pb = PartBrand.find params[:part_match][:brand_id]
+    if params[:part_match][:new_number] != ''
+      @matched_part = Part.find_or_create_by(number: params[:part_match][:new_number], part_brand_id: pb.id, part_type_id: @part.part_type.id)
+    else
+      @matched_part = Part.find(params[:part_match][:id])
+    end
+    @part.auto_submodels.each do |asm|
+      asm.parts << @matched_part
+      @matched_part.auto_submodels << asm
+    end
+  end
+  
+  def parts_by_brand_and_type
+    pb = PartBrand.find params[:brand_id]
+    pt = PartType.find params[:type_id]
+    @parts = pb.parts.where(part_type_id: pt.id)
+  end
+  
+  def delete_match
+    @part = Part.find(params[:id])
+    @matched_part = Part.find(params[:match_id])
+    @part.auto_submodels.each do |asm|
+      asm.parts.delete @matched_part
+      @matched_part.auto_submodels.delete asm
+    end
+  end
 end

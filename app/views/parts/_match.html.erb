@@ -1,0 +1,27 @@
+<%= paginate @parts, remote: true %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= t 'manuf_number' %></th>
+      <th><%= t 'brand' %></th>
+      <th><%= t 'part_type' %></th>
+      <th><%= t 'equal_parts' %></th>
+      <th><%= t 'actions' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% colors = %w[success error info warning] %>
+    <% i = 0 %>
+    <% @parts.each do |part| %>
+      <tr class="<%= colors[ i % colors.length] %>" id="tr-<%= part.id %>">
+      <% i += 1 %>
+        <%= render 'part_match_row', part: part %>
+      </tr>
+      <tr>
+          <td class="td-part-match-form" colspan="14" style="display: none;" id="td-<%= part.id.to_s %>"></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @parts, remote: true %>
+<p><strong><%= t('total', count: @parts.count )%></strong></p>

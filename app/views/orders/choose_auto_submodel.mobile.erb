@@ -1,0 +1,14 @@
+<div data-role="page">
+  <div data-role="header">
+    <h1><%= @auto_model.name %></h1>
+    <a href="<%= order_choose_auto_model_path(format: :mobile, auto_brand: @auto_model.auto_brand.id) %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+  </div>
+  
+  <div data-role="content" class="ui-content">
+    <ul data-role="listview">
+      <% @auto_model.auto_submodels.asc(:name).each do |asm| %>
+      <li><%= link_to asm.name, order_begin_path(format: :mobile, auto_submodel: asm.id), {"data-transition" => "slide"}  %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

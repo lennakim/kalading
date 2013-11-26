@@ -1,0 +1,18 @@
+<div data-role="page">
+  <div data-role="header">
+    <h1><%= t(:contact_info) %></h1>
+    <a href="<%= order_pay_path(format: :mobile) %>" class="ui-btn-left" data-transition="slide" data-direction="reverse"><%= t(:prev) %></a>
+  </div>
+  
+  <div data-role="content">
+    <%= simple_nested_form_for @order, :html => { class: "form-horizontal", data: {transition: 'slide'} },  :method => 'get', :url => order_preview_path(format: :mobile) do |f| %>
+      <%= f.input :phone_num, label: t(:phone_num), input_html: { :class => 'numeric', :numeric => '', :minlength => "8", :maxlength => "13", :required => '', "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) } %>
+      <%= f.input :name, label: t(:client_given_name), input_html: {:minlength => "1", :maxlength => "128", :required => '', "data-msg-required" => t(:client_name_required), "data-msg-minlength" => t(:client_name_minlength), "data-msg-maxlength" => t(:client_name_minlength) } %>
+      <%= f.input :address, label: t(:address), input_html: {:minlength => "4", :maxlength => "128", :required => '', "data-msg-required" => t(:address_required), "data-msg-minlength" => t(:address_minlength), "data-msg-maxlength" => t(:address_minlength) } %>
+      <label for="datetime-l"><%= t(:serve_datetime) %></label>
+      <input type="datetime-local" name="order[serve_datetime]" id="datetime-l" value="<%= @order.serve_datetime.strftime('%Y-%m-%dT%H:%M:%S') %>" />
+      <%= f.button :submit, t(:order_preview), "data-role" => "button", "data-theme" => 'b' %>
+    <% end %>
+    <span id="service-type-at-least-one" style="display: none;"><%= t(:service_type_at_least_one) %></span>
+  </div>
+</div>

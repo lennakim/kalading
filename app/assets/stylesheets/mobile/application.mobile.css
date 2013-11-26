@@ -5,3 +5,25 @@
  *= require_self
  *= require jquery.mobile
 */
+
+div.right-nav
+{
+    position:fixed;
+    right:0;
+    width: 18px;
+    top:42px;
+    height: 100%;
+    opacity: 0.5;
+    z-index: 30;
+}
+
+div.ui-content-auro-brands
+{
+    margin-right: 18px;
+}
+
+span.first-letter-nav
+{
+    padding-left: 2px;
+    font-size: 18px;
+}
