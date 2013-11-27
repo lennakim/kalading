@@ -2,7 +2,7 @@ $("#auto_submodel_model_id, #auto_auto_model").html("<%= escape_javascript( opti
 $("#auto_auto_submodel_id, #order_auto_submodel_id").html("<%= escape_javascript( options_for_select(@auto_brand.auto_models.first.auto_submodels.asc(:name).map {|p| [p.name, p.id]})) %>").prop('selectedIndex',0);
 $("#submodel-form").html("<%= escape_javascript(render("auto_submodels/form1")) %>");
 $("#car-model-search").val("");
-$("#service_type_auto_model_id").html("<%= escape_javascript( options_for_select(@auto_brand.auto_models.map {|p| [p.name, p.id]})) %>");
+$("#service_type_auto_model_id").html("<%= escape_javascript( options_for_select(@auto_brand.auto_models.map {|p| [p.name, p.id]}.insert(0, t(:all_models)) )) %>");
 $("#auto_submodels").html("<%= escape_javascript(render("auto_submodels/auto_submodels")) %>");
 $("#select-parts").html("<%= escape_javascript(render("auto_submodels/parts")) %>");
 $("#select-service-types").html("<%= escape_javascript(render("auto_submodels/service_types")) %>");

@@ -2,14 +2,16 @@
   <% if ["edit", "update"].include? params[:action] %>
     <%= f.input :name, label: t('auto_submodel_name'), disabled: true  %>
     <%= f.association :auto_model, collection: AutoModel.all, prompt: t('choose_model'), label: t('owner_auto_model'), disabled: true %>
+    <%= f.input :check_status, label: t('check_status'), collection: AutoSubmodel::CHECK_STATUS, label_method: lambda { |s| t(AutoSubmodel::CHECK_STATUS_STRINGS[s]) }, value_method: :to_i, include_blank: false %>
   <% else %>
     <%= f.input :name, label: t('auto_submodel_name')  %>
     <%= f.association :auto_model, collection: AutoModel.all, prompt: t('choose_model'), label: t('owner_auto_model') %>
   <% end %>
-  <%= f.input :service_level, collection: AutoSubmodel::SERV_LEVEL, label_method: lambda { |s| t(AutoSubmodel::SERV_LEVEL_STRINGS[s]) }, value_method: :to_i, prompt: t('choose_serv_level') %>
+  <%= f.input :service_level, label: t('service_level'), collection: AutoSubmodel::SERV_LEVEL, label_method: lambda { |s| t(AutoSubmodel::SERV_LEVEL_STRINGS[s]) }, value_method: :to_i, prompt: t('choose_serv_level') %>
   <%= f.input :motoroil_cap, label: t('motoroil_capacity') %>
   <%= f.input :engine_displacement, label: t('engine_displacement') %>
   <%= f.input :engine_model, label: t('engine_model') %>
+  <%= f.input :year_range, label: t('year_range') %>
   <%= f.input :match_rule, label: t('match_rule'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
   <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
   

@@ -19,7 +19,8 @@
         <td><%= humanized_money_with_symbol service_type.price %></td>
         <td>
           <% if service_type.specific_auto_model %>
-            <%= link_to service_type.auto_model.name, auto_model_path(service_type.auto_model) %>
+            <%= link_to service_type.auto_brand.name, service_type.auto_brand if service_type.auto_brand %>
+            <%= link_to service_type.auto_model.name, service_type.auto_model if service_type.auto_model %>
           <% else %>
             <%= t(:all) %>
           <% end %>

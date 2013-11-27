@@ -6,6 +6,21 @@ class AutoSubmodelsController < ApplicationController
   # GET /auto_submodels
   # GET /auto_submodels.json
   def index
+    #asms1 = AutoSubmodel.any_of({year_range: /.*\s.*/})
+    #asms1.each do |asm1|
+    #  asms2 = AutoSubmodel.all_of :year_range.not => /.*\s.*/,
+    #    :name => asm1.name,
+    #    :auto_model_id => asm1.auto_model.id,
+    #    :engine_model => /.*#{asm1.engine_model}*/
+    #  if asms2.exists?
+    #    asm2 = asms2.first
+    #    asm1.update_attributes order_ids: asm2.order_ids | asm1.order_ids,
+    #      part_ids: asm2.part_ids | asm1.part_ids,
+    #      auto_ids: asm2.auto_ids | asm1.auto_ids
+    #    asm2.destroy
+    #  end
+    #end
+
     respond_to do |format|
       format.html {
         @auto_submodels = AutoSubmodel.asc(:created_at).page params[:page]
@@ -192,9 +207,9 @@ class AutoSubmodelsController < ApplicationController
   end
   
   def import
-    ab = AutoBrand.find_or_create_by name: params[:brand_name]
+    ab = AutoBrand.find_or_create_by name_mann: params[:brand_name]
     
-    am = AutoModel.find_or_create_by name: params[:model_name], auto_brand_id: ab.id
+    am = AutoModel.find_or_create_by name_mann: params[:model_name], auto_brand_id: ab.id
     full_name = am.auto_brand.name + ' ' + am.name
     full_name.gsub!(/\s+/, "")
     am.update_attributes({
@@ -203,8 +218,9 @@ class AutoSubmodelsController < ApplicationController
     
     asm = AutoSubmodel.find_or_create_by :name => params[:submodel_name],
       :auto_model_id => am.id,
-      :engine_model => params[:engine_model],
-      :year_range => params[:year]
+      :engine_model => params[:engine_model]
+
+    #asm.update_attributes match_rule: params[:limit]
 
     if params[:parts]
       params[:parts].each do |part_data|

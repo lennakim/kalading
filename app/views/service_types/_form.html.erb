@@ -3,13 +3,12 @@
   <%= f.input :price, label: t('price')%>
   <%= f.input :specific_auto_model, label: t(:specific_auto_model), as: :boolean %>
   <div id="service_type_auto_model_div">
-    <div class="control-group select">
-      <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
-      <div class="controls">
-        <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, { :selected => @service_type.auto_model.auto_brand.id }, {:rel => "/auto_brands", :class => 'control'}  %>
-      </div>
-    </div>
-    <%= f.association :auto_model, label: t(:auto_model), collection: @service_type.auto_model.auto_brand.auto_models, label_method: :name, selected: @service_type.auto_model.id, include_blank: false %>
+    <%= f.association :auto_brand, label: t(:choose_brand), collection: AutoBrand.all, label_method: :name, include_blank: false, input_html: {:rel => "/auto_brands"} %>
+    <% if @service_type.auto_brand %>
+      <%= f.association :auto_model, label: t(:auto_model), collection: @service_type.auto_brand.auto_models, label_method: :name, include_blank: t(:all_models) %>
+    <% else %>
+      <%= f.association :auto_model, label: t(:auto_model), collection: AutoBrand.first.auto_models, label_method: :name, include_blank: t(:all_models) %>
+    <% end %>
 </div>
 
   <div class="form-actions">

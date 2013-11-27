@@ -4,8 +4,8 @@ class AutoModelsController < ApplicationController
   load_and_authorize_resource
   
   def convert_to_pinyin
-    AutoModel.all.each do |m|
-      full_name = m.auto_brand.name + ' ' + m.name
+    AutoModel.each do |m|
+      full_name = m.auto_brand.name + m.name
       full_name.gsub!(/\s+/, "")
       m.update_attributes({
                       full_name_pinyin: PinYin.of_string(full_name).join
@@ -16,6 +16,15 @@ class AutoModelsController < ApplicationController
   # GET /auto_models
   # GET /auto_models.json
   def index
+    #convert_to_pinyin
+    #AutoModel.each do |m|
+    #  m.update_attributes name_mann: m.name
+    #end
+    
+    #AutoModel.each do |m|
+    #  m.update_attributes name: (m.name.gsub /(\/.*\|)/, '|')
+    #end
+    
     if params[:query] && params[:query] != ''
       params[:query] = PinYin.of_string(params[:query]).join
       params[:query].gsub!(/\s+/, "")
@@ -41,7 +50,7 @@ class AutoModelsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.js
-      format.json { render json: @auto_model }
+      format.json { render json: @auto_model.auto_submodels }
     end
   end
 

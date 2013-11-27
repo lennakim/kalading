@@ -43,12 +43,12 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(params[:user])
     # rails 3 bug
     params[:user][:roles].reject!(&:blank?)
+    @user = User.new(params[:user])
     respond_to do |format|
       if @user.save
-        format.html { redirect_to users_url, notice: I18n.t(:new_user_notify, name: @user.name, role: @user.roles.map(&:t) ) }
+        format.html { redirect_to users_url, notice: I18n.t(:new_user_notify, name: @user.name, role: @user.role_str ) }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }

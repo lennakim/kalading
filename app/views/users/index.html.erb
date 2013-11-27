@@ -8,6 +8,7 @@
     <tr>
       <th><%= t(:name) %></th>
       <th><%= t(:phone_num) %></th>
+      <th><%= t(:title) %></th>
       <th><%= t(:email) %></th>
       <th><%= t(:role) %></th>
       <th><%= t 'remark' %></th>
@@ -19,6 +20,7 @@
       <tr>
         <td><%= link_to user.name, user_path(user) %></td>
         <td><%= user.phone_num %></td>
+        <td><%= user.title %></td>
         <td><%= user.email %></td>
         <td>
           <ul>

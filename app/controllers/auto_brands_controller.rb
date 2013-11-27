@@ -1,3 +1,4 @@
+# encoding : utf-8
 class AutoBrandsController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
@@ -7,17 +8,43 @@ class AutoBrandsController < ApplicationController
   # GET /auto_brands.json
   def index
     #if AutoBrand.first.name_pinyin.nil?
-      AutoBrand.each do |ab|
-        ab.update_attributes({ name_pinyin: PinYin.of_string(ab.name).join} ) if ab.name_pinyin.nil?
-      end
+      #AutoBrand.each do |ab|
+      #  ab.update_attributes({ name_pinyin: PinYin.of_string(ab.name).join} ) if ab.name_pinyin.nil?
+      #end
       #AutoBrand.find_by(name: '长城汽车(中国) / GREATWALL').update_attributes({name_pinyin: 'changchengqichezhongguoGREATWALL'})
       #AutoBrand.find_by(name: '长安汽车(中国) / CHANGAN').update_attributes({name_pinyin: 'changanqichezhongguoCHANGAN'})
     #end
+    
+    #AutoBrand.each do |m|
+    #  m.update_attributes name_mann: m.name
+    #end
+
+    #AutoBrand.each do |m|
+    #  m.update_attributes name: (m.name.gsub /(\/.*\()/, '(')
+    #end
+
+
+    #AutoBrand.each do |m|
+    #  m.update_attributes name: (m.name.gsub /(\/.*)/, '')
+    #end
+
+    #AutoBrand.each do |m|
+    #  m.update_attributes name: (m.name.gsub /(\(中国\))/, '')
+    #end
+
+    #AutoBrand.each do |m|
+    #  m.update_attributes name: (m.name.strip)
+    #end
+
+    #AutoBrand.each do |m|
+    #  m.update_attributes name: (m.name.gsub /(\([A-Z,\.]+\))/, '')
+    #end
+
     @auto_brands = AutoBrand.all.page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @auto_brands }
+      format.json { render json: AutoBrand.all }
     end
   end
 
@@ -30,7 +57,7 @@ class AutoBrandsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.js
-      format.json { render json: @auto_brand }
+      format.json { render json: @auto_brand.auto_models }
     end
   end
 

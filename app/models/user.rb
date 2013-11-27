@@ -44,8 +44,9 @@ class User
   field :remark,    :type => String
   field :weixin_num,    :type => String
   field :roles,    :type => Array, :default => [0]
+  field :title, :default => ''
   
-  attr_accessible :name, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num
+  attr_accessible :name, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title
   
   has_and_belongs_to_many :autos
   accepts_nested_attributes_for :autos, :allow_destroy => true

@@ -2,13 +2,16 @@
 <table class="table table-striped table-bordered">
   <thead>
     <tr>
-      <th><%= t 'modelyear_displacement' %></th>
+      <th><%= t 'owner_auto_brand' %></th>
+      <th><%= t 'own_model' %></th>
+      <th><%= t 'auto_submodel_name' %></th>
       <th><%= t 'motoroil_capacity' %></th>
       <th><%= t 'engine_displacement' %></th>
       <th><%= t 'engine_model' %></th>
       <th><%= t 'auto_parts' %></th>
       <th><%= t 'auto_count' %></th>
       <th><%= t 'service_level' %></th>
+      <th><%= t 'check_status' %></th>
       <th><%= t 'match_rule' %></th>
       <th><%= t 'update_time' %></th>
       <th><%= t('actions') %></th>
@@ -20,7 +23,9 @@
     <% @auto_submodels.each do |auto_submodel| %>
       <tr class="<%= colors[ i % colors.length] %>">
       <% i += 1 %>
-        <td><%= link_to auto_submodel.full_name, auto_submodel_path(auto_submodel), :target => '_blank' %></td>
+        <td><%= link_to auto_submodel.auto_model.auto_brand.name, auto_submodel.auto_model.auto_brand, :target => '_blank' %></td>
+        <td><%= link_to auto_submodel.auto_model.name, auto_submodel.auto_model, :target => '_blank' %></td>
+        <td><%= link_to auto_submodel.name, auto_submodel, :target => '_blank' %></td>
         <td><%= auto_submodel.motoroil_cap %></td>
         <td><%= auto_submodel.engine_displacement %></td>
         <td><%= auto_submodel.engine_model %></td>
@@ -29,10 +34,11 @@
         </td>
         <td><%= auto_submodel.autos.count %></td>
         <td><%= t(AutoSubmodel::SERV_LEVEL_STRINGS[auto_submodel.service_level]) %></td>
+        <td><%= t(AutoSubmodel::CHECK_STATUS_STRINGS[auto_submodel.check_status]) %></td>
         <td><%= auto_submodel.match_rule %></td>
         <td><%= l auto_submodel.updated_at %></td>
         <td>
-          <%= link_to t('edit'), edit_auto_submodel_path(auto_submodel), :class => 'btn btn-mini', :target => '_blank' if can? :update, auto_submodel %>
+          <%= link_to t('edit'), edit_auto_submodel_path(auto_submodel), :class => 'btn btn-mini', :target => '_blank' if can? :update, auto_submodel && auto_submodel.check_status == 0%>
         </td>
       </tr>
     <% end %>

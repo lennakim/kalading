@@ -6,7 +6,7 @@ class ServiceTypesController < ApplicationController
   # GET /service_types
   # GET /service_types.json
   def index
-    @service_types = ServiceType.all
+    @service_types = ServiceType.asc(:name)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -63,11 +63,14 @@ class ServiceTypesController < ApplicationController
   # PUT /service_types/1.json
   def update
     @service_type = ServiceType.find(params[:id])
-
+    if params[:service_type][:auto_model_id] == I18n.t(:all_models)
+      params[:service_type][:auto_model_id] = nil
+    end
+    
     respond_to do |format|
       if @service_type.update_attributes(params[:service_type])
         format.html { redirect_to service_types_url, notice: 'Service type was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: @service_type, status: :created, location: @service_type }
       else
         format.html { render action: "edit" }
         format.json { render json: @service_type.errors, status: :unprocessable_entity }

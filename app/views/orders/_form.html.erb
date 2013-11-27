@@ -105,7 +105,7 @@
       <%= link_to t('cancel'), orders_path(state: 0), :class => 'btn' %>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
-    <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.where(role: 'engineer'), label_method: :name_and_order_num, include_blank: false %>
+    <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
     <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
     <div class="form-actions">
       <%= f.button :submit, t(:assign_ok), :class => 'btn-primary' %>

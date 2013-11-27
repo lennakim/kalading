@@ -20,6 +20,13 @@
     <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
   </div>
 </div>
+<div class="control-group">
+  <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
+  <div class="controls" id="search-car-model">
+    <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_models_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" minlength="4" , data-msg-required="<%= t(:auto_model_required) %>", data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
+    <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+  </div>
+</div>
 
 <!--<%= form_tag auto_submodels_path, :method => 'get', :id => "auto_submodels_search" do %>-->
 <!--  <p>-->

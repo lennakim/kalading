@@ -8,11 +8,12 @@ class AutoBrand
                 :track_destroy  =>  true     # track document destruction, default is false
 
 
-  paginates_per 5
+  paginates_per 20
 
   field :name, type: String
   field :name_pinyin, type: String
-  attr_accessible :name, :name_pinyin
+  field :name_mann, type: String
+  attr_accessible :name, :name_pinyin, :name_mann
   
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
   
@@ -33,4 +34,9 @@ class AutoBrand
     n += ('(' + I18n.t(:jinkou) + ')') if self.name.index I18n.t(:jinkou)
     n
   end
+  
+  def as_json(options = nil)
+    super :except => [:updated_at, :created_at, :version, :modifier_id]
+  end
+
 end

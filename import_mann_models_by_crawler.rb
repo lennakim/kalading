@@ -27,6 +27,7 @@ m_models.each do |m|
     'submodel_name' => m['model_name'],
     'engine_model' => m['engine'],
     'year' => m['year'],
+    'limit' => m['limit'],
     'parts' => parts
   }
   #puts JSON.pretty_generate(data)
