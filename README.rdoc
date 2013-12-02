@@ -40,7 +40,7 @@ rm -rf public/assets
 RAILS_ENV=production bundle exec rake assets:precompile
 rake db:mongoid:create_indexes
 sudo stop kalading
-sudo start kalading
+RAILS_ENV=production PORT=8002 MONGOHQ_URL=mongodb://localhost:27017/kalading_development sudo start kalading
 
 sudo stop kalading_fun
 sudo start kalading_fun

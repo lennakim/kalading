@@ -81,6 +81,7 @@ test:
 production:
   sessions:
     default:
+      uri: <%= ENV['MONGOHQ_URL'] %>
       database: kalading_development
       hosts:
         - localhost:27017
