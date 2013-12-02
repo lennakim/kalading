@@ -18,7 +18,7 @@ class Partbatch
   
   validates :price, :allow_nil => false,
     :numericality => {
-      :greater_than_or_equal_to => 0.1,
+      :greater_than_or_equal_to => 0.0,
       :less_than_or_equal_to => 1000000
     }
   belongs_to :part

@@ -33,14 +33,15 @@ location ~ ^/(assets)/  {
 }
 
 rake db:reseed
-rake db:mongoid:create_indexes
 
 
 == Deployment of new assets
 rm -rf public/assets
 RAILS_ENV=production bundle exec rake assets:precompile
+rake db:mongoid:create_indexes
 sudo stop kalading
 sudo start kalading
+
 sudo stop kalading_fun
 sudo start kalading_fun
 

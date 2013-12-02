@@ -85,7 +85,7 @@ class AutoSubmodel
   paginates_per 30
   
   def as_json(options = nil)
-    super :except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :remark, :engine_displacement, :match_rule]
+    super :except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :remark, :engine_displacement, :match_rule, :name_mann, :check_status]
   end
 
 end

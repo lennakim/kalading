@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  before_filter :set_locale
+
   def check_for_mobile
     session[:mobile_override] = params[:mobile] if params[:mobile]
     prepare_for_mobile if mobile_device?  && !params[:mobilejs]
@@ -34,4 +36,12 @@ class ApplicationController < ActionController::Base
   def set_default_operator
     self.current_operator = current_user
   end
+  
+  def set_locale
+    if params[:locale] && I18n.available_locales.include?( params[:locale].to_sym )
+      session[:locale] = params[:locale]
+    end
+    I18n.locale = session[:locale] || I18n.default_locale
+  end
+
 end

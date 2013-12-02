@@ -79,6 +79,8 @@ Kalading::Application.routes.draw do
   get 'part_delete_match/:id' => 'parts#delete_match', :as => :part_delete_match
   get 'parts_by_brand_and_type' => 'parts#parts_by_brand_and_type', :as => :parts_by_brand_and_type
 
+  post 'partbatch_import' => 'storehouses#import', :as => :partbatch_import
+
   # singular for weixin app
   get 'm' => 'orders#order_begin', :as => :order_begin
   get 'choose_service' => 'orders#choose_service', :as => :order_choose_service

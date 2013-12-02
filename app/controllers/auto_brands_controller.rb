@@ -1,8 +1,9 @@
 # encoding : utf-8
 class AutoBrandsController < ApplicationController
-  before_filter :authenticate_user! if !Rails.env.importdata?
+  before_filter :authenticate_user!, :except => [:index, :show] if !Rails.env.importdata?
   before_filter :set_default_operator
-  load_and_authorize_resource
+  # API test for Jason
+  load_and_authorize_resource :except => [:index, :show]
   
   # GET /auto_brands
   # GET /auto_brands.json

@@ -1,7 +1,7 @@
 class StorehousesController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:import]
 
   # GET /storehouses
   # GET /storehouses.json
@@ -139,5 +139,30 @@ class StorehousesController < ApplicationController
       format.html { render 'print_ht', layout: false }
       format.json { head :no_content }
     end
+  end
+  
+  def import
+    part_brand = PartBrand.find_by name: /.*#{params[I18n.t(:part_brand)]}.*/
+    return render json: "#{params[I18n.t(:part_brand)]} not found" if part_brand.nil?
+    part_type = PartType.find_by name: /.*#{params[I18n.t(:class)]}.*/
+    return render json: "#{params[I18n.t(:class)]} not found" if part_type.nil?
+    sh = Storehouse.find_by name: /.*#{params[I18n.t(:storehouse)]}.*/
+    return render json: "#{params[I18n.t(:storehouse)]} not found" if sh.nil?
+    u = User.find_by phone_num: '13384517937'
+    return render json: "user not found" if u.nil?
+
+    part = Part.find_or_create_by number: params[I18n.t(:number)], part_brand_id: part_brand.id, part_type_id: part_type.id
+    supplier = Supplier.find_by name: /.*#{params[I18n.t(:part_supplier)]}.*/
+    supplier = Supplier.create name: params[I18n.t(:part_supplier)] if supplier.nil?
+    price = 0.0
+    price = params[I18n.t(:buy_price)].to_f if params[I18n.t(:buy_price)]
+    
+    sh.partbatches.create part_id: part.id,
+      supplier_id: supplier.id,
+      price: price,
+      quantity: 100,
+      remained_quantity: 100,
+      user_id: u.id
+    return render json: 'ok'
   end
 end

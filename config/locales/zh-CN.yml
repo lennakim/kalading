@@ -594,3 +594,7 @@ zh-CN:
   title: '职务'
   roles: '角色'
   all_models: '所有型号'
+  part_brand: "配件品牌"
+  class: "类别"
+  number: "型号"
+  part_supplier: "配件供应商"

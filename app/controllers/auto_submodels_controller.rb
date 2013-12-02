@@ -210,17 +210,15 @@ class AutoSubmodelsController < ApplicationController
     ab = AutoBrand.find_or_create_by name_mann: params[:brand_name]
     
     am = AutoModel.find_or_create_by name_mann: params[:model_name], auto_brand_id: ab.id
-    full_name = am.auto_brand.name + ' ' + am.name
-    full_name.gsub!(/\s+/, "")
-    am.update_attributes({
-                    full_name_pinyin: PinYin.of_string(full_name).join
-                  })
-    
-    asm = AutoSubmodel.find_or_create_by :name => params[:submodel_name],
+    #full_name = am.auto_brand.name + ' ' + am.name
+    #full_name.gsub!(/\s+/, "")
+    #am.update_attributes({
+    #                full_name_pinyin: PinYin.of_string(full_name).join
+    #              })
+    asm = AutoSubmodel.find_or_create_by :name_mann => params[:submodel_name],
       :auto_model_id => am.id,
       :engine_model => params[:engine_model]
-
-    #asm.update_attributes match_rule: params[:limit]
+    asm.update_attributes match_rule: params[:limit]
 
     if params[:parts]
       params[:parts].each do |part_data|

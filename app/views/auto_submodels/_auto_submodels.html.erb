@@ -5,9 +5,10 @@
       <th><%= t 'owner_auto_brand' %></th>
       <th><%= t 'own_model' %></th>
       <th><%= t 'auto_submodel_name' %></th>
+      <th><%= t 'engine_model' %></th>
+      <th><%= t 'year' %></th>
       <th><%= t 'motoroil_capacity' %></th>
       <th><%= t 'engine_displacement' %></th>
-      <th><%= t 'engine_model' %></th>
       <th><%= t 'auto_parts' %></th>
       <th><%= t 'auto_count' %></th>
       <th><%= t 'service_level' %></th>
@@ -26,9 +27,10 @@
         <td><%= link_to auto_submodel.auto_model.auto_brand.name, auto_submodel.auto_model.auto_brand, :target => '_blank' %></td>
         <td><%= link_to auto_submodel.auto_model.name, auto_submodel.auto_model, :target => '_blank' %></td>
         <td><%= link_to auto_submodel.name, auto_submodel, :target => '_blank' %></td>
+        <td><%= auto_submodel.engine_model %></td>
+        <td><%= auto_submodel.year_range %></td>
         <td><%= auto_submodel.motoroil_cap %></td>
         <td><%= auto_submodel.engine_displacement %></td>
-        <td><%= auto_submodel.engine_model %></td>
         <td>
           <%= link_to t(:view), auto_submodel, :target => '_blank' %>
         </td>

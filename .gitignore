@@ -15,7 +15,8 @@
 /tmp
 /public/system
 
-m2f.TXT
-accessories_write_zf_second.text
-*.json
+utils/*.TXT
+utils/*.text
+utils/*.json
+utils/*.csv
 *.tar.gz

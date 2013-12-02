@@ -2,4 +2,598 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  admin:
+    home:
+      name: "Dashboard"
+    form:
+      required: "required"
+      optional: "optional"
+      char_length_up_to: "Max to"
+      bulk_delete: "Delete"
+      confirmation: "Confirmation"
+      cancel: "Cancel"
+      basic_info: 'Basic Infos'
+    misc:
+      ago: "ago"
+      refresh: "refresh"
+      bulk_menu_title: "Operation"
+      log_out: 'Log Out'
+      navigation: "Menu"
+    flash:
+      noaction: "Please choose some items"
+      successful: "Operation finished succeessfully"
+    actions:
+      history_show:
+        menu: "Op History"
+        title: "Op History"
+        breadcrumb: "Op History"
+      show:
+        menu: "Show"
+        breadcrumb: "Show"
+      edit:
+        menu: "Edit"
+      dashboard:
+        menu: "Dashboard"
+        title: "Dashboard"
+        breadcrumb: "Dashboard"
+      index:
+        menu: "List"
+        title: "List"
+        breadcrumb: "List"
+      new:
+        menu: "New"
+        title: "New"
+        breadcrumb: "New"
+      export:
+        menu: "Export"
+        title: "Export"
+        breadcrumb: "Export"
+        link: "Export"
+        bulk_link: "Export"
+      delete:
+        menu: "Delete"
+      bulk_delete:
+        bulk_link: "Delete"
+        breadcrumb: "Bulk Delete"
+      history_index:
+        menu: "History"
+        title: "History"
+        breadcrumb: "History"
+    table_headers:
+      model_name: "Model"
+      last_used: "Last used"
+      records: "Records"
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      long: "%m/%d %H:%M"
+  datetime:
+    distance_in_words:
+      less_than_x_minutes:
+        one: "Less than 1 min"
+        other: "Less than %{count} mins"
+      x_minutes:
+        one: "1 min"
+        other: "%{count} mins"
+      about_x_hours:
+        one: "About 1 hour"
+        other: "About %{count} hours"
+      x_days: "%{count}天"
+  repository_menu: 'Part Storehouses'
+  order_menu: 'Orders'
+  Kalading: 'Kalading'
+  employees_menu: 'Employees'
+  log_out: 'Log out'
+  classes: 'Classes'
+  auto_brands: 'Auto Brands'
+  auto_models: 'Auto Models'
+  owner_auto_model: 'Auto Models'
+  auto_models_list: 'Auto Models'
+  auto_submodels: 'Auto Modelyear'
+  auto_brand_list: 'Auto Brands'
+  auto_model_list: 'Auto Models'
+  choose_brand: 'Brands'
+  auto_submodel_list: 'Auto Modelyears'
+  choose_model: 'Please choose a model'
+  customer_menu: 'Clients'
+  owner_auto_brand: 'Auto Brands'
+  name: 'Name'
+  edit_model: 'Edit auto model'
+  save: 'Save'
+  part_brands: 'Part brands'
+  part_types: 'Part types'
+  part_type: 'Type'
+  modelyear_displacement: 'Auto model info'
+  part_stock: 'Part repository'
+  manuf_number: 'Manuf Number'
+  stock_quantity: 'Quantity'
+  jd_url: 'JD.com Url'
+  last_inout: 'Last OP Time'
+  part_brand: 'Vendor'
+  choose_part_brand: 'Please choose'
+  choose_part_type: 'Please choose'
+  new_part_title: 'New part'
+  price: 'Price'
+  part: 'Part'
+  applicable_auto_models: 'Applicable auto models'
+  auto_submodel_title: 'Auto Modelyears'
+  search_by_number: 'Search by number'
+  default_unit: ''
+  unit: 'Unit'
+  match_rule: 'Match rules'
+  capacity: 'Capacity'
+  capacity_all: 'Capacity'
+  submodel_count: 'Modelyears'
+  auto_menu: 'Autos'
+  search_by_model: 'Search by model'
+  auto_parts: 'Parts'
+  choose_role: 'Roles'
+  customer: 'Client'
+  manager: 'Manager'
+  engineer: 'Engineer'
+  role_admin: 'Admin'
+  storehouse_admin: 'Storehouse Admin'
+  data_admin: 'Data Admin'
+  role: 'Role'
+  phone_num: 'Phone Num'
+  autos: 'Autos'
+  car_number: 'Auto Number'
+  new_user: 'New Employee'
+  owner_users: 'Owner Users'
+  auto_count: 'Auto Counts'
+  search_by_car_number: 'Search by car number'
+  motoroil_capacity: 'Motoroil Capacity'
+  auto_modelyear: 'Model/Year'
+  remark: 'Remark'
+  phone_num: 'Phone Number'
+  phone_num2: 'Second phone Number'
+  password: 'Password'
+  password_confirmation: 'Password Confirmation'
+  mongoid:
+    errors:
+      models:
+        discount:
+          attributes:
+            percent:
+              inclusion: 'Percentage musb be between 1 and 99'
+        auto_model:
+          attributes:
+            name:
+              blank: 'Name can not be empty'
+              taken: 'Name already be taken'
+            auto_brand_id:
+              blank: 'Auto brand can not be empty'
+        auto_submodel:
+          attributes:
+            name:
+              blank: 'Name can not be empty'
+              taken: 'Name already be taken'
+            auto_model_id:
+              blank: 'Auto model can not be empty'
+        part:
+          attributes:
+            price:
+              not_a_number: 'Price should be number'
+            stock_quantity:
+              inclusion: 'Quantity should be between 0 and 999999'
+        user:
+          attributes:
+            password:
+              blank: 'Password can not be empty'
+              confirmation: 'Password mismatched'
+              too_short: 'Password length should be 8 or more'
+            current_password:
+              blank: 'Current password can not be empty'
+        service_type:
+          attributes:
+            name:
+              blank: 'Service name can not be empty'
+              taken: 'Service name has already been taken'
+        partbatch:
+          attributes:
+            part_id:
+              blank: 'Part number can not be blank'
+            supplier_id:
+              blank: 'Supplier can not be blank'
+            user_id:
+              blank: 'Operator can not be blank'
+            price:
+              greater_than_or_equal_to: 'Price should be greater than %{count} RMB'
+              not_a_number: 'Price should be a number'
+            quantity:
+              inclusion: 'Qunatity should be between 1 and 100000'
+        order:
+          attributes:
+            phone_num:
+              too_short: 'Phone number length should be 8 or more'
+              blank: 'Phone number can not be blank'
+  devise:
+    failure:
+      user:
+        unauthenticated: 'Please login'
+    registrations:
+      user:
+        signed_up: 'Login succeeded'
+  errors:
+    messages:
+      not_saved: 'Not saved'
+  helpers:
+    links:
+      cancel: 'Cancel'
+  weixin_num: 'Weixin ID'
+  engine_displacement: 'engine displacement'
+  engine_model: 'Engine Model'
+  choose_serv_level: 'Service Level'
+  service_level: 'Service Level'
+  maintain: 'Maintainable'
+  cantmaintain: 'Not maintainable'
+  needconfirm: 'need confirmed'
+  spec: 'Spec'
+  urls: 'Urls'
+  supplier: 'Supplier'
+  address: 'Address'
+  remove_buy_price: 'Delete price'
+  add_buy_price: 'Add price'
+  remove_sell_price: 'Delete price'
+  add_sell_price: 'Add price'
+  views:
+    pagination:
+      truncate: '...'
+      first: 'First'
+      next: 'Next'
+      previous: 'Prev'
+      last: 'Last'
+  brand: 'brand'
+  total: "Total: %{count}"
+  owner_auto_brand: 'Brand'
+  applicable_auto_submodels: 'Applicable auto models'
+  buy_price_history: 'Price history'
+  sell_price_history: 'Sell Price history'
+  add_url: 'Add url'
+  remove_url: 'Delete url'
+  urlname: 'Web site name'
+  common_info: 'Common Attrs'
+  applicable_auto_submodels_num: 'Applicable auto submodels'
+  total_models: "Total: %{count}"
+  date:
+    formats:
+      default: "%Y/%m/%d"
+  buy_price: 'Buy Price'
+  quantity: 'Quantity'
+  storehouse: 'Storehouse'
+  storehouses: 'Storehouses'
+  buy_date: 'Buy Date'
+  storehouse_in: 'Buy In'
+  brand_own_parts: 'Part'
+  choose_supplier: 'Supplier'
+  choose_part_number: 'Part Number'
+  storehouse_out: 'Out'
+  storehouse_back: 'Back'
+  remained_quantity: 'Remained'
+  ok: 'OK'
+  cancel: 'Cancel'
+  out_quantity: 'Out Quantity'
+  unassigned: 'Not assigned'
+  unscheduled: 'Not schedules'
+  scheduled: 'Scheduled'
+  serve_done: 'Served'
+  handovered: 'Handovered'
+  revisited: 'Revisited'
+  buymyself: 'Buy by myself'
+  create_order_time: 'Create Time'
+  serve_datetime: 'Serve Datetime'
+  state: 'State'
+  orders: 'Orders'
+  new_order: 'new Order'
+  new_storehouse: 'New Storehouse'
+  choose_auto_model: 'Auto Models'
+  auto_model: 'Auto Models'
+  service_types: 'Service Types'
+  sell_price: 'Sell Price'
+  created_at: 'Created At'
+  service_item: 'Service Items'
+  specific_auto_model: 'Applicable for specific auto models'
+  user_info: 'User Infos'
+  auto_info: 'Auto Infos'
+  service_info: 'Services'
+  all: 'All'
+  auto_model_should_be_choosed: 'Please choose a auto model'
+  discount_card: 'Discounts'
+  discount: 'Discounts'
+  discount_percent: 'Discount Percentages'
+  customer_name: 'Customer Name'
+  engineer_name: 'Engineer Name'
+  unassigned: 'Unassigned'
+  discount_info: 'Discounts'
+  auto_submodel: 'Auto Model'
+  car_num: 'Auto Number'
+  basic_infos: 'Basic Infos'
+  part_infos: 'Part Infos'
+  submit: 'Submit'
+  summary_infos: 'Payments'
+  summary_price: 'Total Price: '
+  auto: 'Auto Number'
+  part_brand_choose: 'Part Brands'
+  car_infos: 'Car Infos'
+  view_order: 'Order Details'
+  view_order_pics: 'Order Pictures'
+  return: 'Return'
+  refresh: 'Refresh'
+  view_pic: 'Pictures'
+  upload_pic: 'Upload Pictures'
+  please_sign_in: 'Please log in'
+  sign_in: 'Login'
+  name: 'User Name'
+  password: 'Password'
+  pic_infos: 'Attachments'
+  search_by_part: 'Search by part'
+  search_by_automodel: 'Search by auto models'
+  search_by_order: 'Search by order'
+  all_part_types: 'All part types'
+  all_part_brands: 'All part brands'
+  all_part_numbers: 'All part numbers'
+  partbatch_id: 'Batch ID'
+  partbatch_info: 'Batch Infos'
+  batch_price: 'Buyin Price'
+  add_pic: 'Add pictures'
+  remove_pic: 'Delete pictures'
+  picture: 'Picture'
+  part_brand_number: 'Part brand & number'
+  total_price: 'Total Price'
+  storehouse_name: 'Name'
+  order_id: 'Order ID'
+  operator: 'Operator'
+  partbatch_created: 'Part batch created'
+  partbatch_create_time: 'Part batch create datettime'
+  please_select: 'Please chhose'
+  op_history: 'Op History'
+  user_id_empty: 'Please choose a operator'
+  error: 'Error'
+  quantity_error: 'Quantity should be between %{min} and %{max}'
+  in_quantity: 'Buyin'
+  back_quantity: 'Returned'
+  search_by_partbatch: 'Search by batch ID'
+  actions: 'Action'
+  edit: 'Edit'
+  destroy: 'Delete'
+  edit_part_automodel: 'Edit auto model'
+  edit_applicable_automodel: 'Edit applicable auto model'
+  new_part: 'New Part'
+  confirm_delete_part_automodel: 'Aore you sure to delete applicable auto model：%{name} ？'
+  total_models: 'Total: %{count}'
+  destroy_match: 'Cancel match'
+  part_auto_submodel_exists: '%{name} already exists'
+  add_match: 'Add match'
+  print: 'Print'
+  out_quantity: 'Quantity'
+  part_type_name: 'Name'
+  new_part_type: 'New part type'
+  part_brand_name: 'Name'
+  new_part_brand: 'New part brand'
+  supplier_name: 'Name'
+  new_supplier: 'New supplier'
+  search_by_part_num: 'Search by part number'
+  search_by_part_brand: 'Search by part brand'
+  part_number: 'Part Number'
+  unverified: 'Unverified'
+  verify_error: 'Verify failed'
+  model_year: 'Model year'
+  auto_submodel_info: 'Auto Model Infos'
+  auto_num_info: 'Auto Infos'
+  five_bits_num: '6 characters'
+  jing: '京'
+  locations: '京 津 冀 晋 蒙 辽 吉 黑 沪 苏 浙 皖 闽 赣 鲁 豫 鄂 湘 粤 桂 琼 渝 川 贵 云 藏 陕 甘 青 宁 新 台'
+  car_num_required: 'Please enter car number (6 characters)'
+  car_num_minlength: 'car number length must be 6'
+  phone_num_minlength: 'Phone number length must be between 8 and 13'
+  phone_num_required: 'Please enter phone number'
+  address_minlength: 'Address length must be 4 or more'
+  address_required: 'Please enter a valid address'
+  part_purchased: 'Parts'
+  order_created: 'Order %{seq} created！'
+  service_name: 'Service Name'
+  choose_service_item: 'Services'
+  choose_part_buy: 'Parts'
+  buy_from_kalading: 'We buy the parts for you (recommended)'
+  next: 'Next'
+  prev: 'Back'
+  pay_info: 'Payment'
+  services_price: 'Service Fee'
+  parts_price: 'Parts Price:'
+  year: 'Year'
+  edit_auto_submodel: 'Edit Auto Modelyear'
+  auto_submodel_name: 'Name'
+  others: 'More...'
+  create_order: 'Create Order'
+  shi: 'Yes'
+  fou: 'No'
+  edit_order: 'Edit order'
+  auto_infos: 'Auto Infos'
+  client_name: 'Client Name'
+  discount_num: 'Discount Number'
+  others: 'Others'
+  applicable_parts: 'Applicable Parts'
+  pay_type: 'Pay Type'
+  cash: 'Cash'
+  card: 'Card'
+  none: 'None'
+  personal: 'Personal'
+  firm: 'Firm'
+  reciept_title: 'Reciept Title'
+  reciept_type: 'Reciept Type'
+  new_discount: 'New Discount'
+  discount_name: 'Discount Name'
+  discounts: 'Discouns'
+  expire_date: 'Expire Date'
+  discount_name_required: 'Discount name is required'
+  discount_percent_required: 'Percentage'
+  discount_money_required: 'Discounts'
+  discount_percent_placeholder: 'Percentage should be between 0 and 99'
+  view: 'View'
+  nothing: 'Nothing'
+  search: 'Search'
+  order_saved_notify: 'Order %{seq} Saved successfully'
+  service_type_at_least_one: 'Please choose one service at least'
+  no_orders_found: 'No orders found'
+  history_orders_of: '%{s} history orders'
+  duplicate_order: 'Dulpicate'
+  calc_price: 'Calculate price'
+  sellout: 'Soldout'
+  search_order_history: 'Search order history'
+  verify_discount_num: 'Verify'
+  discount_not_exist: 'Invalid discount number'
+  discount_expired: 'Discount expired：%{s}'
+  price_info: 'Price Info'
+  verify: 'Veirfy'
+  assign_engineer: 'Assign'
+  schedule: 'Schedule'
+  serve_order: 'Serve'
+  handover: 'handover'
+  revisit: 'Revist'
+  order_seq: 'Order %{seq}'
+  verify_ok: 'Verified'
+  verify_failed: 'Verify failed'
+  comment: 'Comment'
+  comment_usage: 'Comments'
+  order_verify_failed: 'Order %{seq} verify failed'
+  reverify: 're-verify'
+  order_verified_notify: Order %{seq} verified successfully'
+  order_assigned_notify: 'order %{seq} assigned to %{name}'
+  order_scheduled_notify: 'Order %{seq} scheduled'
+  order_served_notify: 'Order %{seq} served OK'
+  order_handovered_notify: 'Order %{seq} handovered'
+  order_revisited_notify: 'Order %{seq} revisted'
+  order_num: '      (%{n} orders)'
+  assigned_to_engineer: 'assigned to engineer'
+  new_user_notify: '%{role} %{name} created'
+  confirmed_serve_datetime: 'Confirm serve date'
+  confirmed_address: 'Confirm address'
+  confirmed_client_name: 'Confirm client name'
+  assign_ok: 'Assigned OK'
+  schedule_ok: 'Scheduled OK'
+  serve_ok: 'Serve finished'
+  confirmed_phone_num: 'Confirm phone number'
+  handover_ok: 'Handovered'
+  revisit_ok: 'Revisted'
+  client_comment: 'Client comment'
+  client_comment_usage: 'Client comment'
+  oil_filter_changed: 'Change oil filter'
+  air_filter_changed: 'Change air filter'
+  cabin_filter_changed: 'Change cabin filter'
+  finished_service_types: 'Check finished service items'
+  charged: 'Charged %{p}'
+  gather_auto_info: 'Gather auto info'
+  auto_km: 'KM'
+  oil_out: 'Engine oil disposed'
+  oil_in: 'Engine oil injected'
+  front_wheels: 'Front wheels'
+  back_wheels: 'Back wheels'
+  auto_km_next: 'Next KM'
+  serve_datetime_next: 'Next maintain date'
+  oil_gathered: 'Oil gathering'
+  view_order: 'Order %{seq} details'
+  create_service_type: 'New service type'
+  no_orders: 'No order'
+  login_welcome: 'Welcome to kalading, please login'
+  remember_me: 'Rememebr the password'
+  login: 'Login'
+  fun: ''
+  welcome_user: 'Welcome，%{n}'
+  leave_it_blank: 'If password will not be changed, leave it to blank'
+  need_current_password: 'Please enter current password'
+  edit_account: 'Edit Account'
+  current_password: 'Current Password'
+  part_rand_created: 'Part brand %{n} created'
+  auto_model_query: 'Auto model query'
+  auto_model_search_hint: 'Auto model name keywords'
+  auto_model_nil: 'Auto model is blank'
+  auto_model_required: 'Choose an auto model'
+  auto_model_minlength: 'Choose an auto model'
+  address_required: 'Please enter the address'
+  address_minlength: 'Address length should be 4 or more'
+  address_maxlength: 'Address length should be less than 512'
+  auto_submodel_required: 'Choose an auto modelyear'
+  datepicker:
+    pformat: 'yyyy-MM-dd'
+    dformat: '%Y-%m-%d'
+  tomo_morning: 'Tomorrow morning'
+  tomo_afternoon: 'Tomorrow afternoon'
+  tomo_tomo_morning: 'Morning of the day after tomorrow'
+  tomo_tomo_afternoon: 'Afternon of the day after tomorrow'
+  choose_auto_submodel: 'My auto model'
+  update_time: 'Update time'
+  page_num: 'Page'
+  page: 'e'
+  di: 'Page'
+  batch_edit_oil_cap: 'Batch edit oil capacity'
+  batch_edit_service_level: 'Batch edit service level'
+  oil_cap_modified: '%{n} 排量为%{d}的共%{c}个车型机油量已经更新为%{oc}'
+  service_type_modified: '%{n} 共%{c}个车型的服务等级修改为 %{d}'
+  view_has_urlinfo: 'Only show parts with web sites'
+  number_query: 'Number search'
+  part_number_search_hint: 'Part number search'
+  edit_part: 'Edit Part'
+  site_name: 'Web site name'
+  auto_submodels_edit_with_catalog: 'Auto model verify'
+  copy_catalog_model_attrs: 'Copy'
+  choose_auto_model: '车型选择（品牌，车型，款式）'
+  save_auto_model: 'Save'
+  auto_model_name: 'Model Name'
+  hengst_oil_filter: 'Hengst oil filter'
+  hengst_cabin_filter: 'Hengst cabin filter'
+  hengst_fuel_filter: 'Hengst fuel filter'
+  hengst_air_filter: 'Hengst air filter'
+  hengst: '汉格斯特 Hengst'
+  oil_filter: 'Oil Filter'
+  cabin_filter: 'Cabin Filter'
+  fuel_filter: 'Fuel Filter'
+  air_filter: 'Air Filter'
+  auto_submodel_updated: '%{n} Auto model info and part info saved'
+  cross_domain_script_enable_hint: '请确认使用了chrome.exe -disable-web-security 模式'
+  chrome_not_used: '您未使用Chrome浏览器，数据复制按钮不可用'
+  edit_user: 'Edit account info'
+  confirm_user_delete: 'Are you sure to remove account %{n} ？'
+  employees: 'Employees'
+  dispatcher: 'Dispatcher'
+  new_auto_brand: 'New auto brand'
+  new_auto_model: 'New auto model'
+  detail: 'Detail'
+  mann: '曼牌 Mann'
+  edit_part_match: 'Part Matches'
+  match_part: 'Part Matches'
+  equal_parts: 'Part Matches'
+  jump: 'Go'
+  match_other_part: 'Add matches'
+  delete_match: 'Delete'
+  new_part_hint: 'Enter new part number here'
+  search_part_number: 'Search by part number'
+  choose_auto_brand: 'Auto Brand'
+  jinkou: '进口'
+  confirm_pay: 'Payment'
+  puchase_part: 'Choose parts'
+  service_only: 'Service only'
+  contact_info: 'Contact Info'
+  finish: 'Finish'
+  client_given_name: 'Name'
+  client_name_minlength: 'Name should not be empty'
+  client_name_required: 'Your name?'
+  order_create_failed: 'network error'
+  order_detail: 'Order details'
+  order_created: 'Order created。thank you for choosing kalading service'
+  auto_submodel: 'Auto Model'
+  puchase_part_hint: 'It is recommended that we help you to choose parts'
+  order_preview: 'Order Preview'
+  order_preview_hint: 'Order previews'
+  choose_parts: 'Choose parts'
+  own_model: 'Model'
+  year_range: 'year'
+  unchecked: 'Not checked'
+  checked: 'Checked'
+  check_status: 'Check Status'
+  title: 'Title'
+  roles: 'Role'
+  all_models: 'All Models'
+  part_brand: "Part Brand"
+  class: "Class"
+  number: "Number"
+  part_supplier: "Part Supplier"
