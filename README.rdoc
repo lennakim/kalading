@@ -58,3 +58,7 @@ mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * 
 
 == Restart servers
 
+== Test on Windows
+set RAILS_ENV=development
+set PORT=8002
+foreman start
