@@ -3,10 +3,11 @@ class AutoSubmodel
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
 
-  track_history :track_create   =>  true,    # track document creation, default is false
-                :track_update   =>  true,     # track document updates, default is true
-                :track_destroy  =>  true     # track document destruction, default is false
-
+  if !Rails.env.importdata?
+    track_history :track_create   =>  true,
+                  :track_update   =>  true,
+                  :track_destroy  =>  true
+  end
 
   paginates_per 5
 
@@ -25,7 +26,7 @@ class AutoSubmodel
   index({ service_level: 1 })
 
   SERV_LEVEL = [0, 1, 2]
-  SERV_LEVEL_STRINGS = %w[maintain cantmaintain needconfirm]
+  SERV_LEVEL_STRINGS = %w[cantmaintain maintain needconfirm]
 
   CHECK_STATUS = [0, 1]
   CHECK_STATUS_STRINGS = %w[unchecked checked]
@@ -53,7 +54,8 @@ class AutoSubmodel
   end
   
   def parts_by_type
-    self.parts.group_by {|part| part.part_type}
+    sort_order = { I18n.t(:engine_oil) => 0, I18n.t(:oil_filter) => 1, I18n.t(:air_filter) => 2, I18n.t(:cabin_filter) => 3 }
+    self.parts.select {|part| sort_order.keys.include? part.part_type.name }.group_by {|part| part.part_type}.sort_by { |k, v| sort_order[k.name] }
   end
 
   def full_name

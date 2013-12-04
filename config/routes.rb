@@ -71,6 +71,7 @@ Kalading::Application.routes.draw do
   get 'auto_submodels_service_level_edit' => 'auto_submodels#service_level_edit', :as => :auto_submodels_service_level_edit
   post 'auto_submodels_service_level_modify' => 'auto_submodels#service_level_modify', :as => :auto_submodels_service_level_modify
   post 'auto_submodels_import' => 'auto_submodels#import', :as => :auto_submodels_import
+  post 'auto_submodels_import_by_id/:id' => 'auto_submodels#import_by_id', :as => :auto_submodels_import_by_id
 
   get 'auto_submodels_edit_with_catalog' => 'auto_submodels#edit_with_catalog', :as => :auto_submodels_edit_with_catalog
   get 'part_match' => 'parts#match', :as => :part_match

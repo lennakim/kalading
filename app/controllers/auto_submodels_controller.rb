@@ -1,7 +1,7 @@
 class AutoSubmodelsController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
-  load_and_authorize_resource :except => [:import]
+  load_and_authorize_resource :except => [:import, :import_by_id]
   
   # GET /auto_submodels
   # GET /auto_submodels.json
@@ -229,6 +229,30 @@ class AutoSubmodelsController < ApplicationController
         asm.parts << p
       end
     end
+    respond_to do |format|
+      format.html { redirect_to auto_submodels_url }
+      format.json { head :no_content }
+    end
+  end
+  
+  def import_by_id
+    asm = AutoSubmodel.find params[:id]
+    return render json: 'autosubmodel not found', status: :bad_request if !asm
+    asm.update_attributes service_level: params[:service_level], motoroil_cap: params[:motoroil_cap]
+
+    if params[:parts]
+      params[:parts].each do |part_data|
+        pb = PartBrand.find_by name: part_data[:part_brand_name]
+        return render json: "#{part_data[:part_brand_name]} not found", status: :bad_request if !pb
+        pt = PartType.find_by name: part_data[:part_type_name]
+        return render json: "#{part_data[:part_type_name]} not found", status: :bad_request if !pt
+        p = Part.find_by number: part_data[:number], part_brand_id: pb.id, part_type_id: pt.id
+        return render json: "#{part_data[:number]} not found", status: :bad_request if !p
+        p.auto_submodels << asm
+        asm.parts << p
+      end
+    end
+
     respond_to do |format|
       format.html { redirect_to auto_submodels_url }
       format.json { head :no_content }

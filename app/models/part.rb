@@ -3,10 +3,12 @@ class Part
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
 
-  track_history :track_create   =>  true,    # track document creation, default is false
-                :track_update   =>  true,     # track document updates, default is true
-                :track_destroy  =>  true     # track document destruction, default is false
-
+  if !Rails.env.importdata?
+    track_history :track_create   =>  true,    # track document creation, default is false
+                  :track_update   =>  true,     # track document updates, default is true
+                  :track_destroy  =>  true     # track document destruction, default is false
+  end
+  
   field :number, type: String
   field :capacity, type: Integer, default: 1
   field :spec, type: String

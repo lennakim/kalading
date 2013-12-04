@@ -8,9 +8,9 @@ class PartsController < ApplicationController
   def index
     if params[:search] && params[:search] != ''
       s = params[:search].split('').join(".*")
-      @parts = Part.any_of({ :number => /.*#{s}.*/i })
+      @parts = Part.any_of({ :number => /.*#{s}.*/i }).asc(:number)
     else
-      @parts = Part.all
+      @parts = Part.asc(:number)
     end
     
     if params[:part_search]

@@ -26,3 +26,4 @@
 { "v" : 1, "key" : { "seq" : 1 }, "ns" : "kalading_development.orders", "name" : "seq_1" }
 { "v" : 1, "key" : { "state" : 1 }, "ns" : "kalading_development.orders", "name" : "state_1" }
 { "v" : 1, "key" : { "car_location" : 1, "car_num" : 1 }, "ns" : "kalading_development.orders", "name" : "car_location_1_car_num_1" }
+{ "v" : 1, "key" : { "service_level" : 1 }, "ns" : "kalading_development.auto_submodels", "name" : "service_level_1" }

@@ -16,13 +16,13 @@ rails g bootstrap:themed AutoBrands
 == Install MongoDb on windows
 D:\TDDownload\mongodb-win32-x86_64-2.4.6\mongodb-win32-x86_64-2.4.6\bin>mongod --install --logpath=d:\data\mongodb.log --dbpath d:\data\db\
 
-Capture raw http request (number of pre/post lines (-B and -A args)):
+== Capture raw http request (number of pre/post lines (-B and -A args)):
 sudo tcpdump -n -S -s 0 -A 'tcp dst port 8002' -i eth0 | grep -B3 -A10 "GET /orders"
 
-Show POST requests in log:
+== Show POST requests in log:
 tail -n 1000 kalading/log/development.log | grep -B2 -A10 "POST"
 
-sudo foreman export --app kalading --user ubuntu upstart /etc/init
+sudo foreman export -f Procfile.aws --app kalading -p 3001 --user ubuntu upstart /etc/init
 
 == nginx config for static assets
 location ~ ^/(assets)/  {
@@ -40,23 +40,14 @@ rm -rf public/assets
 RAILS_ENV=production bundle exec rake assets:precompile
 rake db:mongoid:create_indexes
 sudo stop kalading
-RAILS_ENV=production PORT=8002 MONGOHQ_URL=mongodb://localhost:27017/kalading_development sudo start kalading
+MONGOHQ_URL=mongodb://localhost:27017/kalading_development
+sudo start kalading
 
-sudo stop kalading_fun
-sudo start kalading_fun
-
-== Test environment
-sudo foreman export -f Procfile.fun --app kalading_fun --user ubuntu upstart /etc/init
 
 == Import part data
 gem install mysql2xxxx
-Export autohome auto models
 mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * from ah_model" > ah_models.json
-mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * from hengst_filter" > hengst_filter.json
-
 mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * from m_model" > m_models.json
-
-== Restart servers
 
 == Test on Windows
 set RAILS_ENV=development
