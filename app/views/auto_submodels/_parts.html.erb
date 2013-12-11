@@ -1,13 +1,19 @@
 <% @auto_submodel.parts_by_type.each do |k, v| %>
-  <h5><%= k.name %></h5>
   <table class="table table-striped">
+  <th colspan="4"><%= k.name %></th>
   <% v.each do |p| %>
     <tr>
       <td>
-        <%= check_box_tag "order[part_ids][]", "#{p.id}", false, {:id => "part_#{p.id}"} %>
+        <%= check_box_tag "order[part_ids][]", "#{p.id}", false, {:id => "part_#{p.id}", "data-multisel" => p.part_type.allow_multi } %>
         <%= label_tag "part_#{p.id}", p.part_brand.name + ' ' + p.number, {class: "checkbox inline"} %>
       </td>
-      <td><%= humanized_money_with_symbol p.price %></td>
+      <td>
+        <% if p.price <= 0.0 && p.url_price > 0%>
+          <%= humanized_money_with_symbol p.url_price %><%= t(:url_price) %>
+        <% else %>
+          <%= humanized_money_with_symbol p.price %>
+        <% end %>
+      </td>
       <td>
         <% if p.total_remained_quantity <= 0 %>
           <strong class="alert"><%= t(:sellout) %></strong>
@@ -29,6 +35,10 @@
           </tbody>
         </table>
         <% end %>
+      </td>
+      <td>
+        <%= number_field_tag "order[part_counts][#{p.id}]", @auto_submodel.cals_part_count(p), class: 'control input-small required', in: 0..9999 %>
+        <%= t(:default_unit) %>
       </td>
     </tr>
   <% end %>

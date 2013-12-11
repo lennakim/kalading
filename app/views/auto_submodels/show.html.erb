@@ -13,9 +13,8 @@
   <dd></dd>
   <dt><strong><%= t(:auto_count) %>:</strong></dt>
   <dd><%= @auto_submodel.autos.count %></dd>
-  <dt><%= t(:part) %>:</dt>
-  <%= render 'auto_parts', :auto_submodel => @auto_submodel %></dd>
 </dl>
+  <%= render 'parts' %>
 
   <table class="table">
   <% @auto_submodel.pictures.each do |p| %>
@@ -33,7 +32,7 @@
 
 
 <div class="form-actions">
-  <%= link_to t('back'),
+  <%= link_to t('return'),
               auto_submodels_path, :class => 'btn'  %>
   <%= link_to t('edit'),
               edit_auto_submodel_path(@auto_submodel), :class => 'btn' %>

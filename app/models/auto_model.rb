@@ -41,8 +41,8 @@ class AutoModel
   end
 
   def as_json(options = nil)
-    h = super :except => [:updated_at, :created_at, :auto_brand_id, :version, :modifier_id, :name, :name_mann, :full_name_pinyin]
-    h[:name] = self.auto_brand.name + '' + self.name
+    h = super :except => [:updated_at, :created_at, :auto_brand_id, :version, :modifier_id, :name_mann, :full_name_pinyin]
+    h[:full_name] = self.full_name
     h
   end
 end

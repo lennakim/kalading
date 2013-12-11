@@ -54,16 +54,8 @@
         <td><%= humanized_money_with_symbol part.price if part.price %></td>
         <td><%= part.capacity.to_s + ' ' + part.part_type.unit %></td>
         <td><%= part.spec %></td>
-        <td>
-          <table>
-            <tbody>
-            <% part.urlinfos.each do |url| %>
-              <tr>
-                <td><%= humanized_money_with_symbol url.price %></td><td><%= link_to truncate(url.name), url.url, :target => '_blank' %></td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
+        <td id="<%= part.id %>_urls">
+          <%= render 'urlinfo', part: part %>
         </td>
         <td><%= l part.updated_at %></td>
         <td>

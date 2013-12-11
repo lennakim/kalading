@@ -36,11 +36,10 @@ rake db:reseed
 
 
 == Deployment of new assets
+rake db:mongoid:create_indexes
 rm -rf public/assets
 RAILS_ENV=production bundle exec rake assets:precompile
-rake db:mongoid:create_indexes
 sudo stop kalading
-MONGOHQ_URL=mongodb://localhost:27017/kalading_development
 sudo start kalading
 
 

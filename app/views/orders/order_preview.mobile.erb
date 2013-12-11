@@ -6,7 +6,7 @@
   
   <div data-role="content">
     <%= render :partial => 'order', locals: { preview: true } %>
-    <%= simple_nested_form_for @order, :html => { class: "form-horizontal", data: {transition: 'slide'} },  :method => 'post', :url => orders_path(format: :mobile) do |f| %>
+    <%= simple_nested_form_for @order, :html => { class: "form-horizontal", data: {transition: 'slide'} },  :method => 'post', :url => orders_path(format: :mobile, use_session: true) do |f| %>
       <%= f.button :submit, t(:finish), "data-role" => "button", "data-theme" => 'b' %>
     <% end %>
   </div>

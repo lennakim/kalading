@@ -47,6 +47,7 @@ class Order
   has_and_belongs_to_many :discounts
   embeds_many :pictures, :cascade_callbacks => true
   has_and_belongs_to_many :parts
+  field :part_counts, type: Hash, default: {}
   
   accepts_nested_attributes_for :pictures, :allow_destroy => true
 
@@ -60,7 +61,7 @@ class Order
     :auto_submodel_id,
     :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :comment, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :auto_km, :oil_out, :oil_in,
-    :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered
+    :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts
 
   auto_increment :seq
   index({ seq: 1 })
@@ -87,14 +88,47 @@ class Order
   
   def calc_parts_price
     p = Money.new(0.0)
-    self.parts.each {|pi| p += pi.price if pi.price }
+    self.parts.each do |pi|
+      if pi.price && pi.price > 0.0
+        price = pi.price
+      else
+        price = pi.url_price
+      end
+      p += ( price * self.part_counts[pi.id.to_s].to_i )
+    end
     p
- end
+  end
+  
+  def parts_price_info
+    s = ''
+    self.parts_by_type.each do |k, v|
+      p = Money.new(0.0)
+      v.each do |pi|
+        if pi.price && pi.price > 0.0
+          price = pi.price
+        else
+          price = pi.url_price
+        end
+        p += ( price * self.part_counts[pi.id.to_s].to_i )
+      end
+      s += ( k.name + ' ' + p.to_s + ' ' )
+    end
+    s
+  end
+
   
   def calc_service_price
     p = Money.new(0.0)
     self.service_types.each {|st| p += st.price if st.price }
     p
+  end
+
+  def services_price_info
+    s = ''
+    self.service_types.each do |st|
+      s += ( st.name + ' ' + st.price.to_s + ' ' )
+    end
+    s
   end
   
   def calc_price

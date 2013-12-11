@@ -3,9 +3,18 @@ class AutoSubmodelsController < ApplicationController
   before_filter :set_default_operator
   load_and_authorize_resource :except => [:import, :import_by_id]
   
+  def update_full_name_and_pinyin
+    AutoSubmodel.each do |sm|
+      full_name = sm.auto_model.auto_brand.name_with_jinkou + ' ' + sm.auto_model.name.split()[0] + ' ' + sm.name + ' ' + sm.year_range
+      sm.update_attributes full_name: full_name, full_name_pinyin: PinYin.of_string(full_name.gsub(/\s+/, "")).join.gsub(/zhang/, 'chang')
+    end
+  end
+
   # GET /auto_submodels
   # GET /auto_submodels.json
   def index
+    #update_full_name_and_pinyin
+    
     #asms1 = AutoSubmodel.any_of({year_range: /.*\s.*/})
     #asms1.each do |asm1|
     #  asms2 = AutoSubmodel.all_of :year_range.not => /.*\s.*/,
@@ -26,24 +35,31 @@ class AutoSubmodelsController < ApplicationController
         @auto_submodels = AutoSubmodel.asc(:created_at).page params[:page]
       }
       format.js {
-        if params[:search]
-          @auto_submodels = AutoSubmodel.search(:name, params[:search]).asc(:name).page params[:page]
-        elsif params[:model] && params[:year]
-          if params[:year] == I18n.t(:all)
-            @auto_submodels = AutoModel.find(params[:model]).auto_submodels.asc(:name).page params[:page]
-          else
-            @auto_submodels = AutoModel.find(params[:model]).auto_submodels.any_of({ :name => /.*#{params[:year]}.*/i }).asc(:name).page params[:page]
-          end
+        if params[:query] && params[:query] != ''
+          s = PinYin.of_string( params[:query].gsub(/\s+/, "").split('').join(".*") ).join.gsub(/zhang/, 'chang')
+          @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i).page params[:page]
+        elsif params[:model]
+          @auto_submodels = AutoModel.find(params[:model]).auto_submodels.asc(:name).page params[:page]
         else
           @auto_submodels = AutoSubmodel.all.page params[:page]
         end
       }
       format.json {
-        begin
-          @auto_submodels = AutoBrand.find_by(name: params[:brand]).auto_models.find_by(name: params[:model]).auto_submodels.where(name: params[:submodel])
+        if Rails.env.importdata?
+          begin
+            @auto_submodels = AutoBrand.find_by(name: params[:brand]).auto_models.find_by(name: params[:model]).auto_submodels.where(name: params[:submodel])
+            render json: @auto_submodels
+          rescue
+            render json: []
+          end
+        else
+          if params[:query] && params[:query] != ''
+            s = PinYin.of_string( params[:query].gsub(/\s+/, "").split('').join(".*") ).join.gsub(/zhang/, 'chang')
+            @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i).limit(8)
+          else
+            @auto_submodels = AutoSubmodel.limit(8)
+          end
           render json: @auto_submodels
-        rescue
-          render json: []
         end
       }
     end
@@ -53,7 +69,7 @@ class AutoSubmodelsController < ApplicationController
   # GET /auto_submodels/1.json
   def show
     @auto_submodel = AutoSubmodel.find(params[:id])
-
+    @auto_submodels = Kaminari.paginate_array([@auto_submodel]).page(0)
     respond_to do |format|
       format.html # show.html.erb
       format.js

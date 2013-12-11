@@ -19,10 +19,20 @@ $ ->
             "order[service_type_ids][]":
                 required: $('#service-type-at-least-one').text()
     )
-    $('#select-parts table tr td input:checkbox').click ->
-        checkedState =   $(this).prop("checked")
-        $(this).closest('table').find('input:checkbox').prop("checked", false)
-        $(this).prop("checked", checkedState)
+
+    $(document).on "click", '#select-parts table tr td input:checkbox', ->
+        if !$(this).data('multisel')
+            checkedState =  $(this).prop("checked")
+            $(this).closest('table').find('input:checkbox').prop("checked", false)
+            $(this).prop("checked", checkedState)
+        $.post $("#calcprice-btn").prop('href'), $("#calcprice-btn").parents("form").serialize(), null, "script"
+
+    $(document).on "click", '#select-service-types table tr td input:checkbox', ->
+        $.post $("#calcprice-btn").prop('href'), $("#calcprice-btn").parents("form").serialize(), null, "script"
+
+    $(document).on 'keyup input', $('input[name^="order[part_counts]"]'), $.debounce 1000, ->
+        $.post $("#calcprice-btn").prop('href'), $("#calcprice-btn").parents("form").serialize(), null, "script"
+    
     $("#order_auto_submodel_id").change ->
         $.getScript($(this).attr('rel') + '/' + $(this).val())
     $("#search-by-car-num").click ->
@@ -47,15 +57,15 @@ $ ->
                     car_model_table = {}
                     newData = []
                     $.each data, ->
-                        newData.push(this.name)
-                        car_model_table[this.name] = this._id
+                        newData.push(this.full_name)
+                        car_model_table[this.full_name] = this._id
                     return process(newData)
         matcher: (item) ->
             return true
         highlighter: (item) ->
             return '<strong>' + item + '</strong>'
         updater: (item) ->
-            $.get('/auto_models/' + car_model_table[item], null, null, "script")
+            $.get('/auto_submodels/' + car_model_table[item], null, null, "script")
             return item
     $('a.datetime-shortcut').click ->
         $('#order_serve_datetime').val($(this).data('msg'))

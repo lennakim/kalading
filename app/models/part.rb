@@ -49,4 +49,11 @@ class Part
     h
   end
   paginates_per 10
+  
+  def url_price
+    ui = self.urlinfos.all.min do |a, b|
+      a.price <=> b.price
+    end
+    ui ? ui.price : Money.new(0)
+  end
 end

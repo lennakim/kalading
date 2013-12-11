@@ -579,7 +579,7 @@ en:
   client_name_required: 'Your name?'
   order_create_failed: 'network error'
   order_detail: 'Order details'
-  order_created: 'Order created。thank you for choosing kalading service'
+  order_created_mobile: 'Order created。thank you for choosing kalading service'
   auto_submodel: 'Auto Model'
   puchase_part_hint: 'It is recommended that we help you to choose parts'
   order_preview: 'Order Preview'

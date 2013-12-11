@@ -1,7 +1,7 @@
 class PartsController < ApplicationController
   before_filter :authenticate_user! if !Rails.env.importdata?
   before_filter :set_default_operator
-  load_and_authorize_resource
+  load_and_authorize_resource if !Rails.env.importdata?
   
   # GET /parts
   # GET /parts.json
@@ -173,5 +173,12 @@ class PartsController < ApplicationController
       asm.parts.delete @matched_part
       @matched_part.auto_submodels.delete asm
     end
+  end
+  
+  def destroy_urlinfo
+    @part = Part.find(params[:id])
+    ui = Urlinfo.find(params[:url])
+    @part.urlinfos.delete ui
+    ui.destroy
   end
 end

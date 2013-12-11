@@ -6,10 +6,4 @@ $("#service_type_auto_model_id").html("<%= escape_javascript( options_for_select
 $("#auto_submodels").html("<%= escape_javascript(render("auto_submodels/auto_submodels")) %>");
 $("#select-parts").html("<%= escape_javascript(render("auto_submodels/parts")) %>");
 $("#select-service-types").html("<%= escape_javascript(render("auto_submodels/service_types")) %>");
-$("#auto_submodel_year").val("<%= t(:all) %>");
-
-<% if mobile_device? %>
-$("#auto_submodel_model_id").selectmenu('refresh');
-$("#order_auto_submodel_id").selectmenu('refresh');
-<% end %>
 

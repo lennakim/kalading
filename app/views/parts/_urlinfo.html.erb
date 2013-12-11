@@ -1,0 +1,15 @@
+<table>
+  <tbody>
+    <% part.urlinfos.each do |url| %>
+    <tr>
+      <td><%= humanized_money_with_symbol url.price %></td><td><%= link_to truncate(url.name), url.url, :target => '_blank' %></td>
+      <td><%= t(Urlinfo::CHECK_STATUS_STRINGS[url.check_status]) %></td>
+      <td>
+        <%= link_to t('destroy'), delete_part_urlinfo_path(part, url: url.id), :method => :delete, :remote => true,
+              :data => { :confirm => t(:confirm_delete_url, p: (humanized_money_with_symbol url.price) ) },
+              :class => 'btn btn-mini btn-danger' if can? :destroy, part %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

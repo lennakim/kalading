@@ -1,5 +1,5 @@
 <%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
-  <% if %w[unverified verify_error].include? Order::STATE_STRINGS[@order.state] %>
+  <% if (%w[unverified verify_error].include? Order::STATE_STRINGS[@order.state]) || params[:edit_all] %>
   <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
     <div class="control-group">
       <label for="select-car-location" class="control-label"><%= t(:car_num) %></label>
@@ -42,15 +42,14 @@
     <div class="control-group">
       <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
       <div class="controls" id="search-car-model">
-        <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_models_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="<%= @order.auto_submodel ? @order.auto_submodel.auto_model.full_name : '' %>" minlength="4" , data-msg-required="<%= t(:auto_model_required) %>", data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
+        <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="<%= @order.auto_submodel ? @order.auto_submodel.full_name : '' %>" minlength="4" data-msg-required="<%= t(:auto_model_required) %>" data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
         <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
       </div>
     </div>
 
+    <%= f.input :auto_submodel_id, :as => :hidden %>
     <% if @order.auto_submodel %>
-    <%= f.association :auto_submodel, label: t(:model_year), collection: @order.auto_submodel.auto_model.auto_submodels, label_method: :name, selected: @order.auto_submodel, include_blank: false, input_html: {rel: auto_submodels_path, "data-msg-required" => t(:auto_submodel_required) } %>
-    <% else %>
-    <%= f.association :auto_submodel, label: t(:model_year), collection: [], include_blank: false, input_html: {rel: auto_submodels_path, "data-msg-required" => t(:auto_submodel_required)} %>
+      <div id="auto_submodels"><%= render 'auto_submodels/auto_submodels' %></div>
     <% end %>
     
   <h5 id="service_types"><%= t(:service_types) %></h5>
@@ -96,7 +95,7 @@
   <h5 id="others"><%= t(:others) %></h5>
     <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
     <div class="form-actions">
-      <% if %w[new duplicate].include? params[:action] %>
+      <% if (%w[new duplicate].include? params[:action]) || params[:edit_all]%>
         <%= f.button :submit, t(:save), :class => 'btn-primary' %>
       <% else %>
         <%= f.button :submit, t(:verify_ok), :class => 'btn-primary' %>

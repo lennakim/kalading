@@ -59,6 +59,7 @@ Kalading::Application.routes.draw do
   delete 'parts/:id/automodels/:auto_submodel_id' => 'parts#delete_auto_submodel', :as => :delete_part_auto_submodel
   post 'parts/:id/automodels' => 'parts#add_auto_submodel', :as => :add_part_auto_submodel
   get 'storehouses/:id/print_storehouse_out/:ht_id' => 'storehouses#print_storehouse_out', :as => :print_storehouse_out
+  delete 'part_urlinfo/:id' => 'parts#destroy_urlinfo', :as => :delete_part_urlinfo
 
   get 'auto_parts' => 'orders#query_parts', :as => :query_parts
   get 'orders_history' => 'orders#history', :as => :order_history

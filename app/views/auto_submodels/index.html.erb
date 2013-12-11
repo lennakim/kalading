@@ -15,23 +15,15 @@
   <div class="controls">
     <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
     <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
-    <span><%= t(:year) %></span>
-    <%= collection_select :auto_submodel, :year, [t(:all)] + Array(1990..2014), :to_s, :to_s, {}, {:rel => "/auto_submodels", :class => 'control'} %>
     <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
   </div>
 </div>
 <div class="control-group">
   <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
   <div class="controls" id="search-car-model">
-    <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_models_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" minlength="4" , data-msg-required="<%= t(:auto_model_required) %>", data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
+    <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" minlength="4" data-msg-required="<%= t(:auto_model_required) %>" data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
     <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
   </div>
 </div>
 
-<!--<%= form_tag auto_submodels_path, :method => 'get', :id => "auto_submodels_search" do %>-->
-<!--  <p>-->
-    <!--<%= label_tag :search, t('search_by_model'), class: 'control-label' %>
-    <%= text_field_tag :search, params[:search], class: 'control' %>-->
-  <!--</p>-->
-<!--<% end %>-->
 <div id="auto_submodels"><%= render 'auto_submodels' %></div>

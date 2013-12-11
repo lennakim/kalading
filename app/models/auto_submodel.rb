@@ -21,8 +21,10 @@ class AutoSubmodel
   field :year_range, type: String
   field :check_status, type: Integer, default: 0
   field :name_mann, type: String
+  field :full_name_pinyin, type: String, default: ''
+  field :full_name, type: String, default: ''
   
-  index({ name: 1 })
+  index({ full_name_pinyin: 1 })
   index({ service_level: 1 })
 
   SERV_LEVEL = [0, 1, 2]
@@ -40,7 +42,8 @@ class AutoSubmodel
   accepts_nested_attributes_for :pictures, :allow_destroy => true
   
   attr_accessible :name, :auto_model_id, :part_ids, :auto_ids, :motoroil_cap, :engine_displacement,
-    :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes, :year_range, :name_mann
+    :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes,
+    :year_range, :name_mann, :full_name_pinyin, :full_name
 
   validates :name, presence: true
   validates :auto_model_id, presence: true
@@ -55,11 +58,28 @@ class AutoSubmodel
   
   def parts_by_type
     sort_order = { I18n.t(:engine_oil) => 0, I18n.t(:oil_filter) => 1, I18n.t(:air_filter) => 2, I18n.t(:cabin_filter) => 3 }
-    self.parts.select {|part| sort_order.keys.include? part.part_type.name }.group_by {|part| part.part_type}.sort_by { |k, v| sort_order[k.name] }
+    self.parts.asc(:number).select {|part| sort_order.keys.include? part.part_type.name }.group_by {|part| part.part_type}.sort_by { |k, v| sort_order[k.name] }
   end
 
-  def full_name
-    self.auto_model.auto_brand.name_with_jinkou + ' ' + self.auto_model.name + ' ' + self.name
+  def cals_part_count(part)
+    return 1 if part.part_type.name != I18n.t(:engine_oil)
+    parts = self.parts.select {|p| p.part_type == part.part_type && p.part_brand == part.part_brand && p.spec == part.spec }.reject {|a| a.capacity <= 0}.sort {|a,b| b.capacity <=> a.capacity}
+    mc = 0.0
+    part_to_count = {}
+    while mc < self.motoroil_cap
+      p = nil
+      parts.each do |pp|
+        if pp.capacity.to_f <= (self.motoroil_cap - mc)
+          p = pp
+          mc += pp.capacity.to_f 
+          break
+        end
+      end
+      return 0 if !p
+      part_to_count[p] ||= 0
+      part_to_count[p] += 1
+    end
+    part_to_count[part]? part_to_count[part] : 0
   end
   
   def applicable_service_types
@@ -87,7 +107,9 @@ class AutoSubmodel
   paginates_per 30
   
   def as_json(options = nil)
-    super :except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :remark, :engine_displacement, :match_rule, :name_mann, :check_status]
+    h = super :except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :remark, :engine_displacement, :match_rule, :name_mann, :check_status]
+    h[:full_name] = self.full_name
+    h
   end
 
 end

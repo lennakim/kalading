@@ -59,7 +59,8 @@ class OrdersController < ApplicationController
     @order.serve_datetime = DateTime.now.since(1.days)
     @order.discounts = nil
     @order.calc_price
-    @submodel = @order.auto_submodel
+    @auto_submodel = @order.auto_submodel
+    @auto_submodels = [@order.auto_submodel] if @order.auto_submodel
     respond_to do |format|
       format.html { render action: "new" }
       format.json { render action: "new", json: @order }
@@ -69,8 +70,10 @@ class OrdersController < ApplicationController
   # GET /orders/1/edit
   def edit
     @order = Order.find(params[:id])
+    authorize! :edit_all, @order if params[:edit_all]
     @order.discount_num = @order.discounts.first.id if @order.discounts.exists?
-    @submodel = @order.auto_submodel
+    @auto_submodel = @order.auto_submodel
+    @auto_submodels = Kaminari.paginate_array([@order.auto_submodel]).page(0) if @order.auto_submodel
     respond_to do |format|
       format.html
       format.js
@@ -82,8 +85,10 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(params[:order])
-    init_order_from_session
-    save_order_to_session
+    if params[:use_session]
+      init_order_from_session
+      save_order_to_session
+    end
     @order.car_num.upcase!
     @order.discounts << Discount.find(@order.discount_num)
     respond_to do |format|
@@ -176,7 +181,7 @@ class OrdersController < ApplicationController
   end
   
   def query_parts
-    @submodel = AutoSubmodel.find(params[:model])
+    @auto_submodel = AutoSubmodel.find(params[:model])
     respond_to do |format|
       format.html
       format.js

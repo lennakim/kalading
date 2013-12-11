@@ -1,7 +1,10 @@
 $("#auto_model_brand_id").val("<%= @auto_submodel.auto_model.auto_brand.id %>")
-$("#auto_auto_model").html("<%= escape_javascript( options_for_select(@auto_submodel.auto_model.auto_brand.auto_models.asc(:name).map {|p| [p.name, p.id]})) %>").val("<%= @auto_submodel.auto_model.id %>")
+$("#auto_auto_model, #auto_submodel_model_id").html("<%= escape_javascript( options_for_select(@auto_submodel.auto_model.auto_brand.auto_models.asc(:name).map {|p| [p.name, p.id]})) %>").val("<%= @auto_submodel.auto_model.id %>")
 $("#submodel-form").html("<%= escape_javascript(render("form1")) %>");
 $("#ajax-message").text("<%= @notify_message %>");
 
 $("#select-parts").html("<%= escape_javascript(render("parts")) %>");
 $("#select-service-types").html("<%= escape_javascript(render("service_types")) %>");
+
+$("#auto_submodels").html("<%= escape_javascript(render("auto_submodels")) %>");
+$("#order_auto_submodel_id").val("<%= @auto_submodel.id %>");
