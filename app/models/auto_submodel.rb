@@ -23,6 +23,12 @@ class AutoSubmodel
   field :name_mann, type: String
   field :full_name_pinyin, type: String, default: ''
   field :full_name, type: String, default: ''
+  field :oil_filter_oe, type: String
+  field :fuel_filter_oe, type: String
+  field :air_filter_oe, type: String
+
+  # 0 for mann database, 1 for longfeng database
+  field :data_source, type: Integer, default: 0
   
   index({ full_name_pinyin: 1 })
   index({ service_level: 1 })
@@ -43,7 +49,7 @@ class AutoSubmodel
   
   attr_accessible :name, :auto_model_id, :part_ids, :auto_ids, :motoroil_cap, :engine_displacement,
     :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes,
-    :year_range, :name_mann, :full_name_pinyin, :full_name
+    :year_range, :name_mann, :full_name_pinyin, :full_name, :data_source, :oil_filter_oe, :fuel_filter_oe, :air_filter_oe
 
   validates :name, presence: true
   validates :auto_model_id, presence: true
@@ -108,7 +114,6 @@ class AutoSubmodel
   
   def as_json(options = nil)
     h = super :except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :remark, :engine_displacement, :match_rule, :name_mann, :check_status]
-    h[:full_name] = self.full_name
     h
   end
 

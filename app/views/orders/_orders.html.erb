@@ -91,7 +91,7 @@
               <% else %>
                 <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
               <% end %>
-              <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini', :target => '_blank' if can? :edit_all, order %>
+              <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order %>
             <% end %>
           </td>
         </tr>

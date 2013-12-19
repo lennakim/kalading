@@ -13,6 +13,10 @@
       <%= check_box_tag "has_urlinfo", "1", false, {:id => "checkbox-urlinfo"} %>
       <%= label_tag "checkbox-urlinfo", t(:view_has_urlinfo), {class: "checkbox inline"} %>
     </p>
+    <p>
+      <%= check_box_tag "no_urlinfo", "1", false, {:id => "checkbox-no-urlinfo"} %>
+      <%= label_tag "checkbox-no-urlinfo", t(:view_no_urlinfo), {class: "checkbox inline"} %>
+    </p>
   <% end %>
   <div id="parts"><%= render 'parts' %></div>
 </div>

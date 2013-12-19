@@ -69,6 +69,7 @@ class OrdersController < ApplicationController
 
   # GET /orders/1/edit
   def edit
+    session[:return_to] ||= request.referer
     @order = Order.find(params[:id])
     authorize! :edit_all, @order if params[:edit_all]
     @order.discount_num = @order.discounts.first.id if @order.discounts.exists?
@@ -113,6 +114,8 @@ class OrdersController < ApplicationController
     if params[:verify_failed]
       params[:order][:state] = 1
       notice = I18n.t(:order_verify_failed, seq: @order.seq)
+    elsif params[:edit_all]
+      notice = I18n.t(:order_saved_notify, seq: @order.seq)
     else
       params[:order][:state] = 1
       case @order.state
@@ -146,11 +149,7 @@ class OrdersController < ApplicationController
           @order.discounts = nil
           @order.discounts << Discount.find(params[:order][:discount_num])
         end
-        if params[:verify_failed]
-          format.html { redirect_to orders_url(state: 0), notice: notice }
-        else
-          format.html { redirect_to orders_url(state: params[:order][:state] - 1), notice: notice }
-        end
+        format.html { redirect_to session.delete(:return_to), notice: notice }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

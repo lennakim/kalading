@@ -22,6 +22,7 @@ class PartsController < ApplicationController
       end
     end
     @parts = @parts.any_in( _id: Urlinfo.all.distinct("part_id") ) if params[:has_urlinfo]
+    @parts = @parts.not_in( _id: Urlinfo.all.distinct("part_id") ) if params[:no_urlinfo]
     
     respond_to do |format|
       format.html {@parts = @parts.page params[:page]}

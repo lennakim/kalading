@@ -15,9 +15,11 @@
 /log/*.log
 /tmp
 /public/system
+/public/*.mp4
 
 utils/*.TXT
 utils/*.text
 utils/*.json
 utils/*.csv
 *.tar.gz
+config/mongoid.yml 

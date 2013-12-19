@@ -22,6 +22,8 @@
   <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
   <div class="controls" id="search-car-model">
     <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" minlength="4" data-msg-required="<%= t(:auto_model_required) %>" data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
+    <%= label_tag "checkbox-data-source", t(:user_data_source_1), {class: "checkbox inline"} %>
+    <%= check_box_tag "data_source", "1", false, {:id => "checkbox-data-source"} %>
     <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
   </div>
 </div>

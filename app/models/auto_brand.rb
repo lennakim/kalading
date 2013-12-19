@@ -14,7 +14,10 @@ class AutoBrand
   field :name, type: String
   field :name_pinyin, type: String
   field :name_mann, type: String
-  attr_accessible :name, :name_pinyin, :name_mann
+  # 0 for mann database, 1 for longfeng database
+  field :data_source, type: Integer, default: 0
+
+  attr_accessible :name, :name_pinyin, :name_mann, :data_source
   
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
   

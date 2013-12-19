@@ -603,3 +603,5 @@ zh-CN:
   url_price: ' （网价）'
   parts_detail: '配件详情：'
   services_detail: '服务详情：'
+  user_data_source_1: '使用隆丰数据'
+  view_no_urlinfo: '只显示无网站价格的'

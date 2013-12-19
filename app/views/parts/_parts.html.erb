@@ -2,6 +2,7 @@
 <%= simple_form_for parts_path, method: :get, remote: true, :html => { :class => 'form-inline', :id => 'page-num-form' } do |f| %>
   <span><%= t(:di) %></span><input type="text" class="input-mini" name="page" placeholder="<%= t(:page_num) %>" value="<%= params[:page] %>"/><span><%= t(:page) %></span>
 <% end %>
+<p><strong><%= t('total', count: @parts.count )%></strong></p>
 <table class="table table-striped">
   <thead>
     <tr>

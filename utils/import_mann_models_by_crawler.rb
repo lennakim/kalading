@@ -9,11 +9,11 @@ d = File.open 'accessories_write_zf_second.text', 'rb' do |f|
   f.read  
 end
 
-m_models = JSON.parse(d)
-File.open 'mann_auto_models_and_parts.json', 'wb' do |f|
-  f.write(JSON.pretty_generate(m_models))
-end
-exit
+m_models = JSON.parse d
+#File.open 'mann_auto_models_and_parts.json', 'wb' do |f|
+#  f.write(JSON.pretty_generate(m_models))
+#end
+#exit
 
 puts "m_model count #{m_models.count}"
 
@@ -36,7 +36,7 @@ m_models.each do |m|
     'limit' => m['limit'],
     'parts' => parts
   }
-  #puts JSON.pretty_generate(data)
-  response_json = RestClient.post(server_address + 'auto_submodels_import', data.to_json,:content_type => :json, :accept => :json){|response, request, result| response }
-  puts "import error #{response_json.code}\n#{JSON.pretty_generate(m)}\n#{JSON.pretty_generate(data)}" or exit if response_json.code != 204
+  puts JSON.pretty_generate(data) if m['series_name'] =~ /志俊/
+  #response_json = RestClient.post(server_address + 'auto_submodels_import', data.to_json,:content_type => :json, :accept => :json){|response, request, result| response }
+  #puts "import error #{response_json.code}\n#{JSON.pretty_generate(m)}\n#{JSON.pretty_generate(data)}" or exit if response_json.code != 204
 end

@@ -15,13 +15,16 @@ $ ->
     $(document).on "submit", "#page-num-form", ->
         s = $("#parts_search").serialize() + '&' + $(this).serialize()
         s += ('&' + $('#checkbox-urlinfo').prop('name') + '=1') if $('#checkbox-urlinfo').is(':checked')
+        s += ('&' + $('#checkbox-urlinfo').prop('name') + '=1') if $('#checkbox-no-urlinfo').is(':checked')
         $.get($("#parts_search").attr("action"), s, null, "script")
         return false
     $(document).on "submit", "#parts_search", ->
         return false
-    $(document).on "click", "#checkbox-urlinfo", ->
+    $(document).on "click", "#checkbox-urlinfo,#checkbox-no-urlinfo", ->
+        $(this).closest('form').find('input:checkbox').not(this).prop("checked", false)
         s = $("#parts_search").serialize() + '&' + $("#page-num-form").serialize()
-        s += ('&' + $(this).prop('name') + '=1') if $(this).is(':checked')
+        s += ('&' + $('#checkbox-urlinfo').prop('name') + '=1') if $('#checkbox-urlinfo').is(':checked')
+        s += ('&' + $('#checkbox-no-urlinfo').prop('name') + '=1') if $('#checkbox-no-urlinfo').is(':checked')
         $.get($("#parts_search").attr("action"), s, null, "script")
     $(document).on "change", "#part_match_brand_id", ->
         s = 'brand_id=' + $(this).val() + '&type_id=' + $("#part-match-type").prop('value')

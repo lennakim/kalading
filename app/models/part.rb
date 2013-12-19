@@ -51,9 +51,13 @@ class Part
   paginates_per 10
   
   def url_price
-    ui = self.urlinfos.all.min do |a, b|
-      a.price <=> b.price
-    end
+    ui = self.urlinfos.all.min {|x| x.price}
+    ui ? ui.price : Money.new(0)
+  end
+
+  def ref_price
+    return self.price if self.price != 0.0
+    ui = self.urlinfos.all.min {|x| x.price}
     ui ? ui.price : Money.new(0)
   end
 end

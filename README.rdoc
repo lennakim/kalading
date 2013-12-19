@@ -35,8 +35,9 @@ location ~ ^/(assets)/  {
 rake db:reseed
 
 
-== Deployment of new assets
-rake db:mongoid:create_indexes
+== Deployment of new database and assets
+bundle install --deployment --without development test
+RAILS_ENV=production bundle exec rake db:mongoid:create_indexes
 rm -rf public/assets
 RAILS_ENV=production bundle exec rake assets:precompile
 sudo stop kalading
@@ -48,7 +49,41 @@ gem install mysql2xxxx
 mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * from ah_model" > ah_models.json
 mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * from m_model" > m_models.json
 
-== Test on Windows
-set RAILS_ENV=development
-set PORT=8002
-foreman start
+
+== Update database to windows env
+rake db:reseed && cd db && bsdtar zxf data.tar.gz && cd data && import_kalading.bat
+
+== Update database and code to tokyo
+cd db/data && export_kalading.bat && cd .. && bsdtar zcf data.tar.gz data && scp -i ../tokyo_new.ppk data.tar.gz ubuntu@54.248.126.168:/mnt/kalading/db/  && rm -f data.tar.gz && cd .. && bsdtar zcf app.tar.gz app/ && scp -i tokyo_new.ppk app.tar.gz ubuntu@54.248.126.168:/mnt/kalading/ && rm -f app.tar.gz
+ssh ubuntu@54.248.126.168 "cd /mnt/kalading; tar zxf app.tar.gz; rm -f app.tar.gz; rake db:reseed; cd db; tar zxf data.tar.gz; cd data; ./import_kalading.bat; cd ..; cd ..; rm -rf public/assets; RAILS_ENV=production bundle exec rake assets:precompile; sudo stop kalading; sudo start kalading"
+
+== Fetch dababase from tokyo
+cd ../db
+ssh ubuntu@54.248.126.168 "cd /mnt/kalading/db/data; rm -f *.json; ./export_kalading.bat; cd ..; tar zcf data.tar.gz data"
+scp -i ../tokyo_new.ppk ubuntu@54.248.126.168:/mnt/kalading/db/data.tar.gz ./
+bsdtar zxf data.tar.gz && cd .. && rake db:reseed && cd db/data/ && import_kalading.bat
+
+
+== Install ruby & nginx & mongodb on Ubuntu
+cd /tmp/
+wget http://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p353.tar.gz
+tar -xvzf ruby-2.0.0-p353.tar.gz
+cd ruby-2.0.0-p353/
+./configure --prefix=/usr/local
+make
+sudo make install
+
+sudo apt-get install libpcre3-dev zlib1g-dev
+cd /tmp/
+wget http://nginx.org/download/nginx-1.4.3.tar.gz
+tar -xvf nginx-1.4.3.tar.gz
+cd nginx-1.4.3/
+./configure
+make
+sudo make install
+sudo wget https://raw.github.com/JasonGiedymin/nginx-init-ubuntu/master/nginx -O /etc/init.d/nginx
+sudo chmod +x /etc/init.d/nginx
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB1
+echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+sudo apt-get install mongodb-10gen

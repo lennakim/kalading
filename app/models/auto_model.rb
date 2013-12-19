@@ -14,7 +14,10 @@ class AutoModel
   field :name, type: String
   field :full_name_pinyin, type: String, default: ''
   field :name_mann, type: String
-  attr_accessible :name, :auto_brand_id, :auto_submodels_attributes, :full_name_pinyin, :name_mann
+  # 0 for mann database, 1 for longfeng database
+  field :data_source, type: Integer, default: 0
+
+  attr_accessible :name, :auto_brand_id, :auto_submodels_attributes, :full_name_pinyin, :name_mann, :data_source
   
   belongs_to :auto_brand
   has_many :auto_submodels, dependent: :delete

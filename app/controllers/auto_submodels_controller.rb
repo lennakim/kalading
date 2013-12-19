@@ -55,9 +55,13 @@ class AutoSubmodelsController < ApplicationController
         else
           if params[:query] && params[:query] != ''
             s = PinYin.of_string( params[:query].gsub(/\s+/, "").split('').join(".*") ).join.gsub(/zhang/, 'chang')
-            @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i).limit(8)
+            if params[:data_source]
+              @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i, data_source: params[:data_source].to_i).limit(16)
+            else
+              @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i, data_source: 0).limit(16)
+            end
           else
-            @auto_submodels = AutoSubmodel.limit(8)
+            @auto_submodels = AutoSubmodel.limit(16)
           end
           render json: @auto_submodels
         end
@@ -223,28 +227,42 @@ class AutoSubmodelsController < ApplicationController
   end
   
   def import
-    ab = AutoBrand.find_or_create_by name_mann: params[:brand_name]
+    ab = AutoBrand.find_or_create_by( name_mann: params[:brand_name],
+                                      name: params[:brand_name].split('/')[0],
+                                      data_source: params[:data_source] )
     
-    am = AutoModel.find_or_create_by name_mann: params[:model_name], auto_brand_id: ab.id
-    #full_name = am.auto_brand.name + ' ' + am.name
-    #full_name.gsub!(/\s+/, "")
-    #am.update_attributes({
-    #                full_name_pinyin: PinYin.of_string(full_name).join
-    #              })
-    asm = AutoSubmodel.find_or_create_by :name_mann => params[:submodel_name],
-      :auto_model_id => am.id,
-      :engine_model => params[:engine_model]
-    asm.update_attributes match_rule: params[:limit]
+    am = AutoModel.find_or_create_by( name_mann: params[:model_name],
+                                       auto_brand_id: ab.id,
+                                       name: params[:model_name].split('/')[0],
+                                       data_source: params[:data_source] )
+    
+    full_name = params[:brand_name].split('/')[0] + ' ' + params[:model_name].split('/')[0]
+    am.update_attributes full_name_pinyin: PinYin.of_string(full_name.gsub(/\s+/, "")).join
+
+    asm = AutoSubmodel.find_or_create_by( name_mann: params[:submodel_name],
+      name: params[:submodel_name].split('/')[0],
+      auto_model_id: am.id,
+      engine_model: params[:engine_model],
+      year_range: params[:year_range],
+      data_source: params[:data_source],
+      oil_filter_oe: params[:oil_filter_oe],
+      fuel_filter_oe: params[:fuel_filter_oe],
+      air_filter_oe: params[:air_filter_oe] )
+    full_name = params[:brand_name].split('/')[0] + ' ' + params[:model_name].split('/')[0] + ' ' + params[:submodel_name].split('/')[0].delete(params[:model_name].split('/')[0]) + ' ' + params[:year_range]
+    asm.update_attributes full_name: full_name, full_name_pinyin: PinYin.of_string(full_name.gsub(/\s+/, "")).join.gsub(/zhang/, 'chang')
 
     if params[:parts]
       params[:parts].each do |part_data|
         pb = PartBrand.find_or_create_by name: part_data[:part_brand_name]
         pt = PartType.find_or_create_by name: part_data[:part_type_name]
-        p = Part.find_or_create_by number: part_data[:number], part_brand_id: pb.id, part_type_id: pt.id
+        s = part_data[:number].gsub(/\s+/, "").split('').join(".*")
+        p = Part.find_by number: /.*#{s}.*/i, part_brand_id: pb.id, part_type_id: pt.id
+        p = Part.find_or_create_by number: part_data[:number], part_brand_id: pb.id, part_type_id: pt.id if ! p
         p.auto_submodels << asm
         asm.parts << p
       end
     end
+
     respond_to do |format|
       format.html { redirect_to auto_submodels_url }
       format.json { head :no_content }

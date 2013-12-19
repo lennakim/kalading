@@ -22,15 +22,13 @@ $ ->
 
     $(document).on "click", '#select-parts table tr td input:checkbox', ->
         if !$(this).data('multisel')
-            checkedState =  $(this).prop("checked")
-            $(this).closest('table').find('input:checkbox').prop("checked", false)
-            $(this).prop("checked", checkedState)
+            $(this).closest('table').find('input:checkbox').not(this).prop("checked", false)
         $.post $("#calcprice-btn").prop('href'), $("#calcprice-btn").parents("form").serialize(), null, "script"
 
     $(document).on "click", '#select-service-types table tr td input:checkbox', ->
         $.post $("#calcprice-btn").prop('href'), $("#calcprice-btn").parents("form").serialize(), null, "script"
 
-    $(document).on 'keyup input', $('input[name^="order[part_counts]"]'), $.debounce 1000, ->
+    $(document).on 'keyup input', "input[name^='order[part_counts]']", $.debounce 1000, ->
         $.post $("#calcprice-btn").prop('href'), $("#calcprice-btn").parents("form").serialize(), null, "script"
     
     $("#order_auto_submodel_id").change ->
@@ -51,8 +49,10 @@ $ ->
     car_model_table = {}
     $('#car-model-search').typeahead
         source: (query, process) ->
+            params = {query: query}
+            params[$('#checkbox-data-source').prop('name')] = 1 if $('#checkbox-data-source').is(':checked')
             return $.getJSON $('#car-model-search').data('link'),
-                {query: query},
+                params,
                 (data) ->
                     car_model_table = {}
                     newData = []
@@ -67,5 +67,6 @@ $ ->
         updater: (item) ->
             $.get('/auto_submodels/' + car_model_table[item], null, null, "script")
             return item
+        items: 16
     $('a.datetime-shortcut').click ->
         $('#order_serve_datetime').val($(this).data('msg'))
