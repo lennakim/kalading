@@ -6,7 +6,8 @@ namespace :export_automodel do
   task :a => :environment do
     mann = '曼牌 Mann'
     mahle = '马勒 Mahle'
-    
+
+    fuel_filter =  PartType.find_by name: '燃油滤清器'
     mann_brand = PartBrand.find_by name: mann
     mahle_brand = PartBrand.find_by name: mahle
     
@@ -37,6 +38,7 @@ namespace :export_automodel do
       File.open 'mann_parts.csv', 'w:UTF-8' do |f|
         f.puts 'ID,品牌,类型,型号'
         mann_parts.sort_by {|x| x.part_type}.each do |p|
+          next if p.part_type == fuel_filter
           f.puts "#{p.part_brand.name},#{p.part_type.name},#{p.number}"
         end
       end
@@ -44,6 +46,7 @@ namespace :export_automodel do
       File.open 'mahle_parts.csv', 'w:UTF-8' do |f|
         f.puts 'ID,品牌,类型,型号'
         mahle_parts.sort_by {|x| x.part_type}.each do |p|
+          next if p.part_type == fuel_filter
           f.puts "#{p.id},#{p.part_brand.name},#{p.part_type.name},#{p.number}"
         end
       end

@@ -21,6 +21,7 @@ utils/*.TXT
 utils/*.text
 utils/*.json
 utils/*.csv
+utils/merge/
 *.tar.gz
 config/mongoid.yml 
 README.rdoc
