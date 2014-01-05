@@ -113,10 +113,11 @@
 <h5 id="others"><%= t(:others) %></h5>
   <table class="table table-striped">
     <tbody>
+      <% @order.comments.each do |c|%>
       <tr>
-        <td><%= t(:comment) %></td>
-        <td><%= text_area_tag 'comment', @order.comment, {:size => '80x3', :disabled => true} %></td>
+        <td><%= text_area_tag 'comment', c.text, {:size => '80x3', :disabled => true} %></td>
       </tr>
+      <% end %>
     </tbody>
   </table>
   <table class="table table-strped">

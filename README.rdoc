@@ -22,8 +22,6 @@ sudo tcpdump -n -S -s 0 -A 'tcp dst port 8002' -i eth0 | grep -B3 -A10 "GET /ord
 == Show POST requests in log:
 tail -n 1000 kalading/log/development.log | grep -B2 -A10 "POST"
 
-sudo foreman export -f Procfile.aws --app kalading -p 3001 --user ubuntu upstart /etc/init
-
 == nginx config for static assets
 location ~ ^/(assets)/  {
   root /home/ubuntu/kalading/public;
@@ -31,8 +29,6 @@ location ~ ^/(assets)/  {
   expires max;
   add_header Cache-Control public;
 }
-
-rake db:reseed
 
 
 == Deployment of new database and assets
@@ -52,10 +48,6 @@ mysql2json1.9 --database=car --user=root --password=anycomm --execute "select * 
 
 == Update database to windows env
 rake db:reseed && cd db && bsdtar zxf data.tar.gz && cd data && import_kalading.bat
-
-== Update database and code to tokyo
-cd db/data && export_kalading.bat && cd .. && bsdtar zcf data.tar.gz data && scp -i ../tokyo_new.ppk data.tar.gz ubuntu@54.248.126.168:/mnt/kalading/db/  && rm -f data.tar.gz && cd .. && bsdtar zcf app.tar.gz app/ && scp -i tokyo_new.ppk app.tar.gz ubuntu@54.248.126.168:/mnt/kalading/ && rm -f app.tar.gz
-ssh ubuntu@54.248.126.168 "cd /mnt/kalading; tar zxf app.tar.gz; rm -f app.tar.gz; rake db:reseed; cd db; tar zxf data.tar.gz; cd data; ./import_kalading.bat; cd ..; cd ..; rm -rf public/assets; RAILS_ENV=production bundle exec rake assets:precompile; sudo stop kalading; sudo start kalading"
 
 == Fetch dababase from tokyo
 cd ../db
@@ -78,12 +70,60 @@ cd /tmp/
 wget http://nginx.org/download/nginx-1.4.3.tar.gz
 tar -xvf nginx-1.4.3.tar.gz
 cd nginx-1.4.3/
-./configure
+./configure --with-http_gzip_static_module
+sudo apt-get install make
 make
 sudo make install
 sudo wget https://raw.github.com/JasonGiedymin/nginx-init-ubuntu/master/nginx -O /etc/init.d/nginx
 sudo chmod +x /etc/init.d/nginx
 
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB1
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+sudo apt-get update
 sudo apt-get install mongodb-10gen
+
+== SSH azure Kalading3 hongkong
+ssh 'azureuser@137.116.129.52'
+
+== SCP azure Kalading3 hongkong
+scp -pw Kalading123 azureuser@137.116.129.52
+
+== SSH azure Kalading3 beijing
+ssh 'azureuser@42.159.24.222'
+
+== SCP azure Kalading3 beijing
+scp -pw Kalading123 azureuser@42.159.24.222
+
+== First time deployment to ubuntu hongkong
+bsdtar zcf kalading.tar.gz kalading_backend && scp kalading.tar.gz azureuser@137.116.129.52:/mnt/ && ssh azureuser@137.116.129.52 "cd /mnt; tar zxf kalading.tar.gz; mv kalading_backend kalading; "
+ssh azureuser@137.116.129.52 "sudo gem install bundler; sudo gem install foreman; sudo gem install thin"
+ssh azureuser@137.116.129.52 "cd /mnt/kalading; sudo foreman export -f Procfile.aws --app kalading -p 3001 --user azureuser upstart /etc/init"
+
+== First time deployment to ubuntu beijing
+bsdtar zcf kalading.tar.gz kalading_backend && scp kalading.tar.gz azureuser@42.159.24.222:/mnt/ && ssh azureuser@42.159.24.222 "cd /mnt; tar zxf kalading.tar.gz; mv kalading_backend kalading; "
+ssh azureuser@42.159.24.222
+sudo gem install bundler; sudo gem install foreman; sudo gem install thin
+For “Cannot load such file — openssl” error:
+sudo apt-get install libssl-dev
+cd ext/openssl
+ruby extconf.rb
+make && sudo make install
+cd /mnt/kalading; sudo foreman export -f Procfile.aws --app kalading -p 3001 --user azureuser upstart /etc/init
+sudo apt-get install node.js
+
+== Database copy to hongkong
+cd db/data && ./export_kalading.bat && cd .. && bsdtar zcf data.tar.gz data && scp data.tar.gz azureuser@137.116.129.52:/mnt/kalading/db/ && rm -f data.tar.gz
+
+== Database copy to beijing
+cd db/data && ./export_kalading.bat && cd .. && bsdtar zcf data.tar.gz data && scp data.tar.gz azureuser@42.159.24.222:/mnt/kalading/db/ && rm -f data.tar.gz
+
+== Update database and code to beijing
+cd db/data && export_kalading.bat && cd .. && bsdtar zcf data.tar.gz data && scp -pw Kalading123 data.tar.gz azureuser@42.159.24.222:/mnt/kalading/db/  && rm -f data.tar.gz && cd .. && bsdtar zcf app.tar.gz app/ && scp -pw Kalading123 app.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f app.tar.gz && bsdtar zcf config.tar.gz config/ && scp -pw Kalading123 config.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f config.tar.gz
+ssh azureuser@42.159.24.222 "cd /mnt/kalading; tar zxf app.tar.gz; rm -f app.tar.gz; tar zxf config.tar.gz; rm -f config.tar.gz; bundle exec rake db:reseed; cd db; tar zxf data.tar.gz; cd data; ./import_kalading.bat; cd ..; cd ..; rm -rf public/assets; RAILS_ENV=production bundle exec rake assets:precompile; sudo stop kalading; sudo start kalading"
+
+== Fetch dababase from azure beijing
+cd db
+ssh azureuser@42.159.24.222 "cd /mnt/kalading/db/data; rm -f *.json; ./export_kalading.bat; cd ..; tar zcf data.tar.gz data"
+scp -pw Kalading123 azureuser@42.159.24.222:/mnt/kalading/db/data.tar.gz ./
+bsdtar zxf data.tar.gz && cd .. && rake db:reseed && cd db/data/ && import_kalading.bat
+

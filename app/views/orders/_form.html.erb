@@ -96,7 +96,7 @@
     <%= f.input :reciept_title, label: t(:reciept_title) %>
   
   <h5 id="others"><%= t(:others) %></h5>
-    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <%= render 'comments', :f => f %>
     <div class="form-actions">
       <% if (%w[new duplicate].include? params[:action]) %>
         <%= f.button :submit, t(:save), :class => 'btn-primary' %>
@@ -110,7 +110,7 @@
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
     <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
-    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <%= render 'comments', :f => f %>
     <div class="form-actions">
       <%= f.button :submit, t(:assign_ok), :class => 'btn-primary' %>
     </div>
@@ -120,7 +120,7 @@
     <%= f.input :name, label: t(:confirmed_client_name) %>
     <%= f.input :serve_datetime, label: t(:confirmed_serve_datetime), :as => :datetime_picker %>
     <div id="price-detail"><%= render 'price_detail' %></div>
-    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <%= render 'comments', :f => f %>
     <div class="form-actions">
       <%= f.button :submit, t(:schedule_ok), :class => 'btn-primary' %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
@@ -157,26 +157,28 @@
       </tbody>
     </table>
     <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
-    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <%= render 'comments', :f => f %>
     <div class="form-actions">
       <%= f.button :submit, t(:serve_ok), :class => 'btn-primary' %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'serve_done' %>
-    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <%= render 'comments', :f => f %>
+    <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">
       <%= f.button :submit, t(:handover_ok), :class => 'btn-primary' %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'handovered' %>
+    <%= render 'comments', :f => f %>
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
-    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
     <div class="form-actions">
       <%= f.button :submit, t(:revisit_ok), :class => 'btn-primary' %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'revisited' %>
-    <%= f.input :comment, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+    <%= render 'comments', :f => f %>
+    <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">
       <%= f.button :submit, t(:save), :class => 'btn-primary' %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>

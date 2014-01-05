@@ -23,3 +23,4 @@ utils/*.json
 utils/*.csv
 *.tar.gz
 config/mongoid.yml 
+README.rdoc

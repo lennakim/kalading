@@ -1,3 +1,11 @@
+class Comment
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  field :text, type: String
+
+  embedded_in :order
+end
+
 class Order
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -21,7 +29,6 @@ class Order
   field :pay_type, type: Integer, default: 0
   field :reciept_type, type: Integer, default: 0
   field :reciept_title, type: String, default: ''
-  field :comment, type: String, default: ''
   field :client_comment, type: String, default: ''
 
   field :oil_filter_changed, type: Boolean, default: false
@@ -47,9 +54,12 @@ class Order
   has_and_belongs_to_many :discounts
   embeds_many :pictures, :cascade_callbacks => true
   has_and_belongs_to_many :parts
+  embeds_many :comments, :cascade_callbacks => true
+
   field :part_counts, type: Hash, default: {}
   
   accepts_nested_attributes_for :pictures, :allow_destroy => true
+  accepts_nested_attributes_for :comments, :allow_destroy => true
 
   attr_accessible :state, :address, :phone_num,:buymyself,:serve_datetime,
     :customer_id, :engineer_id, :auto_id,
@@ -58,8 +68,9 @@ class Order
     :discount_ids,
     :part_ids,
     :picture_ids, :pictures_attributes,
+    :comment_ids, :comments_attributes,
     :auto_submodel_id,
-    :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :comment, :client_comment,
+    :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts
 

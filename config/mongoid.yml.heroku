@@ -81,11 +81,7 @@ test:
 production:
   sessions:
     default:
-      database: kalading_development
-      # Provides the hosts the default session can connect to. Must be an array
-      # of host:port pairs. (required)
-      hosts:
-        - localhost:27017
+      uri: <%= ENV['MONGOHQ_URL'] %>
   options:
     raise_not_found_error: false
 importdata:

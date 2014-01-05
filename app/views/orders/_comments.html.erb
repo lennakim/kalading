@@ -1,0 +1,15 @@
+<table id="comments" class="table table-hover table-small">
+  <tbody>
+    <%= f.fields_for :comments, :wrapper => false do |sf| %>
+      <tr class="fields">
+        <td>
+          <%= sf.input :text, label: t('comment'), as: :text, :input_html => { :cols => 50, :rows => 2, :placeholder => t(:comment_usage) } %>
+        </td>
+        <td>
+          <%= sf.link_to_remove t('remove_comment'), class: 'btn btn-small btn-warning' if can? :destroy, Comment %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<p><%= f.link_to_add t('add_comment'), :comments, :data => { :target => "#comments > tbody" }, class: 'btn btn-small btn-info' %></p>

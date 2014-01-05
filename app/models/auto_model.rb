@@ -24,7 +24,7 @@ class AutoModel
 
   has_many :service_types
   
-  validates :name, uniqueness:  {case_sensitive: false}, presence: true
+  validates :name, presence: true
   validates :auto_brand_id, presence: true
   
   index({ name: 1 })
