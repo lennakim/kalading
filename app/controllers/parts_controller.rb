@@ -100,6 +100,7 @@ class PartsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to parts_url }
+      format.js
       format.json { head :no_content }
     end
   end

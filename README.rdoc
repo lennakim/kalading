@@ -65,13 +65,14 @@ cd ruby-2.0.0-p353/
 make
 sudo make install
 
+sudo apt-get update
+sudo apt-get install make
 sudo apt-get install libpcre3-dev zlib1g-dev
 cd /tmp/
 wget http://nginx.org/download/nginx-1.4.3.tar.gz
 tar -xvf nginx-1.4.3.tar.gz
 cd nginx-1.4.3/
 ./configure --with-http_gzip_static_module
-sudo apt-get install make
 make
 sudo make install
 sudo wget https://raw.github.com/JasonGiedymin/nginx-init-ubuntu/master/nginx -O /etc/init.d/nginx
@@ -121,9 +122,22 @@ cd db/data && ./export_kalading.bat && cd .. && bsdtar zcf data.tar.gz data && s
 cd db/data && export_kalading.bat && cd .. && bsdtar zcf data.tar.gz data && scp -pw Kalading123 data.tar.gz azureuser@42.159.24.222:/mnt/kalading/db/  && rm -f data.tar.gz && cd .. && bsdtar zcf app.tar.gz app/ && scp -pw Kalading123 app.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f app.tar.gz && bsdtar zcf config.tar.gz config/ && scp -pw Kalading123 config.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f config.tar.gz
 ssh azureuser@42.159.24.222 "cd /mnt/kalading; tar zxf app.tar.gz; rm -f app.tar.gz; tar zxf config.tar.gz; rm -f config.tar.gz; bundle exec rake db:reseed; cd db; tar zxf data.tar.gz; cd data; ./import_kalading.bat; cd ..; cd ..; rm -rf public/assets; RAILS_ENV=production bundle exec rake assets:precompile; sudo stop kalading; sudo start kalading"
 
+== Update code & assets to beijing
+bsdtar zcf app.tar.gz app/ && scp -pw Kalading123 app.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f app.tar.gz && bsdtar zcf config.tar.gz config/ && scp -pw Kalading123 config.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f config.tar.gz
+ssh azureuser@42.159.24.222 "cd /mnt/kalading; tar zxf app.tar.gz; rm -f app.tar.gz; tar zxf config.tar.gz; rm -f config.tar.gz; rm -rf public/assets; RAILS_ENV=production bundle exec rake assets:precompile; sudo stop kalading; sudo start kalading"
+
+== Update code to beijing
+bsdtar zcf app.tar.gz app/ && scp -pw Kalading123 app.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f app.tar.gz && bsdtar zcf config.tar.gz config/ && scp -pw Kalading123 config.tar.gz azureuser@42.159.24.222:/mnt/kalading/ && rm -f config.tar.gz
+ssh azureuser@42.159.24.222 "cd /mnt/kalading; tar zxf app.tar.gz; rm -f app.tar.gz; tar zxf config.tar.gz; rm -f config.tar.gz; sudo stop kalading; sudo start kalading"
+
 == Fetch dababase from azure beijing
 cd db
 ssh azureuser@42.159.24.222 "cd /mnt/kalading/db/data; rm -f *.json; ./export_kalading.bat; cd ..; tar zcf data.tar.gz data"
 scp -pw Kalading123 azureuser@42.159.24.222:/mnt/kalading/db/data.tar.gz ./
 bsdtar zxf data.tar.gz && cd .. && rake db:reseed && cd db/data/ && import_kalading.bat
 
+== Change editor to vim
+export EDITOR=/usr/bin
+
+== Set time zone on ubuntu server
+sudo dpkg-reconfigure tzdata

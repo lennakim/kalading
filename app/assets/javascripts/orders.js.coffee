@@ -50,7 +50,6 @@ $ ->
     $('#car-model-search').typeahead
         source: (query, process) ->
             params = {query: query}
-            params[$('#checkbox-data-source').prop('name')] = 1 if $('#checkbox-data-source').is(':checked')
             return $.getJSON $('#car-model-search').data('link'),
                 params,
                 (data) ->

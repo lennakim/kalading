@@ -2,6 +2,8 @@
 <div>
   <%= link_to t(:new_discount), new_discount_path, :class => 'btn btn-primary pull-right' if can? :create, Discount %>
 </div>
+<%= paginate @discounts %>
+<p><strong><%= t('total', count: @discounts.count )%></strong></p>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -38,4 +40,5 @@
     <% end %>
   </tbody>
 </table>
-
+<%= paginate @discounts %>
+<p><strong><%= t('total', count: @discounts.count )%></strong></p>

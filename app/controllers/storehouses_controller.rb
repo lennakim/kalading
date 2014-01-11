@@ -58,6 +58,10 @@ class StorehousesController < ApplicationController
       format.html # show.html.erb
       format.js # show.js.erb
       format.json { render json: @partbatches }
+      format.csv {
+        headers['Last-Modified'] = Time.now.httpdate
+        send_data @storehouse.to_csv, :filename => @storehouse.name + I18n.l(DateTime.now) + '.csv'
+      }
     end
   end
 

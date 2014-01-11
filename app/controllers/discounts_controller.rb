@@ -6,7 +6,7 @@ class DiscountsController < ApplicationController
   # GET /discounts
   # GET /discounts.json
   def index
-    @discounts = Discount.asc(:name)
+    @discounts = Discount.desc(:created_at).page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb
@@ -45,16 +45,15 @@ class DiscountsController < ApplicationController
   # POST /discounts
   # POST /discounts.json
   def create
-    @discount = Discount.new(params[:discount])
-
+    discounts = []
+    (1..params[:discount_number].to_i).each do |i|
+      @discount = Discount.new(params[:discount])
+      @discount.save
+      discounts << @discount
+    end
     respond_to do |format|
-      if @discount.save
-        format.html { redirect_to @discount, notice: 'Discount was successfully created.' }
-        format.json { render json: @discount, status: :created, location: @discount }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @discount.errors, status: :unprocessable_entity }
-      end
+      format.html { redirect_to discounts_url, notice: I18n.t(:discount_created, n: params[:discount][:name], c: params[:discount_number] ) }
+      format.json { render json: discounts, status: :created, location: discounts }
     end
   end
 

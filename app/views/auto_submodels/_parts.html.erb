@@ -1,7 +1,7 @@
 <% @auto_submodel.parts_by_type.each do |k, v| %>
   <table class="table table-striped">
   <th colspan="4"><%= k.name %></th>
-  <% v.each do |p| %>
+  <% v.sort{|x, y| y.total_remained_quantity <=> x.total_remained_quantity }.each do |p| %>
     <tr>
       <td>
         <%= check_box_tag "order[part_ids][]", "#{p.id}", false, {:id => "part_#{p.id}", "data-multisel" => p.part_type.allow_multi } %>

@@ -1,8 +1,16 @@
 <%= simple_form_for @discount, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :name, label: t(:discount_name), input_html: { maxlength: "128", required: '', "data-msg-required" => t(:discount_name_required) } %>
   <%= f.input :discount, label: t(:discount) %>
-  <%= f.input :percent, label: t(:discount_percent), :as => :numeric, input_html: {min: "0", max: "99", required: '', "data-msg-required" => t(:discount_percent_required) }, placeholder: t(:discount_percent_placeholder) %>
+  <%= f.input :percent, label: t(:discount_percent), :as => :numeric, input_html: {min: "0", max: "100", required: '', "data-msg-required" => t(:discount_percent_required) }, placeholder: t(:discount_percent_placeholder) %>
   <%= f.input :expire_date, label: t(:expire_date), :as => :date_picker, readonly: true %>
+  <% if ["new"].include? params[:action] %>
+    <div class="control-group numeric required discount_number">
+      <label class="numeric required control-label" for="discount_number"><%= t(:count) %></label>
+      <div class="controls">
+        <input class="numeric numeric required valid" data-msg-required="" id="discount_number" max="9999" min="1" name="discount_number" placeholder="1-9999之间" required="required" step="any" type="number" value="1">
+      </div>
+    </div>
+  <% end %>
   <div class="form-actions">
     <%= f.button :submit, t(:save), :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

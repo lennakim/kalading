@@ -60,7 +60,7 @@ class OrdersController < ApplicationController
     @order.discounts = nil
     @order.calc_price
     @auto_submodel = @order.auto_submodel
-    @auto_submodels = [@order.auto_submodel] if @order.auto_submodel
+    @auto_submodels = Kaminari.paginate_array([@order.auto_submodel]).page(0) if @order.auto_submodel
     respond_to do |format|
       format.html { render action: "new" }
       format.json { render action: "new", json: @order }
@@ -119,7 +119,7 @@ class OrdersController < ApplicationController
     else
       params[:order][:state] = 1
       case @order.state
-      when 0
+      when 0..1
         params[:order][:state] = 2
         notice = I18n.t(:order_verified_notify, seq: @order.seq)
       when 2

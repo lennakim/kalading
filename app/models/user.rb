@@ -66,4 +66,12 @@ class User
   end
   
   paginates_per 10
+  
+  def ability
+    @ability ||= Ability.new(self)
+  end
+
+  def self.storehouse_admins
+    User.all.select {|u| u.ability.can? :create, Partbatch}
+  end
 end

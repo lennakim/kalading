@@ -18,7 +18,7 @@ class Part
   belongs_to :part_type
   has_and_belongs_to_many :auto_submodels
   has_many :urlinfos
-  has_many :partbatches
+  has_many :partbatches, dependent: :destroy
   has_and_belongs_to_many :orders
 
   attr_accessible :capacity, :number, :match_rule, :spec,

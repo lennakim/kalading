@@ -7,6 +7,7 @@
       <th><%= t 'remained_quantity' %></th>
       <th><%= t 'partbatch_id' %></th>
       <th><%= t 'partbatch_create_time' %></th>
+      <th><%= t 'comment' %></th>
       <th><%=t 'actions' %></th>
     </tr>
   </thead>
@@ -19,6 +20,7 @@
         <td id="<%= pb.id %>"><%= pb.remained_quantity %></td>
         <td><%= link_to pb.id.to_s, pb, :target => '_blank' %></td>
         <td><%= l pb.created_at %></td>
+        <td><%= pb.comment %></td>
         <td>
           <%= link_to t('storehouse_out'), edit_partbatch_path(pb),
               {:class => 'btn btn-mini', :remote => true, :disabled => (pb.remained_quantity <= 0), 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can? :update, pb %>

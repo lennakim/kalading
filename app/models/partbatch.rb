@@ -6,8 +6,9 @@ class Partbatch
   field :quantity, type: Integer, default: 0
   field :price, type: Money
   field :remained_quantity, type: Integer, default: ->{ quantity }
+  field :comment, type: String, default: ''
   
-  attr_accessible :price, :part_id, :quantity, :storehouse_id, :supplier_id, :remained_quantity, :modifier, :user_id
+  attr_accessible :price, :part_id, :quantity, :storehouse_id, :supplier_id, :remained_quantity, :modifier, :user_id, :comment
   
   validates :part_id, presence: true
   validates :storehouse_id, presence: true

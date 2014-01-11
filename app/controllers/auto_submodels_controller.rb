@@ -55,11 +55,7 @@ class AutoSubmodelsController < ApplicationController
         else
           if params[:query] && params[:query] != ''
             s = PinYin.of_string( params[:query].gsub(/\s+/, "").split('').join(".*") ).join.gsub(/zhang/, 'chang')
-            if params[:data_source]
-              @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i, data_source: params[:data_source].to_i).limit(16)
-            else
-              @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i, data_source: 0).limit(16)
-            end
+            @auto_submodels = AutoSubmodel.where(full_name_pinyin: /.*#{s}.*/i).limit(16)
           else
             @auto_submodels = AutoSubmodel.limit(16)
           end

@@ -13,7 +13,11 @@ class Discount
   field :expire_date, type: Date, default: Date.today.since(1.years)
   
   validates :name, presence: true
-  validates :percent, inclusion: { in: 0..99 }, presence: true
+  validates :percent, inclusion: { in: 0..100 }, presence: true
   has_and_belongs_to_many :orders
   attr_accessible :name, :discount, :percent, :order_ids, :expire_date
+  
+  paginates_per 10
+  
+  
 end
