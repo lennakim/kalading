@@ -12,6 +12,8 @@
       <th><%= t(:discount) %></th>
       <th><%= t(:discount_percent) %></th>
       <th><%= t(:expire_date) %></th>
+      <th><%= t(:available_times) %></th>
+      <th><%= t(:total_times) %></th>
       <th><%=t 'actions' %></th>
     </tr>
   </thead>
@@ -27,6 +29,8 @@
         <% else %>
         <td><%= l discount.expire_date %></td>
         <% end %>
+        <td><%= discount.remained_times %></td>
+        <td><%= discount.times %></td>
         <td>
           <%= link_to t('edit'),
                       edit_discount_path(discount), :class => 'btn btn-mini' if can? :update, discount %>

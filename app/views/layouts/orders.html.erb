@@ -5,26 +5,29 @@
     <%= render '/layouts/menu' %>
     <div class="container-fluid">
       <div class="row-fluid">
+        <% if mobile_device? %>
+        <% else %>
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header"></li>
               <% Order::STATES.each do |s| %>
-                <% if params[:state] && params[:state].to_i == s %>
+                <% if params[:state] && params[:state] != '' && params[:state].to_i == s %>
                   <li class="active"><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
                 <% else %>
                   <li><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
                 <% end %>
               <% end %>
 
-              <% if !params[:state] %>
-                <li class="active"><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
-              <% else %>
+              <% if params[:state] && params[:state] != '' %>
                 <li><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
+              <% else %>
+                <li class="active"><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
               <% end %>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
+      <% end %>
         <div class="span10">
           <%= bootstrap_flash %>
           <%= yield %>

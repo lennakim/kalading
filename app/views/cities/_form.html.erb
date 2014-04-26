@@ -1,0 +1,14 @@
+<%= simple_nested_form_for @city, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :name, label: t('city_name') %>
+    <%= f.fields_for :districts do |sf| %>
+    <%= sf.input :name, label: t('district_name')%>
+    <%= sf.link_to_remove t('remove_district') %>
+  <% end %>
+  <p><%= f.link_to_add t('add_district'), :districts %></p>
+  
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                cities_path, :class => 'btn' %>
+  </div>
+<% end %>

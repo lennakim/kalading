@@ -17,12 +17,8 @@
 /public/system
 /public/*.mp4
 
-utils/*.TXT
-utils/*.text
-utils/*.json
-utils/*.csv
-utils/*.xls
-utils/merge/
+/utils
 *.tar.gz
+*.json
 config/mongoid.yml 
 README.rdoc

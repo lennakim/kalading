@@ -19,4 +19,10 @@ class ServiceType
       errors.add(:auto_model, I18n.t(:auto_model_should_be_choosed) ) unless self.auto_model || self.auto_brand
     end
   end
+  
+  def as_json(options = nil)
+    h = super :except => [:auto_brand_id, :auto_model_id, :order_ids, :specific_auto_model, :updated_at, :created_at]
+    h[:price] = self.price.to_f
+    h
+  end
 end

@@ -1,14 +1,18 @@
+@mixin default-font {
+  font: {
+    family: verdana, arial, helvetica, sans-serif;
+    size: 13px;
+  }
+}
+
 body {
   background-color: #fff;
   color: #333;
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 13px;
-  line-height: 18px;
+  @include default-font;
 }
 
 p, ol, ul, td {
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 13px;
+  @include default-font;
   line-height: 18px;
 }
 

@@ -1,26 +1,27 @@
 class AutoModel
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::History::Trackable
-
-  if !Rails.env.importdata?
-    track_history :track_create   =>  true,    # track document creation, default is false
-                  :track_update   =>  true,     # track document updates, default is true
-                  :track_destroy  =>  true     # track document destruction, default is false
-  end
 
   paginates_per 20
 
   field :name, type: String
-  field :full_name_pinyin, type: String, default: ''
+  field :name_pinyin, type: String, default: ''
   field :name_mann, type: String
-  # 0 for mann database, 1 for longfeng database
-  field :data_source, type: Integer, default: 0
+  # 0 for mann database
+  # 1 for longfeng database
+  # 2 for new data (20140309)
+  # 3 for manually created or updated submodels
+  # 4 for hidden submodels
+  field :data_source, type: Integer, default: 2
+  index({ data_source: 1 })
 
-  attr_accessible :name, :auto_brand_id, :auto_submodels_attributes, :full_name_pinyin, :name_mann, :data_source
+  field :service_level, type: Integer, default: 0
+  index({ service_level: 1 })
+
+  attr_accessible :name, :auto_brand, :auto_brand_id, :auto_submodels_attributes, :name_pinyin, :name_mann, :data_source, :service_level
   
   belongs_to :auto_brand
-  has_many :auto_submodels, dependent: :delete
+  has_many :auto_submodels, dependent: :destroy
 
   has_many :service_types
   
@@ -39,13 +40,26 @@ class AutoModel
     end
   end
 
+  def as_json(options = nil)
+    super :except => [:updated_at, :created_at, :auto_brand_id, :version, :modifier_id, :name_mann, :name_pinyin, :data_source, :service_level]
+  end
+  
   def full_name
     self.auto_brand.name + ' ' + self.name
   end
-
-  def as_json(options = nil)
-    h = super :except => [:updated_at, :created_at, :auto_brand_id, :version, :modifier_id, :name_mann, :full_name_pinyin]
-    h[:full_name] = self.full_name
-    h
+  
+  after_save do |am|
+    if am.service_level == 1
+      if am.auto_brand.service_level == 0
+        am.auto_brand.update_attributes service_level: 1
+      end
+    else
+      if am.auto_brand.service_level == 1
+        if am.auto_brand.auto_models.where(service_level: 1).empty?
+          am.auto_brand.update_attributes service_level: 0
+        end
+      end
+    end
   end
+
 end

@@ -27,10 +27,26 @@ class Partbatch
   belongs_to :supplier
   belongs_to :user
   
-  if !Rails.env.importdata?
-    track_history :track_create   =>  true,    # track document creation, default is false
-                  :track_update   =>  true,     # track document updates, default is true
-                  :track_destroy  =>  true     # track document destruction, default is false
+  track_history :track_create   =>  true,    # track document creation, default is false
+                :track_update   =>  true,     # track document updates, default is true
+                :track_destroy  =>  true     # track document destruction, default is false
+
+  after_create :on_create
+  before_destroy :on_destroy
+  
+  def on_create
+    return if self.part.part_type.name == I18n.t(:engine_oil)
+    self.part.auto_submodels.each do |asm|
+      asm.on_part_inout self.part, self.quantity
+    end
   end
+
+  def on_destroy
+    return if self.part.part_type.name == I18n.t(:engine_oil)
+    self.part.auto_submodels.each do |asm|
+      asm.on_part_inout self.part, -self.remained_quantity
+    end
+  end
+
   paginates_per 5
 end

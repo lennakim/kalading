@@ -1,17 +1,17 @@
 <td><%= link_to part.number, part_path(part), :target => '_blank' %></td>
 <td><%= link_to part.part_brand.name, part_brand_path(part.part_brand), :target => '_blank' %></td>
 <td><%= link_to part.part_type.name, part_type_path(part.part_type), :target => '_blank' %></td>
+<td><%= part.ref_price %></td>
+<td><%= part.total_remained_quantity %></td>
 <td>
-  <% if part.auto_submodels.exists? %>
-    <ul>
-    <% part.auto_submodels.first.parts.where(part_type_id: part.part_type.id).excludes(id: part.id).each do |ep| %>
-      <li>
-        <%= link_to ep.part_brand.name + ' ' + ep.number, ep, :target => '_blank' %>
-        <%= link_to t(:delete_match), part_delete_match_path(part, match_id: ep.id), :remote => true, :class => 'btn btn-mini btn-danger' %>
-      </li>
-    <% end %>
-    </ul>
+  <ul>
+  <% part.matched_parts.each do |ep| %>
+    <li>
+      <%= link_to ep.part_brand.name + ' ' + ep.number + ' $' + ep.ref_price.to_f.to_s, ep, :target => '_blank' %>
+      <%= link_to t(:delete_match), part_delete_match_path(part, match_id: ep.id), :remote => true, :class => 'btn btn-mini btn-danger' %>
+    </li>
   <% end %>
+  </ul>
 </td>
 <td>
   <%= link_to t('match_other_part'), part_select_path(part), :remote => true, :class => 'btn btn-mini' if can? :update, part %>

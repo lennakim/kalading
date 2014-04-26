@@ -4,17 +4,15 @@
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= t(:owner_auto_brand) %>:</strong></dt>
+  <dt><strong><%= t(:full_name) %>:</strong></dt>
   <dd><%= @auto_submodel.full_name %></dd>
-  <dt><strong><%= t(:auto_submodels) %>:</strong></dt>
-  <dd><%= @auto_submodel.name %></dd>
   <dt><strong><%= t(:motoroil_capacity) %>:</strong></dt>
   <dd><%= @auto_submodel.motoroil_cap %></dd>
   <dd></dd>
   <dt><strong><%= t(:auto_count) %>:</strong></dt>
   <dd><%= @auto_submodel.autos.count %></dd>
 </dl>
-  <%= render 'parts' %>
+  <%= render 'parts', parts: @auto_submodel.parts_by_type_ignore_quantity %>
 
   <table class="table">
   <% @auto_submodel.pictures.each do |p| %>

@@ -1,6 +1,6 @@
 # encoding : utf-8
 class AutoBrandsController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :show] if !Rails.env.importdata?
+  before_filter :authenticate_user!, :except => [:index, :show]
   before_filter :set_default_operator
   # API test for Jason
   load_and_authorize_resource :except => [:index, :show]
@@ -8,44 +8,14 @@ class AutoBrandsController < ApplicationController
   # GET /auto_brands
   # GET /auto_brands.json
   def index
-    #if AutoBrand.first.name_pinyin.nil?
-      #AutoBrand.each do |ab|
-      #  ab.update_attributes({ name_pinyin: PinYin.of_string(ab.name).join} ) if ab.name_pinyin.nil?
-      #end
-      #AutoBrand.find_by(name: '长城汽车(中国) / GREATWALL').update_attributes({name_pinyin: 'changchengqichezhongguoGREATWALL'})
-      #AutoBrand.find_by(name: '长安汽车(中国) / CHANGAN').update_attributes({name_pinyin: 'changanqichezhongguoCHANGAN'})
-    #end
-    
-    #AutoBrand.each do |m|
-    #  m.update_attributes name_mann: m.name
-    #end
-
-    #AutoBrand.each do |m|
-    #  m.update_attributes name: (m.name.gsub /(\/.*\()/, '(')
-    #end
-
-
-    #AutoBrand.each do |m|
-    #  m.update_attributes name: (m.name.gsub /(\/.*)/, '')
-    #end
-
-    #AutoBrand.each do |m|
-    #  m.update_attributes name: (m.name.gsub /(\(中国\))/, '')
-    #end
-
-    #AutoBrand.each do |m|
-    #  m.update_attributes name: (m.name.strip)
-    #end
-
-    #AutoBrand.each do |m|
-    #  m.update_attributes name: (m.name.gsub /(\([A-Z,\.]+\))/, '')
-    #end
-
-    @auto_brands = AutoBrand.all.page params[:page]
-
     respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: AutoBrand.all }
+      format.html {
+        @auto_brands = AutoBrand.where(data_source: 2).asc(:name_pinyin).page params[:page]
+      }
+      format.json {
+        @auto_brands = AutoBrand.where(data_source: 2, service_level: 1).asc(:name_pinyin)
+        render json: @auto_brands
+      }
     end
   end
 
@@ -53,12 +23,17 @@ class AutoBrandsController < ApplicationController
   # GET /auto_brands/1.json
   def show
     @auto_brand = AutoBrand.find(params[:id])
-    @auto_submodels = @auto_brand.auto_models.first.auto_submodels.asc(:name).page params[:page]
-    @auto_submodel = @auto_submodels.first
+    if @auto_brand.auto_models.exists?
+      @auto_submodels = @auto_brand.auto_models.first.auto_submodels.asc(:name).page params[:page]
+    else
+      @auto_submodels = []
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.js
-      format.json { render json: @auto_brand.auto_models }
+      format.json {
+        render json: @auto_brand.auto_models.where(service_level: 1).asc(:name_pinyin)
+      }
     end
   end
 

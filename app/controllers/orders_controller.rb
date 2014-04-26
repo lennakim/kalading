@@ -1,23 +1,39 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:order_begin, :choose_service]
-  before_filter :authenticate_user!, :except => [:uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview] if !Rails.env.importdata?
+  before_filter :authenticate_user!, :except => [
+    :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order ]
   before_filter :set_default_operator
   
   # GET /orders
   # GET /orders.json
   def index
-    if params[:state]
-      @orders = Order.where(state: params[:state]).asc(:seq).page params[:page]
-    elsif params[:car_location] && params[:car_num]
-      params[:car_num].upcase!
-      @orders = Order.where(car_location: params[:car_location], car_num: params[:car_num]).asc(:created_at).page params[:page]
-    elsif params[:phone_num]
-      @orders = Order.where(phone_num: params[:phone_num]).asc(:created_at).page params[:page]
+    if params[:state] && params[:state] != ''
+      @orders = Order.where(state: params[:state])
     else
-      @orders = Order.asc(:seq).page params[:page]
+      @orders = Order.all
     end
 
-    @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'order').desc(:created_at)).page(0).per(5)
+    if params[:car_num] && params[:car_num] != ''
+      @orders = @orders.where(car_num: /.*#{params[:car_num]}.*/i)
+    end
+
+    if params[:phone_num] && params[:phone_num] != ''
+      @orders = @orders.where(phone_num: /.*#{params[:phone_num]}.*/i)
+    end
+
+    if params[:customer_name] && params[:customer_name] != ''
+      @orders = @orders.where(name: /.*#{params[:customer_name]}.*/i)
+    end
+
+    if params[:seq] && params[:seq] != ''
+      @orders = @orders.where(seq: params[:seq])
+    end
+
+    @orders = @orders.desc(:seq).page params[:page]
+
+    if params[:history]
+      @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'order').desc(:created_at)).page(0).per(5)
+    end
     
     respond_to do |format|
       format.html # index.html.erb
@@ -92,9 +108,10 @@ class OrdersController < ApplicationController
     end
     @order.car_num.upcase!
     @order.discounts << Discount.find(@order.discount_num)
+    @order.state = 2
     respond_to do |format|
       if @order.save
-        Auto.find_or_create_by(car_location: @order.car_location, car_num: @order.car_num, auto_submodel_id: @order.auto_submodel.id )
+        Auto.find_or_create_by(car_location: @order.car_location, car_num: @order.car_num, auto_submodel_id: @order.auto_submodel.id ) if @order.auto_submodel
         format.html { redirect_to orders_url, notice: I18n.t(:order_created, seq: @order.seq) }
         format.json { render json: @order, status: :created, location: @order }
         format.mobile { render  :action => "show.mobile.erb"}
@@ -194,7 +211,7 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.json { head :no_content }
+      format.json { render json: @order }
     end
   end
 
@@ -317,5 +334,198 @@ class OrdersController < ApplicationController
     end
     @order.serve_datetime = DateTime.now.since(1.days) if !@order.serve_datetime
     save_order_to_session
+  end
+  
+  def latest_orders
+    @orders = Order.desc(:created_at).limit(14)
+  end
+
+  def auto_maintain
+    return render json: { result: t(:auto_submodel_required)}, status: :bad_request if params[:asm_id].nil?
+    asm = AutoSubmodel.find(params[:asm_id])
+    return render json: { result: t(:auto_submodel_required)}, status: :bad_request if asm.nil?
+    @order = Order.new
+    @order.auto_submodel = asm
+    maintain_service = ServiceType.find '527781377ef560ccbc000003'
+    return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
+    @order.service_types << maintain_service
+    asm.parts_by_type.each do |t, parts|
+      if t.name == I18n.t(:engine_oil)
+        parts.group_by(&:spec)[parts.first.spec].each do |p|
+          @order.parts << p
+          @order.part_counts[p.id.to_s] = asm.cals_part_count(p)
+        end
+      else
+        @order.parts << parts.first
+        @order.part_counts[parts.first.id.to_s] = asm.cals_part_count(parts.first)
+      end
+    end
+  end
+
+  def auto_maintain_packs
+    @asms = []
+    @packs = []
+    @asms = AutoSubmodel.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:full_name_pinyin)
+    @asms_count = @asms.count
+    @asms = @asms.page(params[:page]).per(10)
+    @asms.each do |asm|
+      params[:asm_id] = asm.id.to_s
+      auto_maintain
+      @packs << @order
+    end
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+  
+  def auto_maintain_price
+    _create_auto_maintain_order
+    render :action => "auto_maintain"
+  end
+  
+  def create_auto_maintain_order
+    return render json: { result: t(:auto_submodel_required)}, status: :bad_request if params[:asm_id].nil?
+    return render json: {result: t(:parts_needed)}, status: :bad_request if params[:parts].nil? || params[:parts].empty?
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    asm = AutoSubmodel.find(params[:asm_id])
+    return render json: t(:auto_submodel_required), status: :bad_request if asm.nil?
+    
+    _create_auto_maintain_order
+    return render json: {result: t(:parts_needed)}, status: :bad_request if @order.parts.empty?
+
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+
+  # no auto submodel, no parts
+  def create_auto_maintain_order2
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    
+    _create_auto_maintain_order
+    if @order.parts.empty?
+      @order.buymyself = true
+    end
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+
+  def create_auto_verify_order
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    @order = Order.new
+    st = ServiceType.find '52cb67839a94e4fd190001eb'
+    return render json: t(:auto_verify_service_type_not_found), status: :bad_request if st.nil?
+    @order.service_types << st
+    check_discount
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+
+  def create_auto_test_order
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    @order = Order.new
+    st = ServiceType.find '52c186d4098e7133cd000005'
+    return render json: t(:auto_test_service_type_not_found), status: :bad_request if st.nil?
+    @order.service_types << st
+    check_discount
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+    
+  def auto_test_price
+    @order = Order.new
+    st = ServiceType.find '52c186d4098e7133cd000005'
+    return render json: t(:auto_test_service_type_not_found), status: :bad_request if st.nil?
+    @order.service_types << st
+    check_discount
+    render :action => 'auto_test_order'
+  end
+
+  def auto_test_order
+    auto_test_price
+  end
+  
+  def auto_verify_price
+    @order = Order.new
+    st = ServiceType.find '52cb67839a94e4fd190001eb'
+    return render json: t(:auto_verify_service_type_not_found), status: :bad_request if st.nil?
+    @order.service_types << st
+    check_discount
+    render :action => 'auto_verify_order'
+  end
+
+  def auto_verify_order
+    auto_verify_price
+  end
+    
+private
+  def _create_auto_maintain_order
+    @order = Order.new
+    if params[:asm_id]
+      asm = AutoSubmodel.find(params[:asm_id])
+      @order.auto_submodel = asm
+    end
+    maintain_service = ServiceType.find '527781377ef560ccbc000003'
+    return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
+    @order.service_types << maintain_service
+    if params[:parts]
+      params[:parts].each do |h|
+        parts = []
+        p = Part.find h[:number]
+        parts << p if p
+        if parts.empty?
+          # For engine oil
+          parts = Part.where part_brand: (PartBrand.find_by name: h[:brand]), spec: h[:number]
+        end
+        parts.each do |p|
+          @order.parts << p
+          @order.part_counts[p.id.to_s] = asm.cals_part_count(p)
+        end
+      end
+    end
+    check_discount
+  end
+
+  def check_discount
+    if params[:discount]
+      discount = Discount.find params[:discount]
+      if discount
+        if discount.expire_date >= Date.today
+          @order.discounts << discount
+        else
+          @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
+        end
+      else
+        @discount_error = I18n.t(:discount_not_exist)
+      end
+    end
   end
 end

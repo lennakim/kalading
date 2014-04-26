@@ -1,0 +1,51 @@
+<div class="page-header">
+  <h4><%= t(:auto_maintain_packs) %></h4>
+</div>
+
+<%= paginate @asms %>
+<p><strong><%= t('total', count: @asms_count )%></strong></p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= t(:auto_submodel) %></th>
+      <th><%= t(:part) %></th>
+      <th><%= t(:total_price_with_st) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% colors = %w[success error info warning] %>
+    <% @packs.each_with_index do |order, i| %>
+      <tr class="<%= colors[ i % colors.length] %>">
+        <td><%= order.auto_submodel.full_name if order.auto_submodel %></td>
+        <td>
+          <% if order.buymyself %>
+            <%= t(:buymyself) %>
+          <% elsif order.parts.empty? %>
+            <%= t(:nothing) %>
+          <% else %>
+            <a class="btn btn-link" data-toggle="collapse" data-target="#<%= order.id %>_parts"><%= t(:view) %></a>
+            <div id="<%= order.id %>_parts" class="collapse">
+              <table class="table table-condensed">
+                <tbody>
+                <% order.parts.each do |part| %>
+                  <% next if order.part_counts[part.id.to_s] <= 0 %>
+                  <tr>
+                    <td><%= part.part_type.name %></td>
+                    <td><%= part.brand_and_number %></td>
+                    <td><%= humanized_money_with_symbol part.ref_price %></td>
+                    <td><%= order.part_counts[part.id.to_s] %></td>
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
+        </td>
+        <td><%= humanized_money_with_symbol order.calc_price %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @asms %>
+<p><strong><%= t('total', count: @asms_count )%></strong></p>
+<%= render 'progress_dlg' %>

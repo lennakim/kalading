@@ -1,4 +1,16 @@
 Kalading::Application.routes.draw do
+  resources :user_types
+
+
+  resources :motoroil_groups
+
+
+  resources :cities
+
+
+  resources :videos
+
+
   resources :discounts
 
   resources :service_types
@@ -53,8 +65,8 @@ Kalading::Application.routes.draw do
   post 'users' => 'users#create', :as => :create_user
   delete 'users/:id' => 'users#destroy', :as => :user
   
-  post 'partbatches/:id' => 'partbatches#inout', :as => :inout_partbatch
   get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
+  post 'storehouses_inout/:id' => 'storehouses#inout', :as => :inout_storehouse
   get 'parts/:id/edit_part_automodel' => 'parts#edit_part_automodel', :as => :edit_part_automodel
   delete 'parts/:id/automodels/:auto_submodel_id' => 'parts#delete_auto_submodel', :as => :delete_part_auto_submodel
   post 'parts/:id/automodels' => 'parts#add_auto_submodel', :as => :add_part_auto_submodel
@@ -63,18 +75,27 @@ Kalading::Application.routes.draw do
 
   get 'auto_parts' => 'orders#query_parts', :as => :query_parts
   get 'orders_history' => 'orders#history', :as => :order_history
+  get 'latest_orders' => 'orders#latest_orders', :as => :latest_orders
   post 'orders/:id/uploadpic' => 'orders#uploadpic', :as => :uploadpic_orders
   get 'orders/:id/duplicate' => 'orders#duplicate', :as => :duplicate_order
   match 'orders_calcprice' => 'orders#calcprice', via: [:put, :post], :as => :calcprice_order
+  get 'auto_maintain_order/:asm_id' => 'orders#auto_maintain', :as => :auto_maintain_order
+  post 'auto_maintain_price/:asm_id' => 'orders#auto_maintain_price', :as => :auto_maintain_price
+  post 'auto_maintain_order/:asm_id' => 'orders#create_auto_maintain_order', :as => :create_auto_maintain_order
+  post 'auto_verify_order' => 'orders#create_auto_verify_order', :as => :create_auto_verify_order
+  post 'auto_test_order' => 'orders#create_auto_test_order', :as => :create_auto_test_order
+  post 'auto_maintain_order2' => 'orders#create_auto_maintain_order2', :as => :create_auto_maintain_order2
+  get 'auto_test_order' => 'orders#auto_test_order', :as => :auto_test_order
+  get 'auto_verify_order' => 'orders#auto_verify_order', :as => :auto_verify_order
+  post 'auto_test_price' => 'orders#auto_test_price', :as => :auto_test_price
+  post 'auto_verify_price' => 'orders#auto_verify_price', :as => :auto_verify_price
+  get 'auto_maintain_packs' => 'orders#auto_maintain_packs', :as => :auto_maintain_packs
 
   get 'auto_submodels_oil_cap_edit' => 'auto_submodels#oil_cap_edit', :as => :auto_submodels_oil_cap_edit
   post 'auto_submodels_oil_cap_modify' => 'auto_submodels#oil_cap_modify', :as => :auto_submodels_oil_cap_modify
   get 'auto_submodels_service_level_edit' => 'auto_submodels#service_level_edit', :as => :auto_submodels_service_level_edit
   post 'auto_submodels_service_level_modify' => 'auto_submodels#service_level_modify', :as => :auto_submodels_service_level_modify
-  post 'auto_submodels_import' => 'auto_submodels#import', :as => :auto_submodels_import
-  post 'auto_submodels_import_by_id/:id' => 'auto_submodels#import_by_id', :as => :auto_submodels_import_by_id
 
-  get 'auto_submodels_edit_with_catalog' => 'auto_submodels#edit_with_catalog', :as => :auto_submodels_edit_with_catalog
   get 'part_match' => 'parts#match', :as => :part_match
   get 'part_select/:id' => 'parts#part_select', :as => :part_select
   post 'part_select/:id' => 'parts#update_part_select', :as => :update_part_select

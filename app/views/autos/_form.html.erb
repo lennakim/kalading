@@ -12,18 +12,18 @@
   <div class="control-group select">
     <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
     <div class="controls">
-      <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+      <%= collection_select :auto_model, :brand_id, AutoBrand.where(data_source: 2).asc(:name_pinyin), :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
     </div>
   </div>
 
   <div class="control-group select">
     <%= label_tag :auto_submodel_model_id, t('choose_auto_model'), class: 'control-label' %>
     <div class="controls">
-      <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+      <%= collection_select :auto_submodel, :model_id, AutoBrand.where(data_source: 2).asc(:name_pinyin).first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
     </div>
   </div>
 
-  <%= f.association :auto_submodel, collection: AutoBrand.first.auto_models.all.first.auto_submodels.all, label: t('auto_model'), label_method: :name, include_blank: false %>
+  <%= f.association :auto_submodel, collection: AutoBrand.where(data_source: 2).asc(:name_pinyin).first.auto_models.all.first.auto_submodels.all, label: t('auto_model'), label_method: :name, include_blank: false %>
   <div class="form-actions">
     <%= f.button :submit, :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

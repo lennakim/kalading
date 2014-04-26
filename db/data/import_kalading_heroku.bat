@@ -17,4 +17,8 @@ mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kala
 mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kalading --collection system.indexes --file system.indexes.json
 mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kalading --collection urlinfos --file urlinfos.json
 mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kalading --collection users --file users.json
+mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kalading --collection videos --file videos.json
+mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kalading --collection cities --file cities.json
+mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kalading --collection motoroil_groups --file motoroil_groups.json
+mongoimport --host paulo.mongohq.com:10015 -u nanami -pNetworkeasy1979 --db kalading --collection user_types --file user_types.json
 

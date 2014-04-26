@@ -1,0 +1,14 @@
+<% if params[:back] %>
+  $("#modal-window").html("<%= escape_javascript(render 'storehouse_back') %>");
+  $("#partbatch_back_btn").click( function() {
+      $.post($("#storehouse_out").attr("action"), $("#storehouse_out").serialize(), null, "script");
+      return false; 
+  });
+<% else %>
+  $("#modal-window").html("<%= escape_javascript(render 'storehouse_out') %>");
+  $("#storehouse_out_btn").click( function() {
+      $.post($("#storehouse_out").attr("action"), $("#storehouse_out").serialize(), null, "script");
+      return false; 
+  });
+<% end %>
+ 

@@ -17,4 +17,7 @@ mongoexport --db kalading_development --collection suppliers --out suppliers.jso
 mongoexport --db kalading_development --collection system.indexes --out system.indexes.json
 mongoexport --db kalading_development --collection urlinfos --out urlinfos.json
 mongoexport --db kalading_development --collection users --out users.json
-
+mongoexport --db kalading_development --collection videos --out videos.json
+mongoexport --db kalading_development --collection cities --out cities.json
+mongoexport --db kalading_development --collection motoroil_groups --out motoroil_groups.json
+mongoexport --db kalading_development --collection user_types --out user_types.json

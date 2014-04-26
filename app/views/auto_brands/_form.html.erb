@@ -1,5 +1,6 @@
 <%= simple_form_for @auto_brand, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :name, label: t('name') %>
+  <%= f.input :name_pinyin, label: t('sort_factor') %>
   <%= f.association :auto_models, collection: @auto_brand.auto_models, label: t('auto_model_list') %>
   <div class="form-actions">
     <%= f.button :submit, t('save'), :class => 'btn-primary' %>

@@ -1,3 +1,4 @@
+<%= paginate @part_to_partbatches %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -5,32 +6,18 @@
       <th><%= t 'brand' %></th>
       <th><%= t 'part_type' %></th>
       <th><%= t 'remained_quantity' %></th>
-      <th><%= t 'partbatch_id' %></th>
-      <th><%= t 'partbatch_create_time' %></th>
-      <th><%= t 'comment' %></th>
+      <th><%= t 'in_quantity' %></th>
       <th><%=t 'actions' %></th>
     </tr>
   </thead>
   <tbody>
-    <% @partbatches.each do |pb| %>
-      <tr>
-        <td><%= link_to pb.part.number, part_path(pb.part), :target => '_blank' %></td>
-        <td><%= pb.part.part_brand.name %></td>
-        <td><%= pb.part.part_type.name %></td>
-        <td id="<%= pb.id %>"><%= pb.remained_quantity %></td>
-        <td><%= link_to pb.id.to_s, pb, :target => '_blank' %></td>
-        <td><%= l pb.created_at %></td>
-        <td><%= pb.comment %></td>
-        <td>
-          <%= link_to t('storehouse_out'), edit_partbatch_path(pb),
-              {:class => 'btn btn-mini', :remote => true, :disabled => (pb.remained_quantity <= 0), 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can? :update, pb %>
-          <%= link_to t('storehouse_back'), edit_partbatch_path(pb, back: true),
-              {:class => 'btn btn-mini', :remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can? :update, pb %>
-        </td>
+    <% @part_to_partbatches.each do |part, partbatches| %>
+      <tr id="<%= part.id %>">
+        <%= render 'part', part: part, partbatches: partbatches %>
       </tr>
     <% end %>
   </tbody>
 </table>
-<%= paginate @partbatches %>
+<%= paginate @part_to_partbatches %>
 
 <div id="modal-window" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true"></div>

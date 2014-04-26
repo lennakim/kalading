@@ -23,16 +23,32 @@
       <td><%= @order.name %></td>
     </tr>
     <tr>
+      <td><%= t(:auto_owner_name) %></td>
+      <td><%= @order.auto_owner_name %></td>
+    </tr>
+    <tr>
+      <td><%= t(:user_type) %></td>
+      <td><%= @order.user_type.name if @order.user_type %></td>
+    </tr>
+    <tr>
       <td><%= t(:serve_datetime) %></td>
       <td><%= l @order.serve_datetime %></td>
     </tr>
     <tr>
       <td><%= t(:auto_submodel) %></td>
-      <td><%= @order.auto_submodel.full_name %></td>
+      <td><%= @order.auto_submodel ? @order.auto_submodel.full_name : t(:nil_auto_model) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:auto_reg_date) %></td>
+      <td><%= l @order.registration_date if @order.registration_date %></td>
     </tr>
     <tr>
       <td><%= t(:vin) %></td>
       <td><%= @order.vin %></td>
+    </tr>
+    <tr>
+      <td><%= t(:engine_num) %></td>
+      <td><%= @order.engine_num %></td>
     </tr>
   </tbody>
 </table>
@@ -115,9 +131,13 @@
     <tbody>
       <% @order.comments.each do |c|%>
       <tr>
-        <td><%= text_area_tag 'comment', c.text, {:size => '80x3', :disabled => true} %></td>
+        <td colspan="2"><%= text_area_tag 'comment', c.text, {:size => '80x3', :disabled => true} %></td>
       </tr>
       <% end %>
+      <tr>
+        <td><%= t(:client_comment) %></td>
+        <td><%= @order.client_comment %></td>
+      </tr>
     </tbody>
   </table>
   <table class="table table-strped">

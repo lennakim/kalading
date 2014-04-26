@@ -1,0 +1,61 @@
+<%- motoroil_group = MotoroilGroup -%>
+<div class="page-header">
+  <h1><%=t 'motoroil_group_list' %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= t(:motoroil_group) %></th>
+      <th><%= t(:motoroil_numbers_list) %></th>
+      <th><%= t 'actions' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @motoroil_groups.each do |motoroil_group| %>
+      <tr>
+        <td><%= link_to motoroil_group.name, motoroil_group_path(motoroil_group) %></td>
+        <td>
+          <table>
+            <thead>
+              <tr>
+                <th><%= t 'spec' %></th><th><%= t 'capacity' %></th><th><%= t 'stock_quantity' %></th><th><%= t 'price_per_l' %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% motoroil_group.ordered_parts.group_by(&:spec).each do |spec, parts| %>
+              <tr class="info"><td><%= parts[0].part_brand.name + '  ' + spec.to_s %></td></tr>
+              <% parts.each do |p| %>
+                <tr>
+                  <td></td>
+                  <td><%= p.capacity %>L</td>
+                  <td>
+                    <% if p.total_remained_quantity <= 0 %>
+                    <strong class="alert"><%= t(:sellout) %></strong>
+                    <% else %>
+                    <strong><%= p.total_remained_quantity %></strong>
+                    <% end %>  
+                  </td>
+                  <td><%= p.ref_price / p.capacity if p.capacity != 0%></td>
+                </tr>
+              <% end %>
+            <% end %>
+            </tbody>
+          </table>
+        </td>
+        <td>
+          <%= link_to t('edit'),
+                      edit_motoroil_group_path(motoroil_group), :class => 'btn'  if can? :update, motoroil_group %>
+          <%= link_to t('destroy'),
+                      motoroil_group_path(motoroil_group),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-danger'  if can? :destroy, motoroil_group %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('new_motoroil_group'),
+            new_motoroil_group_path,
+            :class => 'btn btn-primary' %>

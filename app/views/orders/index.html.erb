@@ -1,19 +1,67 @@
 <%- model_class = Order -%>
 <div class="page-header">
   <h4>
-  <% if params[:state] %>
+  <% if params[:state] && params[:state] != '' %>
     <%= t(:orders) + ' - ' + t(Order::STATE_STRINGS[params[:state].to_i])  %>
   <% else %>
     <%= t(:orders) %>
   <% end %>
-  <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary pull-right', :target => '_blank' if can? :create, Order %>
+  <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary pull-right' if can? :create, Order %>
   </h4>
+  <% if mobile_device? %>
+  <div class="btn-group">
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><%= t 'list_by_state' %> <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
+      <% Order::STATES.each do |s| %>
+        <li><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
+      <% end %>
+    </ul>
+  </div>
+  <% end %>
 </div>
+
+<a class="btn btn-link" data-target="#order-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
+<div id="order-search-form" class="collapse in">
+  <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
+    <input name="state" type="hidden" value="<%= params[:state] %>" />
+    <div class="control-group">
+      <%= label_tag :phone_num, t('phone_num'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :phone_num, params[:phone_num], class: 'control', placeholder: t(:phone_num_hint) %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :customer_name, t('customer_name'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :customer_name, params[:customer_name], class: 'control' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :car_num, t('car_num'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :car_num, params[:car_num], class: 'control', placeholder: t(:car_num_hint) %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :seq, t('order_id'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :seq, params[:seq], class: 'control' %>
+      </div>
+    </div>
+    <div class="form-actions">
+      <%= submit_tag t(:search), class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>
+
 <div id="order-list">
   <%= render 'orders' %>
 </div>
 
+<% if params[:history] %>
 <div class="well">
   <h4><%= t(:op_history) %></h4>
   <div id="history_trackers"><%= render 'history' %></div>
 </div>
+<% end %>

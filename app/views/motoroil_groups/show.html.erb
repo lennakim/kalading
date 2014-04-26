@@ -1,0 +1,21 @@
+<%- model_class = MotoroilGroup -%>
+<div class="page-header">
+  <h1><%=t 'motoroil_group' %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= t(:motoroil_group_name) %>:</strong></dt>
+  <dd><%= @motoroil_group.name %></dd>
+  <h3><%= t(:motoroil_numbers_list) %></h3>
+  <ul>
+   <% @motoroil_group.parts.each do |p| %>
+   <li><%= p.brand_and_number %></li>
+   <% end %>
+ </ul>
+
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('edit'),
+              edit_motoroil_group_path(@motoroil_group), :class => 'btn' if can? :update, @motoroil_group %>
+</div>

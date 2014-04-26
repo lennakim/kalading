@@ -15,6 +15,8 @@ $ ->
 
     $(document).ajaxSend (event, request, settings) ->
         $('.loading-indicator').show()
+        $('#progress-dialog').modal('toggle')
     
     $(document).ajaxComplete (event, request, settings) ->
         $('.loading-indicator').hide()
+        $('#progress-dialog').modal('toggle')

@@ -1,9 +1,13 @@
 <%= form_tag add_part_auto_submodel_path(@part), :method => 'post', :id => "add_part_auto_submodel", :class => 'form-inline', :remote => true do %>
 <div class="controls">
-  <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
-  <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
-  <%= collection_select :auto, :auto_submodel_id, AutoBrand.first.auto_models.all.first.auto_submodels.all, :id, :name, {}, {:class => 'control'} %>
-  <%= submit_tag t(:add_match), class: 'btn btn-primary' %>
+  <div class="row-fluid">
+    <div class="span3"><%= collection_select :auto_model, :brand_id, AutoBrand.any_of({ data_source: 2 }, { data_source: 3 }).asc(:name_pinyin), :id, :name, {}, {:rel => "/auto_brands", :class => 'control input-block-level'} %></div>
+    <div class="span3"><%= collection_select :auto_submodel, :model_id, AutoBrand.any_of({ data_source: 2 }, { data_source: 3 }).asc(:name_pinyin).first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control input-block-level'} %></div>
+    <div class="span6"><%= collection_select :auto, :auto_submodel_id, AutoBrand.any_of({ data_source: 2 }, { data_source: 3 }).asc(:name_pinyin).first.auto_models.all.first.auto_submodels.all, :id, :full_name, {}, {:class => 'control input-block-level'} %></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span4"><%= submit_tag t(:add_match), class: 'btn btn-primary input-block-level' %></div>
+  </div>
 </div>
 <% end %>
 <div class="alert" id="error-div" style="display: none;"></div>

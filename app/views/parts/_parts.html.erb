@@ -21,15 +21,13 @@
   </thead>
   <tbody>
     <% colors = %w[success error info warning] %>
-    <% i = 0 %>
-    <% @parts.each do |part| %>
+    <% @parts.each_with_index do |part, i| %>
       <tr class="<%= colors[ i % colors.length] %>" id="<%= part.id %>">
-      <% i += 1 %>
         <td><%= link_to part.number, part_path(part), :target => '_blank' %></td>
         <td><%= link_to part.part_brand.name, part_brand_path(part.part_brand), :target => '_blank' %></td>
         <td><%= link_to part.part_type.name, part_type_path(part.part_type), :target => '_blank' %></td>
         <td>
-          <%= t('total_models', count: part.auto_submodels.count) %>&nbsp
+          <%= t('total_models', count: part.auto_submodels.any_of({data_source: 2}, {data_source: 3}).count) %>&nbsp
           <%= link_to t('edit_part_automodel'), edit_part_automodel_path(part), :class => 'btn btn-mini pull-right', :target => '_blank' if can? :update, part %>
         </td>
         <td>
@@ -46,7 +44,7 @@
               <tr>
                 <td><%= pb.storehouse.name %></td>
                 <td><%= humanized_money_with_symbol pb.price %>
-                <td><%= pb.quantity %></td>
+                <td><%= pb.remained_quantity %></td>
               </tr>
             <% end %>
             </tbody>

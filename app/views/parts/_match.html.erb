@@ -1,20 +1,21 @@
 <%= paginate @parts, remote: true %>
+<p><strong><%= t('total', count: @total_parts.count )%></strong></p>
 <table class="table table-striped">
   <thead>
     <tr>
       <th><%= t 'manuf_number' %></th>
       <th><%= t 'brand' %></th>
       <th><%= t 'part_type' %></th>
+      <th><%= t 'price' %></th>
+      <th><%= t 'total_remained_quantity' %></th>
       <th><%= t 'equal_parts' %></th>
       <th><%= t 'actions' %></th>
     </tr>
   </thead>
   <tbody>
     <% colors = %w[success error info warning] %>
-    <% i = 0 %>
-    <% @parts.each do |part| %>
+    <% @parts.each_with_index do |part, i| %>
       <tr class="<%= colors[ i % colors.length] %>" id="tr-<%= part.id %>">
-      <% i += 1 %>
         <%= render 'part_match_row', part: part %>
       </tr>
       <tr>
@@ -24,4 +25,4 @@
   </tbody>
 </table>
 <%= paginate @parts, remote: true %>
-<p><strong><%= t('total', count: @parts.count )%></strong></p>
+<p><strong><%= t('total', count: @total_parts.count )%></strong></p>

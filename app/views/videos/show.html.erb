@@ -1,0 +1,16 @@
+<%- model_class = Video -%>
+<div class="page-header">
+  <h1><%= t 'videos' %></h1>
+  <%= link_to t(:back), videos_path, :class => 'btn pull-right'  %>
+</div>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="offset1 span10">
+      <video controls="controls" autoplay="autoplay">
+        <source src="<%= @video.url %>" type="video/mp4" />
+      </video>
+    </div>
+  </div>
+</div>
+

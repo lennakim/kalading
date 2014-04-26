@@ -23,6 +23,8 @@
         <%= link_to ht.modifier.name, ht.modifier if ht.modifier %>
         <%= link_to t(:print), print_storehouse_out_path(@storehouse, ht), {:class => 'btn btn-mini btn-info'} if ht.modified['remained_quantity'] < ht.original['remained_quantity'] %></a>
         </li>
+      <% else %>
+        <li>todo</li>
       <% end %>
     <% end %>    
   <% end %>

@@ -534,7 +534,6 @@ en:
   part_number_search_hint: 'Part number search'
   edit_part: 'Edit Part'
   site_name: 'Web site name'
-  auto_submodels_edit_with_catalog: 'Auto model verify'
   copy_catalog_model_attrs: 'Copy'
   choose_auto_model: '车型选择（品牌，车型，款式）'
   save_auto_model: 'Save'
@@ -597,3 +596,18 @@ en:
   class: "Class"
   number: "Number"
   part_supplier: "Part Supplier"
+  partbatch: 'Batch'
+  size: 'Size'
+  create_time: 'Create Time'
+  number:
+    human:  
+      storage_units:
+        format: "%n %u"
+        units:
+           byte:
+             one: "Byte"
+             other: "Bytes"
+           kb: "KB"
+           mb: "MB"
+           gb: "GB"
+           tb: "TB"

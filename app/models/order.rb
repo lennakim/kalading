@@ -16,11 +16,12 @@ class Order
                 :track_destroy  =>  true     # track document destruction, default is false
 
   field :state, type: Integer, default: 0
-  field :address, type: String
-  field :phone_num, type: String
-  field :name, type: String
+  field :address, type: String, default: ''
+  field :phone_num, type: String, default: ''
+  field :name, type: String, default: ''
   field :buymyself, type: Boolean, default: false
   field :serve_datetime, type: DateTime
+  field :registration_date, type: Date
   field :price, type: Money
   field :car_location, type: String, default: I18n.t(:jing)
   field :car_num, type: String, default: ''
@@ -44,7 +45,9 @@ class Order
   field :back_wheels, type: String, default: ''
   field :auto_km_next, type: String, default: ''
   field :serve_datetime_next, type: DateTime
-  
+  field :auto_owner_name, type: String, default: ->{ name }
+  field :engine_num, type: String, default: ''
+
   belongs_to :customer, class_name: "User", inverse_of: :buy_orders, index: true
   belongs_to :engineer, class_name: "User", inverse_of: :serve_orders
 
@@ -55,6 +58,7 @@ class Order
   embeds_many :pictures, :cascade_callbacks => true
   has_and_belongs_to_many :parts
   embeds_many :comments, :cascade_callbacks => true
+  belongs_to :user_type
 
   field :part_counts, type: Hash, default: {}
   
@@ -72,7 +76,8 @@ class Order
     :auto_submodel_id,
     :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :auto_km, :oil_out, :oil_in,
-    :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts
+    :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
+    :registration_date, :engine_num
 
   auto_increment :seq
   index({ seq: 1 })
@@ -82,7 +87,6 @@ class Order
   validates :car_num, length: { in: 6..6 }, presence: true
   validates :phone_num, length: { in: 8..13 }, presence: true
   validates :address, length: { in: 4..512 }, presence: true
-  validates :auto_submodel_id, presence: true
   
   STATES = [0, 1, 2, 3, 4, 5, 6, 7]
   STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited]
@@ -154,6 +158,7 @@ class Order
         self.price = self.price - self.price * d.percent / 100
       end
     end
+    self.price = 0.0 if self.price < 0.0
     self.price
   end
 
@@ -161,5 +166,17 @@ class Order
     self.parts.group_by {|part| part.part_type}
   end
 
+  def price_without_discount
+    self.calc_service_price + self.calc_parts_price
+  end
+  
   paginates_per 10
+  
+  def as_json(options = nil)
+    h = super :except => [:_id, :air_filter_changed, :auto_id, :auto_km, :auto_km_next, :back_wheels,:cabin_filter_changed, :client_comment, :created_at ,:customer_id, :discount_ids,
+      :discount_num,:engineer_id, :front_wheels, :modifier_id, :oil_filter_changed, :oil_gathered, :oil_in, :oil_out,
+      :phone_num  ,:serve_datetime ,:serve_datetime_next ,:updated_at, :version, :vin, :charged, :state, 
+      :part_counts, :address, :buymyself, :car_location, :car_num, :name, :pay_type, :reciept_title, :reciept_type, :seq, :part_ids, :service_type_ids,
+      :auto_submodel_id, :price, :comments ]
+  end
 end

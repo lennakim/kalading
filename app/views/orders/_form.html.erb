@@ -24,6 +24,8 @@
   
     <%= f.input :address, label: t(:address), input_html: { minlength: "4", maxlength: "512", "data-msg-required" => t(:address_required), "data-msg-minlength" => t(:address_minlength), "data-msg-maxlength" => t(:address_maxlength)} %>
     <%= f.input :name, label: t(:client_name) %>
+    <%= f.input :auto_owner_name, label: t(:auto_owner_name) %>
+    <%= f.association :user_type, collection: UserType.all, prompt: t('choose_user_type'), label: t('user_type'), include_blank: false %>
 
     <div class="control-group">
       <label for="order_serve_datetime" class="control-label"><%= t(:serve_datetime) %></label>
@@ -39,10 +41,12 @@
     </div>
 
     <%= f.input :vin %>
+    <%= f.input :engine_num, label: t(:engine_num) %>
+    <%= f.input :registration_date, as: :date_picker, label: t(:auto_reg_date) %>
     <div class="control-group">
       <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
       <div class="controls" id="search-car-model">
-        <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="<%= @order.auto_submodel ? @order.auto_submodel.full_name : '' %>" minlength="4" data-msg-required="<%= t(:auto_model_required) %>" data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
+        <input type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="<%= @order.auto_submodel ? @order.auto_submodel.full_name : '' %>"/>
         <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
       </div>
     </div>
@@ -132,6 +136,22 @@
       <%= f.input :back_wheels, label: t(:back_wheels) %>
       <%= f.input :auto_km_next, label: t(:auto_km_next) %>
       <%= f.input :serve_datetime_next, label: t(:serve_datetime_next), :as => :datetime_picker %>
+    <%= f.input :vin %>
+    <%= f.input :engine_num, label: t(:engine_num) %>
+    <%= f.input :registration_date, as: :date_picker, label: t(:auto_reg_date) %>
+    <div class="control-group">
+      <label for="search-car-model" class="control-label"><%= t(:auto_submodel) %></label>
+      <div class="controls" id="search-car-model">
+        <input type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="<%= @order.auto_submodel ? @order.auto_submodel.full_name : '' %>"/>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+    </div>
+    <%= f.input :auto_submodel_id, :as => :hidden %>
+    <div id="auto_submodels">
+    <% if @order.auto_submodel %>
+      <%= render 'auto_submodels/auto_submodels' %>
+    <% end %>
+    </div>
     <h5><%= t(:finished_service_types) %></h5>
     <%= f.input :oil_filter_changed, label: t(:oil_filter_changed), :as => :boolean %>
     <%= f.input :air_filter_changed, label: t(:air_filter_changed), :as => :boolean %>
@@ -160,6 +180,7 @@
       <%= f.button :submit, t(:serve_ok), :class => 'btn-primary' %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
+    <%= javascript_include_tag "application" %>
   <% elsif Order::STATE_STRINGS[@order.state] == 'serve_done' %>
     <%= render 'comments', :f => f %>
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>

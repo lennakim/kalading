@@ -1,4 +1,5 @@
-source 'https://rubygems.org'
+#source 'https://rubygems.org'
+source 'http://ruby.taobao.org'
 
 gem 'rails', '3.2.12'
 
@@ -18,7 +19,7 @@ end
 gem 'jquery-rails'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+gem 'jbuilder'
 
 # Use unicorn as the app server
 # gem 'unicorn'
@@ -28,6 +29,7 @@ gem 'jquery-rails'
 
 group :test, :development do
   gem 'rspec-rails'
+  gem 'spreadsheet'
 end
 
 group :test do
@@ -60,3 +62,4 @@ gem 'ruby-pinyin'
 gem 'mongoid_auto_increment', :git => 'git://github.com/teriyakisan/mongoid_auto_increment.git'
 
 gem 'capistrano', '~> 3.0.1'
+gem 'pry-rails'

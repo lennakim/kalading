@@ -6,13 +6,11 @@
   
   <div data-role="content" class="ui-content-auro-brands">
     <% letter_to_li = {} %>
-    <% i = 0 %>
     <ul data-role="listview" id="auto-brand-list" data-autodividers="true">
-      <% AutoBrand.asc(:name_pinyin).each do |ab| %>
+      <% AutoBrand.asc(:name_pinyin).each_with_index do |ab, i| %>
       <li pinyin="<%= ab.name_pinyin.capitalize[0] %>" id="brand-li-<%= i %>">
         <%= link_to ab.name_with_jinkou, order_choose_auto_model_path(format: :mobile, auto_brand: ab.id), {"data-transition" => "slide"} %>
         <% letter_to_li[ab.name_pinyin.capitalize[0]] = "brand-li-#{i}" if !letter_to_li[ab.name_pinyin.capitalize[0]] %>
-        <% i += 1 %>
       </li>
       <% end %>
     </ul>

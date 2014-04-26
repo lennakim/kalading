@@ -1,5 +1,5 @@
 class StorehousesController < ApplicationController
-  before_filter :authenticate_user! if !Rails.env.importdata?
+  before_filter :authenticate_user!
   before_filter :set_default_operator
   load_and_authorize_resource :except => [:import]
 
@@ -50,14 +50,14 @@ class StorehousesController < ApplicationController
         pbs = pbs.select { |pb| o.parts.find(pb.part) } if o
       end
     end
-
-    @partbatches = Kaminari.paginate_array(pbs).page(params[:page]).per(5)
-    @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
+    @part_to_partbatches = Kaminari.paginate_array(pbs.group_by(&:part).to_a.sort_by {|x, y| x.number }).page(params[:page]).per(15)
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html {
+        @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
+      }
       format.js # show.js.erb
-      format.json { render json: @partbatches }
+      format.json { render json: pbs }
       format.csv {
         headers['Last-Modified'] = Time.now.httpdate
         send_data @storehouse.to_csv, :filename => @storehouse.name + I18n.l(DateTime.now) + '.csv'
@@ -89,6 +89,57 @@ class StorehousesController < ApplicationController
   # GET /storehouses/1/edit
   def edit
     @storehouse = Storehouse.find(params[:id])
+    if params[:part]
+      @part = Part.find params[:part]
+      @partbatches = @storehouse.partbatches.where(part: @part)
+    end
+  end
+
+  def inout
+    @storehouse = Storehouse.find(params[:id])
+    @part = Part.find params[:part]
+    @partbatches = @storehouse.partbatches.where(part: @part).asc(:created_at)
+    @quantity = params[:quantity].to_i
+    if params[:back]
+      if params[:user][:id] == ''
+        @error = I18n.t(:user_id_empty)
+      elsif @quantity <=0 || @quantity + (@partbatches.sum {|x| x.remained_quantity}) > (@partbatches.sum {|x| x.quantity})
+        @error = I18n.t(:quantity_error, min: 1, max: (@partbatches.sum {|x| x.quantity - x.remained_quantity}) )
+      end
+    else
+      if params[:user][:id] == ''
+        @error = I18n.t(:user_id_empty)
+      elsif @quantity <= 0 || @quantity > (@partbatches.sum {|x| x.remained_quantity})
+        @error = I18n.t(:quantity_error, min: 1, max: ((@partbatches.sum {|x| x.remained_quantity})) )
+      end
+    end
+    return if @error
+
+    self.current_operator = User.find(params[:user][:id])
+    if params[:back]
+      need_q = @quantity
+      @partbatches.each do |pb|
+        c = [need_q, pb.quantity - pb.remained_quantity].min
+        pb.update_attribute :remained_quantity, pb.remained_quantity + c
+        pb.part.auto_submodels.each do |asm|
+          asm.on_part_inout pb.part, c
+        end
+        need_q -= c
+        break if need_q <= 0
+      end
+    else
+      need_q = @quantity
+      @partbatches.each do |pb|
+        c = [need_q, pb.remained_quantity].min
+        pb.update_attribute :remained_quantity, pb.remained_quantity - c
+        pb.part.auto_submodels.each do |asm|
+          asm.on_part_inout pb.part, -c
+        end
+        need_q -= c
+        break if need_q <= 0
+      end
+    end
+    @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
   end
 
   # POST /storehouses

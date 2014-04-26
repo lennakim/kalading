@@ -1,0 +1,2 @@
+module MotoroilClassesHelper
+end

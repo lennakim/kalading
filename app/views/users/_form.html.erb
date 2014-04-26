@@ -1,6 +1,6 @@
 <%= simple_form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :roles, label: t(:roles), collection: User::ROLES, label_method: lambda { |s| t(User::ROLE_STRINGS[s]) }, prompt: t('choose_role'), as: :check_boxes %>
-  <%= f.input :name, label: t('name') %>
+  <%= f.input :name, label: t('user_name') %>
   <%= f.input :title, label: t('title') %>
   <%= f.input :phone_num, label: t('phone_num') %>
   <%= f.input :email, :required => true, :autofocus => true %>

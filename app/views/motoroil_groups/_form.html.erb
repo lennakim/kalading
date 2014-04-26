@@ -1,0 +1,25 @@
+<%= simple_form_for @motoroil_group, :html => { :class => 'form-horizontal form-for-motoroil-group' } do |f| %>
+  <%= f.input :name, label: t(:motoroil_group_name) %>
+  
+  <div class="control-group">
+    <label for="motoroil_part_ids" class="control-label"><%= t(:motoroil_numbers) %></label>
+    <div class="controls form-inline">
+      <%= collection_select(:motoroil, :part_ids, PartType.find_by(name: t(:engine_oil)).parts.sort_by(&:brand_and_number) - @motoroil_group.parts, :id, :brand_and_number, {}, {:multiple => true, :size => 10} ) %>
+      <div class="btn-group btn-group-vertical">
+        <a class="btn" id="btn-move-right"><i class="icon-arrow-right">&nbsp</i><%= t(:move_right) %></a>
+        <a class="btn" id="btn-move-left"><i class="icon-arrow-left">&nbsp</i><%= t(:move_left) %></a>
+      </div>
+      <%= collection_select(:motoroil_group, :part_ids, @motoroil_group.ordered_parts, :id, :brand_and_number, {}, {:multiple => true, :size => 10} ) %>
+      <div class="btn-group btn-group-vertical">
+        <a class="btn" id="btn-move-up"><i class="icon-arrow-up">&nbsp</i><%= t(:move_up) %></a>
+        <a class="btn" id="btn-move-down"><i class="icon-arrow-down">&nbsp</i><%= t(:move_down) %></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, t('save'), :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                motoroil_groups_path, :class => 'btn' %>
+  </div>
+<% end %>

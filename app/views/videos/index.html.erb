@@ -1,0 +1,30 @@
+<%- model_class = Video -%>
+<div class="page-header">
+  <h1><%= t 'videos' %></h1>
+</div>
+<%= paginate @videos %>
+<p><strong><%= t('total', count: Video.count )%></strong></p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= t(:engineer_name) %></th>
+      <th><%= t(:create_time) %></th>
+      <th><%= t(:size) %></th>
+      <th><%= t 'actions' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @videos.each do |video| %>
+      <tr>
+        <td><%= video.engineer_name %></td>
+        <td><%= l video.create_time %></td>
+        <td><%= number_to_human_size(video.bytes) %></td>
+        <td>
+          <%= link_to t('view'), video_path(video), :class => 'btn btn-primary' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @videos %>
+<p><strong><%= t('total', count: Video.count )%></strong></p>

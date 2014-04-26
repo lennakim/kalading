@@ -1,44 +1,17 @@
 class AutoModelsController < ApplicationController
-  before_filter :authenticate_user!, :except => [:show] if !Rails.env.importdata?
+  before_filter :authenticate_user!, :except => [:show]
   before_filter :set_default_operator
   # API test for Jason
   load_and_authorize_resource :except => [:show]
   
-  def convert_to_pinyin
-    AutoModel.each do |m|
-      full_name = m.auto_brand.name + m.name
-      full_name.gsub!(/\s+/, "")
-      m.update_attributes({
-                      full_name_pinyin: PinYin.of_string(full_name).join
-                    })
-    end
-  end
-  
   # GET /auto_models
   # GET /auto_models.json
   def index
-    #convert_to_pinyin
-    #AutoModel.each do |m|
-    #  m.update_attributes name_mann: m.name
-    #end
-    
-    #AutoModel.each do |m|
-    #  m.update_attributes name: (m.name.gsub /(\/.*\|)/, '|')
-    #end
-    
-    if params[:query] && params[:query] != ''
-      params[:query] = PinYin.of_string(params[:query]).join
-      params[:query].gsub!(/\s+/, "")
-      s = params[:query].split('').join(".*")
-      @auto_models = AutoModel.any_of({ full_name_pinyin: /.*#{s}.*/i })
-    else
-      @auto_models = AutoModel.all.page params[:page]
-    end
-
+    @auto_models = AutoModel.where(data_source: 2).asc(:name).page params[:page]
     respond_to do |format|
       format.html # index.html.erb
       format.js
-      format.json { render json: @auto_models }
+      format.json { render json: @auto_models.asc(:name) }
     end
   end
 
@@ -46,12 +19,17 @@ class AutoModelsController < ApplicationController
   # GET /auto_models/1.json
   def show
     @auto_model = AutoModel.find(params[:id])
-    @auto_submodels = @auto_model.auto_submodels.asc(:name).page params[:page]
-    @auto_submodel = @auto_submodels.first
     respond_to do |format|
-      format.html # show.html.erb
-      format.js
-      format.json { render json: @auto_model.auto_submodels }
+      format.html {
+        @auto_submodels = @auto_model.auto_submodels.where(data_source: 2).asc(:name).page params[:page]
+      }
+      format.js {
+        @auto_submodels = @auto_model.auto_submodels.where(data_source: 2).asc(:name).page params[:page]
+      }
+      format.json {
+        # Only show maintainable asms on web site
+        render json: @auto_model.auto_submodels.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:name)
+      }
     end
   end
 

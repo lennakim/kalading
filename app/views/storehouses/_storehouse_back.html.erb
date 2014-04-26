@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="modal-label"><%= t('storehouse_back') + ' - ' + @part.part_type.name + '（' + @part.part_brand.name + ' ' + @part.number + '）'%></h3>
+</div>
+
+<div class="modal-body">
+  <%= form_tag inout_storehouse_path(@storehouse, part: params[:part], back: true), :method => 'post', :id => "storehouse_out"  do %>
+    <p>
+      <%= label_tag :in_quantity, t('in_quantity'), class: 'control-label' %>
+      <%= number_field_tag :in_quantity, @partbatches.sum {|x| x.quantity}, class: 'control', readonly: true %>
+      <%= label_tag :remained_quantity, t('remained_quantity'), class: 'control-label' %>
+      <%= number_field_tag :remained_quantity, @partbatches.sum {|x| x.remained_quantity}, class: 'control', readonly: true %>
+      <%= label_tag :quantity, t('back_quantity'), class: 'control-label' %>
+      <%= number_field_tag :quantity, params[:quantity], class: 'control', in: 1..(@partbatches.sum {|x| x.quantity - x.remained_quantity}) %>
+      <%= label_tag :user_id, t('operator'), class: 'control-label' %>
+      <%= collection_select(:user, :id, User.all, :id, :name, :prompt => t(:please_select)) %>
+    </p>
+  <% end %>
+  <div id="error-div"></div>
+</div>
+
+<div class="modal-footer">
+  <%= link_to t('ok'), '#',
+    {:class => 'btn btn-primary', :remote => true, :id => 'partbatch_back_btn'} %>
+  <button class="btn" data-dismiss="modal" aria-hidden="true"><%= t('cancel') %></button>
+</div>

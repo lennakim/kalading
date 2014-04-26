@@ -17,4 +17,7 @@ mongoimport --db kalading_development --collection suppliers --file suppliers.js
 mongoimport --db kalading_development --collection system.indexes --file system.indexes.json
 mongoimport --db kalading_development --collection urlinfos --file urlinfos.json
 mongoimport --db kalading_development --collection users --file users.json
-
+mongoimport --db kalading_development --collection videos --file videos.json
+mongoimport --db kalading_development --collection cities --file cities.json
+mongoimport --db kalading_development --collection motoroil_groups --file motoroil_groups.json
+mongoimport --db kalading_development --collection user_types --file user_types.json

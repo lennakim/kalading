@@ -1,11 +1,11 @@
 <%= simple_nested_form_for @auto_model, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :name, label: t('name') %>
-  <%= f.association :auto_brand, collection: AutoBrand.all, prompt: t('choose_brand'), label: t('owner_auto_brand') %>
+  <%= f.association :auto_brand, collection: AutoBrand.where(data_source: 2).asc(:name_pinyin), prompt: t('choose_brand'), label: t('owner_auto_brand') %>
   <%= f.fields_for :auto_submodels do |submodel_form| %>
-    <%= submodel_form.text_field :name %>
-    <%= submodel_form.link_to_remove "Remove this submodel" %>
+    <%= submodel_form.text_field :full_name %>
+    <%= submodel_form.text_field :full_name_pinyin %>
+    <%= submodel_form.link_to_remove t(:remove_auto_submodel) %>
   <% end %>
-  <p><%= f.link_to_add "Add a submodel", :auto_submodels %></p>
   <div class="form-actions">
     <%= f.button :submit, t('save'), :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

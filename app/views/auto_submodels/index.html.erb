@@ -1,29 +1,46 @@
 <%- model_class = AutoSubmodel -%>
 <div class="page-header">
-  <h2><%=t 'auto_submodel_list' %>
+  <h2>
+    <% if @ds == 3 %>
+      <%= t 'pending_auto_submodels' %>
+    <% elsif params[:sanlv_ready] %>
+      <%= t 'sanlv_ready_auto_submodels_title' %>
+    <% elsif params[:oilf_soldout] %>
+      <%= t 'oilf_soldout_auto_submodels_title' %>
+    <% elsif params[:airf_soldout] %>
+      <%= t 'airf_soldout_auto_submodels_title' %>
+    <% elsif params[:cabinf_soldout] %>
+      <%= t 'cabinf_soldout_auto_submodels_title' %>
+    <% elsif params[:part_rule_exists] %>
+      <%= t 'part_rule_exists_auto_submodels_title' %>
+    <% elsif params[:motoroil_not_set] %>
+      <%= t 'motoroil_not_set_asms' %>
+    <% else %>
+      <%= t 'auto_submodel_list' %>
+      <%= link_to t(:new_auto_submodel), new_auto_submodel_path, :class => 'btn btn-primary pull-right' %>
+      <%= link_to t(:batch_edit_service_level),
+                  auto_submodels_service_level_edit_path,
+                  :class => 'btn btn-primary pull-right', :target => '_blank' if can? :update, AutoSubmodel %>
+    <% end %>
   <!--<%= link_to t(:batch_edit_oil_cap), auto_submodels_oil_cap_edit_path, :class => 'btn btn-primary pull-right' %>-->
-  <%= link_to t(:batch_edit_service_level),
-              auto_submodels_service_level_edit_path,
-              :class => 'btn btn-primary pull-right', :target => '_blank' if can? :update, AutoSubmodel %>
-  <%= link_to t(:auto_submodels_edit_with_catalog),
-              auto_submodels_edit_with_catalog_path,
-              :class => 'btn btn-primary pull-right', :target => '_blank' if can? :update, AutoSubmodel %>
   </h2>
 </div>
 
-<div class="control-group select form-inline">
-  <div class="controls">
-    <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
-    <%= collection_select :auto_submodel, :model_id, AutoBrand.first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
-    <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
+<% if @ds != 3 && params[:sanlv_ready].nil? && params[:motoroil_cap].nil? && params[:oilf_soldout].nil? && params[:airf_soldout].nil? && params[:cabinf_soldout].nil? && params[:part_rule_exists].nil? && params[:motoroil_not_set].nil? %>
+  <div class="control-group select form-inline">
+    <label for="car-model-by-brand-model" class="control-label"><%= t(:auto_model_query_by_brand) %></label>
+    <div class="controls" id="car-model-by-brand-model">
+      <%= collection_select :auto_model, :brand_id, AutoBrand.where(data_source: 2).asc(:name_pinyin), :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+      <%= collection_select :auto_submodel, :model_id, AutoBrand.where(data_source: 2).asc(:name_pinyin).first.auto_models.asc(:name), :id, :name, { :include_blank => true }, {:rel => "/auto_models", :class => 'control'} %>
+      <%= image_tag "ajax-loader.gif", :class => "loading-indicator", :style => "display: none;"%>
+    </div>
   </div>
-</div>
-<div class="control-group">
-  <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
-  <div class="controls" id="search-car-model">
-    <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" minlength="4" data-msg-required="<%= t(:auto_model_required) %>" data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
-    <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+  <div class="control-group">
+    <label for="search-car-model" class="control-label"><%= t(:auto_model_query) %></label>
+    <div class="controls" id="search-car-model">
+      <input class="required" type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" minlength="4" data-msg-required="<%= t(:auto_model_required) %>" data-msg-minlength="<%= t(:auto_model_minlength) %>"/>
+      <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+    </div>
   </div>
-</div>
-
+<% end %>
 <div id="auto_submodels"><%= render 'auto_submodels' %></div>
