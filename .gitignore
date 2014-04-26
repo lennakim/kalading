@@ -20,5 +20,6 @@
 /utils
 *.tar.gz
 *.json
+*.csv
 config/mongoid.yml 
 README.rdoc
