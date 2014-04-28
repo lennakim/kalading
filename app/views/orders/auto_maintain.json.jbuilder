@@ -20,6 +20,8 @@ parts_to_user_friendly = Proc.new do |parts|
   a = parts.collect do |p|
       if p.part_type.name == I18n.t(:engine_oil)
         { brand: p.part_brand.name, number: p.spec}
+      elsif p.part_type.name == I18n.t(:cabin_filter)
+        { brand: p.part_brand.name, number: p.id, spec: p.spec }
       else
         { brand: p.part_brand.name, number: p.id }
       end

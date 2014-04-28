@@ -7,13 +7,12 @@ class Discount
   field :percent, type: Integer, default: 0
   field :expire_date, type: Date, default: Date.today.since(1.years)
   field :times, type: Integer, default: 1
-  field :remained_times, type: Integer, default: ->{ times }
   
   validates :times, inclusion: { in: 1..999999 }, presence: true
   validates :name, presence: true
   validates :percent, inclusion: { in: 0..100 }, presence: true
   has_and_belongs_to_many :orders
-  attr_accessible :name, :discount, :percent, :order_ids, :expire_date, :times, :remained_times
+  attr_accessible :name, :discount, :percent, :order_ids, :expire_date, :times
   
   paginates_per 10
   
