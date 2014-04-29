@@ -13,7 +13,7 @@ class PartType
   scope :parts_by_type, ->(t){ where(name: t).parts.all }
   
   def allow_multi
-    h = { I18n.t(:engine_oil) => true, I18n.t(:oil_filter) => false, I18n.t(:air_filter) => false, I18n.t(:cabin_filter) => false }
+    h = { I18n.t(:engine_oil) => true, I18n.t(:oil_filter) => false, I18n.t(:air_filter) => false, I18n.t(:cabin_filter) => true }
     return h[self.name]
   end
 

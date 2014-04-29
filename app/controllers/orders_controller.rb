@@ -373,23 +373,25 @@ class OrdersController < ApplicationController
 
   def auto_maintain_packs
     @asms = []
-    @packs = []
     @asms = AutoSubmodel.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:full_name_pinyin)
     @asms_count = @asms.count
-    @asms = @asms.page(params[:page]).per(10)
-    @asms.each do |asm|
-      params[:asm_id] = asm.id.to_s
-      auto_maintain
-      @packs << @order
-    end
     respond_to do |format|
-      format.html
-      format.js
+      format.html {
+        @asms = @asms.page(params[:page]).per(10)
+        @packs = []
+        @asms.each do |asm|
+          params[:asm_id] = asm.id.to_s
+          auto_maintain
+          @packs << @order
+        end
+      }
       format.csv {
         csv = CSV.generate({}) do |csv|
           csv << ['ID', I18n.t(:owner_auto_brand), I18n.t(:series), I18n.t(:auto_submodel), I18n.t(:total_price_with_st)]
-          @packs.each do |order|
-            csv << [order.auto_submodel.id, order.auto_submodel.auto_model.auto_brand.name, order.auto_submodel.auto_model.name, order.auto_submodel.full_name, order.calc_price ]
+          @asms.each do |asm|
+            params[:asm_id] = asm.id.to_s
+            auto_maintain
+            csv << [@order.auto_submodel.id, @order.auto_submodel.auto_model.auto_brand.name, @order.auto_submodel.auto_model.name, @order.auto_submodel.full_name, @order.calc_price ]
           end
         end
         headers['Last-Modified'] = Time.now.httpdate
