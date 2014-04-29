@@ -3,10 +3,10 @@
   <%= f.input :discount, label: t(:discount) %>
   <%= f.input :percent, label: t(:discount_percent), :as => :numeric, input_html: {min: "0", max: "100", required: '', "data-msg-required" => t(:discount_percent_required) }, placeholder: t(:discount_percent_placeholder) %>
   <%= f.input :expire_date, label: t(:expire_date), :as => :date_picker, readonly: true %>
-  <%= f.input :times, input_html: {type: 'number', value: '1', step:'1', min: '1', max: '99999'}, label: t('quantity') %>
+  <%= f.input :times, input_html: {type: 'number', step:'1', min: '1', max: '99999'}, label: t('usage_quantity') %>
   <% if ["new"].include? params[:action] %>
     <div class="control-group numeric required discount_number">
-      <label class="numeric required control-label" for="discount_number"><%= t(:count) %></label>
+      <label class="numeric required control-label" for="discount_number"><%= t(:discount_number) %></label>
       <div class="controls">
         <input class="numeric numeric required valid" data-msg-required="" id="discount_number" max="9999" min="1" name="discount_number" placeholder="1-9999之间" required="required" step="any" type="number" value="1">
       </div>

@@ -43,7 +43,7 @@ $ ->
         $.post this.href, $(this).parents("form").serialize(), null, "script"
         return false
     $("#verify-discount-num-btn").click ->
-        $.getScript(this.href + '/' + $("#order_discount_num").val()) if $("#order_discount_num").val().length > 0
+        $.getScript(this.href + '?discount=' + $("#order_discount_num").val()) if $("#order_discount_num").val().length > 0
         return false
 
     car_model_table = {}

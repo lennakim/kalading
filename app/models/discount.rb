@@ -7,6 +7,7 @@ class Discount
   field :percent, type: Integer, default: 0
   field :expire_date, type: Date, default: Date.today.since(1.years)
   field :times, type: Integer, default: 1
+  field :token, type: String
   
   validates :times, inclusion: { in: 1..999999 }, presence: true
   validates :name, presence: true
@@ -16,9 +17,9 @@ class Discount
   
   paginates_per 10
   
-  def apply
-    if discount.expire_date >= Date.today
-      
-    end
+  before_create :generate_token
+  
+  def generate_token
+    self.token = SecureRandom.uuid.delete '-'
   end
 end

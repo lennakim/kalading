@@ -2,6 +2,30 @@
 <div>
   <%= link_to t(:new_discount), new_discount_path, :class => 'btn btn-primary pull-right' if can? :create, Discount %>
 </div>
+
+<a class="btn btn-link" data-target="#discount-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
+<div id="discount-search-form" class="collapse in">
+  <%= form_tag discounts_path, :method => 'get', :id => "discounts_search", :class => 'form-horizontal' do %>
+    <div class="control-group">
+      <%= label_tag :discount_token, t('discount_num'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :discount_token, params[:discount_token], class: 'control' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= label_tag :name, t('name'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :name, params[:name], class: 'control' %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= submit_tag t(:search), class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>
+
 <%= paginate @discounts %>
 <p><strong><%= t('total', count: @discounts.count )%></strong></p>
 <table class="table table-striped">
@@ -20,7 +44,7 @@
   <tbody>
     <% @discounts.each do |discount| %>
       <tr>
-        <td><%= link_to discount.id, discount_path(discount) %></td>
+        <td><%= link_to discount.token, discount_path(discount) %></td>
         <td><%= link_to discount.name, discount_path(discount) %></td>
         <td><%= humanized_money_with_symbol discount.discount %></td>
         <td><%= discount.percent %>%</td>

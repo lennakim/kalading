@@ -6,8 +6,14 @@ class DiscountsController < ApplicationController
   # GET /discounts
   # GET /discounts.json
   def index
-    @discounts = Discount.desc(:created_at).page params[:page]
-
+    @discounts = Discount.desc(:created_at)
+    if params[:discount_token] && params[:discount_token] != ''
+      @discounts = @discounts.where(token: /.*#{params[:discount_token]}.*/)
+    end
+    if params[:name] && params[:name] != ''
+      @discounts = @discounts.where(name: /.*#{params[:name]}.*/)
+    end
+    @discounts = @discounts.page params[:page]
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @discounts }
@@ -24,6 +30,11 @@ class DiscountsController < ApplicationController
       format.js
       format.json { render json: @discount }
     end
+  end
+
+  def query
+    @discount = Discount.find_by token: params[:discount]
+    render action: "show"
   end
 
   # GET /discounts/new

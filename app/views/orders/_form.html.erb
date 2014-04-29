@@ -78,7 +78,7 @@
       <label for="div-discount" class="control-label"><%= t(:discount_num) %></label>
       <div class="controls form-inline" id="div-discount">
         <%= f.input_field :discount_num %>
-        <%= link_to t(:verify_discount_num), discounts_path, class: 'btn', id: 'verify-discount-num-btn' %>
+        <%= link_to t(:verify_discount_num), discount_query_path, class: 'btn', id: 'verify-discount-num-btn' %>
         <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
       </div>
     </div>

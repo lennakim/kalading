@@ -107,7 +107,10 @@ class OrdersController < ApplicationController
       save_order_to_session
     end
     @order.car_num.upcase!
-    @order.discounts << Discount.find(@order.discount_num)
+    d = Discount.find_by token: @order.discount_num
+    if d && d.expire_date >= Date.today && d.orders.count < d.times
+      @order.discounts << d
+    end
     @order.state = 2
     respond_to do |format|
       if @order.save
@@ -164,7 +167,10 @@ class OrdersController < ApplicationController
       if @order.update_attributes(params[:order])
         if params[:order][:discount_num]
           @order.discounts = nil
-          @order.discounts << Discount.find(params[:order][:discount_num])
+          d = Discount.find_by token: params[:order][:discount_num]
+          if d && d.expire_date >= Date.today && d.orders.count < d.times
+            @order.discounts << d
+          end
         end
         format.html { redirect_to session.delete(:return_to), notice: notice }
         format.json { head :no_content }
@@ -207,7 +213,10 @@ class OrdersController < ApplicationController
   
   def calcprice
     @order = Order.new(params[:order])
-    @order.discounts << Discount.find(@order.discount_num)
+    d = Discount.find_by token: @order.discount_num
+    if d && d.expire_date >= Date.today && d.orders.count < d.times
+      @order.discounts << d
+    end
     respond_to do |format|
       format.html
       format.js
@@ -376,6 +385,16 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html
       format.js
+      format.csv {
+        csv = CSV.generate({}) do |csv|
+          csv << ['ID', I18n.t(:owner_auto_brand), I18n.t(:series), I18n.t(:auto_submodel), I18n.t(:total_price_with_st)]
+          @packs.each do |order|
+            csv << [order.auto_submodel.id, order.auto_submodel.auto_model.auto_brand.name, order.auto_submodel.auto_model.name, order.auto_submodel.full_name, order.calc_price ]
+          end
+        end
+        headers['Last-Modified'] = Time.now.httpdate
+        send_data csv, :filename => 'maintain_packs' + I18n.l(DateTime.now) + '.csv'
+      }
     end
   end
   
@@ -518,10 +537,12 @@ private
     if params[:discount]
       discount = Discount.find params[:discount]
       if discount
-        if discount.expire_date >= Date.today
-          @order.discounts << discount
-        else
+        if discount.expire_date < Date.today
           @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
+        elsif discount.orders.count >= discount.times
+          @discount_error = I18n.t(:discount_no_capacity)
+        else
+          @order.discounts << discount
         end
       else
         @discount_error = I18n.t(:discount_not_exist)

@@ -14,6 +14,15 @@
       <%= l @discount.expire_date %>
     <% end %>
   </dd>
+  <dt><strong><%= t(:available_times) %>:</strong></dt>
+  <dd>
+    <% if @discount.orders.count >= @discount.times %>
+      <span class="text-error"><%= t(:discount_no_capacity) %></span>
+    <% else %>
+      <%= @discount.times - @discount.orders.count %>
+    <% end %>
+  </dd>
+  
 </dl>
 <% else %>
   <span class="alert"><%= t(:discount_not_exist) %></span>

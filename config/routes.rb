@@ -114,6 +114,8 @@ Kalading::Application.routes.draw do
   get 'order_preview' => 'orders#order_preview', :as => :order_preview
   get 'order_finish' => 'orders#order_finish', :as => :order_finish
 
+  get 'discount_query' => 'discounts#query', :as => :discount_query
+  
   resources :auto_brands
   root :to => 'orders#index'
 

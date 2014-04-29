@@ -151,7 +151,7 @@ class Order
     self.price += self.calc_service_price
     self.price += self.calc_parts_price
     self.discounts.each do |d|
-      next if d.expire_date < Date.today
+      next if d.expire_date < Date.today || d.orders.count >= d.times
       if d.discount != 0
         self.price -= d.discount
       elsif d.percent != 0
