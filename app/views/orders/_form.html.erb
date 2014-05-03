@@ -117,6 +117,7 @@
       <%= f.button :submit, t(:assign_ok), :class => 'btn-primary' %>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unscheduled' %>
+    <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
     <%= f.input :phone_num, label: t(:confirmed_phone_num), input_html: { :class => 'numeric', :numeric => '', minlength: "8", maxlength: "13", "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) } %>
     <%= f.input :address, label: t(:confirmed_address) %>
     <%= f.input :name, label: t(:confirmed_client_name) %>
@@ -128,6 +129,7 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'scheduled' %>
+    <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
     <h5><%= t(:gather_auto_info) %></h5>
       <%= f.input :auto_km, label: t(:auto_km) %>
       <%= f.input :oil_out, label: t(:oil_out) %>

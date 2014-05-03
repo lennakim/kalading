@@ -36,6 +36,7 @@ group :test do
   gem 'json_spec'
   gem 'database_cleaner'
   gem 'rest-client'
+  gem "factory_girl_rails", "~> 4.0"
 end
 
 gem "twitter-bootstrap-rails"

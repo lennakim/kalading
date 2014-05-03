@@ -714,3 +714,6 @@ zh-CN:
   discount_number: '优惠券数量'
   discount_token: '优惠码'
   discount_token_hint: '32位优惠码'
+  phone_num_invalid: '电话号码未指定'
+  phone_num_not_found: '无效的电话号码'
+  incorrect_password: '密码错误'
