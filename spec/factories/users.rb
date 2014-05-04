@@ -7,7 +7,6 @@ FactoryGirl.define do
     roles [5]
   end
 
-  # This will use the User class (Admin would have been guessed)
   factory :admin, class: User do
     phone_num "13688888888"
     email "test_admin@kalading.com"

@@ -27,9 +27,9 @@ class Partbatch
   belongs_to :supplier
   belongs_to :user
   
-  track_history :track_create   =>  true,    # track document creation, default is false
-                :track_update   =>  true,     # track document updates, default is true
-                :track_destroy  =>  true     # track document destruction, default is false
+  #track_history :track_create   =>  true,    # track document creation, default is false
+  #              :track_update   =>  true,     # track document updates, default is true
+  #              :track_destroy  =>  true     # track document destruction, default is false
 
   after_create :on_create
   before_destroy :on_destroy

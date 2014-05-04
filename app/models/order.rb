@@ -11,9 +11,9 @@ class Order
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
 
-  track_history :track_create   =>  true,    # track document creation, default is false
-                :track_update   =>  true,     # track document updates, default is true
-                :track_destroy  =>  true     # track document destruction, default is false
+  #track_history :track_create   =>  true,    # track document creation, default is false
+  #              :track_update   =>  true,     # track document updates, default is true
+  #              :track_destroy  =>  true     # track document destruction, default is false
 
   field :state, type: Integer, default: 0
   field :address, type: String, default: ''

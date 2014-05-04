@@ -29,16 +29,17 @@ class OrdersController < ApplicationController
       @orders = @orders.where(seq: params[:seq])
     end
 
-    @orders = @orders.desc(:seq).page params[:page]
-
     if params[:history]
       @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'order').desc(:created_at)).page(0).per(5)
     end
-    
+
     respond_to do |format|
-      format.html # index.html.erb
-      format.js
-      format.json { render json: @orders }
+      format.html {
+        @orders = @orders.desc(:seq).page params[:page]
+      }
+      format.json {
+        @orders = @orders.where(engineer: current_user).desc(:seq).page params[:page]
+      }
     end
   end
 

@@ -2,29 +2,20 @@
 require 'spec_helper'
 require 'rest_client'
 
-describe User do
-  before (:all) {
-    @user = create(:user)  
-  }
-  
-  after (:all) {
-    @user.destroy
-  }
-
+describe User, :need_user=> true do
   it "should sign in" do
-    response_json = RestClient.post "http://localhost:3000/users/sign_in", {:phone_num => "13988888888", :password => "12345678"}.to_json, :content_type => :json, :accept => :json
+    response_json = RestClient.post "http://localhost:3000/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password}.to_json, :content_type => :json, :accept => :json
+    expect(response_json.code).to be(201)
     token = JSON.parse(response_json)["authentication_token"]
-    token.should be
-    p token
-    p response_json
+    expect(token).not_to be(nil)
+    puts JSON.pretty_generate(JSON.parse(response_json))
   end
 
   it "should sign out" do
-    response_json = RestClient.post "http://localhost:3000/users/sign_in", {:phone_num => "13988888888", :password => "12345678"}.to_json, :content_type => :json, :accept => :json
+    response_json = RestClient.post "http://localhost:3000/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password}.to_json, :content_type => :json, :accept => :json
     token = JSON.parse(response_json)["authentication_token"]
-    token.should_not == nil
-    p token
+    expect(token).not_to be(nil)
     response_json = RestClient.delete "http://localhost:3000/users/sign_out?auth_token=#{token}", :accept => :json
-    response_json.code.should == 204
+    expect(response_json.code).to be(204)
   end
 end
