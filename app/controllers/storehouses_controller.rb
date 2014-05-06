@@ -54,7 +54,8 @@ class StorehousesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
+        #@history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
+        @history_trackers = Kaminari.paginate_array([]).page(0).per(5)
       }
       format.js # show.js.erb
       format.json { render json: pbs }

@@ -14,9 +14,9 @@ class Storehouse
   
   def to_csv(options = {})
     CSV.generate(options) do |csv|
-      csv << [I18n.t(:part_brand), I18n.t(:number), I18n.t(:part_type), I18n.t(:in_quantity), I18n.t(:remained_quantity), I18n.t(:batch_price) ]
+      csv << [I18n.t(:part_brand), I18n.t(:number), I18n.t(:part_type), I18n.t(:in_quantity), I18n.t(:remained_quantity), I18n.t(:batch_price), I18n.t(:sell_price_history) ]
       self.partbatches.group_by(&:part).to_a.sort_by {|x, y| x.number }.each do |part, partbatches|
-        csv << [part.part_brand.name, part.number, part.part_type.name, partbatches.sum {|x| x.quantity}, partbatches.sum {|x| x.remained_quantity}, partbatches.first.price ]
+        csv << [part.part_brand.name, part.number, part.part_type.name, partbatches.sum {|x| x.quantity}, partbatches.sum {|x| x.remained_quantity}, partbatches.first.price, part.ref_price ]
       end
     end
   end
