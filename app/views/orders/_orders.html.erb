@@ -33,7 +33,12 @@
       <% @orders.each_with_index do |order, i| %>
         <tr class="<%= colors[ i % colors.length] %>">
           <td><%= order.seq %></td>
-          <td><%= t(Order::STATE_STRINGS[order.state]) %></td>
+          <td>
+            <%= t(Order::STATE_STRINGS[order.state]) %>
+            <% if order.state == 8 %>
+              <p class="alert alert-error"><%= order.cancel_reason %></p>
+            <% end %>
+          </td>
           <td><%= l order.serve_datetime if order.serve_datetime %></td>
           <td>
             <% if order.engineer %>
@@ -93,7 +98,7 @@
                   <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
                 <% end %>
               <% end %>
-              <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[handovered serve_done].include? Order::STATE_STRINGS[order.state]) %>
+              <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[handovered serve_done scheduled].include? Order::STATE_STRINGS[order.state]) %>
             <% end %>
           </td>
         </tr>

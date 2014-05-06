@@ -1,50 +1,72 @@
 #encoding: UTF-8
 require 'spec_helper'
-require 'rest_client'
 
-describe Order, :need_user => true, :need_login => true, :need_maintain_order => true do
-  it "should list page 1 of my orders" do
-    response_json = RestClient.get "http://localhost:3000/orders?auth_token=#{@token}&page=1", :content_type => :json, :accept => :json
+# :need_user表示测试之前执行user_context.rb创建用户，并使用get_json, put_json, post_json等API
+# :need_login表示测试之前执行login_context.rb登录，设置@token
+# :need_maintain_order表示测试之前执行order_context.rb创建订单
+describe '订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 id用于订单的修改', :need_user => true, :need_login => true, :need_maintain_order => true do
+  it "列举第1页订单，每页2个" do
+    response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=1&per=2"
     # 确认调用成功
     expect(response_json.code).to be(200)
-    # 打印返回值
     orders = JSON.parse(response_json)
+    # 确认返回值正确
     expect(orders.size).to be > 0
-    puts JSON.pretty_generate(JSON.parse(response_json))
   end
 
-  it "should list page 2 of my orders" do
-    response_json = RestClient.get "http://localhost:3000/orders?auth_token=#{@token}&page=2", :content_type => :json, :accept => :json
-    # 确认调用成功
+  it "列举第3页订单，到达最后一页" do
+    response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=3&per=2"
     expect(response_json.code).to be(200)
-    # 打印返回值
     orders = JSON.parse(response_json)
     expect(orders.size).to be(0)
   end
+end
 
-  #it "should create auto test order" do
-  #  # API 输入参数
-  #  r = { 
-  #    info: {
-  #      address: "北京朝阳区光华路888号",
-  #      name: "王一迅",
-  #      phone_num: "13888888888",
-  #      car_location: "京",
-  #      car_num: "N333M3",
-  #      serve_datetime: "2014-03-09 15:44",
-  #      pay_type: 1,
-  #      reciept_type: 1,
-  #      reciept_title: "卡拉丁汽车技术",
-  #      client_comment: "请按时到场"
-  #    }
-  #  }
-  #  # API地址为/auto_test_order，HTTP请求类型为POST
-  #  response_json = RestClient.post "http://localhost:3000/auto_test_order?auth_token=#{@token}", r.to_json,:content_type => :json, :accept => :json
-  #  # 确认调用成功
-  #   expect(response_json.code).to be(200)
-  #  # 打印返回值
-  #  puts JSON.pretty_generate(JSON.parse(response_json))
-  #  rs = JSON.parse(response_json)
-  #  # 可以对返回值做进一步分析检查
-  #end
+describe '设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，8：服务取消', :need_user => true, :need_login => true, :need_maintain_order => true do
+  it "设置订单状态为服务取消，并说明原因为：客户联系不上" do
+    # false表示不产生API文档
+    response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=1&per=2", false
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    expect(orders.size).to be > 0
+    expect(orders[0]['id']).to be
+    
+    r = {
+      order: {
+        state: 8,
+        cancel_reason: '客户联系不上'
+      }
+    }
+    response_json = put_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", r
+    expect(response_json.code).to be(200)
+
+    response_json = get_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", false
+    expect(response_json.code).to be(200)
+    order = JSON.parse(response_json)
+    expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[8]))
+    expect(order['cancel_reason']).to eq('客户联系不上')
+  end
+
+  it "设置订单状态为已预约，并修改服务时间" do
+    response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=1&per=2", false
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    expect(orders.size).to be > 0
+    expect(orders[0]['id']).to be
+    
+    r = {
+      order: {
+        state: 4,
+        serve_datetime: '2014-05-08 14:00'
+      }
+    }
+    response_json = put_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", r
+    expect(response_json.code).to be(200)
+
+    response_json = get_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", false
+    expect(response_json.code).to be(200)
+    order = JSON.parse(response_json)
+    expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[4]))
+    expect(order['serve_datetime']).to eq('05-08 14:00')
+  end
 end

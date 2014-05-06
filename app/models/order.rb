@@ -31,6 +31,7 @@ class Order
   field :reciept_type, type: Integer, default: 0
   field :reciept_title, type: String, default: ''
   field :client_comment, type: String, default: ''
+  field :cancel_reason, type: String, default: ''
 
   field :oil_filter_changed, type: Boolean, default: false
   field :air_filter_changed, type: Boolean, default: false
@@ -77,7 +78,7 @@ class Order
     :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
-    :registration_date, :engine_num
+    :registration_date, :engine_num, :cancel_reason
 
   auto_increment :seq
   index({ seq: 1 })
@@ -88,9 +89,9 @@ class Order
   validates :phone_num, length: { in: 8..13 }, presence: true
   validates :address, length: { in: 4..512 }, presence: true
   
-  STATES = [0, 1, 2, 3, 4, 5, 6, 7]
-  STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited]
-  STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit]
+  STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled]
+  STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit]
   STATE_CHANGED_STRS = %w[reverify verify_failed verify_ok assign_ok schedule_ok serve_ok handover_ok revisit_ok]
 
   PAY_TYPES = [0, 1]

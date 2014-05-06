@@ -38,7 +38,9 @@ class OrdersController < ApplicationController
         @orders = @orders.desc(:seq).page params[:page]
       }
       format.json {
-        @orders = @orders.where(engineer: current_user).desc(:seq).page params[:page]
+        params[:page] ||= 1
+        params[:per] ||= 5
+        @orders = @orders.where(engineer: current_user, :state.gte => 3, :state.lte => 5).asc(:seq).page(params[:page]).per(params[:per])
       }
     end
   end
@@ -54,7 +56,7 @@ class OrdersController < ApplicationController
       end
       format.html # show.html.erb
       format.js
-      format.json { render json: @order }
+      format.json
     end
   end
 
@@ -130,6 +132,8 @@ class OrdersController < ApplicationController
   # PUT /orders/1
   # PUT /orders/1.json
   def update
+    params[:edit_all] = true if request.format.json?
+    
     params[:order][:car_num].upcase! if params[:order][:car_num]
     @order = Order.find(params[:id])
     if params[:verify_failed]
@@ -174,10 +178,10 @@ class OrdersController < ApplicationController
           end
         end
         format.html { redirect_to session.delete(:return_to), notice: notice }
-        format.json { head :no_content }
+        format.json { render json: {result: 'ok'} }
       else
         format.html { render action: "edit" }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+        format.json { render json: { result: @order.errors[0] } }
       end
     end
   end

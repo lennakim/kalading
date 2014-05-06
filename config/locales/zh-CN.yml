@@ -717,3 +717,4 @@ zh-CN:
   phone_num_invalid: '电话号码未指定'
   phone_num_not_found: '无效的电话号码'
   incorrect_password: '密码错误'
+  service_cancelled: '服务已取消'
