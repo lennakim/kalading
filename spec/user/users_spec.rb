@@ -19,7 +19,7 @@ end
 
 describe '用户注销', :need_user=> true do
   it "注销成功" do
-    response_json = post_json "http://localhost:3000/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password}, false
+    response_json = post_json "http://localhost:3000/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password}
     token = JSON.parse(response_json)["authentication_token"]
     expect(token).not_to be(nil)
     response_json = delete_json "http://localhost:3000/users/sign_out?auth_token=#{token}"
