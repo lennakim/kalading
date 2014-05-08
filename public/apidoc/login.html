@@ -295,11 +295,11 @@ http://localhost:3000/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "kyuN3i9ZdEv3AmF-hvWa"
+  "authentication_token": "LPwBGA7T7D3Khjcxqyo1"
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('33.3');</script>
-    <dd class="example passed"><span class="passed_spec_name">登录成功，返回authentication_token</span><span class='duration'>0.02248s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">登录成功，返回authentication_token</span><span class='duration'>0.03514s</span></dd>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 http://localhost:3000/users/sign_in
@@ -316,7 +316,7 @@ http://localhost:3000/users/sign_in
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('66.6');</script>
-    <dd class="example passed"><span class="passed_spec_name">登录失败，返回错误信息: 密码错误</span><span class='duration'>0.01376s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">登录失败，返回错误信息: 密码错误</span><span class='duration'>0.01466s</span></dd>
   </dl>
 </div>
 <div id="div_group_2" class="example_group passed">
@@ -324,13 +324,18 @@ http://localhost:3000/users/sign_in
   <dt id="example_group_2" class="passed">用户注销</dt>
 <h5>METHOD:&nbsp&nbspDELETE</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/users/sign_out?auth_token=y-UzMy2Biz5Wi-KuaS47
+http://localhost:3000/users/sign_out?auth_token=J1-Puws-uZFSt6PtGzxE
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok"
+}
+</pre></p>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">注销成功</span><span class='duration'>0.02230s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">注销成功</span><span class='duration'>0.02434s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.05934 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.07496 seconds</strong>";</script>
 <script type="text/javascript">document.getElementById('totals').innerHTML = "3 examples, 0 failures";</script>
 </div>
 </div>

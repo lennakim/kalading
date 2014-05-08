@@ -23,6 +23,8 @@ describe '用户注销', :need_user=> true do
     token = JSON.parse(response_json)["authentication_token"]
     expect(token).not_to be(nil)
     response_json = delete_json "http://localhost:3000/users/sign_out?auth_token=#{token}"
-    expect(response_json.code).to be(204)
+    expect(response_json.code).to be(200)
+    r = JSON.parse(response_json)["result"]
+    expect(r).to eq('ok')
   end
 end
