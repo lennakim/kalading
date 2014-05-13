@@ -1,9 +1,12 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:order_begin, :choose_service]
-  before_filter :authenticate_user!, :except => [
-    :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order ]
+  @except_actions = [
+    :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order
+  ]
+  before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
-  
+  load_and_authorize_resource :except => @except_actions
+
   # GET /orders
   # GET /orders.json
   def index

@@ -60,6 +60,7 @@ class Order
   has_and_belongs_to_many :parts
   embeds_many :comments, :cascade_callbacks => true
   belongs_to :user_type
+  belongs_to :city
 
   field :part_counts, type: Hash, default: {}
   
@@ -78,7 +79,7 @@ class Order
     :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
-    :registration_date, :engine_num, :cancel_reason
+    :registration_date, :engine_num, :cancel_reason, :city_id
 
   auto_increment :seq
   index({ seq: 1 })
@@ -88,6 +89,7 @@ class Order
   validates :car_num, length: { in: 6..6 }, presence: true
   validates :phone_num, length: { in: 8..13 }, presence: true
   validates :address, length: { in: 4..512 }, presence: true
+  validates :city, presence: true
   
   STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8]
   STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled]
@@ -180,4 +182,11 @@ class Order
       :part_counts, :address, :buymyself, :car_location, :car_num, :name, :pay_type, :reciept_title, :reciept_type, :seq, :part_ids, :service_type_ids,
       :auto_submodel_id, :price, :comments ]
   end
+  
+  instance_eval do
+    def within_datetime_range(s1, s2, d1, d2, city)
+      where :state.gte => s1, :state.lte => s2, :serve_datetime.gte => d1, :serve_datetime.lte => d2, :city => city
+    end
+  end
+
 end

@@ -1,32 +1,33 @@
 <%- model_class = City -%>
 <div class="page-header">
-  <h1><%=t 'cities' %></h1>
+  <h1><%=t 'cities_title' %></h1>
 </div>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th><%= t(:name) %></th>
+      <th><%= t(:order_capacity) %></th>
+      <th><%= t(:serving_orders_today) %></th>
+      <th><%= t(:serve_done_orders_today) %></th>
+      <th><%= t(:actions) %></th>
     </tr>
   </thead>
   <tbody>
     <% @cities.each do |city| %>
       <tr>
         <td><%= link_to city.name, city_path(city) %></td>
+        <td><%= city.order_capacity %></td>
+        <td><%= Order.within_datetime_range(0, 4, Date.today.beginning_of_day, Date.today.end_of_day, city).count %></td>
+        <td><%= Order.within_datetime_range(5, 8, Date.today.beginning_of_day, Date.today.end_of_day, city).count %></td>
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_city_path(city), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      city_path(city),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
+          <%= link_to t('edit'),
+                      edit_city_path(city), :class => 'btn btn-mini' if can? :update, city %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
+<%= link_to t('new_city'),
             new_city_path,
-            :class => 'btn btn-primary' %>
+            :class => 'btn btn-primary' if can? :create, City %>

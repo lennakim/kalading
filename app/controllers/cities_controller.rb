@@ -1,4 +1,7 @@
 class CitiesController < ApplicationController
+  before_filter :authenticate_user!, :except => [ :index, :show ]
+  load_and_authorize_resource :except => [ :index, :show, :capacity ]
+
   # GET /cities
   # GET /cities.json
   def index
@@ -79,5 +82,27 @@ class CitiesController < ApplicationController
       format.html { redirect_to cities_url }
       format.json { head :no_content }
     end
+  end
+  
+  def capacity
+    @city = City.find(params[:id])
+    d1 = Date.parse params[:start_date] if params[:start_date]
+    d1 ||= Date.tomorrow
+    d2 = Date.parse params[:end_date] if params[:end_date]
+    d2 ||= Date.tomorrow.since(1.month).to_date
+    if d1 < Date.today
+      d1 = Date.today
+    end
+    if d2 > d1 + 31 || d2 < d1
+      d2 = d1.since(1.month).to_date
+    end
+    h = {}
+    (d1..d2).each do |d|
+      h[d] = @city.order_capacity
+    end
+    Order.within_datetime_range(0, 4, d1.beginning_of_day, d2.end_of_day, @city).group_by {|o| o.serve_datetime.to_date}.each do |k, v|
+      h[k] = [@city.order_capacity - v.count, 0].max
+    end
+    render json: h
   end
 end
