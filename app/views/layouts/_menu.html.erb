@@ -34,6 +34,14 @@
           <%= link_to t('order_menu'), orders_path  %>
           </li>
 
+          <% if ['cities'].include? params[:controller] %>
+          <li class="active">
+          <% else %>
+          <li>
+          <% end %>
+          <%= link_to t('cities'), cities_path if can? :access, :order %>
+          </li>
+
           <% if ['users'].include? params[:controller] %>
           <li class="active">
           <% else %>

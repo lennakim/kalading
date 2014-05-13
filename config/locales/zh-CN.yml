@@ -728,3 +728,4 @@ zh-CN:
   city_required: '请选择城市'
   serve_done_orders_today: '今天已完成订单数'
   pm25_filter: 'PM2.5特效滤芯'
+  cities: '城市'
