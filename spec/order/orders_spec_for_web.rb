@@ -3,16 +3,16 @@ require 'spec_helper'
 
 describe '查询城市的服务能力.返回每天可下单数量。start_date为起始日期，end_date为终止日期。', :need_user => true, :need_login => true, :need_maintain_order => true do
   it "查询2014-05-13到2014-06-01的服务能力" do
-    response_json = get_json "http://localhost:3000/city_capacity/#{City.find_by(name: '北京市').id}.json?auth_token=#{@token}&start_date=2014-05-13&end_date=2014-06-12"
+    response_json = get_json "http://localhost:3000/city_capacity/#{City.find_by(name: '北京市').id}.json?start_date=2014-05-13&end_date=2014-06-12"
     expect(response_json.code).to be(200)
     h = JSON.parse(response_json)
     expect(h.size).to be > 0
   end
 end
 
-describe '查询车型保养套餐', :need_user => true, :need_login => true do
+describe '查询车型保养套餐', :need_user => true do
   it "查询丰田(一汽) 兰德酷路泽 4.7L 2007.12-2012.02保养套餐" do
-    response_json = get_json "http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json?auth_token=#{@token}"
+    response_json = get_json "http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json"
     expect(response_json.code).to be(200)
     h = JSON.parse(response_json)
     #expect(h['result']).to eq('succeeded')
@@ -20,7 +20,7 @@ describe '查询车型保养套餐', :need_user => true, :need_login => true do
   end
 end
 
-describe '新建保养订单。city_id为城市的ID', :need_user => true, :need_login => true do
+describe '新建保养订单。city_id为城市的ID', :need_user => true do
   it "新建保养订单" do
     o = {
       parts: [
@@ -55,7 +55,7 @@ describe '新建保养订单。city_id为城市的ID', :need_user => true, :need
               city_id: City.find_by(name: '北京市').id.to_s
       }
     }
-    response_json = post_json "http://localhost:3000/auto_maintain_order/#{AutoSubmodel.first.id}.json?auth_token=#{@token}", o
+    response_json = post_json "http://localhost:3000/auto_maintain_order/#{AutoSubmodel.first.id}.json", o
     expect(response_json.code).to be(200)
     h = JSON.parse(response_json)
     expect(h['result']).to eq('succeeded')

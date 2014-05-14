@@ -1,5 +1,5 @@
 class CitiesController < ApplicationController
-  before_filter :authenticate_user!, :except => [ :index, :show ]
+  before_filter :authenticate_user!, :except => [ :index, :show, :capacity ]
   load_and_authorize_resource :except => [ :index, :show, :capacity ]
 
   # GET /cities

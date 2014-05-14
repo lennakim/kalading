@@ -17,16 +17,18 @@ json.name @order.auto_submodel.auto_model.auto_brand.name + ' ' + @order.auto_su
 
 parts_to_user_friendly = Proc.new do |parts|
   # engine oil with same spec and brand are merged
-  a = parts.collect do |p|
+  b = {}
+  a = parts.each do |p|
       if p.part_type.name == I18n.t(:engine_oil)
-        { brand: p.part_brand.name, number: p.spec}
+        b[{brand: p.part_brand.name, number: p.spec}] ||= { brand: p.part_brand.name, number: p.spec, price: 0}
+        b[{brand: p.part_brand.name, number: p.spec}][:price] += p.ref_price.to_f * @order.auto_submodel.cals_part_count(p)
       elsif p.part_type.name == I18n.t(:cabin_filter)
-        { brand: p.part_brand.name, number: p.id, spec: p.spec }
+        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, spec: p.spec, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p) }
       else
-        { brand: p.part_brand.name, number: p.id }
+        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p) }
       end
   end
-  a.uniq
+  b.values
 end
 
 json.parts @order.parts.group_by {|x| x.part_type.name} do |v|
