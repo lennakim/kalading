@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
-  load_and_authorize_resource :except => @except_actions
+  load_and_authorize_resource :except => @except_actions + [:auto_maintain_pack, :create_auto_maintain_order3]
 
   # GET /orders
   # GET /orders.json
@@ -379,6 +379,10 @@ class OrdersController < ApplicationController
     end
   end
 
+  def auto_maintain_pack
+    auto_maintain
+  end
+  
   def auto_maintain_packs
     @asms = []
     @asms = AutoSubmodel.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:full_name_pinyin)
@@ -415,6 +419,8 @@ class OrdersController < ApplicationController
   
   def create_auto_maintain_order
     return render json: { result: t(:auto_submodel_required)}, status: :bad_request if params[:asm_id].nil?
+    asm = AutoSubmodel.find(params[:asm_id])
+    return render json: t(:auto_submodel_required), status: :bad_request if asm.nil?
     return render json: {result: t(:parts_needed)}, status: :bad_request if params[:parts].nil? || params[:parts].empty?
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
     return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
@@ -423,8 +429,6 @@ class OrdersController < ApplicationController
     return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
     return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
     return render json: {result: t(:city_needed)}, status: :bad_request if params[:info][:city_id].nil? || params[:info][:city_id].empty?
-    asm = AutoSubmodel.find(params[:asm_id])
-    return render json: t(:auto_submodel_required), status: :bad_request if asm.nil?
     city = City.find(params[:info][:city_id])
     return render json: t(:city_invalid), status: :bad_request if city.nil?
     
@@ -453,6 +457,22 @@ class OrdersController < ApplicationController
     if @order.parts.empty?
       @order.buymyself = true
     end
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+
+  def create_auto_maintain_order3
+    auto_maintain
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    @order.city = City.find_by name: I18n.t(:beijing)
+    @order.user_type = UserType.find_or_create_by name: I18n.t(:baichebao)
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
@@ -528,9 +548,7 @@ private
       asm = AutoSubmodel.find(params[:asm_id])
       @order.auto_submodel = asm
     end
-    maintain_service = ServiceType.find '527781377ef560ccbc000003'
-    return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
-    @order.service_types << maintain_service
+    cabin_filter_only = true
     if params[:parts]
       params[:parts].each do |h|
         parts = []
@@ -541,11 +559,25 @@ private
           parts = Part.where part_brand: (PartBrand.find_by name: h[:brand]), spec: h[:number]
         end
         parts.each do |p|
+          if ![I18n.t(:cabin_filter), I18n.t(:pm25_filter)].include? p.part_type.name
+            cabin_filter_only = false
+          end
           @order.parts << p
           @order.part_counts[p.id.to_s] = asm.cals_part_count(p)
         end
       end
     end
+
+    if @order.parts.exists? && cabin_filter_only
+      cabin_filter_service = ServiceType.find '527781867ef560ccbc000007'
+      return render json: t(:cabin_filter_service_type_not_found), status: :bad_request if cabin_filter_service.nil?
+      @order.service_types << cabin_filter_service
+    else
+      maintain_service = ServiceType.find '527781377ef560ccbc000003'
+      return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
+      @order.service_types << maintain_service
+    end
+
     check_discount
   end
 

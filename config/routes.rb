@@ -91,6 +91,10 @@ Kalading::Application.routes.draw do
   post 'auto_verify_price' => 'orders#auto_verify_price', :as => :auto_verify_price
   get 'auto_maintain_packs' => 'orders#auto_maintain_packs', :as => :auto_maintain_packs
 
+  # For baichebao
+  get 'auto_maintain_pack/:asm_id' => 'orders#auto_maintain_pack', :as => :auto_maintain_pack
+  post 'auto_maintain_pack/:asm_id' => 'orders#create_auto_maintain_order3', :as => :create_auto_maintain_pack
+
   get 'auto_submodels_oil_cap_edit' => 'auto_submodels#oil_cap_edit', :as => :auto_submodels_oil_cap_edit
   post 'auto_submodels_oil_cap_modify' => 'auto_submodels#oil_cap_modify', :as => :auto_submodels_oil_cap_modify
   get 'auto_submodels_service_level_edit' => 'auto_submodels#service_level_edit', :as => :auto_submodels_service_level_edit

@@ -8,11 +8,13 @@ shared_context "create user", :need_user => true do
   before {
     # 测试之前，创建临时账户
     @user = create(:user)
+    @baichebao_user = create(:baichebao_user)
   }
   
   after {
     # 测试之后，删除账户
     @user.destroy
+    @baichebao_user.destroy
   }
   
   def puts_req(s)

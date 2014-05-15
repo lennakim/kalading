@@ -20,6 +20,15 @@ describe '查询车型保养套餐', :need_user => true do
   end
 end
 
+describe '查询车辆品牌', :need_user => true do
+  it "查询长城" do
+    response_json = get_json "http://localhost:3000/auto_brands/531f1fdb098e71b3f8003522.json"
+    expect(response_json.code).to be(200)
+    #expect(h['result']).to eq('succeeded')
+    #expect(h['seq']).to be
+  end
+end
+
 describe '新建保养订单。city_id为城市的ID', :need_user => true do
   it "新建保养订单" do
     o = {
@@ -55,11 +64,115 @@ describe '新建保养订单。city_id为城市的ID', :need_user => true do
               city_id: City.find_by(name: '北京市').id.to_s
       }
     }
-    response_json = post_json "http://localhost:3000/auto_maintain_order/#{AutoSubmodel.first.id}.json", o
+    response_json = post_json "http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json", o
     expect(response_json.code).to be(200)
     h = JSON.parse(response_json)
     expect(h['result']).to eq('succeeded')
     expect(h['seq']).to be
     Order.find_by(seq: h['seq']).destroy
+  end
+end
+
+describe '查询换空调滤+PM2.5滤芯价格', :need_user => true do
+  it "查询换空调滤+PM2.5滤芯价格" do
+    o = {
+      parts: [
+              {
+                brand: "曼牌 Mann",
+                number: "528af433098e7180590042ca"
+              },
+              {
+                brand: "卡拉丁",
+                number: "53672bab9a94e45d440005ae"
+              }
+      ],
+      info: {
+              address: "北京朝阳区光华路888号",
+              name: "王一迅",
+              phone_num: "13888888888",
+              car_location: "京",
+              car_num: "N333M3",
+              serve_datetime: "2014-06-09 15:44",
+              pay_type: 1,
+              reciept_type: 1,
+              reciept_title: "卡拉丁汽车技术",
+              client_comment: "请按时到场",
+              city_id: City.find_by(name: '北京市').id.to_s
+      }
+    }
+    response_json = post_json "http://localhost:3000/auto_maintain_price/531f1ed0098e71b3f80001fb.json", o
+    expect(response_json.code).to be(200)
+  end
+end
+
+describe '新建换空调滤+PM2.5滤芯订单', :need_user => true do
+  it "新建保养订单" do
+    o = {
+      parts: [
+              {
+                brand: "曼牌 Mann",
+                number: "528af433098e7180590042ca"
+              },
+              {
+                brand: "卡拉丁",
+                number: "53672bab9a94e45d440005ae"
+              }
+      ],
+      info: {
+              address: "北京朝阳区光华路888号",
+              name: "王一迅",
+              phone_num: "13888888888",
+              car_location: "京",
+              car_num: "N333M3",
+              serve_datetime: "2014-06-09 15:44",
+              pay_type: 1,
+              reciept_type: 1,
+              reciept_title: "卡拉丁汽车技术",
+              client_comment: "请按时到场",
+              city_id: City.find_by(name: '北京市').id.to_s
+      }
+    }
+    response_json = post_json "http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json", o
+    expect(response_json.code).to be(200)
+    h = JSON.parse(response_json)
+    expect(h['result']).to eq('succeeded')
+    expect(h['seq']).to be
+    o = Order.find_by(seq: h['seq'])
+    expect(o.price.to_f).to be(50.0)
+    o.destroy
+  end
+end
+
+describe '新建PM2.5滤芯订单', :need_user => true do
+  it "新建保养订单" do
+    o = {
+      parts: [
+              {
+                brand: "卡拉丁",
+                number: "53672bab9a94e45d440005ae"
+              }
+      ],
+      info: {
+              address: "北京朝阳区光华路888号",
+              name: "王一迅",
+              phone_num: "13888888888",
+              car_location: "京",
+              car_num: "N333M3",
+              serve_datetime: "2014-06-09 15:44",
+              pay_type: 1,
+              reciept_type: 1,
+              reciept_title: "卡拉丁汽车技术",
+              client_comment: "请按时到场",
+              city_id: City.find_by(name: '北京市').id.to_s
+      }
+    }
+    response_json = post_json "http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json", o
+    expect(response_json.code).to be(200)
+    h = JSON.parse(response_json)
+    expect(h['result']).to eq('succeeded')
+    expect(h['seq']).to be
+    o = Order.find_by(seq: h['seq'])
+    expect(o.price.to_f).to be(50.0)
+    o.destroy
   end
 end

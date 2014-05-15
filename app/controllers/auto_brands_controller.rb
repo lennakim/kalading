@@ -32,7 +32,7 @@ class AutoBrandsController < ApplicationController
       format.html # show.html.erb
       format.js
       format.json {
-        render json: @auto_brand.auto_models.where(service_level: 1).asc(:name_pinyin)
+        render json: @auto_brand.auto_models.where(service_level: 1).asc(:name_pinyin).select { |am| am.auto_submodels.where(data_source: 2, service_level: 1, :oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).exists? }
       }
     end
   end

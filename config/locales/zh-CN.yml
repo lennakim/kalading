@@ -731,3 +731,6 @@ zh-CN:
   cities: '城市'
   city_needed: '请选择城市'
   city_invalid: '城市信息无效'
+  beijing: '北京市'
+  baichebao: '百车宝'
+  cabin_filter_service_type_not_found: '换空调滤服务不可用'

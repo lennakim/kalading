@@ -288,40 +288,39 @@ http://localhost:3000/city_capacity/5307033e098e719c45000043.json?start_date=201
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
-  "2014-05-14": 9999,
-  "2014-05-15": 9999,
-  "2014-05-16": 9998,
-  "2014-05-17": 9999,
-  "2014-05-18": 9998,
-  "2014-05-19": 9999,
-  "2014-05-20": 9999,
-  "2014-05-21": 9999,
-  "2014-05-22": 9999,
-  "2014-05-23": 9999,
-  "2014-05-24": 9999,
-  "2014-05-25": 9999,
-  "2014-05-26": 9999,
-  "2014-05-27": 9999,
-  "2014-05-28": 9999,
-  "2014-05-29": 9999,
-  "2014-05-30": 9999,
-  "2014-05-31": 9999,
-  "2014-06-01": 9999,
-  "2014-06-02": 9999,
-  "2014-06-03": 9999,
-  "2014-06-04": 9999,
-  "2014-06-05": 9999,
-  "2014-06-06": 9999,
-  "2014-06-07": 9999,
-  "2014-06-08": 9999,
-  "2014-06-09": 9999,
-  "2014-06-10": 9999,
-  "2014-06-11": 9999,
-  "2014-06-12": 9999
+  "2014-05-15": 1,
+  "2014-05-16": 0,
+  "2014-05-17": 1,
+  "2014-05-18": 0,
+  "2014-05-19": 1,
+  "2014-05-20": 1,
+  "2014-05-21": 1,
+  "2014-05-22": 1,
+  "2014-05-23": 1,
+  "2014-05-24": 1,
+  "2014-05-25": 1,
+  "2014-05-26": 1,
+  "2014-05-27": 1,
+  "2014-05-28": 1,
+  "2014-05-29": 1,
+  "2014-05-30": 1,
+  "2014-05-31": 1,
+  "2014-06-01": 1,
+  "2014-06-02": 1,
+  "2014-06-03": 1,
+  "2014-06-04": 1,
+  "2014-06-05": 1,
+  "2014-06-06": 1,
+  "2014-06-07": 1,
+  "2014-06-08": 1,
+  "2014-06-09": 0,
+  "2014-06-10": 1,
+  "2014-06-11": 1,
+  "2014-06-12": 1
 }
 </pre></p>
-    <script type="text/javascript">moveProgressBar('33.3');</script>
-    <dd class="example passed"><span class="passed_spec_name">查询2014-05-13到2014-06-01的服务能力</span><span class='duration'>0.44292s</span></dd>
+    <script type="text/javascript">moveProgressBar('14.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询2014-05-13到2014-06-01的服务能力</span><span class='duration'>0.13848s</span></dd>
   </dl>
 </div>
 <div id="div_group_2" class="example_group passed">
@@ -333,8 +332,8 @@ http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
-  "price": 608.0,
-  "price_without_discount": 608.0,
+  "price": 550.0,
+  "price_without_discount": 550.0,
   "service_price": 150.0,
   "discount": {
   },
@@ -374,7 +373,7 @@ http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json
         {
           "brand": "卡拉丁",
           "number": "53672bab9a94e45d440005ae",
-          "price": 58.0
+          "price": 0.0
         }
       ]
     }
@@ -422,7 +421,7 @@ http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json
         {
           "brand": "卡拉丁",
           "number": "53672bab9a94e45d440005ae",
-          "price": 58.0
+          "price": 0.0
         }
       ]
     },
@@ -463,16 +462,41 @@ http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json
   ]
 }
 </pre></p>
-    <script type="text/javascript">moveProgressBar('66.6');</script>
-    <dd class="example passed"><span class="passed_spec_name">查询丰田(一汽) 兰德酷路泽 4.7L 2007.12-2012.02保养套餐</span><span class='duration'>0.78114s</span></dd>
+    <script type="text/javascript">moveProgressBar('28.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询丰田(一汽) 兰德酷路泽 4.7L 2007.12-2012.02保养套餐</span><span class='duration'>0.47219s</span></dd>
   </dl>
 </div>
 <div id="div_group_3" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_3" class="passed">新建保养订单。city_id为城市的ID</dt>
+  <dt id="example_group_3" class="passed">查询车辆品牌</dt>
+<h5>METHOD:&nbsp&nbspGET</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://localhost:3000/auto_brands/531f1fdb098e71b3f8003522.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+[
+  {
+    "_id": "531f1fdb098e71b3f8003531",
+    "full_name_pinyin": "",
+    "name": "哈弗H5"
+  },
+  {
+    "_id": "531f1fdb098e71b3f800353f",
+    "full_name_pinyin": "",
+    "name": "腾翼C30"
+  }
+]
+</pre></p>
+    <script type="text/javascript">moveProgressBar('42.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询长城</span><span class='duration'>0.08578s</span></dd>
+  </dl>
+</div>
+<div id="div_group_4" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_4" class="passed">新建保养订单。city_id为城市的ID</dt>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/auto_maintain_order/528af399098e718059000007.json
+http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
@@ -512,15 +536,251 @@ http://localhost:3000/auto_maintain_order/528af399098e718059000007.json
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "succeeded",
-  "seq": 872
+  "seq": 964
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('57.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.14977s</span></dd>
+  </dl>
+</div>
+<div id="div_group_5" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_5" class="passed">查询换空调滤+PM2.5滤芯价格</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://localhost:3000/auto_maintain_price/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "曼牌 Mann",
+      "number": "528af433098e7180590042ca"
+    },
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "price": 50.0,
+  "price_without_discount": 50.0,
+  "service_price": 50.0,
+  "discount": {
+  },
+  "pic_url": "http://intranet.kalading.com/assets/car_blue.png",
+  "name": "丰田(一汽) 兰德酷路泽 上门保养",
+  "parts": [
+    {
+      "空调滤清器": [
+        {
+          "brand": "曼牌 Mann",
+          "number": "528af433098e7180590042ca",
+          "spec": null,
+          "price": 0.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "卡拉丁",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    }
+  ],
+  "applicable_parts": [
+    {
+      "空调滤清器": [
+        {
+          "brand": "曼牌 Mann",
+          "number": "5246c8f1098e71092800024a",
+          "spec": "",
+          "price": 99.0
+        },
+        {
+          "brand": "曼牌 Mann",
+          "number": "528af3e8098e71805900228a",
+          "spec": "双效活性炭",
+          "price": 120.0
+        },
+        {
+          "brand": "汉格斯特 Hengst",
+          "number": "5280cb96098e71d85e000354",
+          "spec": "",
+          "price": 74.0
+        },
+        {
+          "brand": "马勒 ",
+          "number": "5298b96f098e716daf000889",
+          "spec": "",
+          "price": 49.0
+        }
+      ]
+    },
+    {
+      "机滤": [
+        {
+          "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
+          "price": 28.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "卡拉丁",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    },
+    {
+      "机油": [
+        {
+          "brand": "嘉实多",
+          "number": "金嘉护 SN 10W-40",
+          "price": 273.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "黄喜力HX5 10W-40",
+          "price": 276.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "磁护 SN 5W-40",
+          "price": 522.0
+        },
+        {
+          "brand": "美孚",
+          "number": "美孚1号 0W-40",
+          "price": 560.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "极护 SN 0W-40",
+          "price": 672.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "灰喜力ULTRA 5W-40",
+          "price": 708.0
+        }
+      ]
+    }
+  ]
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('71.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询换空调滤+PM2.5滤芯价格</span><span class='duration'>0.35934s</span></dd>
+  </dl>
+</div>
+<div id="div_group_6" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_6" class="passed">新建换空调滤+PM2.5滤芯订单</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "曼牌 Mann",
+      "number": "528af433098e7180590042ca"
+    },
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "succeeded",
+  "seq": 965
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('85.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.06497s</span></dd>
+  </dl>
+</div>
+<div id="div_group_7" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_7" class="passed">新建PM2.5滤芯订单</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "succeeded",
+  "seq": 966
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.23249s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.05316s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>1.45751 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "3 examples, 0 failures";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>1.32573 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "7 examples, 0 failures";</script>
 </div>
 </div>
 </body>
