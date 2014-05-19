@@ -61,6 +61,8 @@ class Order
   embeds_many :comments, :cascade_callbacks => true
   belongs_to :user_type
   belongs_to :city
+  
+  has_many :maintains
 
   field :part_counts, type: Hash, default: {}
   

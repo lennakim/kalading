@@ -1,0 +1,25 @@
+<h1>Listing maintains</h1>
+
+<table>
+  <tr>
+    <th>Order id</th>
+    <th>Created at</th>
+    <th>ID</th>
+    <th></th>
+  </tr>
+
+<% @maintains.each do |maintain| %>
+  <tr>
+    <td><%= maintain.order_id %></td>
+    <td><%= maintain.created_at %></td>
+    <td><%= maintain.id %></td>
+    <td><%= link_to 'Show', maintain %></td>
+    <td><%= link_to 'Edit', edit_maintain_path(maintain) %></td>
+    <td><%= link_to 'Destroy', maintain, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Maintain', new_maintain_path %>

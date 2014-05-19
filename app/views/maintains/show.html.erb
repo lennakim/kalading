@@ -1,0 +1,12 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Order id:</b>
+  <%= @maintain.order_id %>
+  <b>Outlook desc:</b>
+  <%= @maintain.outlook_desc %>
+</p>
+
+
+<%= link_to 'Edit', edit_maintain_path(@maintain) %> |
+<%= link_to 'Back', maintains_path %>
