@@ -115,6 +115,16 @@ class Maintain
   embeds_one :old_cabin_filter_pic, class_name: "Picture"
   
   accepts_nested_attributes_for :wheels, :allow_destroy => true
+  accepts_nested_attributes_for :outlook_pic
+  accepts_nested_attributes_for :auto_front_pic
+  accepts_nested_attributes_for :auto_back_pic
+  accepts_nested_attributes_for :auto_left_pic
+  accepts_nested_attributes_for :auto_right_pic
+  accepts_nested_attributes_for :auto_top_pic
+  accepts_nested_attributes_for :old_oil_pic
+  accepts_nested_attributes_for :oil_filter_pic
+  accepts_nested_attributes_for :old_air_filter_pic
+  accepts_nested_attributes_for :old_cabin_filter_pic
   
   attr_accessible :outlook_desc, :buy_date, :VIN, :insurance_date, :auto_color, :engine_num,
     :no_lights_check, :high_beam, :low_beam, :turn_light, :brake_light, :fog_light,
