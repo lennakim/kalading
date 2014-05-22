@@ -1,7 +1,7 @@
 class Wheel
   include Mongoid::Document
   include Mongoid::Timestamps
-  
+
   field :name, type: String, default: ""
   field :brand, type: String, default: ""
   field :factory_data, type: Date
@@ -13,17 +13,14 @@ class Wheel
   field :brake_pad, type: Float, default: 0
   field :brake_disc, type: String, default: ""
 
-  embeds_many :pictures, :cascade_callbacks => true
-  accepts_nested_attributes_for :pictures, :allow_destroy => true
   embedded_in :maintain, :inverse_of => :wheels
 
-  #WHEEL_NAMES = [0, 1, 2, 3, 4]
-  #WHEEL_NAMES_STRINGS = %w[spare left_front right_front left_back right_back]
-  
+  #validates_format_of :name, in: ["spare", "left_front", "right_front", "left_back", "right_back"]
+  validates :name, uniqueness:  {case_sensitive: false}, presence: true
+
   attr_accessible :name, :brand,
     :factory_data, :tread_depth, :tread_desc, :sidewall_desc,
-    :pressure, :width, :brake_pad, :brake_disc,
-    :picture_ids, :pictures_attributes
+    :pressure, :width, :brake_pad, :brake_disc
 
 end
 
@@ -31,14 +28,14 @@ class Maintain
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
-  
+
   field :outlook_desc, type: String, default: ""
   field :buy_date, type: DateTime
   field :VIN, type: String
   field :insurance_date, type: DateTime
   field :auto_color, type: String
   field :engine_num, type: String
-  
+
   #light check
   field :no_lights_check, type: Boolean, default: false
   field :high_beam, type: Integer, default: 0
@@ -46,26 +43,26 @@ class Maintain
   field :turn_light, type: Integer, default: 0
   field :brake_light, type: Integer, default: 0
   field :fog_light, type: Integer, default: 0
-  field :small_light, type: Integer, default: 0 
+  field :small_light, type: Integer, default: 0
   field :backup_light, type: Integer, default: 0
   field :room_light, type: Integer, default: 0
   field :license_light, type: Integer, default: 0
-  
+
   field :curr_oil, type: Integer, default: 0
   field :oil_out, type: Integer, default: 0
   field :oil_in, type: Integer, default: 0
   field :oil_desc, type: Integer, default: 0
   field :oil_filter_changed, type: Boolean, default: false
   field :oil_filter_not_changed_reason, type: String, default: ""
-  
+
   field :air_filter_desc, type: Integer, default: 0
   field :air_filter_changed, type: Boolean, default: false
   field :air_filter_not_changed_reason, type: String, default: ""
-  
+
   field :cabin_filter_desc, type: Integer, default: 0
   field :cabin_filter_changed, type: Boolean, default: false
   field :cabin_filter_not_changed_reason, type: String, default: ""
-  
+
   field :brake_oil_desc, type: Integer , default: 0
   field :brake_oil_boiling_point, type: Integer, default: 0
   field :antifreeze_desc, type: Integer, default: 0
@@ -76,7 +73,7 @@ class Maintain
   field :glass_water_added, type: Boolean, default: false
   field :battery_life, type: String, default: ""
   field :battery_charge_desc, type: Integer, default: 0
-  field :battery_health_index, type: String, default: "" 
+  field :battery_health_index, type: String, default: ""
   field :battery_outlook_desc, type: Integer, default: 0
   field :battery_light_color, type: String, default: ""
   field :battery_head_desc, type: Integer, default: 0
@@ -91,7 +88,7 @@ class Maintain
   field :curr_km, type: String, default: ""
   field :next_maintain_km, type: String, default: ""
   field :next_maintain_time, type: String, default: ""
-  
+
   belongs_to :order
   PART_DESC = [0, 1, 2, 3, 4]
   PART_DESC_STRINGS = %w[init bad normal good lack]
@@ -113,7 +110,12 @@ class Maintain
   embeds_one :oil_filter_pic, class_name: "Picture"
   embeds_one :old_air_filter_pic, class_name: "Picture"
   embeds_one :old_cabin_filter_pic, class_name: "Picture"
-  
+  embeds_one :tire_left_front_pic, class_name: "Picture"
+  embeds_one :tire_left_back_pic, class_name: "Picture"
+  embeds_one :tire_right_front_pic, class_name: "Picture"
+  embeds_one :tire_right_back_pic, class_name: "Picture"
+  embeds_one :tire_spare_pic, class_name: "Picture"
+
   accepts_nested_attributes_for :wheels, :allow_destroy => true
   accepts_nested_attributes_for :outlook_pic
   accepts_nested_attributes_for :auto_front_pic
@@ -125,7 +127,12 @@ class Maintain
   accepts_nested_attributes_for :oil_filter_pic
   accepts_nested_attributes_for :old_air_filter_pic
   accepts_nested_attributes_for :old_cabin_filter_pic
-  
+  accepts_nested_attributes_for :tire_left_front_pic
+  accepts_nested_attributes_for :tire_left_back_pic
+  accepts_nested_attributes_for :tire_right_front_pic
+  accepts_nested_attributes_for :tire_right_back_pic
+  accepts_nested_attributes_for :tire_spare_pic
+
   attr_accessible :outlook_desc, :buy_date, :VIN, :insurance_date, :auto_color, :engine_num,
     :no_lights_check, :high_beam, :low_beam, :turn_light, :brake_light, :fog_light,
     :small_light, :backup_light, :room_light, :license_light,

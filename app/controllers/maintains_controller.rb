@@ -64,15 +64,22 @@ class MaintainsController < ApplicationController
   # PUT /maintains/1.json
   def update
     @maintain = Maintain.find(params[:id])
-
+    ret = FALSE
     if params[:maintain][:wheels]
-      params[:maintain][:wheels].each do |wheel_data|
-        @maintain.wheels.create!(wheel_data)
+      params[:maintain][:wheels].each do |wheel|
+        if @maintain.wheels.where(name: wheel[:name]).exists?
+          ret = @maintain.wheels.where(name: wheel[:name]).first.update_attributes(wheel)
+        else
+          @maintain.wheels.create(wheel)
+          ret = TRUE
+        end
       end
-      return render json: {result: 'ok'}
+    else
+      ret = @maintain.update_attributes(params[:maintain])
     end
+
     respond_to do |format|
-      if @maintain.update_attributes(params[:maintain])
+      if ret
         format.html { redirect_to @maintain, notice: 'Maintain was successfully updated.' }
         format.json { render json: {result: 'ok'} }
       else
@@ -96,8 +103,8 @@ class MaintainsController < ApplicationController
 
   def uploadpic
     @maintain = Maintain.find(params[:id])
-    pic_type = params[:type] + '_pic'
-    pic = @maintain.send(pic_type).create!(p: params[:pic_data])
+    create_pic_type = 'create_' + params[:type] + '_pic'
+    pic = @maintain.send(create_pic_type, p: params[:pic_data])
     respond_to do |format|
       format.html { head :no_content }
       format.json { render json: {result: 'ok', url: pic.p.url }, status: :ok }
@@ -106,8 +113,6 @@ class MaintainsController < ApplicationController
     
   def last_maintain
     curr_maintain = Maintain.find(params[:id])
-    order_id = curr_maintain.order_id
-    create_time = curr_maintain.created_at
-    @maintain = Maintain.where(order_id: order_id, :created_at.lt => create_time).desc(:created_at).first
+    @maintain = Maintain.where(order_id: curr_maintain.order_id, :created_at.lt => curr_maintain.create_time).desc(:created_at).first
   end
 end
