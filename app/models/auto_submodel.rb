@@ -212,7 +212,7 @@ class AutoSubmodel
   paginates_per 30
 
   def as_json(options = nil)
-    opts = {:except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :remark, :engine_displacement, :match_rule, :name_mann, :data_source, :full_name_pinyin, :air_filter_oe, :fuel_filter_oe, :cabin_filter_oe, :oil_filter_oe, :service_level, :year_range, :motoroil_cap]}
+    opts = {:except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :remark, :engine_displacement, :match_rule, :name_mann, :data_source, :full_name_pinyin, :air_filter_oe, :fuel_filter_oe, :cabin_filter_oe, :oil_filter_oe, :service_level, :year_range, :motoroil_cap, :air_filter_count, :cabin_filter_count, :check_status, :engine_model, :full_name, :motoroil_group_id, :oil_filter_count, :part_rules, :year_mann]}
     h = super options.merge(opts) do |k, old_value, new_value|
       old_value + new_value
     end
