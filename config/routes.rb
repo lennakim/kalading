@@ -1,4 +1,10 @@
 Kalading::Application.routes.draw do
+  resources :tool_records
+
+
+  resources :tool_types
+
+
   resources :maintains
 
 
@@ -96,7 +102,7 @@ Kalading::Application.routes.draw do
   
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains
   get 'last_maintain/:id' => 'maintains#last_maintain', :as => :last_maintain
-  
+  post 'tool_records/:id/uploadpic' => 'tool_records#uploadpic', :as => :uploadpic_tool_records
 
   # For baichebao
   get 'auto_maintain_pack/:asm_id' => 'orders#auto_maintain_pack', :as => :auto_maintain_pack
