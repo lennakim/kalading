@@ -4,6 +4,7 @@ class AutoBrandsController < ApplicationController
   before_filter :set_default_operator
   # API test for Jason
   load_and_authorize_resource :except => [:index, :show]
+  caches_action :index, :if => Proc.new { request.format.json? && params[:all] }
   
   # GET /auto_brands
   # GET /auto_brands.json
@@ -14,7 +15,7 @@ class AutoBrandsController < ApplicationController
       }
       format.json {
         @auto_brands = AutoBrand.where(data_source: 2, service_level: 1).asc(:name_pinyin)
-        render json: @auto_brands
+        render json: @auto_brands if !params[:all]
       }
     end
   end
@@ -78,6 +79,7 @@ class AutoBrandsController < ApplicationController
       if @auto_brand.update_attributes(params[:auto_brand])
         format.html { redirect_to @auto_brand, notice: 'Auto brand was successfully updated.' }
         format.json { head :no_content }
+        expire_action :controller => :auto_brands, :action => :index, :format => :json
       else
         format.html { render action: "edit" }
         format.json { render json: @auto_brand.errors, status: :unprocessable_entity }
