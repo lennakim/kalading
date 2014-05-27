@@ -100,7 +100,7 @@
     <%= f.input :pay_type, label: t(:pay_type), collection: Order::PAY_TYPES, label_method:  lambda { |s| t(Order::PAY_TYPE_STRINGS[s]) }, include_blank: false %>
     <%= f.input :reciept_type, label: t(:reciept_type), collection: Order::RECIEPT_TYPES, label_method:  lambda { |s| t(Order::RECIEPT_TYPE_STRINGS[s]) }, include_blank: false %>
     <%= f.input :reciept_title, label: t(:reciept_title) %>
-  
+    <%= f.input :reciept_address, label: t(:reciept_address) %>
   <h5 id="others"><%= t(:others) %></h5>
     <%= render 'comments', :f => f %>
     <div class="form-actions">
@@ -163,6 +163,10 @@
     <%= f.input :charged, label: t(:charged, p: (humanized_money_with_symbol @order.price) ), :as => :boolean %>
     <%= f.input :oil_gathered, label: t(:oil_gathered), :as => :boolean %>
     <h5 id="others"><%= t(:others) %></h5>
+    <%= f.input :pay_type, label: t(:pay_type), collection: Order::PAY_TYPES, label_method:  lambda { |s| t(Order::PAY_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :reciept_type, label: t(:reciept_type), collection: Order::RECIEPT_TYPES, label_method:  lambda { |s| t(Order::RECIEPT_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :reciept_title, label: t(:reciept_title) %>
+    <%= f.input :reciept_address, label: t(:reciept_address) %>
     <table id="pictures" class="table table-hover table-small">
       <tbody>
         <%= f.fields_for :pictures, :wrapper => false do |sf| %>

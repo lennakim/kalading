@@ -32,6 +32,7 @@ class Order
   field :reciept_title, type: String, default: ''
   field :client_comment, type: String, default: ''
   field :cancel_reason, type: String, default: ''
+  field :reciept_address, type: String, default: ''
 
   field :oil_filter_changed, type: Boolean, default: false
   field :air_filter_changed, type: Boolean, default: false
@@ -79,9 +80,9 @@ class Order
     :comment_ids, :comments_attributes,
     :auto_submodel_id,
     :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
-    :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :auto_km, :oil_out, :oil_in,
+    :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
-    :registration_date, :engine_num, :cancel_reason, :city_id
+    :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address
 
   auto_increment :seq
   index({ seq: 1 })

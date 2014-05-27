@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_filter :check_for_mobile, :only => [:order_begin, :choose_service]
+  before_filter :check_for_mobile, :only => [:index, :order_begin, :choose_service]
   @except_actions = [
     :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order
   ]
@@ -16,6 +16,17 @@ class OrdersController < ApplicationController
       @orders = Order.all
     end
 
+    if mobile_device? && current_user.roles == ['5']
+      @orders = @orders.where :engineer => current_user
+      if !params[:state]
+        @orders = @orders.where :state.gte => 0, :state.lte => 5
+      end
+    else
+      if params[:engineer] && params[:engineer] != ''
+        @orders = @orders.where(engineer: User.find(params[:engineer]))
+      end
+    end
+    
     if params[:car_num] && params[:car_num] != ''
       @orders = @orders.where(car_num: /.*#{params[:car_num]}.*/i)
     end
@@ -28,8 +39,30 @@ class OrdersController < ApplicationController
       @orders = @orders.where(name: /.*#{params[:customer_name]}.*/i)
     end
 
+    if params[:address] && params[:address] != ''
+      @orders = @orders.where(address: /.*#{params[:address]}.*/i)
+    end
+
     if params[:seq] && params[:seq] != ''
       @orders = @orders.where(seq: params[:seq])
+    end
+
+    if params[:user_type] && params[:user_type] != ''
+      @orders = @orders.where(user_type: UserType.find(params[:user_type]))
+    end
+
+    if params[:serve_datetime_start] && params[:serve_datetime_start] != ''
+      sds = Date.parse params[:serve_datetime_start]
+      @orders = @orders.where :serve_datetime.gte => sds.beginning_of_day
+    end
+
+    if params[:serve_datetime_end] && params[:serve_datetime_end] != ''
+      sds = Date.parse params[:serve_datetime_end]
+      @orders = @orders.where :serve_datetime.lte => sds.end_of_day
+    end
+
+    if params[:city] && params[:city] != ''
+      @orders = @orders.where(city: City.find(params[:city]))
     end
 
     if params[:history]
@@ -61,6 +94,11 @@ class OrdersController < ApplicationController
       format.js
       format.json
     end
+  end
+
+  def print
+    @order = Order.find(params[:id])
+    render layout: false
   end
 
   # GET /orders/new

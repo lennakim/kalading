@@ -134,6 +134,7 @@ Kalading::Application.routes.draw do
   get 'discount_query' => 'discounts#query', :as => :discount_query
 
   get 'city_capacity/:id' => 'cities#capacity', :as => :city_capacity
+  get 'orders/:id/print' => 'orders#print', :as => :print_order
   
   resources :auto_brands
   root :to => 'orders#index'

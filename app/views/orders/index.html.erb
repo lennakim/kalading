@@ -22,7 +22,11 @@
 </div>
 
 <a class="btn btn-link" data-target="#order-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
+<% if mobile_device? %>
+<div id="order-search-form" class="collapse">
+<% else %>  
 <div id="order-search-form" class="collapse in">
+<% end %>
   <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
     <input name="state" type="hidden" value="<%= params[:state] %>" />
     <div class="control-group">
@@ -37,10 +41,57 @@
         <%= text_field_tag :customer_name, params[:customer_name], class: 'control' %>
       </div>
     </div>
+
+    <div class="control-group select">
+      <%= label_tag :city, t('cities'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="city" id="city">
+          <% if params[:city].nil? || params[:city] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% City.asc(:name).each do |t| %>
+            <% if params[:city] == t.id.to_s %>
+              <option value="<%= t.id %>" selected><%= t.name %></option>
+            <% else %>
+              <option value="<%= t.id %>"><%= t.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <%= label_tag :address, t('address'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :address, params[:address], class: 'control' %>
+      </div>
+    </div>
     <div class="control-group">
       <%= label_tag :car_num, t('car_num'), class: 'control-label' %>
       <div class="controls form-inline">
         <%= text_field_tag :car_num, params[:car_num], class: 'control', placeholder: t(:car_num_hint) %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :serve_datetime_start, t('serve_datetime_segment'), class: 'control-label' %>
+      <div class="controls form-inline" id="serve_datetime">
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_start" value="<%= params[:serve_datetime_start] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
+        <%= t :to %>
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_end" value="<%= params[:serve_datetime_end] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
       </div>
     </div>
     <div class="control-group">
@@ -49,6 +100,46 @@
         <%= text_field_tag :seq, params[:seq], class: 'control' %>
       </div>
     </div>
+    <div class="control-group select">
+      <%= label_tag :user_type, t('user_type'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="user_type" id="user_type">
+          <% if params[:user_type].nil? || params[:user_type] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% UserType.asc(:name).each do |t| %>
+            <% if params[:user_type] == t.id.to_s %>
+              <option value="<%= t.id %>" selected><%= t.name %></option>
+            <% else %>
+              <option value="<%= t.id %>"><%= t.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :engineer, t('engineer'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="engineer" id="engineer">
+          <% if params[:engineer].nil? || params[:engineer] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }.each do |t| %>
+            <% if params[:engineer] == t.id.to_s %>
+              <option value="<%= t.id %>" selected><%= t.name %></option>
+            <% else %>
+              <option value="<%= t.id %>"><%= t.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
     <div class="form-actions">
       <%= submit_tag t(:search), class: 'btn btn-primary' %>
     </div>
@@ -56,6 +147,7 @@
 </div>
 
 <div id="order-list">
+  <%= t(:total, count: @orders.size) %><br/>
   <%= render 'orders' %>
 </div>
 

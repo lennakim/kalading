@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
 
   def check_for_mobile
     session[:mobile_override] = params[:mobile] if params[:mobile]
-    prepare_for_mobile if mobile_device?  && !params[:mobilejs]
+    #prepare_for_mobile if mobile_device?  && !params[:mobilejs]
   end
 
   def prepare_for_mobile

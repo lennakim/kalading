@@ -108,7 +108,7 @@
       <% end %>
     </tbody>
   </table>
-  <%= paginate @orders, remote: true %>
+  <%= paginate @orders %>
 <% else %>
   <% if params[:phone_num] or params[:car_location] %>
   <div class="alert alert-error">

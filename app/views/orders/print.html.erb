@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "Kalading" %></title>
+    <%= csrf_meta_tags %>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <![endif]-->
+    <%= stylesheet_link_tag "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+  </head>
+  <body style="padding-top: 10px;">
+    <a class="btn btn-primary pull-right" id="print-btn" onclick="$('#print-btn').hide(); window.print(); $('#print-btn').show();"><%= t(:print) %></a>
+    <h3 class="text-center"><%= t :shigongdan %></h3>
+    <div>
+      <table class="table table-bordered table-condensed">
+        <tbody>
+            <tr>
+              <td><%= t :customer_name %></td><td><%= @order.name %></td><td><%= t :serve_datetime %></td><td><%= l @order.serve_datetime %></td>
+            </tr>
+            <tr>
+              <td><%= t :user_type %></td><td><%= @order.user_type.name if @order.user_type %></td><td><%= t :address %></td><td><%= @order.address %></td>
+            </tr>
+            <tr>
+              <td><%= t :phone_num %></td><td><%= @order.phone_num %></td><td><%= t :engineer_name %></td><td><%= @order.engineer.name %></td>
+            </tr>
+            <tr>
+              <td><%= t :car_num_format, n: @order.car_location + @order.car_num %></td><td><%= t :vin_chs, n: @order.vin %></td><td colspan="2"><%= t :auto_model_format, n: @order.auto_submodel.full_name if @order.auto_submodel %></td>
+            </tr>
+        </tbody>
+      </table>
+
+      <div>
+        <%= label_tag "checkbox-buymyself", t(:customer_buy_parts), {class: "checkbox inline"} %>
+        <%= check_box_tag "buymyself", "1", @order.buymyself, {:id => "checkbox-buymyself", readonly: true} %>
+        <%= label_tag "checkbox-needparts", t(:need_parts), {class: "checkbox inline"} %>
+        <%= check_box_tag "buymyself", "1", !@order.buymyself, {:id => "checkbox-needparts", readonly: true} %>
+        <%= label_tag "not_used", t(:other_types), {class: "checkbox inline"} %>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="span4">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr><th><%= t :service_types %></th><th><%= t :service_fee %></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
+            </tr>
+            <tr>
+              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="span8">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr><th><%= t :part %></th><th><%= t :brand_and_number %></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
+            </tr>
+            <tr>
+              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+  </body>
+</html>

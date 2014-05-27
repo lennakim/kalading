@@ -69,3 +69,4 @@ $ ->
         items: 16
     $('a.datetime-shortcut').click ->
         $('#order_serve_datetime').val($(this).data('msg'))
+    $(".form_datetime").datetimepicker({pickTime: false, language: 'zh-CN'});
