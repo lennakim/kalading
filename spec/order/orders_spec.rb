@@ -22,7 +22,7 @@ describe '订单列表,支持分页，page为页数（从1开始），per为每�
   end
 end
 
-describe '设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，8：服务取消', :need_user => true, :need_login => true, :need_maintain_order => true do
+describe '设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，5: 服务完成，8：服务取消', :need_user => true, :need_login => true, :need_maintain_order => true do
   it "设置订单状态为服务取消，并说明原因为：客户联系不上" do
     # false表示不产生API文档
     response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=1&per=2", false
@@ -68,5 +68,26 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
     order = JSON.parse(response_json)
     expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[4]))
     expect(order['serve_datetime']).to eq('05-08 14:00')
+  end
+
+  it "完成订单" do
+    response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=1&per=2", false
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    expect(orders.size).to be > 0
+    expect(orders[0]['id']).to be
+    
+    r = {
+      order: {
+        state: 5,
+      }
+    }
+    response_json = put_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", r
+    expect(response_json.code).to be(200)
+
+    response_json = get_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", false
+    expect(response_json.code).to be(200)
+    order = JSON.parse(response_json)
+    expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[5]))
   end
 end

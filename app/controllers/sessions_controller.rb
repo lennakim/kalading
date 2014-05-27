@@ -14,7 +14,7 @@ class SessionsController < Devise::SessionsController
                     sign_in(resource_name, resource)
                     resource.update_tracked_fields!(request)
                     resource.ensure_authentication_token!  #make sure the user has a token generated
-                    render json: { result: 'ok', authentication_token: resource.authentication_token }, status: :created
+                    render json: { result: 'ok', authentication_token: resource.authentication_token , name: resource.name }, status: :created
                 else
                     render json: { result: t(:incorrect_password) }, status: :ok
                 end

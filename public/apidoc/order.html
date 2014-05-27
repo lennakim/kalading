@@ -284,12 +284,12 @@ a {
   <dt id="example_group_1" class="passed">订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 id用于订单的修改</dt>
 <h5>METHOD:&nbsp&nbspGET</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/orders?auth_token=2GHUNwFzSMG8FDwnEUyG&page=1&per=2
+http://localhost:3000/orders?auth_token=q9yfB8AvpTzHVHVaz4V4&page=1&per=2
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 [
   {
-    "id": "53688084421aa9b7b9000002",
+    "id": "5384a4d9421aa919b6000003",
     "name": "Sheldon",
     "address": "订单地址",
     "phone_num": "13888888888",
@@ -298,7 +298,7 @@ http://localhost:3000/orders?auth_token=2GHUNwFzSMG8FDwnEUyG&page=1&per=2
     "car_num": "京N333M3",
     "client_comment": "请按时到场",
     "state": "未预约",
-    "serve_datetime": "05-09 12:00",
+    "serve_datetime": "05-18 12:00",
     "auto_model": "一汽轿车 CA系列 1.8L 08/88 -> 12/90",
     "service_types": [
       {
@@ -316,18 +316,18 @@ http://localhost:3000/orders?auth_token=2GHUNwFzSMG8FDwnEUyG&page=1&per=2
         "price": 138.0
       },
       {
-        "brand": "索菲玛 Sofima",
-        "type": "空气滤清器",
-        "number": "S 0730 A",
+        "brand": "卡拉丁",
+        "type": "PM2.5特效滤芯",
+        "number": "PM2.5滤芯-1",
         "price": 0.0
       }
     ],
-    "price": 150.0,
+    "price": 200.0,
     "pay_type": "刷卡",
     "cancel_reason": ""
   },
   {
-    "id": "53688084421aa9b7b9000003",
+    "id": "5384a4d9421aa919b6000004",
     "name": "Name of client",
     "address": "Some address",
     "phone_num": "13888888888",
@@ -336,7 +336,7 @@ http://localhost:3000/orders?auth_token=2GHUNwFzSMG8FDwnEUyG&page=1&per=2
     "car_num": "京N000M3",
     "client_comment": "请按时到场",
     "state": "已预约",
-    "serve_datetime": "05-09 15:44",
+    "serve_datetime": "05-16 15:44",
     "auto_model": "大众(一汽) 高尔夫6 1.6L 2010.09-2014",
     "service_types": [
       {
@@ -352,27 +352,27 @@ http://localhost:3000/orders?auth_token=2GHUNwFzSMG8FDwnEUyG&page=1&per=2
   }
 ]
 </pre></p>
-    <script type="text/javascript">moveProgressBar('25.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">列举第1页订单，每页2个</span><span class='duration'>0.11300s</span></dd>
+    <script type="text/javascript">moveProgressBar('20.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第1页订单，每页2个</span><span class='duration'>0.66048s</span></dd>
 <h5>METHOD:&nbsp&nbspGET</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/orders?auth_token=kbns_rBQa7tGyz3siDp_&page=3&per=2
+http://localhost:3000/orders?auth_token=K8-baceHgLxJg4pjbYh4&page=3&per=2
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 [
 
 ]
 </pre></p>
-    <script type="text/javascript">moveProgressBar('50.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">列举第3页订单，到达最后一页</span><span class='duration'>0.08496s</span></dd>
+    <script type="text/javascript">moveProgressBar('40.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第3页订单，到达最后一页</span><span class='duration'>0.20296s</span></dd>
   </dl>
 </div>
 <div id="div_group_2" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_2" class="passed">设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，8：服务取消</dt>
+  <dt id="example_group_2" class="passed">设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，5: 服务完成，8：服务取消</dt>
 <h5>METHOD:&nbsp&nbspPUT</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/orders/53688085421aa9b7b900000a?auth_token=cGV7G__NFz9yA1uH4ssS
+http://localhost:3000/orders/5384a4da421aa919b600000d?auth_token=xYh6aYxYR8QZw9TzR6dL
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
@@ -387,11 +387,11 @@ http://localhost:3000/orders/53688085421aa9b7b900000a?auth_token=cGV7G__NFz9yA1u
   "result": "ok"
 }
 </pre></p>
-    <script type="text/javascript">moveProgressBar('75.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">设置订单状态为服务取消，并说明原因为：客户联系不上</span><span class='duration'>0.27577s</span></dd>
+    <script type="text/javascript">moveProgressBar('60.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">设置订单状态为服务取消，并说明原因为：客户联系不上</span><span class='duration'>0.49089s</span></dd>
 <h5>METHOD:&nbsp&nbspPUT</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/orders/53688085421aa9b7b900000e?auth_token=wVxEryvp1zxxFszYX-8-
+http://localhost:3000/orders/5384a4da421aa919b6000012?auth_token=FHn4677ryVFy_yWqZyDe
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
@@ -406,12 +406,30 @@ http://localhost:3000/orders/53688085421aa9b7b900000e?auth_token=wVxEryvp1zxxFsz
   "result": "ok"
 }
 </pre></p>
+    <script type="text/javascript">moveProgressBar('80.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">设置订单状态为已预约，并修改服务时间</span><span class='duration'>0.30809s</span></dd>
+<h5>METHOD:&nbsp&nbspPUT</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://localhost:3000/orders/5384a4da421aa919b6000017?auth_token=yiQ-z42H8edKy4VeUz3o
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "order": {
+    "state": 5
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok"
+}
+</pre></p>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">设置订单状态为已预约，并修改服务时间</span><span class='duration'>0.14023s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">完成订单</span><span class='duration'>0.21417s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.61500 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "4 examples, 0 failures";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>1.87769 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "5 examples, 0 failures";</script>
 </div>
 </div>
 </body>
