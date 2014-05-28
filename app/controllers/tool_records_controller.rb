@@ -11,9 +11,7 @@ class ToolRecordsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.json {
-        name = "dddddddd"
-        #ret = @tool_records.where(engineer_name: current_user.name).exists?
-        if @tool_records.where(engineer_name: name).exists?
+        if @tool_records.where(engineer_name: current_user.name).exists?
           render json: {result: 'ok'}
         else
           head :no_content
