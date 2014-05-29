@@ -1,5 +1,5 @@
 <%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
-  <% if (%w[unverified verify_error].include? Order::STATE_STRINGS[@order.state]) || params[:edit_all] %>
+  <% if !params[:cancel] && ( (%w[unverified verify_error].include? Order::STATE_STRINGS[@order.state]) || params[:edit_all] ) %>
   <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
     <div class="control-group">
       <label for="select-car-location" class="control-label"><%= t(:car_num) %></label>
@@ -113,6 +113,12 @@
         <%= f.button :submit, t(:verify_failed), :class => 'btn-warning', name: "verify_failed", value: t(:verify_failed) %>
       <% end %>
       <%= link_to t('cancel'), orders_path(state: 0), :class => 'btn' %>
+    </div>
+  <% elsif params[:cancel] %>
+    <%= f.input :cancel_reason, label: t('cancel_reason'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:ok), :class => 'btn-primary', :name => "cancel" %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
     <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>

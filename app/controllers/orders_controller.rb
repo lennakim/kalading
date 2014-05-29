@@ -182,6 +182,9 @@ class OrdersController < ApplicationController
       notice = I18n.t(:order_verify_failed, seq: @order.seq)
     elsif params[:edit_all]
       notice = I18n.t(:order_saved_notify, seq: @order.seq)
+    elsif params[:cancel]
+      params[:order][:state] = 8
+      notice = I18n.t(:order_cancelled, seq: @order.seq)
     else
       params[:order][:state] = 1
       case @order.state
