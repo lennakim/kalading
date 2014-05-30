@@ -7,11 +7,20 @@ class AutoModelsController < ApplicationController
   # GET /auto_models
   # GET /auto_models.json
   def index
-    @auto_models = AutoModel.where(data_source: 2).asc(:name).page params[:page]
+    if params[:auto_brand_id] && params[:auto_brand_id] != ''
+      @auto_models = AutoModel.where(data_source: 2, auto_brand_id: params[:auto_brand_id]).asc(:name)
+    else
+      @auto_models = AutoModel.where(data_source: 2).asc(:name)
+    end
+    
     respond_to do |format|
-      format.html # index.html.erb
+      format.html {
+        @auto_models = @auto_models.page params[:page]
+      }
       format.js
-      format.json { render json: @auto_models.asc(:name) }
+      format.json {
+        render json: @auto_models
+      }
     end
   end
 

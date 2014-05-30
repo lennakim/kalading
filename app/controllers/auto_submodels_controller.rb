@@ -49,7 +49,9 @@ class AutoSubmodelsController < ApplicationController
             s = PinYin.of_string(params[:query]).join.gsub(/\s+/, "").split('').join("\.\*").gsub(/zhang/, 'chang')
             @auto_submodels = AutoSubmodel.where(data_source: @ds).where(full_name_pinyin: /.*#{s}.*/i).limit(16)
           end
-        else
+        elsif params[:auto_model_id] && params[:auto_model_id] != ''
+          @auto_submodels = AutoModel.find(params[:auto_model_id]).auto_submodels.asc(:name)
+        else 
           @auto_submodels = AutoSubmodel.where(data_source: @ds).limit(16)
         end
         render json: @auto_submodels
@@ -193,5 +195,10 @@ class AutoSubmodelsController < ApplicationController
       format.json { render json: {}, status: :created }
     end
   end
- 
+  
+  def available_parts
+    p = AutoSubmodel.find(params[:id]).parts_includes_motoroil
+    @parts = p.select {|part| part.part_type.name==params[:type]}
+  end
+
 end

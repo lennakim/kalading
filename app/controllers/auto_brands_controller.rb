@@ -14,7 +14,7 @@ class AutoBrandsController < ApplicationController
         @auto_brands = AutoBrand.where(data_source: 2).asc(:name_pinyin).page params[:page]
       }
       format.json {
-        @auto_brands = AutoBrand.where(data_source: 2, service_level: 1).asc(:name_pinyin)
+        @auto_brands = AutoBrand.where(data_source: 2).asc(:name_pinyin)
         render json: @auto_brands if !params[:all]
       }
     end
