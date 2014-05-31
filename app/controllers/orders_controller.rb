@@ -78,6 +78,21 @@ class OrdersController < ApplicationController
         params[:per] ||= 5
         @orders = @orders.where(engineer: current_user, :state.gte => 3, :state.lte => 5).asc(:seq).page(params[:page]).per(params[:per])
       }
+      format.csv {
+        csv = CSV.generate({}) do |csv|
+          csv << ['ID', I18n.t(:name), I18n.t(:auto_owner_name), I18n.t(:address), I18n.t(:car_number), I18n.t(:auto_submodel), I18n.t(:auto_reg_date), I18n.t(:auto_km)]
+          @orders.where(:state.gte => 5, :state.lte => 7, :auto_submodel.ne => nil).each do |o|
+            if o.registration_date
+              d = I18n.l(o.registration_date)
+            else
+              d = ''
+            end
+            csv << [o.seq, o.name, o.auto_owner_name, o.address, o.car_location + o.car_num, o.auto_submodel.full_name, d, o.auto_km ]
+          end
+        end
+        headers['Last-Modified'] = Time.now.httpdate
+        send_data csv, :filename => 'orders_' + I18n.l(DateTime.now) + '.csv'
+      }
     end
   end
 
