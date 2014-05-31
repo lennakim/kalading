@@ -80,14 +80,14 @@ class OrdersController < ApplicationController
       }
       format.csv {
         csv = CSV.generate({}) do |csv|
-          csv << ['ID', I18n.t(:name), I18n.t(:auto_owner_name), I18n.t(:address), I18n.t(:car_number), I18n.t(:auto_submodel), I18n.t(:auto_reg_date), I18n.t(:auto_km)]
+          csv << ['ID', I18n.t(:name), I18n.t(:auto_owner_name), I18n.t(:address), I18n.t(:car_number), I18n.t(:auto_submodel), I18n.t(:auto_reg_date), I18n.t(:auto_km), I18n.t(:serve_datetime) ]
           @orders.where(:state.gte => 5, :state.lte => 7, :auto_submodel.ne => nil).each do |o|
             if o.registration_date
               d = I18n.l(o.registration_date)
             else
               d = ''
             end
-            csv << [o.seq, o.name, o.auto_owner_name, o.address, o.car_location + o.car_num, o.auto_submodel.full_name, d, o.auto_km ]
+            csv << [o.seq, o.name, o.auto_owner_name, o.address, o.car_location + o.car_num, o.auto_submodel.full_name, d, o.auto_km, I18n.l(o.serve_datetime) ]
           end
         end
         headers['Last-Modified'] = Time.now.httpdate
