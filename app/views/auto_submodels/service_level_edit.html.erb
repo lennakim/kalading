@@ -6,7 +6,7 @@
   <div class="control-group select">
     <%= label_tag :auto_model_brand_id, t('choose_brand'), class: 'control-label' %>
     <div class="controls">
-      <%= collection_select :auto_model, :brand_id, AutoBrand.where(data_source: 2).asc(:name_pinyin), :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
+      <%= collection_select :auto_model, :brand_id, AutoBrand.where(data_source: 2).asc(:name_pinyin), :id, :name, {}, {:rel => "/auto_brands", :class => 'control', :data => {:source => 2}} %>
     </div>
   </div>
   <div class="control-group select">

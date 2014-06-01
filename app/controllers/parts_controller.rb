@@ -115,7 +115,7 @@ class PartsController < ApplicationController
   def edit_part_automodel
     @part = Part.find(params[:id])
     #@auto_submodels = Kaminari.paginate_array(@part.auto_submodels).page(0).per(5)
-    @auto_submodels = @part.auto_submodels.any_of({ data_source: 2 }, { data_source: 3 })
+    @auto_submodels = @part.auto_submodels.any_of({ data_source: 2 }, { data_source: 3 }, { data_source: 4 })
   end
   
   def delete_auto_submodel

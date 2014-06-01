@@ -56,8 +56,8 @@
               </div>
               <label for="car-model-info" class="control-label"><%= t(:choose_auto_model) %></label>
               <div class="controls" id="car-model-info">
-                <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control'} %>
-                <%= collection_select :auto, :auto_model, @auto_submodel.auto_model.auto_brand.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control'} %>
+                <%= collection_select :auto_model, :brand_id, AutoBrand.all, :id, :name, {}, {:rel => "/auto_brands", :class => 'control', :data => {:source => 2}} %>
+                <%= collection_select :auto, :auto_model, @auto_submodel.auto_model.auto_brand.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control', :data => {:source => 2}} %>
                 <%= collection_select :auto, :auto_submodel_id, @auto_submodel.auto_model.auto_submodels.all, :id, :name, {}, {:rel => "/auto_submodels", :class => 'control'} %>
               </div>
             </div>

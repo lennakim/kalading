@@ -27,13 +27,14 @@ class AutoModelsController < ApplicationController
   # GET /auto_models/1
   # GET /auto_models/1.json
   def show
+    params[:data_source] ||= 2
     @auto_model = AutoModel.find(params[:id])
     respond_to do |format|
       format.html {
-        @auto_submodels = @auto_model.auto_submodels.where(data_source: 2).asc(:name).page params[:page]
+        @auto_submodels = @auto_model.auto_submodels.where(data_source: params[:data_source]).asc(:name).page params[:page]
       }
       format.js {
-        @auto_submodels = @auto_model.auto_submodels.where(data_source: 2).asc(:name).page params[:page]
+        @auto_submodels = @auto_model.auto_submodels.where(data_source: params[:data_source]).asc(:name).page params[:page]
       }
       format.json {
         # Only show maintainable asms on web site

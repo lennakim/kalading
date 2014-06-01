@@ -14,7 +14,7 @@
               <ul class="nav nav-list">
                 <li class="nav-header"></li>
                 <li><%= link_to t('autos'), autos_path %></li>
-                <% if @ds == 3 || params[:sanlv_ready] || params[:motoroil_cap] || params[:oilf_soldout] || params[:airf_soldout] || params[:cabinf_soldout] || params[:part_rule_exists] || params[:motoroil_not_set] %>
+                <% if [3,4].include?(@ds) ||params[:sanlv_ready] || params[:motoroil_cap] || params[:oilf_soldout] || params[:airf_soldout] || params[:cabinf_soldout] || params[:part_rule_exists] || params[:motoroil_not_set] %>
                   <li><%= link_to t('auto_submodels', n: AutoSubmodel.where(data_source: 2).count), auto_submodels_path %></li>
                 <% else %>
                   <li class="active"><%= link_to t('auto_submodels', n: AutoSubmodel.where(data_source: 2).count ), auto_submodels_path %></li>
@@ -57,6 +57,12 @@
                   <li><%= link_to t('cabinf_soldout_auto_submodels', n: AutoSubmodel.where(data_source: 2).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count => 0).count ), auto_submodels_path(cabinf_soldout: 1) %></li>
                 <% end %>
 
+                <% if @ds == 4 %>
+                  <li class="active"><%= link_to t('hidden_submodels', n: AutoSubmodel.where(data_source: 4).count ), auto_submodels_path(data_source: 4) %></li>
+                <% else %>
+                  <li><%= link_to t('hidden_submodels', n: AutoSubmodel.where(data_source: 4).count ), auto_submodels_path(data_source: 4) %></li>
+                <% end %>
+                
                 <% if params[:part_rule_exists] %>
                   <li class="active"><%= link_to t('part_rule_exists_auto_submodels', n: AutoSubmodel.where(data_source: 2).not_in(part_rules: [nil, []]).count ), auto_submodels_path(part_rule_exists: 1) %></li>
                 <% else %>

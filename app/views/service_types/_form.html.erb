@@ -3,7 +3,7 @@
   <%= f.input :price, label: t('price')%>
   <%= f.input :specific_auto_model, label: t(:specific_auto_model), as: :boolean %>
   <div id="service_type_auto_model_div">
-    <%= f.association :auto_brand, label: t(:choose_brand), collection: AutoBrand.where(data_source: 2).asc(:name_pinyin), label_method: :name, include_blank: false, input_html: {:rel => "/auto_brands"} %>
+    <%= f.association :auto_brand, label: t(:choose_brand), collection: AutoBrand.where(data_source: 2).asc(:name_pinyin), label_method: :name, include_blank: false, input_html: {:rel => "/auto_brands", :data => {:source => 2}} %>
     <% if @service_type.auto_brand %>
       <%= f.association :auto_model, label: t(:auto_model), collection: @service_type.auto_brand.auto_models, label_method: :name, include_blank: t(:all_models) %>
     <% else %>

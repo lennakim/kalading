@@ -10,8 +10,8 @@ $ ->
         $.get($("#autos_search").attr("action"), $("#autos_search").serialize(), null, "script")
         return false
 
-    $("#auto_model_brand_id, #auto_submodel_model_id, #auto_auto_model, #auto_auto_submodel_id, #service_type_auto_brand_id").change ->
-        $.get($(this).attr('rel') + '/' + $(this).val(), null, null, "script")
+    $("#auto_model_brand_id, #auto_submodel_model_id, #auto_auto_model, #service_type_auto_brand_id").change ->
+        $.get($(this).attr('rel') + '/' + $(this).val() + '?data_source=' + $(this).data('source'), null, null, "script")
 
     $(document).ajaxSend (event, request, settings) ->
         $('.loading-indicator').show()

@@ -23,9 +23,10 @@ class AutoBrandsController < ApplicationController
   # GET /auto_brands/1
   # GET /auto_brands/1.json
   def show
+    params[:data_source] ||= 2
     @auto_brand = AutoBrand.find(params[:id])
     if @auto_brand.auto_models.exists?
-      @auto_submodels = @auto_brand.auto_models.first.auto_submodels.asc(:name).page params[:page]
+      @auto_submodels = @auto_brand.auto_models.first.auto_submodels.where(data_source: params[:data_source]).asc(:name).page params[:page]
     else
       @auto_submodels = []
     end
