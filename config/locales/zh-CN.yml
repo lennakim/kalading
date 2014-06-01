@@ -750,3 +750,4 @@ zh-CN:
   cancel_reason: '取消原因'
   hidden_submodels: '隐藏车型(%{n})'
   hidden_auto_submodels_title: '隐藏车型'
+  show: '显示'
