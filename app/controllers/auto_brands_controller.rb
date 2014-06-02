@@ -80,7 +80,6 @@ class AutoBrandsController < ApplicationController
       if @auto_brand.update_attributes(params[:auto_brand])
         format.html { redirect_to @auto_brand, notice: 'Auto brand was successfully updated.' }
         format.json { head :no_content }
-        expire_action :controller => :auto_brands, :action => :index, :format => :json
       else
         format.html { render action: "edit" }
         format.json { render json: @auto_brand.errors, status: :unprocessable_entity }
