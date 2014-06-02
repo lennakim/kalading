@@ -1,4 +1,7 @@
 Kalading::Application.routes.draw do
+  resources :image_texts
+
+
   resources :tool_records
 
 

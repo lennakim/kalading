@@ -1,0 +1,23 @@
+<h1>Listing image_texts</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @image_texts.each do |image_text| %>
+  <tr>
+    <td><%= image_text.title %></td>
+    <td><%= link_to 'Show', image_text %></td>
+    <td><%= link_to 'Edit', edit_image_text_path(image_text) %></td>
+    <td><%= link_to 'Destroy', image_text, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Image text', new_image_text_path %>

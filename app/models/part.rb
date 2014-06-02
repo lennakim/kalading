@@ -19,13 +19,16 @@ class Part
   has_many :urlinfos
   has_many :partbatches, dependent: :delete
   has_and_belongs_to_many :orders
+  has_many :image_texts
 
   attr_accessible :capacity, :number, :match_rule, :spec,
     :part_brand_id, :part_type_id,
     :auto_submodel_ids,
     :urlinfo_ids, :urlinfos_attributes, :price, :order_ids, :partbatch_ids,
-    :motoroil_group_id
+    :motoroil_group_id,
+    :image_text_ids, :image_texts_attributes
   
+  accepts_nested_attributes_for :urlinfos, :allow_destroy => true
   accepts_nested_attributes_for :urlinfos, :allow_destroy => true
   
   validates :number, uniqueness:  {case_sensitive: false}, presence: true
