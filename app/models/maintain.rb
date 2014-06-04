@@ -87,7 +87,7 @@ class Maintain
   field :km_be_zero, type: Boolean, default: false
   field :curr_km, type: String, default: ""
   field :next_maintain_km, type: String, default: ""
-  field :next_maintain_time, type: String, default: ""
+  field :comment, type: String, default: ""
 
   belongs_to :order
   PART_DESC = [0, 1, 2, 3, 4]
@@ -143,11 +143,13 @@ class Maintain
     :power_steering_oil_desc, :gearbox_oil_desc, :glass_water_lock, :glass_water_added, :battery_life,
     :battery_charge_desc, :battery_health_index, :battery_outlook_desc, :battery_light_color, :battery_head_desc,
     :front_wiper_desc, :back_wiper_desc, :extinguisher_existed, :warning_board_existed, :spare_tire_existed,
-    :km_be_zero, :curr_km, :next_maintain_km, :next_maintain_time,
+    :km_be_zero, :curr_km, :next_maintain_km, :comment,
     :order_id,
     :wheel_ids, :wheels_attributes
 
   def as_json(options = nil)
-    h = super :except => [:_id]
+    h = super :except => [:_id, :created_at, :updated_at, :buy_date, :VIN, :insurance_date, :engine_num,
+      :oil_out, :oil_in, :oil_filter_changed, :oil_filter_not_changed_reason, :air_filter_changed, :air_filter_not_changed_reason,
+      :cabin_filter_changed, :cabin_filter_not_changed_reason]
   end
 end
