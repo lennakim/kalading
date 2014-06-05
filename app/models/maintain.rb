@@ -52,6 +52,7 @@ class Maintain
   field :oil_out, type: Integer, default: 0
   field :oil_in, type: Integer, default: 0
   field :oil_desc, type: Integer, default: 0
+  field :oil_sample_collected, type: Boolean, default: false
   field :oil_filter_changed, type: Boolean, default: false
   field :oil_filter_not_changed_reason, type: String, default: ""
 
@@ -136,7 +137,7 @@ class Maintain
   attr_accessible :outlook_desc, :buy_date, :VIN, :insurance_date, :auto_color, :engine_num,
     :no_lights_check, :high_beam, :low_beam, :turn_light, :brake_light, :fog_light,
     :small_light, :backup_light, :room_light, :license_light,
-    :curr_oil, :oil_out, :oil_in, :oil_desc, :oil_filter_changed, :oil_filter_not_changed_reason,
+    :curr_oil, :oil_out, :oil_in, :oil_desc, :oil_sample_collected, :oil_filter_changed, :oil_filter_not_changed_reason,
     :air_filter_desc, :air_filter_changed, :air_filter_not_changed_reason,
     :cabin_filter_desc, :cabin_filter_changed, :cabin_filter_not_changed_reason,
     :brake_oil_desc, :brake_oil_boiling_point, :antifreeze_desc, :antifreeze_freezing_point,
@@ -148,8 +149,8 @@ class Maintain
     :wheel_ids, :wheels_attributes
 
   def as_json(options = nil)
-    h = super :except => [:_id, :created_at, :updated_at, :buy_date, :VIN, :insurance_date, :engine_num,
-      :oil_out, :oil_in, :oil_filter_changed, :oil_filter_not_changed_reason, :air_filter_changed, :air_filter_not_changed_reason,
+    h = super :except => [:_id, :created_at, :updated_at, :buy_date, :VIN, :insurance_date, :engine_num, :order_id,
+      :oil_out, :oil_in, :oil_sample_collected, :oil_filter_changed, :oil_filter_not_changed_reason, :air_filter_changed, :air_filter_not_changed_reason,
       :cabin_filter_changed, :cabin_filter_not_changed_reason]
   end
 end

@@ -3,9 +3,9 @@ class MaintainsController < ApplicationController
   # GET /maintains.json
   def index
     if params[:car_location] && params[:car_location] != '' && params[:car_num] && params[:car_num] != ''
-      order = Order.where(car_location: params[:car_location], car_num: params[:car_num])
-      if order
-        @maintains = Maintain.where(order_id: order.id)
+      @maintains = []
+      Order.where(car_location: params[:car_location], car_num: params[:car_num]).each do |o|
+	@maintains += o.maintains.desc(:created_at)
       end
     else
       @maintains = Maintain.all
@@ -13,7 +13,9 @@ class MaintainsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @maintains }
+      format.json {
+        @maintains = Kaminari.paginate_array(@maintains).page(params[:page]).per(params[:per])
+      }
     end
   end
 
@@ -114,5 +116,10 @@ class MaintainsController < ApplicationController
   def last_maintain
     curr_maintain = Maintain.find(params[:id])
     @maintain = Maintain.where(order_id: curr_maintain.order_id, :created_at.lt => curr_maintain.create_time).desc(:created_at).first
+  end
+  
+  def auto_inspection_report
+    @maintains = Maintain.where(order_id: params[:order_id]).desc(:created_at)
+    render json: @maintains
   end
 end
