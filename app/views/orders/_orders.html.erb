@@ -31,7 +31,7 @@
     <tbody>
       <% colors = %w[success error info warning] %>
       <% @orders.each_with_index do |order, i| %>
-        <tr class="<%= colors[ i % colors.length] %>">
+        <tr class="<%= colors[ i % colors.length] %>" id="order-<%= order.seq %>">
           <td><%= order.seq %></td>
           <td>
             <%= t(Order::STATE_STRINGS[order.state]) %>

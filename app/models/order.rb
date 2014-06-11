@@ -176,7 +176,7 @@ class Order
     self.calc_service_price + self.calc_parts_price
   end
   
-  paginates_per 10
+  paginates_per 20
   
   def as_json(options = nil)
     h = super :except => [:_id, :air_filter_changed, :auto_id, :auto_km, :auto_km_next, :back_wheels,:cabin_filter_changed, :client_comment, :created_at ,:customer_id, :discount_ids,

@@ -146,6 +146,65 @@
   <% end %>
 </div>
 
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=xmcLHVWegnz5MYzrExa46wqg"></script>
+<a class="btn btn-link" data-target="#map-div" data-toggle="collapse"><%= t(:view_map) %></a>
+<div id="map-div" class="collapse">
+  <div class="row">
+    <div class="span12" id="map" style="height: 600px;">
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  $(function(){
+    // 百度地图API功能
+    var map = new BMap.Map("map");
+    map.enableScrollWheelZoom();
+    map.enableContinuousZoom();
+    
+    //$('#map-div').on('show', function () {
+      var myGeo = new BMap.Geocoder();
+      var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
+      points = [
+      <% @orders.select {|x| x.state >= 2 && x.state <=4 && x.city && x.city.name == t(:beijing) }.each do |o| %>
+        {
+          seq: "<%= o.seq %>",
+          state: "<%= t(Order::STATE_STRINGS[o.state]) %>",
+          address: "<%= o.address %>",
+          city: "<%= o.city.name %>",
+          color: colors["<%= o.state %>"] },
+      <% end %>
+      ]
+      points.forEach(function(v, i) {
+        myGeo.getPoint(v.address, function(point){
+          if (point) {
+            map.centerAndZoom(point,12);
+            marker = new BMap.Marker(point);
+            marker.addEventListener("click", function(type, target) {
+              document.getElementById(v.seq).scrollIntoView();
+            });
+            map.addOverlay(marker);
+            var label = new BMap.Label(v.seq + ' ' + v.state + ": " + v.address, {position: point, offset:new BMap.Size(0, 0)} );  // 创建文本标注对象
+            label.setStyle({
+              color : v.color,
+              fontSize : "12px",
+              height : "20px",
+              lineHeight : "20px",
+              fontFamily:"微软雅黑"
+            });
+            label.addEventListener("click", function(type, target) {
+              var prev = $('#order-' + v.seq).prev().prev();
+              if(prev.size() <= 0)
+                prev = $('#order-table');
+              document.getElementById(prev.attr("id")).scrollIntoView();
+            });
+            map.addOverlay(label);
+          }
+        }, v.city);
+      });
+    });
+  //});
+</script>
+
 <div id="order-list">
   <%= t(:total, count: @orders.size) %><br/>
   <%= render 'orders' %>
