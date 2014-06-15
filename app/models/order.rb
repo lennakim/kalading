@@ -89,14 +89,14 @@ class Order
   index({ state: 1 })
   index({ car_location: 1, car_num: 1})
 
-  validates :car_num, length: { in: 6..6 }, presence: true
   validates :phone_num, length: { in: 8..13 }, presence: true
   validates :address, length: { in: 4..512 }, presence: true
   validates :city, presence: true
   
-  STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-  STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled]
-  STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit]
+  # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询
+  STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled inquiry]
+  STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit edit]
   STATE_CHANGED_STRS = %w[reverify verify_failed verify_ok assign_ok schedule_ok serve_ok handover_ok revisit_ok]
 
   PAY_TYPES = [0, 1]

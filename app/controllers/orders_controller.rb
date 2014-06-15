@@ -170,11 +170,17 @@ class OrdersController < ApplicationController
     if d && d.expire_date >= Date.today && d.orders.count < d.times
       @order.discounts << d
     end
-    @order.state = 2
+    if params[:inquire]
+      @order.state = 9
+      notice = :inquiry_created
+    else
+      @order.state = 2
+      notice = :order_created
+    end
     respond_to do |format|
       if @order.save
         Auto.find_or_create_by(car_location: @order.car_location, car_num: @order.car_num, auto_submodel_id: @order.auto_submodel.id ) if @order.auto_submodel
-        format.html { redirect_to orders_url, notice: I18n.t(:order_created, seq: @order.seq) }
+        format.html { redirect_to orders_url, notice: I18n.t(notice, seq: @order.seq) }
         format.json { render json: @order, status: :created, location: @order }
         format.mobile { render  :action => "show.mobile.erb"}
       else

@@ -5,14 +5,14 @@
       <label for="select-car-location" class="control-label"><%= t(:car_num) %></label>
       <div class="controls form-inline">
         <%= collection_select(:order, :car_location, t(:locations).split, :to_s, :to_s, {:prompt=>true}, {:class=>'input-small control', :id => 'select-car-location'}) %>
-        <%= f.input_field :car_num, class: "input-small", minlength: "6", maxlength: "6", "data-msg-required" => t(:car_num_required), "data-msg-minlength" => t(:car_num_minlength), "data-msg-maxlength" => t(:car_num_minlength), placeholder: t(:five_bits_num) %>
+        <%= f.input_field :car_num, class: "input-small", placeholder: t(:five_bits_num) %>
         <%= link_to t(:search_order_history), orders_path(), :class => 'btn', :id => 'search-by-car-num' %>
         <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
       </div>
       <div id="order-list"></div>
     </div>
   
-    <div class="control-group">
+    <div class="control-group required">
       <label for="order_phone_num" class="control-label"><%= t(:phone_num) %></label>
       <div class="controls form-inline">
         <%= f.input_field :phone_num, :class => 'numeric', :numeric => '', minlength: "8", maxlength: "13", "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) %>
@@ -106,6 +106,7 @@
     <div class="form-actions">
       <% if (%w[new duplicate].include? params[:action]) %>
         <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+        <%= f.button :submit, t(:savs_as_inquiry), :class => 'btn-info', name: "inquire" %>
       <% elsif params[:edit_all] %>
         <%= f.button :submit, t(:save), :class => 'btn-primary', name: "edit_all", value: t(:save) %>
       <% else %>

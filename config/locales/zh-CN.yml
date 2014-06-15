@@ -752,3 +752,6 @@ zh-CN:
   hidden_auto_submodels_title: '隐藏车型'
   show: '显示'
   view_map: '显示隐藏地图'
+  inquiry: '咨询单'
+  savs_as_inquiry: '保存为咨询单'
+  inquiry_created: '咨询单%{seq} 保存成功！'

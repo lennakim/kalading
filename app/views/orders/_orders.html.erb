@@ -91,7 +91,7 @@
             <% end %>
               
             <% if can? :update, Order %>
-              <% if !(%w[revisited service_cancelled].include? Order::STATE_STRINGS[order.state]) %>
+              <% if !(%w[revisited service_cancelled inquiry].include? Order::STATE_STRINGS[order.state]) %>
                 <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
               <% end %>
               <% if !(%w[service_cancelled].include? Order::STATE_STRINGS[order.state]) %>
