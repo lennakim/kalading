@@ -180,12 +180,8 @@
         myGeo.getPoint(v.address, function(point){
           if (point) {
             map.centerAndZoom(point,12);
-            marker = new BMap.Marker(point);
-            marker.addEventListener("click", function(type, target) {
-              document.getElementById(v.seq).scrollIntoView();
-            });
-            map.addOverlay(marker);
-            var label = new BMap.Label(v.seq + ' ' + v.state + ": " + v.address, {position: point, offset:new BMap.Size(0, 0)} );  // 创建文本标注对象
+
+            var label = new BMap.Label(v.seq, {position: point, offset:new BMap.Size(1,-7)} );  // 创建文本标注对象
             label.setStyle({
               color : v.color,
               fontSize : "12px",
@@ -199,7 +195,23 @@
                 prev = $('#order-table');
               document.getElementById(prev.attr("id")).scrollIntoView();
             });
+            label.addEventListener("mouseover", function(type, target) {
+              this.setContent(v.seq + ' ' + v.state + ': ' + v.address);
+              this.setZIndex(100);
+            });
+            label.addEventListener("mouseout", function(type, target) {
+              this.setContent(v.seq);
+            });
             map.addOverlay(label);
+
+            marker = new BMap.Marker(point);
+            marker.addEventListener("click", function(type, target) {
+              var prev = $('#order-' + v.seq).prev().prev();
+              if(prev.size() <= 0)
+                prev = $('#order-table');
+              document.getElementById(prev.attr("id")).scrollIntoView();
+            });
+            map.addOverlay(marker);
           }
         }, v.city);
       });
