@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:index, :order_begin, :choose_service]
   @except_actions = [
-    :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order
+    :index, :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
@@ -10,58 +10,63 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    if params[:state] && params[:state] != ''
-      @orders = Order.where(state: params[:state])
-    else
-      @orders = Order.all
-    end
-
-    if mobile_device? && current_user.roles == ['5']
-      @orders = @orders.where :engineer => current_user
-      if !params[:state]
-        @orders = @orders.where :state.gte => 0, :state.lte => 5
+    if current_user
+      if current_user.roles == ['5']
+        @orders = Order.where :engineer => current_user
+        if params[:state].blank?
+          @orders = @orders.where :state.gte => 3, :state.lte => 5
+        end
+      else
+        @orders = Order.all
       end
     else
-      if params[:engineer] && params[:engineer] != ''
-        @orders = @orders.where(engineer: User.find(params[:engineer]))
-      end
+      return render json: t(:open_id_needed), status: :bad_request if params[:client_id].blank?
+      @orders = Order.where client_id: params[:client_id]
     end
     
-    if params[:car_num] && params[:car_num] != ''
+    if !params[:state].blank?
+      @orders = Order.where(state: params[:state])
+    end
+
+    if !params[:engineer].blank?
+      @orders = @orders.where(engineer: User.find(params[:engineer]))
+    end
+
+    if !params[:car_num].blank?
       @orders = @orders.where(car_num: /.*#{params[:car_num]}.*/i)
     end
 
-    if params[:phone_num] && params[:phone_num] != ''
+    if !params[:phone_num].blank?
       @orders = @orders.where(phone_num: /.*#{params[:phone_num]}.*/i)
     end
 
-    if params[:customer_name] && params[:customer_name] != ''
+    if !params[:customer_name].blank?
       @orders = @orders.where(name: /.*#{params[:customer_name]}.*/i)
     end
 
-    if params[:address] && params[:address] != ''
+    if !params[:address].blank?
       @orders = @orders.where(address: /.*#{params[:address]}.*/i)
     end
 
-    if params[:seq] && params[:seq] != ''
+    if !params[:seq].blank?
       @orders = @orders.where(seq: params[:seq])
     end
 
-    if params[:user_type] && params[:user_type] != ''
+    if !params[:user_type].blank?
       @orders = @orders.where(user_type: UserType.find(params[:user_type]))
     end
 
-    if params[:serve_datetime_start] && params[:serve_datetime_start] != ''
+    if !params[:serve_datetime_start].blank?
       sds = Date.parse params[:serve_datetime_start]
       @orders = @orders.where :serve_datetime.gte => sds.beginning_of_day
     end
 
-    if params[:serve_datetime_end] && params[:serve_datetime_end] != ''
+    if !params[:serve_datetime_end].blank?
       sds = Date.parse params[:serve_datetime_end]
       @orders = @orders.where :serve_datetime.lte => sds.end_of_day
     end
 
-    if params[:city] && params[:city] != ''
+    if !params[:city].blank?
       @orders = @orders.where(city: City.find(params[:city]))
     end
 
@@ -76,7 +81,7 @@ class OrdersController < ApplicationController
       format.json {
         params[:page] ||= 1
         params[:per] ||= 5
-        @orders = @orders.where(engineer: current_user, :state.gte => 3, :state.lte => 5).asc(:seq).page(params[:page]).per(params[:per])
+        @orders = @orders.asc(:seq).page(params[:page]).per(params[:per])
       }
       format.csv {
         csv = CSV.generate({}) do |csv|

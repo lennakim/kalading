@@ -31,7 +31,7 @@ shared_context "create user", :need_user => true do
 
   def puts_url(s)
     puts '<h4><strong>URL:&nbsp&nbsp'
-    puts s
+    puts s.sub('localhost:3000','115.28.132.220:81')
     puts '<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>'
   end
   

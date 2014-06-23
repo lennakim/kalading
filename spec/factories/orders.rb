@@ -4,6 +4,7 @@ FactoryGirl.define do
     address '订单地址'
     name 'Sheldon'
     phone_num "13888888888"
+    client_id '0a0b7D0C1MNP'
     car_location "京"
     car_num "N333M3"
     auto_km '20000'
@@ -22,6 +23,7 @@ FactoryGirl.define do
     address 'Some address'
     name 'Name of client'
     phone_num "13888888888"
+    client_id '0a0b7D0C1MNP'
     car_location "京"
     car_num "N000M3"
     auto_km '100'
@@ -40,6 +42,7 @@ FactoryGirl.define do
     address 'Some address'
     name 'Name of client'
     phone_num "13888888888"
+    client_id '0a0b7D0C1MNP'
     car_location "京"
     car_num "MM0588"
     auto_km '2000'
@@ -53,5 +56,25 @@ FactoryGirl.define do
     city_id City.find_by(name: '北京市').id
     service_type_ids [ServiceType.first.id]
   end
+
+  factory :revisited_order, class: Order do
+    address 'Some address'
+    name 'Name of client'
+    phone_num "13888888888"
+    client_id '0a0b7D0C1MNP'
+    car_location "京"
+    car_num "MM0588"
+    auto_km '2000'
+    vin 'VIN of auto'
+    serve_datetime "2014-04-13 19:44"
+    pay_type 1
+    reciept_type 1
+    reciept_title "卡拉丁汽车技术"
+    client_comment "请按时到场"
+    state 7
+    city_id City.find_by(name: '北京市').id
+    service_type_ids [ServiceType.first.id]
+  end
+
 
 end

@@ -29,7 +29,7 @@ describe '查询车辆品牌', :need_user => true do
   end
 end
 
-describe '新建保养订单。city_id为城市的ID', :need_user => true do
+describe '新建保养订单。city_id为城市的ID，client_id为用户标识（openid）。', :need_user => true do
   it "新建保养订单" do
     o = {
       parts: [
@@ -54,6 +54,7 @@ describe '新建保养订单。city_id为城市的ID', :need_user => true do
               address: "北京朝阳区光华路888号",
               name: "王一迅",
               phone_num: "13888888888",
+              client_id: "040471abcd",
               car_location: "京",
               car_num: "N333M3",
               serve_datetime: "2014-06-09 15:44",
@@ -73,7 +74,7 @@ describe '新建保养订单。city_id为城市的ID', :need_user => true do
   end
 end
 
-describe '查询换空调滤+PM2.5滤芯价格', :need_user => true do
+describe '查询换空调滤+PM2.5滤芯价格，client_id为用户标识（openid）。', :need_user => true do
   it "查询换空调滤+PM2.5滤芯价格" do
     o = {
       parts: [
@@ -90,6 +91,7 @@ describe '查询换空调滤+PM2.5滤芯价格', :need_user => true do
               address: "北京朝阳区光华路888号",
               name: "王一迅",
               phone_num: "13888888888",
+              client_id: "040471abcd",
               car_location: "京",
               car_num: "N333M3",
               serve_datetime: "2014-06-09 15:44",
@@ -105,7 +107,7 @@ describe '查询换空调滤+PM2.5滤芯价格', :need_user => true do
   end
 end
 
-describe '新建换空调滤+PM2.5滤芯订单', :need_user => true do
+describe '新建换空调滤+PM2.5滤芯订单，client_id为用户标识（openid）。', :need_user => true do
   it "新建保养订单" do
     o = {
       parts: [
@@ -122,6 +124,7 @@ describe '新建换空调滤+PM2.5滤芯订单', :need_user => true do
               address: "北京朝阳区光华路888号",
               name: "王一迅",
               phone_num: "13888888888",
+              client_id: "040471abcd",
               car_location: "京",
               car_num: "N333M3",
               serve_datetime: "2014-06-09 15:44",
@@ -143,7 +146,7 @@ describe '新建换空调滤+PM2.5滤芯订单', :need_user => true do
   end
 end
 
-describe '新建PM2.5滤芯订单', :need_user => true do
+describe '新建PM2.5滤芯订单，client_id为用户标识（openid）。', :need_user => true do
   it "新建保养订单" do
     o = {
       parts: [
@@ -156,6 +159,7 @@ describe '新建PM2.5滤芯订单', :need_user => true do
               address: "北京朝阳区光华路888号",
               name: "王一迅",
               phone_num: "13888888888",
+              client_id: "040471abcd",
               car_location: "京",
               car_num: "N333M3",
               serve_datetime: "2014-06-09 15:44",
@@ -174,5 +178,23 @@ describe '新建PM2.5滤芯订单', :need_user => true do
     o = Order.find_by(seq: h['seq'])
     expect(o.price.to_f).to be(50.0)
     o.destroy
+  end
+end
+
+describe '读取某个客户的订单列表，client_id为客户标识（openid）。支持分页，page为页数（从1开始），per为每页返回的订单个数。返回空表示到达最后一页。', :need_user => true, :need_maintain_order => true do
+  it "列举第1页订单，每页4个" do
+    response_json = get_json "http://localhost:3000/orders.json?client_id=0a0b7D0C1MNP&page=1&per=4"
+    # 确认调用成功
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    # 确认返回值正确
+    expect(orders.size).to be > 0
+  end
+
+  it "列举第2页订单，到达最后一页" do
+    response_json = get_json "http://localhost:3000/orders.json?client_id=0a0b7D0C1MNP&page=2&per=4"
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    expect(orders.size).to be(0)
   end
 end

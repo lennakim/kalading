@@ -49,8 +49,8 @@ class Order
   field :serve_datetime_next, type: DateTime
   field :auto_owner_name, type: String, default: ->{ name }
   field :engine_num, type: String, default: ''
+  field :client_id, type: String, default: ''
 
-  belongs_to :customer, class_name: "User", inverse_of: :buy_orders, index: true
   belongs_to :engineer, class_name: "User", inverse_of: :serve_orders
 
   belongs_to :auto
@@ -82,7 +82,7 @@ class Order
     :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
-    :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address
+    :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id
 
   auto_increment :seq
   index({ seq: 1 })
