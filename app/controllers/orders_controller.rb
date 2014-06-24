@@ -20,8 +20,12 @@ class OrdersController < ApplicationController
         @orders = Order.all
       end
     else
-      return render json: t(:open_id_needed), status: :bad_request if params[:client_id].blank?
-      @orders = Order.where client_id: params[:client_id]
+      if request.format.json?
+        return render json: t(:open_id_needed), status: :bad_request if params[:client_id].blank?
+        @orders = Order.where client_id: params[:client_id]
+      else
+        return redirect_to new_user_session_url
+      end
     end
     
     if !params[:state].blank?
