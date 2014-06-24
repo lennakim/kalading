@@ -106,6 +106,7 @@ Kalading::Application.routes.draw do
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains
   get 'last_maintain/:id' => 'maintains#last_maintain', :as => :last_maintain
   get 'auto_inspection_report' => 'maintains#auto_inspection_report', :as => :auto_inspection_report
+  get 'maintain_summary/:id' => 'maintains#maintain_summary', :as => :maintain_summary
   post 'tool_records/:id/uploadpic' => 'tool_records#uploadpic', :as => :uploadpic_tool_records
 
   # For baichebao

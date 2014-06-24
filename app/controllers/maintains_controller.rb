@@ -122,4 +122,8 @@ class MaintainsController < ApplicationController
     @maintains = Maintain.where(order_id: params[:order_id]).desc(:created_at)
     render json: @maintains
   end
+  
+  def maintain_summary
+    @m = Maintain.find(params[:id])
+  end
 end

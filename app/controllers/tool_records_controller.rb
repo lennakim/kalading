@@ -12,9 +12,9 @@ class ToolRecordsController < ApplicationController
       format.html # index.html.erb
       format.json {
         if @tool_records.where(engineer_name: current_user.name).exists?
-          render json: {result: 'ok'}
+          render json: {result: 'approved'}
         else
-          head :no_content
+          render json: {result: 'not aproved'}
         end
       }
     end
