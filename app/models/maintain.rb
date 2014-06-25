@@ -7,13 +7,13 @@ class Wheel
   field :factory_data, type: Date
   field :tread_depth, type: Float, default: 0
   field :ageing_desc, type: Integer, default: 0
-  field :tread_desc, type: Integer, default: 0
-  field :sidewall_desc, type: Integer, default: 0
+  field :tread_desc, type: Array, default: [0]
+  field :sidewall_desc, type: Array, default: [0]
   field :pressure, type: Float, default: 0
   field :width, type: Integer, default: 0
   field :brake_pad_checked, type: Boolean, default: true
   field :brake_pad_thickness, type: Float, default: 0
-  field :brake_disc_desc, type: String, default: ""
+  field :brake_disc_desc, type: Integer, default: 0
 
   embedded_in :maintain, :inverse_of => :wheels
 
