@@ -99,6 +99,7 @@ class Maintain
   field :curr_km, type: String, default: ""
   field :next_maintain_km, type: String, default: ""
   field :comment, type: String, default: ""
+  field :total_time, type: Integer, default: 0
 
   belongs_to :order
   PART_DESC = [0, 1, 2, 3, 4]
@@ -156,7 +157,7 @@ class Maintain
     :gearbox_oil_position, :glass_water_desc, :glass_water_add, :glass_water_amount,
     :battery_charge, :battery_health, :battery_desc, :battery_light_color, :battery_head_desc,
     :front_wiper_desc, :back_wiper_desc, :extinguisher_desc, :warning_board_desc, :spare_tire_desc,
-    :km_be_zero, :curr_km, :next_maintain_km, :comment,
+    :km_be_zero, :curr_km, :next_maintain_km, :comment, :total_time,
     :wheel_ids, :wheels_attributes, :light_ids, :lights_attributes,:order_id
 
   def as_json(options = nil)
