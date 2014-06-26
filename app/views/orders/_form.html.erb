@@ -29,7 +29,7 @@
     <%= f.association :user_type, collection: UserType.all, prompt: t('choose_user_type'), label: t('user_type'), include_blank: false %>
     <% if %w[unscheduled scheduled serve_done handovered].include? Order::STATE_STRINGS[@order.state] %>
       <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
-      <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
+      <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: true %>
     <% end %>
   
     <div class="control-group">
@@ -124,7 +124,7 @@
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
     <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
-    <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
+    <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: true %>
     <%= render 'comments', :f => f %>
     <div class="form-actions">
       <%= f.button :submit, t(:assign_ok), :class => 'btn-primary' %>

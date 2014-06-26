@@ -46,6 +46,9 @@
             <% else %>
               <%= t(:unassigned) %>
             <% end %>
+            <% if order.engineer2 %>
+              <%= order.engineer2.name %>
+            <% end %>
           </td>
           <td><%= order.car_location + order.car_num %></td>
           <td><%= order.auto_submodel.full_name if order.auto_submodel %></td>

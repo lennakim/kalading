@@ -33,7 +33,8 @@ class OrdersController < ApplicationController
     end
 
     if !params[:engineer].blank?
-      @orders = @orders.where(engineer: User.find(params[:engineer]))
+      e = User.find params[:engineer]
+      @orders = @orders.any_of({engineer: e}, {engineer2: e})
     end
 
     if !params[:car_num].blank?
