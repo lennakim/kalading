@@ -52,6 +52,7 @@ class Order
   field :client_id, type: String, default: ''
 
   belongs_to :engineer, class_name: "User", inverse_of: :serve_orders
+  belongs_to :engineer2, class_name: "User", inverse_of: :serve_orders2
 
   belongs_to :auto
   belongs_to :auto_submodel
@@ -71,7 +72,7 @@ class Order
   accepts_nested_attributes_for :comments, :allow_destroy => true
 
   attr_accessible :state, :address, :phone_num,:buymyself,:serve_datetime,
-    :customer_id, :engineer_id, :auto_id,
+    :customer_id, :engineer_id, :auto_id, :engineer2_id,
     :service_type_ids,
     :auto_id,
     :discount_ids,

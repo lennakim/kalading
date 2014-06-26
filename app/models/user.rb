@@ -50,8 +50,8 @@ class User
   has_and_belongs_to_many :autos
   accepts_nested_attributes_for :autos, :allow_destroy => true
   
-  has_many :buy_orders, class_name: "Order", inverse_of: :customer
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
+  has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2
   has_many :partbatches
   
   validates_uniqueness_of :phone_num, :allow_blank => true

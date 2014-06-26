@@ -78,6 +78,14 @@
       <td><%= t(:auto_km_next) %></td>
       <td><%= @order.auto_km_next %></td>
     </tr>
+    <tr>
+      <td><%= t(:assigned_to_engineer) %></td>
+      <td><%= @order.engineer.name if @order.engineer %></td>
+    </tr>
+    <tr>
+      <td><%= t(:assigned_to_engineer2) %></td>
+      <td><%= @order.engineer2.name if @order.engineer2 %></td>
+    </tr>
   </tbody>
 </table>
 

@@ -756,3 +756,4 @@ zh-CN:
   savs_as_inquiry: '保存为咨询单'
   inquiry_created: '咨询单%{seq} 保存成功！'
   open_id_needed: '无效参数'
+  assigned_to_engineer2: '助理技师'
