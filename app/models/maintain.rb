@@ -17,7 +17,12 @@ class Wheel
 
   embedded_in :maintain, :inverse_of => :wheels
 
-  #validates_format_of :name, in: ["spare", "left_front", "right_front", "left_back", "right_back"]
+  NAME_STRINGS = %w[spare left_front right_front left_back right_back]
+  AGEING_STRINGS = %w[slight general serious]
+  TREAD_STRINGS = %w[normal local_cracking wear_in_middle wear_in_sides puncture]
+  SIDEWALL_STRINGS = %w[normal local_cracking cut worn_in_sides swelling abnormal_wear]
+  BRAKE_DISC_STRINGS = %w[no_uneven_wear uneven_wear recommend_replace not_recommend_replace undetectable]
+  
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
 
   attr_accessible :name, :brand, :factory_data,
@@ -34,6 +39,8 @@ class Light
   
   embedded_in :maintain, :inverse_of => :lights
   
+  DESC_STRINGS = %w[bright undetectable left_not_bright right_not_bright left_front_not_bright right_front_not_bright left_back_not_bright right_back_not_bright high_not_bright back_fog_not_bright]
+
   validates :name, uniqueness: {case_sensitive: false}, presence: true
   
   attr_accessible :name, :desc
@@ -110,6 +117,15 @@ class Maintain
   TIRE_CRACK_LEVLE_STRINGS = %w[partial block]
   OIL_DESC = [0, 1]
   OIL_DESC_STRINGS = %w[clean dirty]
+  POSITION_STRINGS = %w[high middle low undetectable]
+  OIL_STRINGS = %w[muddy dirty serious_dirty]
+  OTHER_OIL_STRINGS = %w[clean muddy dirty undetectable]
+  FILTER_STRINGS = %w[clean dirty serious_dirty]
+  GLASS_WATER_STRINGS = %w[full lack]
+  BATTERY_STRINGS = %w[good worn leak undetectable]
+  BATTERY_HEAD_STRINGS = %w[good corroded undetectable]
+  WIPER_STRINGS = %w[normal recommend_replace none]
+  AUTO_TOOLS_STRINGS = %w[existed not_existed undetected]
 
   embeds_many :wheels, :cascade_callbacks => true
   embeds_many :lights, :cascade_callbacks => true

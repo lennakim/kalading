@@ -1,12 +1,360 @@
-<p id="notice"><%= notice %></p>
+<h5><%= t(:basic_infos)%></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:outlook_desc) %></td>
+      <td><%= @maintain.outlook_desc %></td>
+    </tr>
+    <tr>
+      <td><%= t(:buy_date) %></td>
+      <td><%= @maintain.buy_date.strftime('%Y-%m-%d') if @maintain.buy_date %></td>
+    </tr>
+    <tr>
+      <td><%= t(:vin) %></td>
+      <td><%= @maintain.VIN %></td>
+    </tr>
+    <tr>
+      <td><%= t(:insurance_date) %></td>
+      <td><%= @maintain.insurance_date.strftime('%Y-%m-%d') if @maintain.insurance_date %></td>
+    </tr>
+    <tr>
+      <td><%= t(:auto_color) %></td>
+      <td><%= @maintain.auto_color %></td>
+    </tr>
+    <tr>
+      <td><%= t(:engine_num) %></td>
+      <td><%= @maintain.engine_num %></td>
+    </tr>
+    <tr>
+      <td><%= t(:total_time) %></td>
+      <td><%= @maintain.total_time %></td>
+    </tr>
+  </tbody>
+</table>
 
-<p>
-  <b>Order id:</b>
-  <%= @maintain.order_id %>
-  <b>Outlook desc:</b>
-  <%= @maintain.outlook_desc %>
-</p>
+<h5 ><%= t(:lights_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <% for light in @maintain.lights %>
+    <tr>
+      <td><%= I18n.t(light.name) %></td>
+      <td>
+        <% for d in light.desc %>
+        <%= I18n.t(Light::DESC_STRINGS[d]) %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
 
+<h5 ><%= t(:wheels_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <% for wheel in @maintain.wheels %>
+    <tr>
+      <td><%= t(:wheel_name) %></td>
+      <td><%= I18n.t(wheel.name) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:brand) %></td>
+      <td><%= wheel.brand %></td>
+    </tr>
+    <tr>
+      <td><%= t(:factory_data) %></td>
+      <td><%= wheel.factory_data.strftime('%Y-%m-%d') if wheel.factory_data %></td>
+    </tr>
+    <tr>
+      <td><%= t(:tread_depth) %></td>
+      <td><%= wheel.tread_depth %></td>
+    </tr>
+    <tr>
+      <td><%= t(:ageing_desc) %></td>
+      <td><%= I18n.t(Wheel::AGEING_STRINGS[wheel.ageing_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:tread_desc) %></td>
+      <td>
+        <% for desc in wheel.tread_desc %>
+        <%= I18n.t(Wheel::TREAD_STRINGS[desc]) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:sidewall_desc) %></td>
+      <td>
+        <% for desc in wheel.tread_desc %>
+        <%= I18n.t(Wheel::SIDEWALL_STRINGS[desc]) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:pressure) %></td>
+      <td><%= wheel.pressure %></td>
+    </tr>
+    <tr>
+      <td><%= t(:width) %></td>
+      <td><%= wheel.width %></td>
+    </tr>
+    <tr>
+      <td><%= t(:brake_pad_checked) %></td>
+      <td>
+        <% if wheel.brake_pad_checked? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:brake_pad_thickness) %></td>
+      <td><%= wheel.brake_pad_thickness %></td>
+    </tr>
+    <tr>
+      <td><%= t(:brake_disc_desc) %></td>
+      <td><%= I18n.t(Wheel::BRAKE_DISC_STRINGS[wheel.brake_disc_desc]) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_maintain_path(@maintain) %> |
-<%= link_to 'Back', maintains_path %>
+<h5 ><%= t(:oil_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:position) %></td>
+      <td><%= I18n.t(Maintain::POSITION_STRINGS[@maintain.oil_position]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:oil_in) %></td>
+      <td><%= @maintain.oil_in %></td>
+    </tr>
+    <tr>
+      <td><%= t(:oil_out) %></td>
+      <td><%= @maintain.oil_out %></td>
+    </tr>
+    <tr>
+      <td><%= t(:engine_oil) %></td>
+      <td><%= I18n.t(Maintain::OIL_STRINGS[@maintain.oil_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:oil_sample_collected) %></td>
+      <td>
+        <% if @maintain.oil_sample_collected? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:oil_sample_number) %></td>
+      <td><%= @maintain.oil_sample_number %></td>
+    </tr>
+    <tr>
+      <td><%= t(:oil_filter_changed) %></td>
+      <td>
+        <% if @maintain.oil_filter_changed? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:unchanged_reason) %></td>
+      <td><%= @maintain.oil_filter_not_changed_reason %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 ><%= t(:air_filter_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:air_filter_desc) %></td>
+      <td><%= I18n.t(Maintain::FILTER_STRINGS[@maintain.air_filter_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:air_filter_changed) %></td>
+      <td>
+        <% if @maintain.air_filter_changed? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:unchanged_reason) %></td>
+      <td><%= @maintain.air_filter_not_changed_reason %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 ><%= t(:cabin_filter_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:cabin_filter_desc) %></td>
+      <td><%= I18n.t(Maintain::FILTER_STRINGS[@maintain.cabin_filter_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:cabin_filter_changed) %></td>
+      <td>
+        <% if @maintain.cabin_filter_changed? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:unchanged_reason) %></td>
+      <td><%= @maintain.cabin_filter_not_changed_reason %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 ><%= t(:other_oil_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:brake_oil_boiling_point) %></td>
+      <td><%= @maintain.brake_oil_boiling_point %></td>
+    </tr>
+    <tr>
+      <td><%= t(:position) %></td>
+      <td><%= I18n.t(Maintain::POSITION_STRINGS[@maintain.brake_oil_position]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:antifreeze_desc) %></td>
+      <td><%= I18n.t(Maintain::OTHER_OIL_STRINGS[@maintain.antifreeze_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:antifreeze_freezing_point) %></td>
+      <td><%= @maintain.antifreeze_freezing_point %></td>
+    </tr>
+    <tr>
+      <td><%= t(:position) %></td>
+      <td><%= I18n.t(Maintain::POSITION_STRINGS[@maintain.antifreeze_position]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:antifreeze_color) %></td>
+      <td><%= @maintain.antifreeze_color %></td>
+    </tr>
+    <tr>
+      <td><%= t(:steering_oil_desc) %></td>
+      <td><%= I18n.t(Maintain::OTHER_OIL_STRINGS[@maintain.steering_oil_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:position) %></td>
+      <td><%= I18n.t(Maintain::POSITION_STRINGS[@maintain.steering_oil_position]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:gearbox_oil_desc) %></td>
+      <td><%= I18n.t(Maintain::OTHER_OIL_STRINGS[@maintain.gearbox_oil_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:position) %></td>
+      <td><%= I18n.t(Maintain::POSITION_STRINGS[@maintain.gearbox_oil_position]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:glass_water_desc) %></td>
+      <td><%= I18n.t(Maintain::GLASS_WATER_STRINGS[@maintain.glass_water_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:glass_water_add) %></td>
+      <td>
+        <% if @maintain.glass_water_add? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:glass_water_amount) %></td>
+      <td><%= @maintain.glass_water_amount %></td>
+    </tr>
+  </tbody>
+</table>
+<h5 ><%= t(:battery_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:battery_desc) %></td>
+      <td><%= I18n.t(Maintain::BATTERY_STRINGS[@maintain.battery_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:battery_charge) %></td>
+      <td><%= @maintain.battery_charge %></td>
+    </tr>
+    <tr>
+      <td><%= t(:battery_health) %></td>
+      <td><%= @maintain.battery_health %></td>
+    </tr>
+    <tr>
+      <td><%= t(:battery_light_color) %></td>
+      <td><%= @maintain.battery_light_color %></td>
+    </tr>
+    <tr>
+      <td><%= t(:battery_head_desc) %></td>
+      <td><%= I18n.t(Maintain::BATTERY_HEAD_STRINGS[@maintain.battery_head_desc]) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 ><%= t(:wiper_and_tool_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:front_wiper_desc) %></td>
+      <td><%= I18n.t(Maintain::WIPER_STRINGS[@maintain.front_wiper_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:back_wiper_desc) %></td>
+      <td><%= I18n.t(Maintain::WIPER_STRINGS[@maintain.back_wiper_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:extinguisher_desc) %></td>
+      <td><%= I18n.t(Maintain::AUTO_TOOLS_STRINGS[@maintain.extinguisher_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:warning_board_desc) %></td>
+      <td><%= I18n.t(Maintain::AUTO_TOOLS_STRINGS[@maintain.warning_board_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:spare_tire_desc) %></td>
+      <td><%= I18n.t(Maintain::AUTO_TOOLS_STRINGS[@maintain.spare_tire_desc]) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 ><%= t(:km_be_zero_info) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:km_be_zero) %></td>
+      <td>
+        <% if @maintain.km_be_zero? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:curr_km) %></td>
+      <td><%= @maintain.curr_km %></td>
+    </tr>
+    <tr>
+      <td><%= t(:next_maintain_km) %></td>
+      <td><%= @maintain.next_maintain_km %></td>
+    </tr>
+    <tr>
+      <td><%= t(:comment) %></td>
+      <td><%= @maintain.comment %></td>
+    </tr>
+  </tbody>
+</table>
