@@ -112,8 +112,7 @@ class MaintainsController < ApplicationController
   end
   
   def auto_inspection_report
-    @maintains = Maintain.where(order_id: params[:order_id]).desc(:created_at)
-    render json: @maintains
+    @maintains = Maintain.where(order_id: params[:order_id]).desc(:created_at).page(params[:page]).per(params[:per])
   end
   
   def maintain_summary
