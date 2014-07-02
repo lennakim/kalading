@@ -31,10 +31,10 @@ class ApplicationController < ActionController::Base
     orders_path
   end
   
-  attr_accessor :current_operator
+  attr_accessor :current_order
   
   def set_default_operator
-    self.current_operator = current_user
+    # Not used
   end
   
   def set_locale

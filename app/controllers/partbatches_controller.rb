@@ -47,7 +47,6 @@ class PartbatchesController < ApplicationController
   # POST /partbatches
   # POST /partbatches.json
   def create
-    self.current_operator = User.find(params[:partbatch][:user_id]) if params[:partbatch][:user_id]
     @storehouse = Storehouse.find(params[:storehouse_id])
     @partbatch = @storehouse.partbatches.new(params[:partbatch])
     @part = Part.find(params[:partbatch][:part_id])

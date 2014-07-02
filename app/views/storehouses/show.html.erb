@@ -3,9 +3,6 @@
 <div class="tabbable">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#tab1" data-toggle="tab"><%= t(:search_by_part) %></a></li>
-    <li><a href="#tab2" data-toggle="tab"><%= t(:search_by_automodel) %></a></li>
-    <li><a href="#tab3" data-toggle="tab"><%= t(:search_by_order) %></a></li>
-    <li><a href="#tab4" data-toggle="tab"><%= t(:search_by_partbatch) %></a></li>
     <div class="pull-right">
       <% if can? :create, Partbatch %>
         <%= link_to new_storehouse_partbatches_path(@storehouse), :class => 'btn btn-success', :target => '_blank' do %>
@@ -19,37 +16,7 @@
     <div class="tab-pane active" id="tab1">
       <%= form_tag @storehouse, :method => 'get', :id => "partbatches_search_by_part", :class => 'form-inline' do %>
       <div class="controls">
-        <%= collection_select :partbatch_part, :type_id, PartType.all, :id, :name, {:include_blank => t(:all_part_types)}, {:rel => part_types_path, :class => 'control'} %>
-        <%= collection_select :partbatch_part, :brand_id, PartBrand.all, :id, :name, {:include_blank => t(:all_part_brands)}, {:class => 'control'} %>
         <%= render 'partbatches/part_number_search' %>
-        <%= submit_tag t(:submit), class: 'btn btn-primary' %>
-      </div>
-      <% end %>
-    </div>
-    <div class="tab-pane" id="tab2">
-      <%= form_tag @storehouse, :method => 'get', :id => "partbatches_search_by_auto", :class => 'form-inline' do %>
-      <div class="controls">
-        <%= collection_select :auto_model, :brand_id, AutoBrand.where(data_source: 2).asc(:name_pinyin), :id, :name, {}, {:rel => "/auto_brands", :class => 'control', :data => {:source => 2}} %>
-        <%= collection_select :auto_submodel, :model_id, AutoBrand.where(data_source: 2).asc(:name_pinyin).first.auto_models.all, :id, :name, {}, {:rel => "/auto_models", :class => 'control', :data => {:source => 2}} %>
-        <%= collection_select :auto, :auto_submodel_id, AutoBrand.where(data_source: 2).asc(:name_pinyin).first.auto_models.all.first.auto_submodels.all, :id, :name, {}, {:class => 'control'} %>
-        <%= submit_tag t(:submit), class: 'btn btn-primary' %>
-      </div>
-      <% end %>
-    </div>
-    <div class="tab-pane" id="tab3">
-      <%= form_tag @storehouse, :method => 'get', :id => "partbatches_search_by_order", :class => 'form-inline' do %>
-      <div class="controls">
-        <%= label_tag :order, t('order_id'), class: 'control-label' %>
-        <%= text_field_tag :order, params[:order], class: 'control' %>
-        <%= submit_tag t(:submit), class: 'btn btn-primary' %>
-      </div>
-      <% end %>
-    </div>
-    <div class="tab-pane" id="tab4">
-      <%= form_tag @storehouse, :method => 'get', :id => "partbatches_search_by_partbatch", :class => 'form-inline' do %>
-      <div class="controls">
-        <%= label_tag :partbatch, t('partbatch_id'), class: 'control-label' %>
-        <%= text_field_tag :partbatch_id, params[:partbatch], class: 'control' %>
         <%= submit_tag t(:submit), class: 'btn btn-primary' %>
       </div>
       <% end %>

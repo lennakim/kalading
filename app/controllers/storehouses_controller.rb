@@ -18,39 +18,11 @@ class StorehousesController < ApplicationController
   # GET /storehouses/1.json
   def show
     @storehouse = Storehouse.find(params[:id])
-    if params[:partbatch_id] # search by partbatch id
-      pb = @storehouse.partbatches.find(params[:partbatch_id])
-      pbs = []
-      pbs << pb if pb
-    else
-      pbs = @storehouse.partbatches.desc(:created_at)
-      if params[:partbatch_part] # search by part
-        if params[:partbatch_part][:type_id] != ''
-          part_type = PartType.find params[:partbatch_part][:type_id]
-          pbs = pbs.select { |pb| pb.part.part_type == part_type } if part_type
-        end
-        if params[:partbatch_part][:brand_id] != ''
-          part_brand = PartBrand.find params[:partbatch_part][:brand_id]
-          pbs = pbs.select { |pb| pb.part.part_brand == part_brand } if part_brand
-        end
-        if params[:part_number] && params[:part_number] != ''
-          parts = Part.where(number: params[:part_number])
-          pbs = pbs.select { |pb| parts.include? pb.part }
-        end
-      end
-  
-      if params[:auto] # search by auto submodel
-        if params[:auto][:auto_submodel_id] != ''
-          pbs = pbs.select { |pb| pb.part.auto_submodels.find(params[:auto][:auto_submodel_id]) }
-        end
-      end
-  
-      if params[:order] # search by order seq
-        o = Order.where(seq: params[:order])
-        pbs = pbs.select { |pb| o.parts.find(pb.part) } if o
-      end
+    pbs = @storehouse.partbatches.desc(:created_at)
+    if params[:part_number].present?
+      pbs = pbs.where(part: Part.find_by(number: params[:part_number]))
     end
-    @part_to_partbatches = Kaminari.paginate_array(pbs.group_by(&:part).to_a.sort_by {|x, y| x.number }).page(params[:page]).per(15)
+    @partbatches = pbs.page(params[:page])
 
     respond_to do |format|
       format.html {
@@ -94,6 +66,7 @@ class StorehousesController < ApplicationController
       @part = Part.find params[:part]
       @partbatches = @storehouse.partbatches.where(part: @part)
     end
+    @order = Order.find params[:order] if params[:order].present?
   end
 
   def inout
@@ -101,22 +74,19 @@ class StorehousesController < ApplicationController
     @part = Part.find params[:part]
     @partbatches = @storehouse.partbatches.where(part: @part).asc(:created_at)
     @quantity = params[:quantity].to_i
+    @order = self.current_order = Order.find params[:order]
+    @order.part_delivered_counts[@part.id.to_s] ||= 0
     if params[:back]
-      if params[:user][:id] == ''
-        @error = I18n.t(:user_id_empty)
-      elsif @quantity <=0 || @quantity + (@partbatches.sum {|x| x.remained_quantity}) > (@partbatches.sum {|x| x.quantity})
-        @error = I18n.t(:quantity_error, min: 1, max: (@partbatches.sum {|x| x.quantity - x.remained_quantity}) )
+      if @quantity <=0 || @quantity > @order.part_delivered_counts[@part.id.to_s].to_i
+        @error = I18n.t :quantity_error, min: 1, max: @order.part_delivered_counts[@part.id.to_s].to_i
       end
     else
-      if params[:user][:id] == ''
-        @error = I18n.t(:user_id_empty)
-      elsif @quantity <= 0 || @quantity > (@partbatches.sum {|x| x.remained_quantity})
-        @error = I18n.t(:quantity_error, min: 1, max: ((@partbatches.sum {|x| x.remained_quantity})) )
+      if @quantity <= 0 || @quantity > @order.part_counts[@part.id.to_s].to_i - @order.part_delivered_counts[@part.id.to_s].to_i
+        @error = I18n.t :quantity_error, min: 1, max: @order.part_counts[@part.id.to_s].to_i - @order.part_delivered_counts[@part.id.to_s].to_i
       end
     end
     return if @error
 
-    self.current_operator = User.find(params[:user][:id])
     if params[:back]
       need_q = @quantity
       @partbatches.each do |pb|
@@ -128,6 +98,7 @@ class StorehousesController < ApplicationController
         need_q -= c
         break if need_q <= 0
       end
+      @order.part_delivered_counts[@part.id.to_s] -= @quantity
     else
       need_q = @quantity
       @partbatches.each do |pb|
@@ -139,7 +110,9 @@ class StorehousesController < ApplicationController
         need_q -= c
         break if need_q <= 0
       end
+      @order.part_delivered_counts[@part.id.to_s] += @quantity
     end
+    @order.save!
     @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
   end
 

@@ -1,3 +1,3 @@
-<input class="required" name="part_number" type="text" autocomplete="off" id="part-number-search" data-link="<%= parts_path %>" placeholder="<%= t(:part_number_search_hint) %>" value=""/>
+<input class="required" name="part_number" type="text" autocomplete="off" id="part-number-search" data-link="<%= parts_path %>" placeholder="<%= t(:part_number_search_hint) %>" value="<%= params[:part_number] %>"/>
 <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
 

@@ -1,10 +1,6 @@
 <% if @error %>
     $("#error-div").html("<%= escape_javascript(render 'error') %>");
 <% else %>
-    $("#<%= @part.id %>").html("<%= escape_javascript(render("part", part: @part, partbatches: @partbatches)) %>");
+    $("#delivering-parts").html("<%= escape_javascript(render 'orders/parts_table', readonly: false) %>");
     $('#modal-window').modal('hide').html("");
-    $("#history_trackers").html("<%= escape_javascript(render("history")) %>");
-    $("#history_trackers ul li:first-child").fadeOut().fadeIn();
 <% end %>
-
- 

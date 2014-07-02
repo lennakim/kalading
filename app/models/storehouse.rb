@@ -6,11 +6,12 @@ class Storehouse
   field :address, type: String
   field :phone_num, type: String
   
-  attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes
+  attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes, :city_id
   
 
   has_many :partbatches, dependent: :destroy
   accepts_nested_attributes_for :partbatches, :allow_destroy => true
+  belongs_to :city
   
   def to_csv(options = {})
     CSV.generate(options) do |csv|

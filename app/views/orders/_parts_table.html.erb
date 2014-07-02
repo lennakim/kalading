@@ -1,0 +1,58 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= t :brand_and_number %></td>
+      <th><%= t :ordered_quantity %></td>
+      <th><%= t :delivered_quantity %></td>
+    </tr>    
+  </thead>
+  <tbody>
+  <% @order.parts.sort_by(&:part_type).each do |p| %>
+    <tr>
+      <td>
+        <%= p.part_brand.name + ' ' + p.number %>
+      </td>
+      <td>
+        <%= @order.part_counts[p.id.to_s].to_s + ' ' + t(:default_unit) %>
+      </td>
+      <td>
+        <%= @order.part_delivered_counts[p.id.to_s].to_i.to_s + ' ' + t(:default_unit) %>
+      </td>
+      <% if !readonly %>
+      <td>
+        <table>
+          <thead>
+            <tr>
+              <th><%= t 'storehouse' %></th>
+              <th><%= t 'remained_quantity' %></th>
+            </tr>
+          </thead>
+          <tbody>
+          <% p.partbatches.group_by(&:storehouse).each do |sh, pbs| %>
+            <% next if sh.city != @order.city %>
+            <% s = pbs.sum(&:remained_quantity) %>
+            <tr>
+              <td><%= sh.name %></td>
+              <td><%= s %></td>
+              <td>
+                <%= link_to t('storehouse_out'), edit_storehouse_path(sh, part: p, order: @order, quantity: @order.part_counts[p.id.to_s].to_i - @order.part_delivered_counts[p.id.to_s].to_i ),
+                    {:class => 'btn btn-mini', :remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can?(:update, sh) && s > 0 && @order.part_delivered_counts[p.id.to_s].to_i < @order.part_counts[p.id.to_s].to_i %>
+                <%= link_to t('storehouse_back'), edit_storehouse_path(sh, part: p, back: true, order: @order),
+                    {:class => 'btn btn-mini', :remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can?(:update, sh) && @order.part_delivered_counts[p.id.to_s].to_i > 0 %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </td>
+      <% end %>
+    </tr>
+  <% end %>
+  <tr>
+    <th colspan="4"><%= t(:parts_price) + ' ' + humanized_money_with_symbol(@order.calc_parts_price) %></th>
+  </tr>
+  <tr>
+    <th colspan="4"><%= t(:summary_price) + " " + humanized_money_with_symbol(@order.calc_price) %></th>
+  </tr>
+  </tbody>
+</table>

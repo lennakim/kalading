@@ -230,14 +230,17 @@ class OrdersController < ApplicationController
         params[:order][:state] = 4
         notice = I18n.t(:order_scheduled_notify, seq: @order.seq)
       when 4
-        params[:order][:state] = 5
-        notice = I18n.t(:order_served_notify, seq: @order.seq)
+        params[:order][:state] = 10
+        notice = I18n.t(:order_delivered_notify, seq: @order.seq)
       when 5
         params[:order][:state] = 6
         notice = I18n.t(:order_handovered_notify, seq: @order.seq)
       when 6
         params[:order][:state] = 7
         notice = I18n.t(:order_revisited_notify, seq: @order.seq)
+      when 10
+        params[:order][:state] = 5
+        notice = I18n.t(:order_served_notify, seq: @order.seq)
       else
         notice = I18n.t(:order_saved_notify, seq: @order.seq)
       end

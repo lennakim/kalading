@@ -3,6 +3,7 @@
   <thead>
     <tr>
       <th><%= t(:storehouse_name) %></th>
+      <th><%= t(:cities) %></th>
       <th><%= t(:address) %></th>
       <th><%= t(:phone_num) %></th>
       <th><%= t(:created_at) %></th>
@@ -13,6 +14,7 @@
     <% @storehouses.each do |storehouse| %>
       <tr>
         <td><%= link_to storehouse.name, storehouse_path(storehouse) %></td>
+        <td><%= link_to storehouse.city.name, storehouse.city if storehouse.city %></td>
         <td><%= storehouse.address %></td>
         <td><%= storehouse.phone_num %></td>
         <td><%=l storehouse.created_at %></td>

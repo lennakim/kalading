@@ -1,13 +1,6 @@
-<td><%= link_to part.number, part_path(part), :target => '_blank' %></td>
-<td><%= part.part_brand.name %></td>
-<td><%= part.part_type.name %></td>
-<td><%= partbatches.sum {|x| x.remained_quantity} %></td>
-<td><%= partbatches.sum {|x| x.quantity} %></td>
-<td>
-  <% if (partbatches.sum {|x| x.remained_quantity}) > 0 && (can? :update, @storehouse) %>
-    <%= link_to t('storehouse_out'), edit_storehouse_path(@storehouse, part: part),
-        {:class => 'btn btn-mini', :remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window'} %>
-  <% end %>
-  <%= link_to t('storehouse_back'), edit_storehouse_path(@storehouse, part: part, back: true),
-      {:class => 'btn btn-mini', :remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window'} if can? :update, @storehouse %>
-</td>
+<td><%= l pb.created_at %></td>
+<td><%= link_to pb.part.number, part_path(pb.part), :target => '_blank' %></td>
+<td><%= pb.part.part_brand.name %></td>
+<td><%= pb.part.part_type.name %></td>
+<td><%= pb.remained_quantity %></td>
+<td><%= pb.quantity %></td>

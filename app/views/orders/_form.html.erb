@@ -141,14 +141,18 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'scheduled' %>
+    <h5><%= t(:part_infos) %></h5>
+    <div class="controls" id="delivering-parts">
+      <%= render 'parts_table', readonly: false %>
+    </div>
     <h5><%= t(:gather_auto_info) %></h5>
-      <%= f.input :auto_km, label: t(:auto_km) %>
-      <%= f.input :oil_out, label: t(:oil_out) %>
-      <%= f.input :oil_in, label: t(:oil_in) %>
-      <%= f.input :front_wheels, label: t(:front_wheels) %>
-      <%= f.input :back_wheels, label: t(:back_wheels) %>
-      <%= f.input :auto_km_next, label: t(:auto_km_next) %>
-      <%= f.input :serve_datetime_next, label: t(:serve_datetime_next), :as => :datetime_picker %>
+    <%= f.input :auto_km, label: t(:auto_km) %>
+    <%= f.input :oil_out, label: t(:oil_out) %>
+    <%= f.input :oil_in, label: t(:oil_in) %>
+    <%= f.input :front_wheels, label: t(:front_wheels) %>
+    <%= f.input :back_wheels, label: t(:back_wheels) %>
+    <%= f.input :auto_km_next, label: t(:auto_km_next) %>
+    <%= f.input :serve_datetime_next, label: t(:serve_datetime_next), :as => :datetime_picker %>
     <%= f.input :vin %>
     <%= f.input :engine_num, label: t(:engine_num) %>
     <%= f.input :registration_date, as: :date_picker, label: t(:auto_reg_date) %>

@@ -1,23 +1,23 @@
-<%= paginate @part_to_partbatches %>
+<%= paginate @partbatches %>
 <table class="table table-striped">
   <thead>
     <tr>
+      <th><%= t 'buy_time' %></th>
       <th><%= t 'manuf_number' %></th>
       <th><%= t 'brand' %></th>
       <th><%= t 'part_type' %></th>
       <th><%= t 'remained_quantity' %></th>
       <th><%= t 'in_quantity' %></th>
-      <th><%=t 'actions' %></th>
     </tr>
   </thead>
   <tbody>
-    <% @part_to_partbatches.each do |part, partbatches| %>
-      <tr id="<%= part.id %>">
-        <%= render 'part', part: part, partbatches: partbatches %>
+    <% @partbatches.each do |pb| %>
+      <tr id="<%= pb.id %>">
+        <%= render 'part', pb: pb %>
       </tr>
     <% end %>
   </tbody>
 </table>
-<%= paginate @part_to_partbatches %>
+<%= paginate @partbatches %>
 
 <div id="modal-window" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true"></div>

@@ -9,11 +9,6 @@ end
 class Order
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::History::Trackable
-
-  #track_history :track_create   =>  true,    # track document creation, default is false
-  #              :track_update   =>  true,     # track document updates, default is true
-  #              :track_destroy  =>  true     # track document destruction, default is false
 
   field :state, type: Integer, default: 0
   field :address, type: String, default: ''
@@ -67,6 +62,7 @@ class Order
   has_many :maintains
 
   field :part_counts, type: Hash, default: {}
+  field :part_delivered_counts, type: Hash, default: {}
   
   accepts_nested_attributes_for :pictures, :allow_destroy => true
   accepts_nested_attributes_for :comments, :allow_destroy => true
@@ -95,7 +91,7 @@ class Order
   validates :city, presence: true
   
   # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询
-  STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled inquiry]
   STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit edit]
   STATE_CHANGED_STRS = %w[reverify verify_failed verify_ok assign_ok schedule_ok serve_ok handover_ok revisit_ok]

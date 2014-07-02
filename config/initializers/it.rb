@@ -3,6 +3,7 @@ ActionController::Responder.class_eval do
 end
 
 Mongoid::History.tracker_class_name = :history_tracker
-Mongoid::History.current_user_method = :current_operator
+Mongoid::History.modifier_class_name = "Order"
+Mongoid::History.current_user_method = :current_order
 
 require_dependency 'history_tracker.rb' if Rails.env == "development"

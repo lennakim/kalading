@@ -117,20 +117,7 @@
     <% if !@order.buymyself %>
     <tr>
       <td><%= t(:part_infos) %></td>
-      <td>
-        <table class="table table-striped">
-          <tbody>
-            <% for p in @order.parts %>
-            <tr>
-              <td><%= p.part_type.name %></td>
-              <td><%= p.part_brand.name %></td>
-              <td><%= p.number %></td>
-              <td><%= humanized_money_with_symbol p.price %></td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
-      </td>
+      <td><%= render 'parts_table', readonly: true %></td>
     </tr>
     <% end %>
   </tbody>

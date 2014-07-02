@@ -27,10 +27,12 @@
               </tr>
             </thead>
             <tbody>
-            <% p.partbatches.each do |pb| %>
+            <% p.partbatches.group_by(&:storehouse).each do |sh, pbs| %>
+              <% s = pbs.sum(&:remained_quantity) %>
+              <% next if s == 0%>
               <tr>
-                <td><%= pb.storehouse.name %></td>
-                <td><%= pb.remained_quantity %></td>
+                <td><%= sh.name %></td>
+                <td><%= s %></td>
               </tr>
             <% end %>
             </tbody>
