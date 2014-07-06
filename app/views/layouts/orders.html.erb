@@ -12,18 +12,27 @@
             <ul class="nav nav-list">
               <li class="nav-header"></li>
               <% Order::STATES.each do |s| %>
-                <% if params[:state] && params[:state] != '' && params[:state].to_i == s %>
-                  <li class="active"><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
+                <% if params[:state].present? && params[:state].to_i == s %>
+                  <li class="active">
                 <% else %>
-                  <li><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
+                  <li>
                 <% end %>
+                  <% if Order::STATE_STRINGS[s] == 'scheduled' %>
+                    <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 1).count.to_s + ')', orders_path(state: s, part_deliver_state: 1) %>
+                  <% elsif Order::STATE_STRINGS[s] == 'serve_done' %>
+                    <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                  <% else %>
+                    <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
+                  <% end %>
+                  </li>
               <% end %>
-
-              <% if params[:state] && params[:state] != '' %>
-                <li><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
+              <% if params[:state].present? %>
+                <li>
               <% else %>
-                <li class="active"><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
+                <li class="active">
               <% end %>
+                  <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
+                </li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

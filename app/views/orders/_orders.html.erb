@@ -108,7 +108,14 @@
               
             <% if can? :update, Order %>
               <% if !(%w[revisited service_cancelled inquiry].include? Order::STATE_STRINGS[order.state]) %>
-                <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
+                <% if Order::STATE_STRINGS[order.state] == 'scheduled' && order.part_deliver_state == 0 %>
+                  <% title = t(:parts_deliver) %>
+                <% elsif Order::STATE_STRINGS[order.state] == 'serve_done' && order.part_deliver_state == 1 %>
+                  <% title = t(:storehouse_back) %>
+                <% else %>
+                  <% title = t(Order::STATE_OPERATIONS[order.state]) %>
+                <% end %>
+                <%= link_to title, edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
               <% end %>
               <% if !(%w[service_cancelled].include? Order::STATE_STRINGS[order.state]) %>
                 <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[unverified verify_error unassigned].include? Order::STATE_STRINGS[order.state]) %>

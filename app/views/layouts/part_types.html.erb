@@ -20,6 +20,8 @@
               <li class="active"><%= link_to t('part_types'), part_types_path %></li>
               <li><%= link_to t('part_brands'), part_brands_path %></li>
               <li><%= link_to t('supplier'), suppliers_path %></li>
+              <li><%= link_to t('to_be_delivered_orders', n: Order.where(state: 4, part_deliver_state: 0).count), orders_path(state: 4, part_deliver_state: 0) %></li>
+              <li><%= link_to t('to_be_backed_orders', n: Order.where(state: 5, part_deliver_state: 1).count), orders_path(state: 5, part_deliver_state: 1) %></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

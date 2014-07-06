@@ -29,7 +29,11 @@ class OrdersController < ApplicationController
     end
     
     if !params[:state].blank?
-      @orders = Order.where(state: params[:state])
+      @orders = @orders.where(state: params[:state])
+    end
+
+    if !params[:part_deliver_state].blank?
+      @orders = @orders.where(part_deliver_state: params[:part_deliver_state])
     end
 
     if !params[:engineer].blank?
@@ -43,6 +47,10 @@ class OrdersController < ApplicationController
 
     if !params[:phone_num].blank?
       @orders = @orders.where(phone_num: /.*#{params[:phone_num]}.*/i)
+    end
+
+    if params[:phone_nums].present?
+      @orders = @orders.any_in(phone_num: params[:phone_nums])
     end
 
     if !params[:customer_name].blank?
@@ -82,6 +90,11 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html {
         @orders = @orders.desc(:seq).page params[:page]
+        if params[:state].to_i == 4 && params[:part_deliver_state].to_i == 0
+          render layout: 'storehouses'
+        elsif params[:state].to_i == 5 && params[:part_deliver_state].to_i == 1
+          render layout: 'storehouses'
+        end
       }
       format.json {
         params[:page] ||= 1
@@ -230,11 +243,21 @@ class OrdersController < ApplicationController
         params[:order][:state] = 4
         notice = I18n.t(:order_scheduled_notify, seq: @order.seq)
       when 4
-        params[:order][:state] = 10
-        notice = I18n.t(:order_delivered_notify, seq: @order.seq)
+        if @order.part_deliver_state == 1
+          params[:order][:state] = 5
+          notice = I18n.t(:order_served_notify, seq: @order.seq)
+        else
+          params[:order][:state] = 4
+          notice = I18n.t(:order_delivered_notify, seq: @order.seq)
+        end
       when 5
-        params[:order][:state] = 6
-        notice = I18n.t(:order_handovered_notify, seq: @order.seq)
+        if @order.part_deliver_state == 2
+          params[:order][:state] = 6
+          notice = I18n.t(:order_handovered_notify, seq: @order.seq)
+        else
+          params[:order][:state] = 5
+          notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
+        end
       when 6
         params[:order][:state] = 7
         notice = I18n.t(:order_revisited_notify, seq: @order.seq)

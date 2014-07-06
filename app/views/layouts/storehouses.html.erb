@@ -9,7 +9,7 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header"></li>
-              <% unless @storehouse %>
+              <% unless ( @storehouse || @orders ) %>
               <li class="active">
               <% else %>
               <li>
@@ -30,6 +30,21 @@
               <li><%= link_to t('part_types'), part_types_path %></li>
               <li><%= link_to t('part_brands'), part_brands_path %></li>
               <li><%= link_to t('supplier'), suppliers_path %></li>
+              <% if @orders && params[:state].to_i == 4 && params[:part_deliver_state].to_i == 0 %>
+                <li class="active">
+              <% else %>
+                <li>
+              <% end %>
+                  <%= link_to t('to_be_delivered_orders', n: Order.where(state: 4, part_deliver_state: 0).count), orders_path(state: 4, part_deliver_state: 0) %>
+                </li>
+
+              <% if @orders && params[:state].to_i == 5 && params[:part_deliver_state].to_i == 1 %>
+                <li class="active">
+              <% else %>
+                <li>
+              <% end %>
+                  <%= link_to t('to_be_backed_orders', n: Order.where(state: 5, part_deliver_state: 1).count), orders_path(state: 5, part_deliver_state: 1) %>
+                </li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
