@@ -55,7 +55,7 @@ class Maintain
   field :outlook_desc, type: String, default: ""
   field :buy_date, type: DateTime
   field :VIN, type: String, default: ""
-  field :insurance_date, type: DateTime
+  field :insurance_date, type: String, default: ""
   field :auto_color, type: String, default: ""
   field :engine_num, type: String, default: ""
 
