@@ -13,7 +13,8 @@ json.wheels do
   json.array! m.wheels do |w|
     json.name w.name
     json.pressure w.pressure
-    if w.name != 'spare' 
+    if w.name != 'spare'
+      json.factory_data_checked w.factory_data_checked
       json.factory_data w.factory_data
       json.tread_depth w.tread_depth
       json.ageing_desc w.ageing_desc
@@ -41,5 +42,6 @@ json.battery_charge m.battery_charge
 json.battery_health m.battery_health
 json.battery_head_desc m.battery_head_desc
 json.battery_desc m.battery_desc
+json.engine_hose_and_line_desc m.engine_hose_and_line_desc
 json.front_wiper_desc m.front_wiper_desc
 json.back_wiper_desc m.back_wiper_desc

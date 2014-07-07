@@ -15,7 +15,7 @@
     </tr>
     <tr>
       <td><%= t(:insurance_date) %></td>
-      <td><%= @maintain.insurance_date.strftime('%Y-%m-%d') if @maintain.insurance_date %></td>
+      <td><%= @maintain.insurance_date %></td>
     </tr>
     <tr>
       <td><%= t(:auto_color) %></td>
@@ -59,6 +59,16 @@
     <tr>
       <td><%= t(:brand) %></td>
       <td><%= wheel.brand %></td>
+    </tr>
+    <tr>
+      <td><%= t(:factory_data_checked) %></td>
+      <td>
+        <% if wheel.factory_data_checked? %>
+          <%= t(:shi) %>
+        <% else %>
+          <%= t(:fou) %>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:factory_data) %></td>
@@ -301,6 +311,10 @@
     <tr>
       <td><%= t(:battery_head_desc) %></td>
       <td><%= I18n.t(Maintain::BATTERY_HEAD_STRINGS[@maintain.battery_head_desc]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:engine_hose_and_line_desc) %></td>
+      <td><%= I18n.t(Maintain::ENGINE_HOSE_AND_LINE_STRINGS[@maintain.engine_hose_and_line_desc]) %></td>
     </tr>
   </tbody>
 </table>

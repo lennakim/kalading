@@ -4,6 +4,7 @@ class Wheel
 
   field :name, type: String, default: ""
   field :brand, type: String, default: ""
+  field :factory_data_checked, type: Boolean, default: true
   field :factory_data, type: Date
   field :tread_depth, type: Float, default: 0
   field :ageing_desc, type: Integer, default: 0
@@ -25,7 +26,7 @@ class Wheel
   
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
 
-  attr_accessible :name, :brand, :factory_data,
+  attr_accessible :name, :brand, :factory_data, :factory_data_checked,
     :tread_depth, :ageing_desc, :tread_desc, :sidewall_desc,
     :pressure, :width, :brake_pad_checked, :brake_pad_thickness, :brake_disc_desc
 
@@ -95,6 +96,7 @@ class Maintain
   field :battery_health, type: String, default: ""
   field :battery_light_color, type: String, default: ""
   field :battery_head_desc, type: Integer, default: 0
+  field :engine_hose_and_line_desc, type: Integer, default: 0
 
   field :front_wiper_desc, type: Integer, default: 0
   field :back_wiper_desc, type: Integer, default: 0
@@ -124,6 +126,7 @@ class Maintain
   GLASS_WATER_STRINGS = %w[full lack]
   BATTERY_STRINGS = %w[good worn leak undetectable]
   BATTERY_HEAD_STRINGS = %w[good corroded undetectable]
+  ENGINE_HOSE_AND_LINE_STRINGS = %w[normal slight serious]
   WIPER_STRINGS = %w[normal recommend_replace none]
   AUTO_TOOLS_STRINGS = %w[existed not_existed undetected]
 
@@ -173,7 +176,7 @@ class Maintain
     :gearbox_oil_position, :glass_water_desc, :glass_water_add, :glass_water_amount,
     :battery_charge, :battery_health, :battery_desc, :battery_light_color, :battery_head_desc,
     :front_wiper_desc, :back_wiper_desc, :extinguisher_desc, :warning_board_desc, :spare_tire_desc,
-    :km_be_zero, :curr_km, :next_maintain_km, :comment, :total_time,
+    :km_be_zero, :curr_km, :next_maintain_km, :comment, :total_time, :engine_hose_and_line_desc,
     :wheel_ids, :wheels_attributes, :light_ids, :lights_attributes,:order_id
 
   def as_json(options = nil)
