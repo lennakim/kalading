@@ -14,7 +14,7 @@ class Wheel
   field :width, type: Integer, default: 0
   field :brake_pad_checked, type: Boolean, default: true
   field :brake_pad_thickness, type: Float, default: 0
-  field :brake_disc_desc, type: Integer, default: 0
+  field :brake_disc_desc, type: Array, default: [0]
 
   embedded_in :maintain, :inverse_of => :wheels
 

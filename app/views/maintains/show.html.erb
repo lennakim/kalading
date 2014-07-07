@@ -122,7 +122,11 @@
     </tr>
     <tr>
       <td><%= t(:brake_disc_desc) %></td>
-      <td><%= I18n.t(Wheel::BRAKE_DISC_STRINGS[wheel.brake_disc_desc]) %></td>
+      <td>
+        <% for desc in wheel.brake_disc_desc %>
+        <%= I18n.t(Wheel::BRAKE_DISC_STRINGS[desc]) %>
+        <% end %>
+      </td>
     </tr>
     <% end %>
   </tbody>
