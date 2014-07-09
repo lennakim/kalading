@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:index, :order_begin, :choose_service]
   @except_actions = [
-    :index, :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order
+    :index, :update, :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
@@ -21,8 +21,10 @@ class OrdersController < ApplicationController
       end
     else
       if request.format.json?
-        return render json: t(:open_id_needed), status: :bad_request if params[:client_id].blank?
-        @orders = Order.where client_id: params[:client_id]
+        #return render json: t(:open_id_needed), status: :bad_request if params[:client_id].blank?
+        #@orders = Order.where client_id: params[:client_id]
+        return render json: t(:phone_num_needed), status: :bad_request if params[:phone_nums].blank?
+        @orders = Order.all
       else
         return redirect_to new_user_session_url
       end
@@ -638,7 +640,7 @@ class OrdersController < ApplicationController
   def auto_verify_order
     auto_verify_price
   end
-    
+
 private
   def _create_auto_maintain_order
     @order = Order.new
@@ -695,4 +697,5 @@ private
       end
     end
   end
+ 
 end

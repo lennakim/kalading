@@ -102,7 +102,7 @@ Kalading::Application.routes.draw do
   post 'auto_test_price' => 'orders#auto_test_price', :as => :auto_test_price
   post 'auto_verify_price' => 'orders#auto_verify_price', :as => :auto_verify_price
   get 'auto_maintain_packs' => 'orders#auto_maintain_packs', :as => :auto_maintain_packs
-  
+    
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains
   get 'last_maintain/:id' => 'maintains#last_maintain', :as => :last_maintain
   get 'auto_inspection_report' => 'maintains#auto_inspection_report', :as => :auto_inspection_report

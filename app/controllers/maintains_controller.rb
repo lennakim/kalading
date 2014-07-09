@@ -112,7 +112,15 @@ class MaintainsController < ApplicationController
   end
   
   def auto_inspection_report
-    @maintains = Maintain.where(order_id: params[:order_id]).desc(:created_at).page(params[:page]).per(params[:per])
+    @maintains = []
+    if params[:order_id].present?
+      @maintains = Maintain.where(order_id: params[:order_id]).desc(:created_at).page(params[:page]).per(params[:per])
+    elsif params[:phone_nums].present?
+      Order.any_in(phone_num: params[:phone_nums]).where(:state.gte => 5,:state.lte => 7).each do |o|
+        @maintains += o.maintains
+      end
+      @maintains = Kaminari.paginate_array(@maintains).page(params[:page]).per(params[:per])
+    end
   end
   
   def maintain_summary

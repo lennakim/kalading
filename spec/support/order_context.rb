@@ -16,10 +16,19 @@ shared_context "order", :need_maintain_order => true do
 
     @order3 = create(:revisited_order)
     @order3.update_attributes engineer_id: @user.id, auto_submodel_id: AutoSubmodel.last.id
+    
+    @maintain1 = create(:auto_maintain_1)
+    @maintain1.update_attributes order_id: @order2.id
+
+    @maintain2 = create(:auto_maintain_2)
+    @maintain2.update_attributes order_id: @order3.id
   }
   
   after {
     # 测试之后，删除订单
+    @maintain1.destroy
+    @maintain2.destroy
+    
     @order.destroy
     @order1.destroy
     @order2.destroy

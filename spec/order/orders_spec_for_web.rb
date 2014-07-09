@@ -181,9 +181,9 @@ describe '新建PM2.5滤芯订单，client_id为用户标识（openid）。', :n
   end
 end
 
-describe '读取某个客户的订单列表，client_id为客户标识（openid）。支持分页，page为页数（从1开始），per为每页返回的订单个数。返回空表示到达最后一页。', :need_user => true, :need_maintain_order => true do
-  it "列举第1页订单，每页4个" do
-    response_json = get_json "http://localhost:3000/orders.json?client_id=0a0b7D0C1MNP&page=1&per=4"
+describe '查询多个手机号的订单列表，phone_nums为手机号列表。支持分页，page为页数（从1开始），per为每页返回的订单个数。返回空表示到达最后一页。', :need_user => true, :need_maintain_order => true do
+  it "列举第1页订单，每页6个" do
+    response_json = get_json "http://localhost:3000/orders.json?phone_nums[]=13888888888&phone_nums[]=13666666666&page=1&per=6"
     # 确认调用成功
     expect(response_json.code).to be(200)
     orders = JSON.parse(response_json)
@@ -191,10 +191,55 @@ describe '读取某个客户的订单列表，client_id为客户标识（openid�
     expect(orders.size).to be > 0
   end
 
-  it "列举第2页订单，到达最后一页" do
-    response_json = get_json "http://localhost:3000/orders.json?client_id=0a0b7D0C1MNP&page=2&per=4"
+  it "列举第100页订单，到达最后一页" do
+    response_json = get_json "http://localhost:3000/orders.json?phone_nums[]=13888888888&phone_nums[]=13666666666&page=100&per=6"
     expect(response_json.code).to be(200)
     orders = JSON.parse(response_json)
     expect(orders.size).to be(0)
   end
+end
+
+describe '查询多个手机号的保养记录列表，phone_nums为手机号列表。支持分页，page为页数（从1开始），per为每页返回的订单个数。返回空表示到达最后一页。返回值：car_num: 车牌号，serve_datetime: 服务时间, curr_km: 当前里程, next_maintain_km: 下次保养里程, lights: 灯光信息，可以为[], lights[i].name: 灯光名称, lights[i].desc: 灯光诊断(0: 良好，1：未检查，2: 左边不亮, 3:右边不亮, 4: 左前不亮, 5: 右前不亮, 6: 左后不亮，7： 右后不亮,8: 高位刹车灯不亮, 9: 雾灯不亮,  wheels: 轮胎信息，可以为[], wheels[i].name: 轮胎名称, wheels[i].pressure: 胎压, wheels[i].factory_data_checked: 是否检查了出厂日期, wheels[i].factory_data: 出厂日期, wheels[i].tread_depth: 花纹深度, wheels[i].ageing_desc: 老化程度, wheels[i].tread_desc: 胎面诊断, wheels[i].sidewall_desc: 胎侧诊断, wheels[i].brake_pad_checked: 刹车片是否检测过, wheels[i].brake_pad_thickness: 刹车片厚度, wheels[i].brake_disc_desc: 刹车片诊断, spare_tire_desc: 备胎信息, extinguisher_desc: 灭火器信息, warning_board_desc: 警示牌, oil_position: 机油位置（0: 高位，1：中位，2：低位，3：未检查), oil_desc: 机油状态（0：清澈，1：脏）, brake_oil_desc: 刹车油状态（0：清澈，1：脏）, brake_oil_position: 刹车油位置（0: 高位，1：中位，2：低位，3：未检查）, antifreeze_desc: 防冻液诊断（0: 清澈，1：浑浊，2：脏，3：未检查）, antifreeze_freezing_point: 防冻液冰点, antifreeze_position: 防冻液位置（0: 高位，1：中位，2：低位，3：未检查）, steering_oil_desc: 转向油诊断（0: 清澈，1：浑浊，2：脏，3：未检查）, gearbox_oil_desc: 变速箱油诊断（0: 清澈，1：浑浊，2：脏，3：未检查）, battery_charge: 电瓶充电量, battery_health: 电瓶健康指数, battery_head_desc: 电瓶桩头诊断(0: 良好，1：腐蚀，2：未检查), battery_desc: 电瓶诊断(0: 良好，1：破损，2：泄露，3：未检查), engine_hose_and_line_desc: 车内软管和线路诊断(0: 良好，1：轻微，2：严重), front_wiper_desc: 前雨刷诊断(0: 正常，1：建议更换，2：未检查),  back_wiper_desc: 后雨刷诊断(0: 正常，1：建议更换，2：未检查)',  :need_user => true, :need_maintain_order => true do
+  it "列举第1页保养记录，每页6个" do
+    response_json = get_json "http://localhost:3000/auto_inspection_report.json?phone_nums[]=13888888888&phone_nums[]=13666666666&page=1&per=6"
+    # 确认调用成功
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    # 确认返回值正确
+    expect(orders.size).to be > 0
+  end
+
+  it "列举第2页保养记录，到达最后一页" do
+    response_json = get_json "http://localhost:3000/auto_inspection_report.json?phone_nums[]=13888888888&phone_nums[]=13666666666&page=2&per=6"
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    expect(orders.size).to be(0)
+  end
+end
+
+describe '设置订单属性，包括状态，取消原因等。状态取值：8：服务取消', :need_user => true, :need_login => true, :need_maintain_order => true do
+  it "设置订单状态为服务取消，并说明原因为：有事先不做了" do
+    # false表示不产生API文档
+    response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=1&per=2", false
+    expect(response_json.code).to be(200)
+    orders = JSON.parse(response_json)
+    expect(orders.size).to be > 0
+    expect(orders[0]['id']).to be
+    
+    r = {
+      order: {
+        state: 8,
+        cancel_reason: '有事先不做了'
+      }
+    }
+    response_json = put_json "http://localhost:3000/orders/#{orders[0]['id']}", r
+    expect(response_json.code).to be(200)
+
+    response_json = get_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", false
+    expect(response_json.code).to be(200)
+    order = JSON.parse(response_json)
+    expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[8]))
+    expect(order['cancel_reason']).to eq('有事先不做了')
+  end
+
 end
