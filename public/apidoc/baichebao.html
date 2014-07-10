@@ -284,7 +284,7 @@ a {
   <dt id="example_group_1" class="passed">用户登录，返回authentication_token用于其它API调用</dt>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/users/sign_in
+http://115.28.132.220:81/users/sign_in
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
@@ -295,23 +295,29 @@ http://localhost:3000/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "reSCDYCCpPBH37yr59V1"
+  "authentication_token": "3qvoYFvkwxG3j1hyDFEb",
+  "name": "baichebao"
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('33.3');</script>
-    <dd class="example passed"><span class="passed_spec_name">登录成功，返回authentication_token</span><span class='duration'>0.03003s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">登录成功，返回authentication_token</span><span class='duration'>0.03900s</span></dd>
   </dl>
 </div>
 <div id="div_group_2" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_2" class="passed">查询车型保养套餐。auth_token为登录返回的token。</dt>
+  <dt id="example_group_2" class="passed">查询某个车型的保养默认套餐和适用配件信息。auth_token为登录返回的token。applicable_parts为所有适用配件的信息，包括品牌，ID，价格。</dt>
 <h5>METHOD:&nbsp&nbspGET</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_token=xRiHS-muJ6Umxxu4qPsk
+http://115.28.132.220:81/auto_maintain_order/531f1ed0098e71b3f80001fb.json?auth_token=QqcbVwCx-9sFxFYiy5Yo
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
-  "price": 608.0,
+  "price": 550.0,
+  "price_without_discount": 550.0,
+  "service_price": 150.0,
+  "discount": {
+  },
+  "pic_url": "http://intranet.kalading.com/assets/car_blue.png",
   "name": "丰田(一汽) 兰德酷路泽 上门保养",
   "parts": [
     {
@@ -327,6 +333,7 @@ http://localhost:3000/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_toke
       "机滤": [
         {
           "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
           "price": 28.0
         }
       ]
@@ -335,6 +342,8 @@ http://localhost:3000/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_toke
       "空调滤清器": [
         {
           "brand": "曼牌 Mann",
+          "number": "5246c8f1098e71092800024a",
+          "spec": "",
           "price": 99.0
         }
       ]
@@ -343,7 +352,90 @@ http://localhost:3000/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_toke
       "PM2.5特效滤芯": [
         {
           "brand": "卡拉丁",
-          "price": 58.0
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    }
+  ],
+  "applicable_parts": [
+    {
+      "空调滤清器": [
+        {
+          "brand": "曼牌 Mann",
+          "number": "5246c8f1098e71092800024a",
+          "spec": "",
+          "price": 99.0
+        },
+        {
+          "brand": "曼牌 Mann",
+          "number": "528af3e8098e71805900228a",
+          "spec": "双效活性炭",
+          "price": 120.0
+        },
+        {
+          "brand": "汉格斯特 Hengst",
+          "number": "5280cb96098e71d85e000354",
+          "spec": "",
+          "price": 74.0
+        },
+        {
+          "brand": "马勒 ",
+          "number": "5298b96f098e716daf000889",
+          "spec": "",
+          "price": 49.0
+        }
+      ]
+    },
+    {
+      "机滤": [
+        {
+          "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
+          "price": 28.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "卡拉丁",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    },
+    {
+      "机油": [
+        {
+          "brand": "嘉实多",
+          "number": "金嘉护 SN 10W-40",
+          "price": 273.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "黄喜力HX5 10W-40",
+          "price": 276.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "磁护 SN 5W-40",
+          "price": 522.0
+        },
+        {
+          "brand": "美孚",
+          "number": "美孚1号 0W-40",
+          "price": 560.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "极护 SN 0W-40",
+          "price": 672.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "灰喜力ULTRA 5W-40",
+          "price": 708.0
         }
       ]
     }
@@ -351,18 +443,32 @@ http://localhost:3000/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_toke
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('66.6');</script>
-    <dd class="example passed"><span class="passed_spec_name">查询车型531f1ed0098e71b3f80001fb的保养套餐</span><span class='duration'>0.37262s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">查询车型531f1ed0098e71b3f80001fb的保养套餐</span><span class='duration'>0.57406s</span></dd>
   </dl>
 </div>
 <div id="div_group_3" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_3" class="passed">新建百车宝保养订单，需指定车型ID。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。</dt>
+  <dt id="example_group_3" class="passed">新建百车宝保养订单，需指定车型ID。parts为用户选择的配件,配件的brand和number从查询套餐的接口获得。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。</dt>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://localhost:3000/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_token=FVGD6FRoj-YCjRvksmGh
+http://115.28.132.220:81/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_token=T4oGdhsDVg_rjVMUKJ3c
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
+  "parts": [
+    {
+      "brand": "嘉实多",
+      "number": "极护 SN 0W-40"
+    },
+    {
+      "brand": "汉格斯特 Hengst",
+      "number": "5280cb8e098e71d85e0000d0"
+    },
+    {
+      "brand": "曼牌 Mann",
+      "number": "5246c7e5098e7109280001cd"
+    }
+  ],
   "info": {
     "address": "客户地址信息",
     "name": "客户姓名",
@@ -380,14 +486,14 @@ http://localhost:3000/auto_maintain_pack/531f1ed0098e71b3f80001fb.json?auth_toke
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "succeeded",
-  "seq": 931
+  "seq": 1716
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">新建保养订单成功</span><span class='duration'>0.30229s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单成功</span><span class='duration'>0.33305s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.70609 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.94734 seconds</strong>";</script>
 <script type="text/javascript">document.getElementById('totals').innerHTML = "3 examples, 0 failures";</script>
 </div>
 </div>
