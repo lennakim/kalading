@@ -104,6 +104,7 @@
     <%= f.input :reciept_address, label: t(:reciept_address) %>
   <h5 id="others"><%= t(:others) %></h5>
     <%= render 'comments', :f => f %>
+    <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">
       <% if (%w[new duplicate].include? params[:action]) %>
         <%= f.button :submit, t(:save), :class => 'btn-primary' %>
