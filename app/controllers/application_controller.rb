@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :set_locale
+  before_filter :merge_json_params
 
   def check_for_mobile
     session[:mobile_override] = params[:mobile] if params[:mobile]
@@ -44,4 +45,11 @@ class ApplicationController < ActionController::Base
     I18n.locale = session[:locale] || I18n.default_locale
   end
 
+  def merge_json_params
+    if request.format.json?
+      body = request.body.read
+      request.body.rewind
+      params.merge!(ActiveSupport::JSON.decode(body)) unless body == ""
+    end
+  end
 end
