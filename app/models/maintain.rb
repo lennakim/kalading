@@ -21,15 +21,68 @@ class Wheel
   NAME_STRINGS = %w[spare left_front right_front left_back right_back]
   AGEING_STRINGS = %w[slight general serious]
   TREAD_STRINGS = %w[normal local_cracking wear_in_middle wear_in_sides puncture]
-  SIDEWALL_STRINGS = %w[normal local_cracking cut worn_in_sides swelling abnormal_wear]
+  SIDEWALL_STRINGS = %w[normal local_cracking cut wear_in_sides swelling abnormal_wear]
   BRAKE_DISC_STRINGS = %w[no_uneven_wear uneven_wear recommend_replace not_recommend_replace undetectable]
-  
+  AGEING_SCORE = [1,0.5,0]
+  TREAD_SCORE = [1,-0.5,-0.5,-0.5,-0.5]
+  SIDEWALL_SCORE = [1.5,-0.5,-1,-1,-1.5,-0.5]
+  BRAKE_DISC_SCORE = [1,0,0,1,1]
+  LIFE_SCORE = {0..365*3 => 1, 365*3..365*5 => 0.5}
+  PRESSURE_SCORE = {1..2 => 1, 2..2.5 => 2, 2.5..5 => 1}
+  TREAD_DEPTH_SCORE = {1.5..3 => 0.5, 3..5 => 1, 5..100 => 1.5}
+  BRAKE_PAD_THICKNESS_SCORE = {2..4 => 1, 4..100 => 2}
   validates :name, uniqueness:  {case_sensitive: false}, presence: true
 
   attr_accessible :name, :brand, :factory_data, :factory_data_checked,
     :tread_depth, :ageing_desc, :tread_desc, :sidewall_desc,
     :pressure, :width, :brake_pad_checked, :brake_pad_thickness, :brake_disc_desc
+    
+  def score
+    score = 0.0
+    LIFE_SCORE.each do |k, v|
+      if k.include?(Date.new() - self.factory_data)
+        score += v
+        break
+      end
+    end
 
+    PRESSURE_SCORE.each do |k, v|
+      if k.include? self.pressure
+        score += v
+        break
+      end
+    end
+    if self.name != "spare"
+      TREAD_DEPTH_SCORE.each do |k, v|
+        if k.include? self.tread_depth
+          score += v
+          break
+        end
+      end
+      score += AGEING_SCORE[self.ageing_desc]
+      self.tread_desc.each do |v|
+        score += TREAD_SCORE[v]
+      end
+      self.sidewall_desc.each do |v|
+        score += SIDEWALL_SCORE[v]
+      end
+      if !self.brake_pad_checked 
+        score += 2
+      else
+        BRAKE_PAD_THICKNESS_SCORE.each do |k, v|
+          if k.include? self.brake_pad_thickness
+            score += v
+            break
+          end
+        end
+      end
+      
+      self.brake_disc_desc.each do |v|
+        score += BRAKE_DISC_SCORE[v]
+      end
+    end
+    score
+  end
 end
 
 class Light
@@ -45,6 +98,18 @@ class Light
   validates :name, uniqueness: {case_sensitive: false}, presence: true
   
   attr_accessible :name, :desc
+  
+  SCORE = {'high_beam' => {0=>2,2=>-1,3=>-1}, 'low_beam' => {0=>2,2=>-1,3=>-1}, 'turn_light' => {0=>4,4=>-1,5=>-1,6=>-1,7=>-1},
+    'fog_light' => {0=>1,6=>-0.5,7=>-0.5,9=>-0.5}, 'small_light' => {0=>2,4=>-0.5,5=>-0.5,6=>-0.5,7=>-0.5},
+    'backup_light' => {0=>1,6=>-0.5,7=>-0.5,1=>1}, 'brake_light' => {0=>3,6=>-1.5,7=>-1.5,8=>-1,1=>3},
+  }
+  def score
+    score = 0.0
+    self.desc.each do |d|
+      score += SCORE[self.name][d]
+    end
+    score
+  end
 
 end
 
@@ -111,16 +176,10 @@ class Maintain
   field :total_time, type: Integer, default: 0
 
   belongs_to :order
-  PART_DESC = [0, 1, 2, 3, 4]
-  PART_DESC_STRINGS = %w[init bad normal good lack]
-  TIRE_AGEING_LEVLE = [0, 1, 2]
-  TIRE_AGEING_LEVLE_STRINGS = %w[slight general serious]
-  TIRE_CRACK_LEVLE = [0, 1]
-  TIRE_CRACK_LEVLE_STRINGS = %w[partial block]
-  OIL_DESC = [0, 1]
-  OIL_DESC_STRINGS = %w[clean dirty]
+  
   POSITION_STRINGS = %w[high middle low undetectable]
   OIL_STRINGS = %w[muddy dirty serious_dirty]
+  OIL_POSITION_STRINGS = %w[middle high low]
   OTHER_OIL_STRINGS = %w[clean muddy dirty undetectable]
   FILTER_STRINGS = %w[clean dirty serious_dirty]
   GLASS_WATER_STRINGS = %w[full lack]
@@ -129,7 +188,26 @@ class Maintain
   ENGINE_HOSE_AND_LINE_STRINGS = %w[normal slight serious]
   WIPER_STRINGS = %w[normal recommend_replace none]
   AUTO_TOOLS_STRINGS = %w[existed not_existed undetected]
+  
+  # desc and position same score
+  OIL_SCORE = [2,1,0] 
+  ANTIFREEZE_SCORE = [2,1,0]
+  OTHER_OIL_SCORE = [1,0.5,0,1]
 
+  BRAKE_OIL_SCORE = [2,1,0]
+  BRAKE_OIL_POSITION_SCORE = [3,2,1,0]
+  FILTER_SCORE = [1,1,0]
+  GLASS_WATER_SCORE = [1,0]
+  BATTERY_SCORE = [1,0.5,0,1]
+  BATTERY_HEAD_SCORE = [1,0,1]
+  FRONT_WIPER_SCORE = [2,0]
+  BACK_WIPER_SCORE = [1,0,1]
+  AUTO_TOOLS_SCORE = [2,0,2]
+  BRAKE_OIL_POINT_SCORE = {0..2 => 4, 2..3 => 3, 3..4 => 1}
+  ANTIFREEZE_POINT_SCORE = {-100..-35 => 3, -35..-10 => 1}
+  BATTERY_HEALTH_SCORE = {60..70 => 1, 70..90 => 2, 90..100 => 3}
+  BATTERY_CHARGE_SCORE = {60..90 => 1, 90..100 => 2}
+  
   embeds_many :wheels, :cascade_callbacks => true
   embeds_many :lights, :cascade_callbacks => true
   embeds_one :outlook_pic, class_name: "Picture"
@@ -178,6 +256,84 @@ class Maintain
     :front_wiper_desc, :back_wiper_desc, :extinguisher_desc, :warning_board_desc, :spare_tire_desc,
     :km_be_zero, :curr_km, :next_maintain_km, :comment, :total_time, :engine_hose_and_line_desc,
     :wheel_ids, :wheels_attributes, :light_ids, :lights_attributes,:order_id
+
+  def calc_score(type)
+    score = 0.0
+    if type == "wheels_brake"
+      self.wheels.each do |w|
+        score += w.score
+      end
+      if self.spare_tire_desc == 1
+        score += -2
+      end
+      BRAKE_OIL_POINT_SCORE.each do |k, v|
+        if k.include? self.brake_oil_boiling_point
+          score += v
+          break
+        end
+      end
+      score += BRAKE_OIL_SCORE[self.brake_oil_desc]
+      score += BRAKE_OIL_POSITION_SCORE[self.brake_oil_position]
+    end
+
+    if type == "lights"
+      self.lights.each do |l|
+        score += l.score
+      end
+    end
+
+    if type == "filter_oil_battery"
+      score += (OIL_SCORE[self.oil_desc] + OIL_SCORE[self.oil_position])
+      score += (ANTIFREEZE_SCORE[self.antifreeze_desc] + ANTIFREEZE_SCORE[self.antifreeze_position])
+      score += (OTHER_OIL_SCORE[self.steering_oil_desc] + OTHER_OIL_SCORE[self.steering_oil_position])
+      score += (OTHER_OIL_SCORE[self.gearbox_oil_desc] + OTHER_OIL_SCORE[self.gearbox_oil_position])
+      score += (FILTER_SCORE[self.air_filter_desc] + FILTER_SCORE[self.cabin_filter_desc])
+      score += GLASS_WATER_SCORE[self.glass_water_desc]
+      score += BATTERY_SCORE[self.battery_desc]
+      score += BATTERY_HEAD_SCORE[self.battery_head_desc]
+      ANTIFREEZE_POINT_SCORE.each do |k, v|
+        if k.include? self.antifreeze_freezing_point
+          score += v
+          break
+        end
+      end
+      case self.battery_light_color
+      when "green"
+        score += 1
+      when "black", "white"
+        score += 0.5
+      end
+      
+      BATTERY_HEALTH_SCORE.each do |k, v|
+        if k.include? self.battery_health.to_i
+          score += v
+          break
+        end
+      end
+      BATTERY_CHARGE_SCORE.each do |k, v|
+        if k.include? self.battery_charge.to_i
+          score += v
+          break
+        end
+      end
+    end
+
+    if type == "others"
+      score += FRONT_WIPER_SCORE[self.front_wiper_desc]
+      score += BACK_WIPER_SCORE[self.back_wiper_desc]
+      score += AUTO_TOOLS_SCORE[self.warning_board_desc]
+      score += AUTO_TOOLS_SCORE[self.extinguisher_desc]
+    end
+    score
+  end
+  
+  def calc_total_score
+    score = 0.0
+    score += self.calc_score("wheels_brake")
+    score += self.calc_score("lights")
+    score += self.calc_score("filter_oil_battery")
+    score += self.calc_score("others")
+  end
 
   def as_json(options = nil)
     h = super :except => [:_id, :created_at, :updated_at, :buy_date, :VIN, :insurance_date, :engine_num, :order_id,

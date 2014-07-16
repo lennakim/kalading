@@ -51,3 +51,9 @@ json.battery_light_color m.battery_light_color
 json.engine_hose_and_line_desc m.engine_hose_and_line_desc
 json.front_wiper_desc m.front_wiper_desc
 json.back_wiper_desc m.back_wiper_desc
+json.score do
+  json.wheels m.calc_score("wheels_brake")
+  json.lights m.calc_score("lights")
+  json.filter_oil_battery m.calc_score("filter_oil_battery")
+  json.others m.calc_score("others")
+end

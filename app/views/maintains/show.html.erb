@@ -93,7 +93,7 @@
     <tr>
       <td><%= t(:sidewall_desc) %></td>
       <td>
-        <% for desc in wheel.tread_desc %>
+        <% for desc in wheel.sidewall_desc %>
         <%= I18n.t(Wheel::SIDEWALL_STRINGS[desc]) %>
         <% end %>
       </td>
@@ -137,7 +137,7 @@
   <tbody>
     <tr>
       <td><%= t(:position) %></td>
-      <td><%= I18n.t(Maintain::POSITION_STRINGS[@maintain.oil_position]) %></td>
+      <td><%= I18n.t(Maintain::OIL_POSITION_STRINGS[@maintain.oil_position]) %></td>
     </tr>
     <tr>
       <td><%= t(:oil_in) %></td>
@@ -233,6 +233,10 @@
 <h5 ><%= t(:other_oil_info) %></h5>
 <table class="table table-striped">
   <tbody>
+    <tr>
+      <td><%= t(:brake_oil_desc) %></td>
+      <td><%= I18n.t(Maintain::OTHER_OIL_STRINGS[@maintain.brake_oil_desc]) %></td>
+    </tr>
     <tr>
       <td><%= t(:brake_oil_boiling_point) %></td>
       <td><%= @maintain.brake_oil_boiling_point %></td>
