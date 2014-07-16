@@ -101,7 +101,7 @@ class OrdersController < ApplicationController
       format.json {
         params[:page] ||= 1
         params[:per] ||= 5
-        @orders = @orders.asc(:seq).page(params[:page]).per(params[:per])
+        @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
       }
       format.csv {
         csv = CSV.generate({}) do |csv|
