@@ -1,4 +1,6 @@
 class UserTypesController < ApplicationController
+  before_filter :authenticate_user!
+  load_and_authorize_resource
   # GET /user_types
   # GET /user_types.json
   def index

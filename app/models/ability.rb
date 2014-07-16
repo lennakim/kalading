@@ -40,8 +40,7 @@ class Ability
     end
 
     if user.roles.include? ROLE_ID('engineer')
-      can :read, :all
-      can :available_parts, AutoSubmodel
+      can :read, Order
       can :update, Order do |o|
         o.engineer == user
       end

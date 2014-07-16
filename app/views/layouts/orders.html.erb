@@ -17,12 +17,22 @@
                 <% else %>
                   <li>
                 <% end %>
-                  <% if Order::STATE_STRINGS[s] == 'scheduled' %>
-                    <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 1).count.to_s + ')', orders_path(state: s, part_deliver_state: 1) %>
-                  <% elsif Order::STATE_STRINGS[s] == 'serve_done' %>
-                    <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                  <% if can? :edit_all, Order %>
+                    <% if Order::STATE_STRINGS[s] == 'scheduled' %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 1).count.to_s + ')', orders_path(state: s, part_deliver_state: 1) %>
+                    <% elsif Order::STATE_STRINGS[s] == 'serve_done' %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                    <% else %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
+                    <% end %>
                   <% else %>
-                    <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
+                    <% if Order::STATE_STRINGS[s] == 'scheduled' %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 1).where(engineer: current_user).count.to_s + ')', orders_path(state: s, part_deliver_state: 1) %>
+                    <% elsif Order::STATE_STRINGS[s] == 'serve_done' %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).where(engineer: current_user).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                    <% else %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).where(engineer: current_user).count.to_s + ')', orders_path(state: s) %>
+                    <% end %>
                   <% end %>
                   </li>
               <% end %>
@@ -31,7 +41,11 @@
               <% else %>
                 <li class="active">
               <% end %>
-                  <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
+                  <% if can? :edit_all, Order %>
+                    <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
+                  <% else %>
+                    <%= link_to t(:all) + ' (' + Order.where(engineer: current_user).count.to_s + ')', orders_path %>
+                  <% end %>
                 </li>
             </ul>
           </div><!--/.well -->

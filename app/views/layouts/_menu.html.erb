@@ -15,7 +15,7 @@
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('repository_menu'), storehouses_path %>
+          <%= link_to t('repository_menu'), storehouses_path if can? :read, Storehouse %>
           </li>
 
           <% if ['auto_submodels', 'autos', 'auto_brands', 'auto_models'].include? params[:controller] %>
@@ -23,7 +23,7 @@
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('auto_menu'), auto_submodels_path %>
+          <%= link_to t('auto_menu'), auto_submodels_path if can? :read, AutoSubmodel %>
           </li>
 
           <% if ['orders'].include? params[:controller] %>
@@ -31,7 +31,7 @@
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('order_menu'), orders_path  %>
+          <%= link_to t('order_menu'), orders_path if can? :read, Order %>
           </li>
 
           <% if ['cities'].include? params[:controller] %>
@@ -39,7 +39,7 @@
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('cities'), cities_path if can? :access, :order %>
+          <%= link_to t('cities'), cities_path if can? :read, City %>
           </li>
 
           <% if ['users'].include? params[:controller] %>
@@ -55,21 +55,21 @@
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('service_types'), service_types_path %>
+          <%= link_to t('service_types'), service_types_path if can? :read, ServiceType %>
           </li>
           <% if ['discounts'].include? params[:controller] %>
           <li class="active">
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('discount_card'), discounts_path %></li>
+          <%= link_to t('discount_card'), discounts_path if can? :read, Discount %>
           </li>
           <% if ['videos'].include? params[:controller] %>
           <li class="active">
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('videos'), videos_path if can? :view, Video %></li>
+          <%= link_to t('videos'), videos_path if can? :view, Video %>
           </li>
         </ul>
         <%= link_to t('log_out'), destroy_user_session_path, :method => :delete, :class => 'btn btn-info btn-small pull-right' if current_user %>
