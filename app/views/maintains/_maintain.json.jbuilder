@@ -2,7 +2,8 @@ o = Order.find(m.order_id)
 json.car_num o.car_location + o.car_num
 json.serve_datetime o.serve_datetime.strftime('%Y-%m-%d %H:%M')
 json.curr_km m.curr_km
-json.next_maintain_km m.next_maintain_km
+json.next_maintain_km "10000公里"
+json.next_maintain_time "2013-11-28"
 json.lights do
   json.array! m.lights do |light|
     json.name light.name
@@ -62,3 +63,4 @@ json.score do
   json.others (s4 * 100 / 8).to_i
   json.total (s1 + s2 + s3 + s4).to_i
 end
+json.next_maintain_service ["换空调滤","更换机滤"]
