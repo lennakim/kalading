@@ -24,8 +24,8 @@ class Wheel
   SIDEWALL_STRINGS = %w[normal local_cracking cut wear_in_sides swelling abnormal_wear]
   BRAKE_DISC_STRINGS = %w[no_uneven_wear uneven_wear recommend_replace not_recommend_replace undetectable]
   AGEING_SCORE = [1,0.5,0]
-  TREAD_SCORE = [1,-0.5,-0.5,-0.5,-0.5]
-  SIDEWALL_SCORE = [1.5,-0.5,-1,-1,-1.5,-0.5]
+  TREAD_SCORE = [1,-0.25,-0.25,-0.25,-0.25]
+  SIDEWALL_SCORE = [1.5,-0.25,-0.25,-0.25,-0.5,-0.25]
   BRAKE_DISC_SCORE = [1,0,0,1,1]
   LIFE_SCORE = {0..365*3 => 1, 365*3..365*5 => 0.5}
   PRESSURE_SCORE = {1..2 => 1, 2..2.5 => 2, 2.5..5 => 1}
@@ -60,11 +60,13 @@ class Wheel
         end
       end
       score += AGEING_SCORE[self.ageing_desc]
+      score += TREAD_SCORE[0]
       self.tread_desc.each do |v|
-        score += TREAD_SCORE[v]
+        score += TREAD_SCORE[v] if TREAD_SCORE[v] < 0
       end
+      score += SIDEWALL_SCORE[0]
       self.sidewall_desc.each do |v|
-        score += SIDEWALL_SCORE[v]
+        score += SIDEWALL_SCORE[v] if SIDEWALL_SCORE[v]
       end
       if !self.brake_pad_checked 
         score += 2
@@ -104,9 +106,9 @@ class Light
     'backup_light' => {0=>1,6=>-0.5,7=>-0.5,1=>1}, 'brake_light' => {0=>3,6=>-1.5,7=>-1.5,8=>-1,1=>3},
   }
   def score
-    score = 0.0
+    score = SCORE[self.name][0]
     self.desc.each do |d|
-      score += SCORE[self.name][d]
+      score += SCORE[self.name][d] if SCORE[self.name][d] < 0 
     end
     score
   end

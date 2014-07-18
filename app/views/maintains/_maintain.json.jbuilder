@@ -52,8 +52,13 @@ json.engine_hose_and_line_desc m.engine_hose_and_line_desc
 json.front_wiper_desc m.front_wiper_desc
 json.back_wiper_desc m.back_wiper_desc
 json.score do
-  json.wheels m.calc_score("wheels_brake")
-  json.lights m.calc_score("lights")
-  json.filter_oil_battery m.calc_score("filter_oil_battery")
-  json.others m.calc_score("others")
+  s1 = m.calc_score("wheels_brake")
+  s2 = m.calc_score("lights")
+  s3 = m.calc_score("filter_oil_battery")
+  s4 = m.calc_score("others")
+  json.wheels (s1 * 100 / 53).to_i
+  json.lights (s2 * 100 / 15).to_i
+  json.filter_oil_battery (s3 * 100 /24).to_i
+  json.others (s4 * 100 / 8).to_i
+  json.total (s1 + s2 + s3 + s4).to_i
 end
