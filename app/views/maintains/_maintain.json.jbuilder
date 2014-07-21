@@ -64,3 +64,8 @@ json.score do
   json.total (s1 + s2 + s3 + s4).to_i
 end
 json.next_maintain_service ["换空调滤","更换机滤"]
+json.outlook_pics do
+  json.array! m.outlook_pics do |p|
+    json.url p.p.url
+  end
+end

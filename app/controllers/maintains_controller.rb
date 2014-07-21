@@ -98,8 +98,8 @@ class MaintainsController < ApplicationController
 
   def uploadpic
     @maintain = Maintain.find(params[:id])
-    create_pic_type = 'create_' + params[:type] + '_pic'
-    pic = @maintain.send(create_pic_type, p: params[:pic_data])
+    pic_type = params[:type] + '_pics'
+    pic = @maintain.send(pic_type).create!(p: params[:pic_data])
     respond_to do |format|
       format.html { head :no_content }
       format.json { render json: {result: 'ok', url: pic.p.url }, status: :ok }
