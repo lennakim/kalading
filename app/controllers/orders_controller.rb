@@ -642,6 +642,21 @@ class OrdersController < ApplicationController
   def auto_verify_order
     auto_verify_price
   end
+  
+  def order_prompt
+    if !params[:state].blank?
+      @orders = Order.where(state: params[:state])
+    end
+
+    if !params[:part_deliver_state].blank?
+      @orders = @orders.where(part_deliver_state: params[:part_deliver_state])
+    end
+    
+    respond_to do |format|
+      format.json
+      format.js
+    end
+  end
 
 private
   def _create_auto_maintain_order

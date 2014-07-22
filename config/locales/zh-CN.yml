@@ -881,3 +881,6 @@ zh-CN:
   order_part_backed_notify: '订单%{seq}回库完成'
   to_be_delivered: '待出库'
   to_be_backed: '待回库'
+  order_prompt: '订单提醒'
+  new_orders_prompt: '%{n}个新订单待审核'
+  not_delivered_orders_prompt: '%{n}个订单待出库'

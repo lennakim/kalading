@@ -1,0 +1,4 @@
+<% if @orders.count != 0 %>
+  $("#modal-prompt").html("<%= escape_javascript(render 'order_prompt') %>");
+  $("#modal-prompt").modal('show');
+<% end %>
