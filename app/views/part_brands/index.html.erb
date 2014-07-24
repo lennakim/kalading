@@ -4,6 +4,7 @@
     <tr>
       <th><%= t(:part_brand_name) %></th>
       <th><%= t(:brand_own_parts) %></th>
+      <th><%= t(:sort_factor) %></th>
       <th><%=t 'actions' %></th>
     </tr>
   </thead>
@@ -14,6 +15,7 @@
         <td>
           <%= t(:total, count: part_brand.parts.size) %><br/>
         </td>
+        <td><%= part_brand.sort_factor %></td>
         <td>
           <%= link_to t('edit'),
                       edit_part_brand_path(part_brand), :class => 'btn btn-mini' if can? :update, part_brand %>
