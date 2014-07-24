@@ -29,6 +29,7 @@ class Ability
       can :read, :all
       can :inout, Storehouse
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
+      can [:update, :edit_all, :calcprice], Order
     end
 
     if user.roles.include? ROLE_ID('data_admin')
