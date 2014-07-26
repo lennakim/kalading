@@ -534,7 +534,6 @@ class OrdersController < ApplicationController
     return render json: t(:city_invalid), status: :bad_request if city.nil?
     
     _create_auto_maintain_order
-    return render json: {result: t(:parts_needed)}, status: :bad_request if @order.parts.empty?
 
     @order.update_attributes params[:info]
     @order.car_num.upcase!
