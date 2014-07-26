@@ -522,7 +522,6 @@ class OrdersController < ApplicationController
     return render json: { result: t(:auto_submodel_required)}, status: :bad_request if params[:asm_id].nil?
     asm = AutoSubmodel.find(params[:asm_id])
     return render json: t(:auto_submodel_required), status: :bad_request if asm.nil?
-    return render json: {result: t(:parts_needed)}, status: :bad_request if params[:parts].nil? || params[:parts].empty?
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
     return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
     return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
