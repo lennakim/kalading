@@ -96,7 +96,7 @@ class AutoSubmodel
 
   def cals_part_count(part)
     return 1 if part.part_type.name != I18n.t(:engine_oil)
-    parts = self.parts_includes_motoroil.select {|p| p.part_type == part.part_type && p.part_brand == part.part_brand && p.spec == part.spec }.reject {|a| a.capacity <= 0}.sort {|a,b| b.capacity <=> a.capacity}
+    parts = self.parts_includes_motoroil_ignore_quantity.select {|p| p.part_type == part.part_type && p.part_brand == part.part_brand && p.spec == part.spec }.reject {|a| a.capacity <= 0}.sort {|a,b| b.capacity <=> a.capacity}
     mc = 0.0
     if self.motoroil_cap - self.motoroil_cap.floor >= 0.2
       total = self.motoroil_cap.floor + 1
