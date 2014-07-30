@@ -118,7 +118,7 @@
                 
               <% end %>
               <% if !(%w[service_cancelled].include? Order::STATE_STRINGS[order.state]) %>
-                <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[unverified verify_error unassigned].include? Order::STATE_STRINGS[order.state]) %>
+                <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
               <% end %>
               <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
               <%= link_to t(:cancel), edit_order_path(order, cancel: 1), :class => 'btn btn-mini', :remote => true if can? :edit_all, order and (%w[unverified verify_error unassigned unscheduled scheduled].include? Order::STATE_STRINGS[order.state]) %>
