@@ -213,38 +213,28 @@ class Maintain
   embeds_many :wheels, :cascade_callbacks => true
   embeds_many :lights, :cascade_callbacks => true
   embeds_many :outlook_pics, class_name: "Picture"
-  embeds_many :auto_front_pics, class_name: "Picture"
-  embeds_many :auto_back_pics, class_name: "Picture"
-  embeds_many :auto_left_pics, class_name: "Picture"
-  embeds_many :auto_right_pics, class_name: "Picture"
-  embeds_many :auto_top_pics, class_name: "Picture"
-  embeds_many :old_oil_pics, class_name: "Picture"
-  embeds_many :oil_filter_pics, class_name: "Picture"
-  embeds_many :old_air_filter_pics, class_name: "Picture"
-  embeds_many :old_cabin_filter_pics, class_name: "Picture"
+  embeds_many :oil_pics, class_name: "Picture"
+  embeds_many :air_filter_pics, class_name: "Picture"
+  embeds_many :cabin_filter_pics, class_name: "Picture"
   embeds_many :tire_left_front_pics, class_name: "Picture"
   embeds_many :tire_left_back_pics, class_name: "Picture"
   embeds_many :tire_right_front_pics, class_name: "Picture"
   embeds_many :tire_right_back_pics, class_name: "Picture"
   embeds_many :tire_spare_pics, class_name: "Picture"
+  embeds_many :oil_and_battery_pics, class_name: "Picture"
 
   accepts_nested_attributes_for :wheels, :allow_destroy => true
   accepts_nested_attributes_for :lights, :allow_destroy => true
   accepts_nested_attributes_for :outlook_pics, :allow_destroy => true
-  accepts_nested_attributes_for :auto_front_pics, :allow_destroy => true
-  accepts_nested_attributes_for :auto_back_pics, :allow_destroy => true
-  accepts_nested_attributes_for :auto_left_pics, :allow_destroy => true
-  accepts_nested_attributes_for :auto_right_pics, :allow_destroy => true
-  accepts_nested_attributes_for :auto_top_pics, :allow_destroy => true
-  accepts_nested_attributes_for :old_oil_pics, :allow_destroy => true
-  accepts_nested_attributes_for :oil_filter_pics, :allow_destroy => true
-  accepts_nested_attributes_for :old_air_filter_pics, :allow_destroy => true
-  accepts_nested_attributes_for :old_cabin_filter_pics, :allow_destroy => true
+  accepts_nested_attributes_for :oil_pics, :allow_destroy => true
+  accepts_nested_attributes_for :air_filter_pics, :allow_destroy => true
+  accepts_nested_attributes_for :cabin_filter_pics, :allow_destroy => true
   accepts_nested_attributes_for :tire_left_front_pics, :allow_destroy => true
   accepts_nested_attributes_for :tire_left_back_pics, :allow_destroy => true
   accepts_nested_attributes_for :tire_right_front_pics, :allow_destroy => true
   accepts_nested_attributes_for :tire_right_back_pics, :allow_destroy => true
   accepts_nested_attributes_for :tire_spare_pics, :allow_destroy => true
+  accepts_nested_attributes_for :oil_and_battery_pics, :allow_destroy => true
 
   attr_accessible :outlook_desc, :buy_date, :VIN, :insurance_date, :auto_color, :engine_num,
     :oil_position, :oil_out, :oil_in, :oil_desc, :oil_sample_collected, :oil_sample_number,
