@@ -16,7 +16,7 @@ json.wheels do
     json.pressure w.pressure
     if w.name != 'spare'
       json.factory_data_checked w.factory_data_checked
-      json.factory_data w.factory_data
+      json.factory_data w.factory_data.strftime('%W%y')
       json.tread_depth w.tread_depth
       json.ageing_desc w.ageing_desc
       json.tread_desc w.tread_desc

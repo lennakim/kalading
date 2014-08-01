@@ -46,11 +46,42 @@ class MaintainsController < ApplicationController
     @maintain = Maintain.find(params[:id])
   end
 
+  # convert string array to integer array
+  def array_convert(a)
+    temp = Array.new
+    a.each do |s|
+      temp.push(s.to_i)
+    end
+    temp
+  end
+
   # POST /maintains
   # POST /maintains.json
   def create
+    if params[:order_seq]
+      if !Order.where(seq: params[:order_seq]).exists?
+        @maintain = Maintain.new
+        return render action: "new", notice: 'Order does not exist.'
+      end 
+      params[:maintain][:order_id] = Order.where(seq: params[:order_seq]).first.id
+      if params[:maintain][:wheels_attributes]
+        params[:maintain][:wheels_attributes].each do |k, w|
+          w[:tread_desc].reject!(&:blank?)
+          w[:sidewall_desc].reject!(&:blank?)
+          w[:brake_disc_desc].reject!(&:blank?)
+          w[:tread_desc] = array_convert w[:tread_desc]
+          w[:sidewall_desc] = array_convert w[:sidewall_desc]
+          w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
+        end
+      end
+      if params[:maintain][:lights_attributes]
+        params[:maintain][:lights_attributes].each do |k, l|
+          l[:desc].reject!(&:blank?)
+          l[:desc] = array_convert l[:desc]
+        end
+      end
+    end
     @maintain = Maintain.new(params[:maintain])
-
     respond_to do |format|
       if @maintain.save
         format.html { redirect_to @maintain, notice: 'Maintain was successfully created.' }
@@ -68,9 +99,25 @@ class MaintainsController < ApplicationController
     @maintain = Maintain.find(params[:id])
     if params[:maintain][:wheels_attributes]
       @maintain.wheels.destroy
+      if params[:order_seq]
+        params[:maintain][:wheels_attributes].each do |k, w|
+          w[:tread_desc].reject!(&:blank?)
+          w[:sidewall_desc].reject!(&:blank?)
+          w[:brake_disc_desc].reject!(&:blank?)
+          w[:tread_desc] = array_convert w[:tread_desc]
+          w[:sidewall_desc] = array_convert w[:sidewall_desc]
+          w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
+        end
+      end
     end
     if params[:maintain][:lights_attributes]
       @maintain.lights.destroy
+      if params[:order_seq]
+        params[:maintain][:lights_attributes].each do |k, l|
+          l[:desc].reject!(&:blank?)
+          l[:desc] = array_convert l[:desc]
+        end
+      end
     end
 
     respond_to do |format|

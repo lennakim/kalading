@@ -1,11 +1,70 @@
-<%= simple_form_for(@maintain) do |f| %>
-  <%= f.error_notification %>
-
-  <div class="form-inputs">
-    <%= f.input :order_id %>
-  </div>
-
+<%= simple_nested_form_for @maintain, :html => { class: "form-horizontal" } do |f| %>
+  <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
+    <div class="control-group required">
+      <label for="order_seq" class="control-label"><%= t(:order_id) %></label>
+      <div class="controls form-inline" id="order_seq" >
+        <input type="text" class="numeric required" name="order_seq" data-msg-required="<%= t(:order_seq_not_empty) %>"/>
+      </div>
+    </div>
+    <%= f.input :buy_date, as: :date_picker, label: t(:buy_date) %>
+    <%= f.input :auto_color, label: t(:auto_color) %>
+  <h5 id="maintain_data"><%= t(:maintain_data) %></h5>  
+    <%= f.input :last_km, label: t(:last_km) %>
+    <%= f.input :air_filter_desc, label: t(:air_filter_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::FILTER_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :cabin_filter_desc, label: t(:cabin_filter_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::FILTER_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :oil_desc, label: t(:old_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OIL_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :oil_out, label: t(:oil_out) %>
+    <%= f.input :oil_in, label: t(:oil_in) %>
+    <%= f.input :outlook_desc, label: t(:outlook_desc), collection: t(:outlook_descs).split, include_blank: false %>
+  <h5 id="other_oil_info"><%= t(:other_oil_info) %></h5>
+    <%= f.input :brake_oil_desc, label: t(:brake_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :brake_oil_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :steering_oil_desc, label: t(:steering_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :steering_oil_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :gearbox_oil_desc, label: t(:gearbox_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :gearbox_oil_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :brake_oil_boiling_point, label: t(:brake_oil_boiling_point), input_html: { min: 0, max: 5, "data-msg-min" => t(:brake_oil_point_rang), "data-msg-max" => t(:brake_oil_point_rang)}%>
+    <%= f.input :antifreeze_freezing_point, label: t(:antifreeze_freezing_point), input_html: {max: 0, "data-msg-max" => t(:antifreeze_freezing_point_max)} %>
+  <h5 id="wiper_and_tool_info"><%= t(:wiper_and_tool_info) %></h5>
+    <%= f.input :front_wiper_desc, label: t(:front_wiper_desc), collection: 0..1, label_method:  lambda { |s| t(Maintain::WIPER_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :back_wiper_desc, label: t(:back_wiper_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::WIPER_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :extinguisher_desc, label: t(:extinguisher_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::AUTO_TOOLS_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :warning_board_desc, label: t(:warning_board_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::AUTO_TOOLS_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :spare_tire_desc, label: t(:spare_tire_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::AUTO_TOOLS_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :glass_water_desc, label: t(:glass_water_desc), collection: 0..1, label_method:  lambda { |s| t(Maintain::GLASS_WATER_STRINGS[s]) }, include_blank: false %>
+  <h5 id="battery_info"><%= t(:battery_info) %></h5>
+    <%= f.input :battery_charge, label: t(:battery_charge), :input_html => {:placeholder => t(:percent) } %>
+    <%= f.input :battery_health, label: t(:battery_health), :input_html => {:placeholder => t(:percent) } %>
+    <%= f.input :battery_desc, label: t(:battery_desc), collection: 0..3, label_method:  lambda { |s| t(Maintain::BATTERY_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :battery_light_color, label: t(:battery_light_color), collection: Maintain::BATTERY_LIGHT_COLOR_STRINGS, label_method:  lambda { |s| t(s) }, include_blank: false %>
+    <%= f.input :battery_head_desc, label: t(:battery_head_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::BATTERY_HEAD_STRINGS[s]) }, include_blank: false %>
+  <h5 id="wheels_info"><%= t(:wheels_info) %></h5>
+    <%= f.fields_for :wheels do |w| %>
+      <%= w.link_to_remove t(:remove_wheel), class: 'btn btn-small btn-warning pull-right' if can? :destroy, Wheel %>
+      <%= w.input :name, label: t(:wheel_name), collection: Wheel::NAME_STRINGS, label_method:  lambda { |s| t(s) }, include_blank: false %>
+      <%= w.input :brand, label: t(:brand), collection: t(:wheel_brands).split %>
+      <%= w.input :pressure, label: t(:pressure) %>
+      <%= w.input :factory_data, label: t(:factory_data) %>
+      <%= w.input :ageing_desc, label: t(:ageing_desc), collection: 0..2, label_method:  lambda { |s| t(Wheel::AGEING_STRINGS[s]) }, include_blank: false%>
+      <%= w.input :tread_depth, label: t(:tread_depth) %>
+      <%= w.input :tread_desc, label: t(:tread_desc), collection: 0..4, label_method:  lambda { |s| t(Wheel::TREAD_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
+      <%= w.input :sidewall_desc, label: t(:sidewall_desc), collection: 0..5, label_method:  lambda { |s| t(Wheel::SIDEWALL_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
+      <%= w.input :brake_pad_thickness, label: t(:brake_pad_thickness) %>
+      <%= w.input :brake_disc_desc, label: t(:brake_disc_desc), collection: 0..3, label_method:  lambda { |s| t(Wheel::BRAKE_DISC_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
+      <hr />
+    <% end %>
+    <p><%= f.link_to_add t(:add_wheel), :wheels, class: 'btn btn-small btn-info' %></p>
+  <h5 id="lights_info"><%= t(:lights_info) %></h5>
+    <%= f.fields_for :lights do |l| %>
+      <%= l.link_to_remove t(:remove_light), class: 'btn btn-small btn-warning pull-right' if can? :destroy, Light %>
+      <%= l.input :name, label: t(:light_name), collection: Light::NAME_STRINGS, label_method:  lambda { |s| t(s) }, include_blank: false %>
+      <%= l.input :desc, label: false, collection: Light::DESC, label_method:  lambda { |s| t(Light::DESC_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
+      <hr />
+    <% end %>
+    <p><%= f.link_to_add t(:add_light), :lights, class: 'btn btn-small btn-info' %></p>
+    
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+    <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
   </div>
 <% end %>

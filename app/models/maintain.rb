@@ -66,7 +66,7 @@ class Wheel
       end
       score += SIDEWALL_SCORE[0]
       self.sidewall_desc.each do |v|
-        score += SIDEWALL_SCORE[v] if SIDEWALL_SCORE[v]
+        score += SIDEWALL_SCORE[v] if SIDEWALL_SCORE[v] < 0
       end
       if !self.brake_pad_checked 
         score += 2
@@ -94,14 +94,14 @@ class Light
   field :desc, type: Array, default: [0]
   
   embedded_in :maintain, :inverse_of => :lights
-  
+  DESC = [0,1,4,5,6,7,8,9]
   DESC_STRINGS = %w[bright undetectable left_not_bright right_not_bright left_front_not_bright right_front_not_bright left_back_not_bright right_back_not_bright high_not_bright back_fog_not_bright]
-
+  NAME_STRINGS = %w[high_beam low_beam turn_light fog_light small_light backup_light brake_light]
   validates :name, uniqueness: {case_sensitive: false}, presence: true
   
   attr_accessible :name, :desc
-  
-  SCORE = {'high_beam' => {0=>2,2=>-1,3=>-1}, 'low_beam' => {0=>2,2=>-1,3=>-1}, 'turn_light' => {0=>4,4=>-1,5=>-1,6=>-1,7=>-1},
+
+  SCORE = {'high_beam' => {0=>2,4=>-1,5=>-1}, 'low_beam' => {0=>2,4=>-1,5=>-1}, 'turn_light' => {0=>4,4=>-1,5=>-1,6=>-1,7=>-1},
     'fog_light' => {0=>1,6=>-0.5,7=>-0.5,9=>-0.5}, 'small_light' => {0=>2,4=>-0.5,5=>-0.5,6=>-0.5,7=>-0.5},
     'backup_light' => {0=>1,6=>-0.5,7=>-0.5,1=>1}, 'brake_light' => {0=>3,6=>-1.5,7=>-1.5,8=>-1,1=>3},
   }
@@ -121,7 +121,7 @@ class Maintain
   include Mongoid::History::Trackable
 
   field :outlook_desc, type: String, default: ""
-  field :buy_date, type: DateTime
+  field :buy_date, type: Date
   field :VIN, type: String, default: ""
   field :insurance_date, type: String, default: ""
   field :auto_color, type: String, default: ""
@@ -172,6 +172,7 @@ class Maintain
   field :spare_tire_desc, type: Integer, default: 0
 
   field :km_be_zero, type: Boolean, default: false
+  field :last_km, type: String, default: ""
   field :curr_km, type: String, default: ""
   field :next_maintain_km, type: String, default: ""
   field :comment, type: String, default: ""
@@ -187,6 +188,7 @@ class Maintain
   GLASS_WATER_STRINGS = %w[full lack]
   BATTERY_STRINGS = %w[good worn leak undetectable]
   BATTERY_HEAD_STRINGS = %w[good corroded undetectable]
+  BATTERY_LIGHT_COLOR_STRINGS = %w[green black white]
   ENGINE_HOSE_AND_LINE_STRINGS = %w[normal slight serious]
   WIPER_STRINGS = %w[normal recommend_replace none]
   AUTO_TOOLS_STRINGS = %w[existed not_existed undetected]
@@ -222,6 +224,7 @@ class Maintain
   embeds_many :tire_right_back_pics, class_name: "Picture"
   embeds_many :tire_spare_pics, class_name: "Picture"
   embeds_many :oil_and_battery_pics, class_name: "Picture"
+  
 
   accepts_nested_attributes_for :wheels, :allow_destroy => true
   accepts_nested_attributes_for :lights, :allow_destroy => true
@@ -246,7 +249,7 @@ class Maintain
     :gearbox_oil_position, :glass_water_desc, :glass_water_add, :glass_water_amount,
     :battery_charge, :battery_health, :battery_desc, :battery_light_color, :battery_head_desc,
     :front_wiper_desc, :back_wiper_desc, :extinguisher_desc, :warning_board_desc, :spare_tire_desc,
-    :km_be_zero, :curr_km, :next_maintain_km, :comment, :total_time, :engine_hose_and_line_desc,
+    :km_be_zero, :curr_km, :last_km, :next_maintain_km, :comment, :total_time, :engine_hose_and_line_desc,
     :wheel_ids, :wheels_attributes, :light_ids, :lights_attributes,:order_id
 
   def calc_score(type)

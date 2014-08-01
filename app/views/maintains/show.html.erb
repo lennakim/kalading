@@ -148,7 +148,7 @@
       <td><%= @maintain.oil_out %></td>
     </tr>
     <tr>
-      <td><%= t(:engine_oil) %></td>
+      <td><%= t(:old_oil_desc) %></td>
       <td><%= I18n.t(Maintain::OIL_STRINGS[@maintain.oil_desc]) %></td>
     </tr>
     <tr>
@@ -314,7 +314,7 @@
     </tr>
     <tr>
       <td><%= t(:battery_light_color) %></td>
-      <td><%= @maintain.battery_light_color %></td>
+      <td><%= I18n.t(@maintain.battery_light_color) %></td>
     </tr>
     <tr>
       <td><%= t(:battery_head_desc) %></td>

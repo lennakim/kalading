@@ -13,6 +13,7 @@
     <%= t(:orders) %>
   <% end %>
   <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary pull-right' if can? :create, Order %>
+  <%= link_to t('create_maintain'), new_maintain_path, :class => 'btn btn-primary pull-right' if can? :create, Maintain %>
   </h4>
   <% if mobile_device? %>
   <div class="btn-group">
