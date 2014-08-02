@@ -80,6 +80,8 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
     r = {
       order: {
         state: 5,
+        serve_datetime: '2014-05-08 14:00',
+        serve_end_datetime: '2014-05-08 16:00'
       }
     }
     response_json = put_json "http://localhost:3000/orders/#{orders[0]['id']}?auth_token=#{@token}", r
@@ -89,5 +91,7 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
     expect(response_json.code).to be(200)
     order = JSON.parse(response_json)
     expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[5]))
+    expect(order['serve_datetime']).to eq('05-08 14:00')
+    expect(order['serve_end_datetime']).to eq('05-08 16:00')
   end
 end

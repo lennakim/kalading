@@ -16,6 +16,7 @@ class Order
   field :name, type: String, default: ''
   field :buymyself, type: Boolean, default: false
   field :serve_datetime, type: DateTime
+  field :serve_end_datetime, type: DateTime
   field :registration_date, type: Date
   field :price, type: Money
   field :car_location, type: String, default: I18n.t(:jing)
@@ -80,7 +81,8 @@ class Order
     :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
-    :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state
+    :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state,
+    :serve_end_datetime
 
   auto_increment :seq
   index({ seq: 1 })

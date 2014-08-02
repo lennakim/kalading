@@ -902,3 +902,4 @@ zh-CN:
   order_prompt: '订单提醒'
   new_orders_prompt: '%{n}个新订单待审核'
   not_delivered_orders_prompt: '%{n}个订单待出库'
+  serve_end_datetime: '服务结束时间'

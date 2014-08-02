@@ -35,6 +35,10 @@
       <td><%= l @order.serve_datetime %></td>
     </tr>
     <tr>
+      <td><%= t(:serve_end_datetime) %></td>
+      <td><%= l @order.serve_end_datetime if @order.serve_end_datetime %></td>
+    </tr>
+    <tr>
       <td><%= t(:auto_submodel) %></td>
       <td><%= @order.auto_submodel ? @order.auto_submodel.full_name : t(:nil_auto_model) %></td>
     </tr>
