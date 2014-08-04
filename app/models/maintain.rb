@@ -5,7 +5,7 @@ class Wheel
   field :name, type: String, default: ""
   field :brand, type: String, default: ""
   field :factory_data_checked, type: Boolean, default: true
-  field :factory_data, type: Date
+  field :factory_data, type: String, default: ""
   field :tread_depth, type: Float, default: 0
   field :ageing_desc, type: Integer, default: 0
   field :tread_desc, type: Array, default: [0]
@@ -39,8 +39,9 @@ class Wheel
     
   def score
     score = 0.0
+    days = (Date.today() - (Date.new(2000 + self.factory_data[2,2].to_i) + self.factory_data[0,2].to_i.weeks)).to_i
     LIFE_SCORE.each do |k, v|
-      if k.include?(Date.new() - self.factory_data)
+      if k.include?(days)
         score += v
         break
       end
@@ -108,7 +109,7 @@ class Light
   def score
     score = SCORE[self.name][0]
     self.desc.each do |d|
-      score += SCORE[self.name][d] if SCORE[self.name][d] < 0 
+      score += SCORE[self.name][d] if SCORE[self.name].include?(d) && SCORE[self.name][d] < 0 
     end
     score
   end

@@ -3,7 +3,7 @@
     <div class="control-group required">
       <label for="order_seq" class="control-label"><%= t(:order_id) %></label>
       <div class="controls form-inline" id="order_seq" >
-        <input type="text" class="numeric required" name="order_seq" data-msg-required="<%= t(:order_seq_not_empty) %>"/>
+        <input type="text" class="numeric required" name="order_seq" data-msg-required="<%= t(:order_seq_not_empty) %>" value="<%= Order.find(@maintain.order_id).seq if !@maintain.order_id.nil? %>"/>
       </div>
     </div>
     <%= f.input :buy_date, as: :date_picker, label: t(:buy_date) %>

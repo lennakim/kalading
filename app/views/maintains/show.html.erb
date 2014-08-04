@@ -1,4 +1,7 @@
-<h5><%= t(:basic_infos)%></h5>
+<h4>
+  <%= t(:maintain_record)%>
+  <%= link_to t(:edit), edit_maintain_path(@maintain), :class => 'btn pull-right' if can? :create, Maintain %>
+</h4>
 <table class="table table-striped">
   <tbody>
     <tr>
@@ -72,7 +75,7 @@
     </tr>
     <tr>
       <td><%= t(:factory_data) %></td>
-      <td><%= wheel.factory_data.strftime('%Y-%m-%d') if wheel.factory_data %></td>
+      <td><%= wheel.factory_data %></td>
     </tr>
     <tr>
       <td><%= t(:tread_depth) %></td>
