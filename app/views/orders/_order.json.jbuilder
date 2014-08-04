@@ -7,7 +7,7 @@ json.vin o.vin
 json.car_num o.car_location + o.car_num
 json.client_comment o.client_comment
 json.state t(Order::STATE_STRINGS[o.state])
-json.serve_datetime o.serve_datetime.strftime('%m-%d %H:%M')
+json.serve_datetime o.serve_datetime.strftime('%Y-%m-%d %H:%M')
 json.serve_end_datetime o.serve_end_datetime.strftime('%Y-%m-%d %H:%M') if o.serve_end_datetime
 if o.auto_submodel
   json.auto_model o.auto_submodel.full_name
