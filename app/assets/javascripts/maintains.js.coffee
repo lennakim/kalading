@@ -8,7 +8,7 @@ $ ->
             (error, element) ->
                 error.css("color", "#FF0000")
                 error.insertAfter(element)
-    )
+    );
 
 
     
