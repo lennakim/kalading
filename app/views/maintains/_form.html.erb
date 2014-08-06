@@ -2,13 +2,21 @@
   <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
     <div class="control-group required">
       <label for="order_seq" class="control-label"><%= t(:order_id) %></label>
-      <div class="controls form-inline" id="order_seq" >
-        <input type="text" class="numeric required" name="order_seq" data-msg-required="<%= t(:order_seq_not_empty) %>" value="<%= Order.find(@maintain.order_id).seq if !@maintain.order_id.nil? %>"/>
+      <div class="controls form-inline" >
+        <input type="text" class="numeric required" id="order_seq" name="order_seq" data-msg-required="<%= t(:order_seq_not_empty) %>" value="<%= Order.find(@maintain.order_id).seq if !@maintain.order_id.nil? %>"/>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+        <lable id="order_not_exist" hidden><strong><%= t(:order_not_exist)%></strong></lable>    
       </div>
+      <% if @maintain.order_id.nil? %>
+        <input type="hidden" id="order_id" name="maintain[order_id]"/>
+      <% end %>
     </div>
-    <%= f.input :buy_date, as: :date_picker, label: t(:buy_date) %>
     <%= f.input :auto_color, label: t(:auto_color) %>
-  <h5 id="maintain_data"><%= t(:maintain_data) %></h5>  
+    <%= f.input :buy_date, as: :date_picker, label: t(:buy_date) %>
+    <%= f.input :VIN, label: t(:VIN) %>
+  <h5 id="maintain_data"><%= t(:maintain_data) %></h5>
+    <%= f.input :curr_km, label: t(:curr_km) %>
+    <%= f.input :next_maintain_km, label: t(:next_maintain_km) %>
     <%= f.input :last_km, label: t(:last_km) %>
     <%= f.input :air_filter_desc, label: t(:air_filter_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::FILTER_STRINGS[s]) }, include_blank: false %>
     <%= f.input :cabin_filter_desc, label: t(:cabin_filter_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::FILTER_STRINGS[s]) }, include_blank: false %>
@@ -19,6 +27,8 @@
   <h5 id="other_oil_info"><%= t(:other_oil_info) %></h5>
     <%= f.input :brake_oil_desc, label: t(:brake_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
     <%= f.input :brake_oil_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :antifreeze_desc, label: t(:antifreeze_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :antifreeze_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
     <%= f.input :steering_oil_desc, label: t(:steering_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
     <%= f.input :steering_oil_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
     <%= f.input :gearbox_oil_desc, label: t(:gearbox_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
@@ -220,3 +230,10 @@
     <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
   </div>
 <% end %>
+<script type="text/javascript">
+  $("#order_seq").blur(function(){
+    if($(this).val() != ""){
+      $.getScript("<%= order_seq_check_path %>" + "?seq=" + $(this).val());
+    }
+  });
+</script>  

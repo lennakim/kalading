@@ -1,7 +1,8 @@
-<h4>
-  <%= t(:maintain_record)%>
+<div>
   <%= link_to t(:edit), edit_maintain_path(@maintain), :class => 'btn pull-right' if can? :create, Maintain %>
-</h4>
+  <%= link_to t(:back_to_maintain), new_maintain_path, :class => 'btn pull-right' if can? :create, Maintain %>
+</div>
+<h4><%= t(:maintain_record)%></h4>
 <table class="table table-striped">
   <tbody>
     <tr>

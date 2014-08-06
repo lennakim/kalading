@@ -1,0 +1,10 @@
+<% if @order.nil? %>
+  $("#order_not_exist").show();
+<% else %>
+  $("#order_not_exist").hide();
+  $("#order_id").val("<%= @order.id %>");
+  $("#maintain_VIN").val("<%= @order.vin %>");
+  $("#maintain_buy_date").val("<%= @order.registration_date.strftime('%Y-%m-%d') if @order.registration_date %>");
+  $("#maintain_curr_km").val("<%= @order.auto_km %>");
+  $("#maintain_next_maintain_km").val("<%= @order.auto_km_next %>");
+<% end %>  

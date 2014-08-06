@@ -655,6 +655,15 @@ class OrdersController < ApplicationController
       format.js
     end
   end
+  
+  def order_seq_check
+    @order = Order.where(seq: params[:seq]).first
+
+    respond_to do |format|
+      format.json 
+      format.js
+    end
+  end
 
 private
   def _create_auto_maintain_order

@@ -54,43 +54,49 @@ class MaintainsController < ApplicationController
     end
     temp
   end
+  
+  def normalize_params(params)
+    if params[:maintain][:wheels_attributes]
+      params[:maintain][:wheels_attributes].each do |k, w|
+        if !w[:tread_desc].nil?
+          w[:tread_desc].reject!(&:blank?)
+          w[:tread_desc] = array_convert w[:tread_desc]
+        end
+        if !w[:sidewall_desc].nil?
+          w[:sidewall_desc].reject!(&:blank?) 
+          w[:sidewall_desc] = array_convert w[:sidewall_desc]
+        end
+        if !w[:brake_disc_desc].nil?
+          w[:brake_disc_desc].reject!(&:blank?) 
+          w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
+        end
+      end
+    end
+    if params[:maintain][:lights_attributes]
+      params[:maintain][:lights_attributes].each do |k, l|
+        if !l[:desc].nil?
+          l[:desc].reject!(&:blank?)
+          l[:desc] = array_convert l[:desc]
+        end  
+      end
+    end
+  end
 
   # POST /maintains
   # POST /maintains.json
   def create
     if params[:order_seq]
-      if !Order.where(seq: params[:order_seq]).exists?
+      normalize_params(params)
+      if params[:maintain][:order_id].blank?
         @maintain = Maintain.new
-        return render action: "new", notice: 'Order does not exist.'
-      end 
-      params[:maintain][:order_id] = Order.where(seq: params[:order_seq]).first.id
-      if params[:maintain][:wheels_attributes]
-        params[:maintain][:wheels_attributes].each do |k, w|
-          if !w[:tread_desc].nil?
-            w[:tread_desc].reject!(&:blank?)
-            w[:tread_desc] = array_convert w[:tread_desc]
-          end
-          if !w[:sidewall_desc].nil?
-            w[:sidewall_desc].reject!(&:blank?) 
-            w[:sidewall_desc] = array_convert w[:sidewall_desc]
-          end
-          if !w[:brake_disc_desc].nil?
-            w[:brake_disc_desc].reject!(&:blank?) 
-            w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
-          end
-        end
-      end
-      if params[:maintain][:lights_attributes]
-        params[:maintain][:lights_attributes].each do |k, l|
-          l[:desc].reject!(&:blank?)
-          l[:desc] = array_convert l[:desc]
-        end
+        redirect_to new_maintain_path, notice: I18n.t(:maintain_not_created)
+        return
       end
     end
     @maintain = Maintain.new(params[:maintain])
     respond_to do |format|
       if @maintain.save
-        format.html { redirect_to @maintain, notice: 'Maintain was successfully created.' }
+        format.html { redirect_to @maintain, notice: I18n.t(:maintain_created) }
         format.json { render json: {id: @maintain.id} }
       else
         format.html { render action: "new" }
@@ -103,38 +109,20 @@ class MaintainsController < ApplicationController
   # PUT /maintains/1.json
   def update
     @maintain = Maintain.find(params[:id])
+    if params[:order_seq]
+      normalize_params(params)
+    end
+    
     if params[:maintain][:wheels_attributes]
       @maintain.wheels.destroy
-      if params[:order_seq]
-        params[:maintain][:wheels_attributes].each do |k, w|
-          if !w[:tread_desc].nil?
-            w[:tread_desc].reject!(&:blank?)
-            w[:tread_desc] = array_convert w[:tread_desc]
-          end
-          if !w[:sidewall_desc].nil?
-            w[:sidewall_desc].reject!(&:blank?) 
-            w[:sidewall_desc] = array_convert w[:sidewall_desc]
-          end
-          if !w[:brake_disc_desc].nil?
-            w[:brake_disc_desc].reject!(&:blank?) 
-            w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
-          end
-        end
-      end
     end
     if params[:maintain][:lights_attributes]
       @maintain.lights.destroy
-      if params[:order_seq]
-        params[:maintain][:lights_attributes].each do |k, l|
-          l[:desc].reject!(&:blank?)
-          l[:desc] = array_convert l[:desc]
-        end
-      end
     end
 
     respond_to do |format|
       if @maintain.update_attributes(params[:maintain])
-        format.html { redirect_to @maintain, notice: 'Maintain was successfully updated.' }
+        format.html { redirect_to @maintain, notice: I18n.t(:maintain_updated) }
         format.json { render json: {result: 'ok'} }
       else
         format.html { render action: "edit" }
