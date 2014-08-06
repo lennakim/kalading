@@ -66,12 +66,18 @@ class MaintainsController < ApplicationController
       params[:maintain][:order_id] = Order.where(seq: params[:order_seq]).first.id
       if params[:maintain][:wheels_attributes]
         params[:maintain][:wheels_attributes].each do |k, w|
-          w[:tread_desc].reject!(&:blank?)
-          w[:sidewall_desc].reject!(&:blank?)
-          w[:brake_disc_desc].reject!(&:blank?)
-          w[:tread_desc] = array_convert w[:tread_desc]
-          w[:sidewall_desc] = array_convert w[:sidewall_desc]
-          w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
+          if !w[:tread_desc].nil?
+            w[:tread_desc].reject!(&:blank?)
+            w[:tread_desc] = array_convert w[:tread_desc]
+          end
+          if !w[:sidewall_desc].nil?
+            w[:sidewall_desc].reject!(&:blank?) 
+            w[:sidewall_desc] = array_convert w[:sidewall_desc]
+          end
+          if !w[:brake_disc_desc].nil?
+            w[:brake_disc_desc].reject!(&:blank?) 
+            w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
+          end
         end
       end
       if params[:maintain][:lights_attributes]
@@ -101,12 +107,18 @@ class MaintainsController < ApplicationController
       @maintain.wheels.destroy
       if params[:order_seq]
         params[:maintain][:wheels_attributes].each do |k, w|
-          w[:tread_desc].reject!(&:blank?)
-          w[:sidewall_desc].reject!(&:blank?)
-          w[:brake_disc_desc].reject!(&:blank?)
-          w[:tread_desc] = array_convert w[:tread_desc]
-          w[:sidewall_desc] = array_convert w[:sidewall_desc]
-          w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
+          if !w[:tread_desc].nil?
+            w[:tread_desc].reject!(&:blank?)
+            w[:tread_desc] = array_convert w[:tread_desc]
+          end
+          if !w[:sidewall_desc].nil?
+            w[:sidewall_desc].reject!(&:blank?) 
+            w[:sidewall_desc] = array_convert w[:sidewall_desc]
+          end
+          if !w[:brake_disc_desc].nil?
+            w[:brake_disc_desc].reject!(&:blank?) 
+            w[:brake_disc_desc] = array_convert w[:brake_disc_desc]
+          end
         end
       end
     end

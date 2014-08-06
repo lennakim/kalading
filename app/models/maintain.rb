@@ -18,7 +18,8 @@ class Wheel
 
   embedded_in :maintain, :inverse_of => :wheels
 
-  NAME_STRINGS = %w[spare left_front right_front left_back right_back]
+  NAME_STRINGS_WIHT_SPARE = {0=>"left_front", 1=>"right_front", 2=>"left_back", 3=>"right_back", 4=>"spare"}
+  NAME_STRINGS = {0=>"left_front", 1=>"right_front", 2=>"left_back", 3=>"right_back"}
   AGEING_STRINGS = %w[slight general serious]
   TREAD_STRINGS = %w[normal local_cracking wear_in_middle wear_in_sides puncture]
   SIDEWALL_STRINGS = %w[normal local_cracking cut wear_in_sides swelling abnormal_wear]
@@ -96,15 +97,15 @@ class Light
   
   embedded_in :maintain, :inverse_of => :lights
   DESC = [0,1,4,5,6,7,8,9]
-  DESC_STRINGS = %w[bright undetectable left_not_bright right_not_bright left_front_not_bright right_front_not_bright left_back_not_bright right_back_not_bright high_not_bright back_fog_not_bright]
+  DESC_STRINGS = %w[bright undetectable not_bright right_not_bright left_front_not_bright right_front_not_bright left_back_not_bright right_back_not_bright high_not_bright back_fog_not_bright]
   NAME_STRINGS = %w[high_beam low_beam turn_light fog_light small_light backup_light brake_light]
   validates :name, uniqueness: {case_sensitive: false}, presence: true
   
   attr_accessible :name, :desc
 
-  SCORE = {'high_beam' => {0=>2,4=>-1,5=>-1}, 'low_beam' => {0=>2,4=>-1,5=>-1}, 'turn_light' => {0=>4,4=>-1,5=>-1,6=>-1,7=>-1},
-    'fog_light' => {0=>1,6=>-0.5,7=>-0.5,9=>-0.5}, 'small_light' => {0=>2,4=>-0.5,5=>-0.5,6=>-0.5,7=>-0.5},
-    'backup_light' => {0=>1,6=>-0.5,7=>-0.5,1=>1}, 'brake_light' => {0=>3,6=>-1.5,7=>-1.5,8=>-1,1=>3},
+  SCORE = {'high_beam' => {0=>2,2=>-2,4=>-1,5=>-1}, 'low_beam' => {0=>2,2=>-2,4=>-1,5=>-1}, 'turn_light' => {0=>4,2=>-4,4=>-1,5=>-1,6=>-1,7=>-1},
+    'fog_light' => {0=>1,2=>-1,6=>-0.5,7=>-0.5,9=>-0.5}, 'small_light' => {0=>2,2=>-2,4=>-0.5,5=>-0.5,6=>-0.5,7=>-0.5},
+    'backup_light' => {0=>1,2=>-1,6=>-0.5,7=>-0.5,1=>1}, 'brake_light' => {0=>3,2=>-3,6=>-1.5,7=>-1.5,8=>-1,1=>3},
   }
   def score
     score = SCORE[self.name][0]

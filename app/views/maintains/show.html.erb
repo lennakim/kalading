@@ -77,6 +77,7 @@
       <td><%= t(:factory_data) %></td>
       <td><%= wheel.factory_data %></td>
     </tr>
+    <% if wheel.name != "spare" %>
     <tr>
       <td><%= t(:tread_depth) %></td>
       <td><%= wheel.tread_depth %></td>
@@ -131,6 +132,7 @@
         <% end %>
       </td>
     </tr>
+    <% end %>
     <% end %>
   </tbody>
 </table>
@@ -317,7 +319,7 @@
     </tr>
     <tr>
       <td><%= t(:battery_light_color) %></td>
-      <td><%= I18n.t(@maintain.battery_light_color) %></td>
+      <td><%= @maintain.battery_light_color %></td>
     </tr>
     <tr>
       <td><%= t(:battery_head_desc) %></td>

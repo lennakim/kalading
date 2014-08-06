@@ -23,8 +23,8 @@
     <%= f.input :steering_oil_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
     <%= f.input :gearbox_oil_desc, label: t(:gearbox_oil_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::OTHER_OIL_STRINGS[s]) }, include_blank: false %>
     <%= f.input :gearbox_oil_position, label: false, collection: 0..3, label_method:  lambda { |s| t(Maintain::POSITION_STRINGS[s]) }, include_blank: false %>
-    <%= f.input :brake_oil_boiling_point, label: t(:brake_oil_boiling_point), input_html: { min: 0, max: 5, "data-msg-min" => t(:brake_oil_point_rang), "data-msg-max" => t(:brake_oil_point_rang)}%>
-    <%= f.input :antifreeze_freezing_point, label: t(:antifreeze_freezing_point), input_html: {max: 0, "data-msg-max" => t(:antifreeze_freezing_point_max)} %>
+    <%= f.input :brake_oil_boiling_point, label: t(:brake_oil_boiling_point), collection: 1..4, include_blank: false %>
+    <%= f.input :antifreeze_freezing_point, label: t(:antifreeze_freezing_point), collection: [-30, -35, -40, -45], include_blank: false %>
   <h5 id="wiper_and_tool_info"><%= t(:wiper_and_tool_info) %></h5>
     <%= f.input :front_wiper_desc, label: t(:front_wiper_desc), collection: 0..1, label_method:  lambda { |s| t(Maintain::WIPER_STRINGS[s]) }, include_blank: false %>
     <%= f.input :back_wiper_desc, label: t(:back_wiper_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::WIPER_STRINGS[s]) }, include_blank: false %>
@@ -32,37 +32,189 @@
     <%= f.input :warning_board_desc, label: t(:warning_board_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::AUTO_TOOLS_STRINGS[s]) }, include_blank: false %>
     <%= f.input :spare_tire_desc, label: t(:spare_tire_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::AUTO_TOOLS_STRINGS[s]) }, include_blank: false %>
     <%= f.input :glass_water_desc, label: t(:glass_water_desc), collection: 0..1, label_method:  lambda { |s| t(Maintain::GLASS_WATER_STRINGS[s]) }, include_blank: false %>
+  <h5 id="brake_pad_thickness"><%= t(:brake_pad_thickness) %></h5>
+    <% Wheel::NAME_STRINGS.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% thickness = @maintain.wheels.where(name: wn).first.brake_pad_thickness %>
+      <% else %>
+        <% thickness = 0 %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls">
+          <select class="select required" name="<%= "maintain[wheels_attributes][" + k.to_s + "][brake_pad_thickness]" %>">
+            <%= options_for_select([12,10,8,6,5,4,3,2], selected: thickness.to_i) %>
+          </select>
+        </div>    
+      </div>
+    <% end %>
+  <h5 id="brake_disc_desc"><%= t(:brake_disc_desc) %></h5>
+    <% Wheel::NAME_STRINGS.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% brake_disc_desc = @maintain.wheels.where(name: wn).first.brake_disc_desc %>
+      <% else %>
+        <% brake_disc_desc = [] %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls form-inline">
+          <% [0,1,2,3].each do |v| %>
+            <label class="checkbox">
+              <% if brake_disc_desc.include?(v) %>
+                <input class="check_boxes optional" name="<%= "maintain[wheels_attributes][" + k.to_s + "][brake_disc_desc][]" %>" type="checkbox" value="<%= v %>" checked/>
+              <% else %>
+                <input class="check_boxes optional" name="<%= "maintain[wheels_attributes][" + k.to_s + "][brake_disc_desc][]" %>" type="checkbox" value="<%= v %>" />
+              <% end %>
+              <%= t(Wheel::BRAKE_DISC_STRINGS[v]) %>
+            </label>
+          <% end %>
+        </div>    
+      </div> 
+    <% end %>
   <h5 id="battery_info"><%= t(:battery_info) %></h5>
-    <%= f.input :battery_charge, label: t(:battery_charge), :input_html => {:placeholder => t(:percent) } %>
-    <%= f.input :battery_health, label: t(:battery_health), :input_html => {:placeholder => t(:percent) } %>
+    <%= f.input :battery_charge, label: t(:battery_charge), collection: {"良"=>"90%","不良"=>"50%"}, include_blank: false%>
+    <%= f.input :battery_health, label: t(:battery_health), collection: ["60%","70%","80%","90%"], include_blank: false %>
     <%= f.input :battery_desc, label: t(:battery_desc), collection: 0..3, label_method:  lambda { |s| t(Maintain::BATTERY_STRINGS[s]) }, include_blank: false %>
     <%= f.input :battery_light_color, label: t(:battery_light_color), collection: Maintain::BATTERY_LIGHT_COLOR_STRINGS, label_method:  lambda { |s| t(s) }, include_blank: false %>
     <%= f.input :battery_head_desc, label: t(:battery_head_desc), collection: 0..2, label_method:  lambda { |s| t(Maintain::BATTERY_HEAD_STRINGS[s]) }, include_blank: false %>
-  <h5 id="wheels_info"><%= t(:wheels_info) %></h5>
-    <%= f.fields_for :wheels do |w| %>
-      <%= w.link_to_remove t(:remove_wheel), class: 'btn btn-small btn-warning pull-right' if can? :destroy, Wheel %>
-      <%= w.input :name, label: t(:wheel_name), collection: Wheel::NAME_STRINGS, label_method:  lambda { |s| t(s) }, include_blank: false %>
-      <%= w.input :brand, label: t(:brand), collection: t(:wheel_brands).split %>
-      <%= w.input :pressure, label: t(:pressure) %>
-      <%= w.input :factory_data, label: t(:factory_data) %>
-      <%= w.input :ageing_desc, label: t(:ageing_desc), collection: 0..2, label_method:  lambda { |s| t(Wheel::AGEING_STRINGS[s]) }, include_blank: false%>
-      <%= w.input :tread_depth, label: t(:tread_depth) %>
-      <%= w.input :tread_desc, label: t(:tread_desc), collection: 0..4, label_method:  lambda { |s| t(Wheel::TREAD_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
-      <%= w.input :sidewall_desc, label: t(:sidewall_desc), collection: 0..5, label_method:  lambda { |s| t(Wheel::SIDEWALL_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
-      <%= w.input :brake_pad_thickness, label: t(:brake_pad_thickness) %>
-      <%= w.input :brake_disc_desc, label: t(:brake_disc_desc), collection: 0..3, label_method:  lambda { |s| t(Wheel::BRAKE_DISC_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
-      <hr />
+  <h5 id="brand"><%= t(:brand) %></h5>
+    <% Wheel::NAME_STRINGS.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% brand = @maintain.wheels.where(name: wn).first.brand %>
+      <% else %>
+        <% brand = "" %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls">
+          <select class="select required" name="<%= "maintain[wheels_attributes][" + k.to_s + "][brand]" %>">
+            <%= options_for_select(t(:wheel_brands).split, selected: brand)%>
+          </select>
+        </div>    
+      </div> 
     <% end %>
-    <p><%= f.link_to_add t(:add_wheel), :wheels, class: 'btn btn-small btn-info' %></p>
+  <h5 id="factory_data"><%= t(:factory_data_and_ageing_desc) %></h5>
+    <% Wheel::NAME_STRINGS.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% factory_data = @maintain.wheels.where(name: wn).first.factory_data %>
+        <% ageing = @maintain.wheels.where(name: wn).first.ageing_desc %>
+      <% else %>
+        <% factory_data = "" %>
+        <% ageing = -1 %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls">
+          <input type="text" name="<%= "maintain[wheels_attributes][" + k.to_s + "][factory_data]" %>" value="<%= factory_data %>" placeholder="<%= t(:week_and_year)%>">
+          <select class="select required" name="<%= "maintain[wheels_attributes][" + k.to_s + "][ageing_desc]" %>">
+            <%= options_for_select([["轻微",0],["严重",2]], selected: ageing) %>
+          </select>
+        </div>    
+      </div> 
+    <% end %>
+  <h5 id="pressure"><%= t(:pressure) %></h5>
+    <% Wheel::NAME_STRINGS_WIHT_SPARE.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% pressure = @maintain.wheels.where(name: wn).first.pressure %>
+      <% else %>
+        <% pressure = 0 %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls">
+          <select class="select required" name="<%= "maintain[wheels_attributes][" + k.to_s + "][pressure]" %>">
+            <%= options_for_select([["正常",2.3],["低",1.9],["偏低",1.8],["高",2.6],["偏高",2.7]], selected: pressure) %> 
+          </select>
+        </div>
+        <input type="hidden" name="<%= "maintain[wheels_attributes][" + k.to_s + "][name]" %>" value="<%= wn %>"/>
+      </div> 
+    <% end %>
+  <h5 id="tread_depth"><%= t(:tread_depth) %></h5>
+    <% Wheel::NAME_STRINGS.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% tread_depth = @maintain.wheels.where(name: wn).first.tread_depth %>
+      <% else %>
+        <% tread_depth = "" %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls">
+          <input type="text" name="<%= "maintain[wheels_attributes][" + k.to_s + "][tread_depth]" %>" value=<%= tread_depth %>>
+        </div>    
+      </div> 
+    <% end %>
+  <h5 id="tread_desc"><%= t(:tread_desc) %></h5>
+    <% Wheel::NAME_STRINGS.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% tread_desc = @maintain.wheels.where(name: wn).first.tread_desc %>
+      <% else %>
+        <% tread_desc = [] %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls form-inline">
+          <% [0,1,2,3,4].each do |v| %>
+            <label class="checkbox">
+              <% if tread_desc.include?(v) %>
+                <input class="check_boxes optional" name="<%= "maintain[wheels_attributes][" + k.to_s + "][tread_desc][]" %>" type="checkbox" value="<%= v %>" checked/>
+              <% else %>
+                <input class="check_boxes optional" name="<%= "maintain[wheels_attributes][" + k.to_s + "][tread_desc][]" %>" type="checkbox" value="<%= v %>" />
+              <% end %>
+              <%= t(Wheel::TREAD_STRINGS[v]) %>
+            </label>
+          <% end %>
+        </div>    
+      </div>
+    <% end %>
+  <h5 id="sidewall_desc"><%= t(:sidewall_desc) %></h5>
+    <% Wheel::NAME_STRINGS.each do |k, wn| %>
+      <% if !@maintain.wheels.blank? && @maintain.wheels.where(name: wn).exists? %>
+        <% sidewall_desc = @maintain.wheels.where(name: wn).first.sidewall_desc %>
+      <% else %>
+        <% sidewall_desc = [] %>
+      <% end %>
+      <div class="control-group required">
+        <label class="control-label"><%= t(wn) %></label>
+        <div class="controls form-inline">
+          <% [0,1,2,3,4,5].each do |v| %>
+            <label class="checkbox">
+              <% if sidewall_desc.include?(v) %>
+                <input class="check_boxes optional" name="<%= "maintain[wheels_attributes][" + k.to_s + "][sidewall_desc][]" %>" type="checkbox" value="<%= v %>" checked/>
+              <% else %>
+                <input class="check_boxes optional" name="<%= "maintain[wheels_attributes][" + k.to_s + "][sidewall_desc][]" %>" type="checkbox" value="<%= v %>" />
+              <% end %> 
+            <%= t(Wheel::SIDEWALL_STRINGS[v]) %>
+            </label>
+          <% end %>
+        </div>    
+      </div> 
+    <% end %>
   <h5 id="lights_info"><%= t(:lights_info) %></h5>
-    <%= f.fields_for :lights do |l| %>
-      <%= l.link_to_remove t(:remove_light), class: 'btn btn-small btn-warning pull-right' if can? :destroy, Light %>
-      <%= l.input :name, label: t(:light_name), collection: Light::NAME_STRINGS, label_method:  lambda { |s| t(s) }, include_blank: false %>
-      <%= l.input :desc, label: false, collection: Light::DESC, label_method:  lambda { |s| t(Light::DESC_STRINGS[s]) }, include_blank: false, as: :check_boxes %>
-      <hr />
+    <% id = 0 %>
+    <% Light::NAME_STRINGS.each do |ln| %>
+      <% if !@maintain.lights.blank? && @maintain.lights.where(name: ln).exists? %>
+        <% desc = @maintain.lights.where(name: ln).first.desc %>
+      <% else %>
+        <% desc = [] %>
+      <% end %>
+      <div class="control-group required">
+        <label for="order_seq" class="control-label"><%= t(ln) %></label>
+        <div class="controls form-inline">
+          <% [0,2].each do |v| %>
+            <label class="checkbox">
+              <% if desc.include?(v) %>
+                <input class="check_boxes optional" name="<%= "maintain[lights_attributes][" + id.to_s + "][desc][]" %>" type="checkbox" value="<%= v %>" checked/>
+              <% else %>  
+                <input class="check_boxes optional" name="<%= "maintain[lights_attributes][" + id.to_s + "][desc][]" %>" type="checkbox" value="<%= v %>" />
+              <% end %>
+            <%= t(Light::DESC_STRINGS[v]) %>
+            </label> 
+          <% end %>
+          <input type="hidden" name="<%= "maintain[lights_attributes][" + id.to_s + "][name]" %>" value="<%= ln %>"/>
+        </div>
+      </div>
+      <% id += 1 %>
     <% end %>
-    <p><%= f.link_to_add t(:add_light), :lights, class: 'btn btn-small btn-info' %></p>
-    
   <div class="form-actions">
     <%= f.button :submit, t(:save), :class => 'btn-primary' %>
     <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
