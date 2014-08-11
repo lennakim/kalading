@@ -61,14 +61,14 @@ class Wheel
           break
         end
       end
-      score += AGEING_SCORE[self.ageing_desc]
+      score += AGEING_SCORE[self.ageing_desc] if AGEING_SCORE.include?(self.ageing_desc)
       score += TREAD_SCORE[0]
       self.tread_desc.each do |v|
-        score += TREAD_SCORE[v] if TREAD_SCORE[v] < 0
+        score += TREAD_SCORE[v] if TREAD_SCORE.include?(v) && TREAD_SCORE[v] < 0
       end
       score += SIDEWALL_SCORE[0]
       self.sidewall_desc.each do |v|
-        score += SIDEWALL_SCORE[v] if SIDEWALL_SCORE[v] < 0
+        score += SIDEWALL_SCORE[v] if SIDEWALL_SCORE.include?(v) && SIDEWALL_SCORE[v] < 0
       end
       if !self.brake_pad_checked 
         score += 2
@@ -82,7 +82,7 @@ class Wheel
       end
       
       self.brake_disc_desc.each do |v|
-        score += BRAKE_DISC_SCORE[v]
+        score += BRAKE_DISC_SCORE[v] if BRAKE_DISC_SCORE.include?(v)
       end
     end
     score
@@ -110,7 +110,7 @@ class Light
   def score
     score = SCORE[self.name][0]
     self.desc.each do |d|
-      score += SCORE[self.name][d] if SCORE[self.name].include?(d) && SCORE[self.name][d] < 0 
+      score += SCORE[self.name][d] if SCORE.include?(self.name) && SCORE[self.name].include?(d) && SCORE[self.name][d] < 0 
     end
     score
   end
@@ -129,7 +129,7 @@ class Maintain
   field :auto_color, type: String, default: ""
   field :engine_num, type: String, default: ""
 
-  field :oil_position, type: Integer, default: 0
+  field :oil_position, type: Integer, default: 1
   field :oil_out, type: Integer, default: 0
   field :oil_in, type: Integer, default: 0
   field :oil_desc, type: Integer, default: 0
@@ -184,7 +184,6 @@ class Maintain
   
   POSITION_STRINGS = %w[high middle low undetectable]
   OIL_STRINGS = %w[muddy dirty serious_dirty]
-  OIL_POSITION_STRINGS = %w[middle high low]
   OTHER_OIL_STRINGS = %w[clean muddy dirty undetectable]
   FILTER_STRINGS = %w[clean dirty serious_dirty]
   GLASS_WATER_STRINGS = %w[full lack]
@@ -196,11 +195,11 @@ class Maintain
   AUTO_TOOLS_STRINGS = %w[existed not_existed undetected]
   
   # desc and position same score
-  OIL_SCORE = [2,1,0] 
+  OIL_SCORE = [1,2,0] 
   ANTIFREEZE_SCORE = [2,1,0]
   OTHER_OIL_SCORE = [1,0.5,0,1]
 
-  BRAKE_OIL_SCORE = [2,1,0]
+  BRAKE_OIL_SCORE = [2,1,0,0]
   BRAKE_OIL_POSITION_SCORE = [3,2,1,0]
   FILTER_SCORE = [1,1,0]
   GLASS_WATER_SCORE = [1,0]
@@ -331,6 +330,8 @@ class Maintain
     score += self.calc_score("filter_oil_battery")
     score += self.calc_score("others")
   end
+  
+  validates :order_id, presence: true
 
   def as_json(options = nil)
     h = super :except => [:_id, :created_at, :updated_at, :buy_date, :VIN, :insurance_date, :engine_num, :order_id,

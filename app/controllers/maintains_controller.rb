@@ -87,11 +87,6 @@ class MaintainsController < ApplicationController
   def create
     if params[:order_seq]
       normalize_params(params)
-      if params[:maintain][:order_id].blank?
-        @maintain = Maintain.new
-        redirect_to new_maintain_path, notice: I18n.t(:maintain_not_created)
-        return
-      end
     end
     @maintain = Maintain.new(params[:maintain])
     respond_to do |format|
@@ -99,7 +94,7 @@ class MaintainsController < ApplicationController
         format.html { redirect_to @maintain, notice: I18n.t(:maintain_created) }
         format.json { render json: {id: @maintain.id} }
       else
-        format.html { render action: "new" }
+        format.html { render action: "new", notice: I18n.t(:maintain_not_created) }
         format.json { render json: @maintain.errors, status: :unprocessable_entity }
       end
     end
