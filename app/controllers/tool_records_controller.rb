@@ -92,8 +92,8 @@ class ToolRecordsController < ApplicationController
   end
   
   def uploadpic
-    @order = Order.find(params[:id])
-    pic = @order.pictures.create!(p: params[:pic_data])
+    @tool_record = ToolRecord.find(params[:id])
+    pic = @tool_record.pictures.create!(p: params[:pic_data])
     respond_to do |format|
       format.html { head :no_content }
       format.json { render json: {result: 'ok', url: pic.p.url }, status: :ok }
