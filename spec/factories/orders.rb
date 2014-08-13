@@ -77,6 +77,7 @@ FactoryGirl.define do
   end
 
   factory :auto_maintain_1, class: Maintain do
+    order_id Order.first.id
     outlook_desc '良好'
     buy_date '2008-10-01'
     VIN "040471abcd"
@@ -177,6 +178,7 @@ FactoryGirl.define do
   end
 
   factory :auto_maintain_2, class: Maintain do
+    order_id Order.first.id
     outlook_desc '残花败柳'
     buy_date '2008-10-01'
     VIN "040471abcd"

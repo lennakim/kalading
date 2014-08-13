@@ -281,24 +281,575 @@ a {
 <div class="results">
 <div id="div_group_1" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_1" class="passed">订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 id用于订单的修改</dt>
+  <dt id="example_group_1" class="passed">查询城市的服务能力.返回每天可下单数量。start_date为起始日期，end_date为终止日期。</dt>
 <h5>METHOD:&nbsp&nbspGET</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://115.28.132.220:81/orders?auth_token=i43TT4GGMw7r4iiBicR_&page=1&per=2
+http://115.28.132.220:81/city_capacity/5307033e098e719c45000043.json?start_date=2014-05-13&end_date=2014-06-12
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "2014-08-13": 1,
+  "2014-08-14": 1,
+  "2014-08-15": 1,
+  "2014-08-16": 1,
+  "2014-08-17": 1,
+  "2014-08-18": 1,
+  "2014-08-19": 1,
+  "2014-08-20": 1,
+  "2014-08-21": 1,
+  "2014-08-22": 1,
+  "2014-08-23": 1,
+  "2014-08-24": 1,
+  "2014-08-25": 1,
+  "2014-08-26": 1,
+  "2014-08-27": 1,
+  "2014-08-28": 1,
+  "2014-08-29": 1,
+  "2014-08-30": 1,
+  "2014-08-31": 1,
+  "2014-09-01": 1,
+  "2014-09-02": 1,
+  "2014-09-03": 1,
+  "2014-09-04": 1,
+  "2014-09-05": 1,
+  "2014-09-06": 1,
+  "2014-09-07": 1,
+  "2014-09-08": 1,
+  "2014-09-09": 1,
+  "2014-09-10": 1,
+  "2014-09-11": 1,
+  "2014-09-12": 1,
+  "2014-09-13": 1
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('9.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询2014-05-13到2014-06-01的服务能力</span><span class='duration'>0.24561s</span></dd>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_2" class="passed">查询车型保养套餐</dt>
+<h5>METHOD:&nbsp&nbspGET</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_order/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "price": 525.0,
+  "price_without_discount": 525.0,
+  "service_price": 150.0,
+  "discount": {
+  },
+  "pic_url": "http://intranet.kalading.com/assets/car_blue.png",
+  "name": "丰田(一汽) 兰德酷路泽 上门保养",
+  "parts": [
+    {
+      "机油": [
+        {
+          "brand": "嘉实多",
+          "number": "金嘉护 SN 10W-40",
+          "price": 273.0
+        }
+      ]
+    },
+    {
+      "机滤": [
+        {
+          "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
+          "price": 28.0
+        }
+      ]
+    },
+    {
+      "空调滤清器": [
+        {
+          "brand": "汉格斯特 Hengst",
+          "number": "5280cb96098e71d85e000354",
+          "spec": "",
+          "price": 74.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "卡拉丁",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    }
+  ],
+  "applicable_parts": [
+    {
+      "空调滤清器": [
+        {
+          "brand": "汉格斯特 Hengst",
+          "number": "5280cb96098e71d85e000354",
+          "spec": "",
+          "price": 74.0
+        },
+        {
+          "brand": "曼牌 Mann",
+          "number": "528af3e8098e71805900228a",
+          "spec": "双效活性炭",
+          "price": 120.0
+        },
+        {
+          "brand": "曼牌 Mann",
+          "number": "5246c8f1098e71092800024a",
+          "spec": "",
+          "price": 99.0
+        },
+        {
+          "brand": "马勒 ",
+          "number": "5298b96f098e716daf000889",
+          "spec": "",
+          "price": 49.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "卡拉丁",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    },
+    {
+      "机滤": [
+        {
+          "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
+          "price": 28.0
+        }
+      ]
+    },
+    {
+      "机油": [
+        {
+          "brand": "嘉实多",
+          "number": "金嘉护 SN 10W-40",
+          "price": 273.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "黄喜力HX5 10W-40",
+          "price": 276.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "磁护 SN 5W-40",
+          "price": 522.0
+        },
+        {
+          "brand": "美孚",
+          "number": "美孚1号 0W-40",
+          "price": 560.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "极护 SN 0W-40",
+          "price": 672.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "灰喜力ULTRA 5W-40",
+          "price": 708.0
+        }
+      ]
+    }
+  ]
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('18.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询丰田(一汽) 兰德酷路泽 4.7L 2007.12-2012.02保养套餐</span><span class='duration'>0.25106s</span></dd>
+  </dl>
+</div>
+<div id="div_group_3" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_3" class="passed">查询车辆品牌</dt>
+<h5>METHOD:&nbsp&nbspGET</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_brands/531f1fdb098e71b3f8003522.json
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 [
   {
-    "id": "53dd0f48421aa98eb4000005",
+    "_id": "531f1fdb098e71b3f8003531",
+    "name": "哈弗H5"
+  },
+  {
+    "_id": "531f1fdb098e71b3f800353f",
+    "name": "腾翼C30"
+  }
+]
+</pre></p>
+    <script type="text/javascript">moveProgressBar('27.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询长城</span><span class='duration'>0.03654s</span></dd>
+  </dl>
+</div>
+<div id="div_group_4" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_4" class="passed">新建保养订单。city_id为城市的ID，client_id为用户标识（openid）。</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_order/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "嘉实多",
+      "number": "极护 SN 0W-40"
+    },
+    {
+      "brand": "汉格斯特 Hengst",
+      "number": "5280cb8e098e71d85e0000d0"
+    },
+    {
+      "brand": "曼牌 Mann",
+      "number": "5246c7e5098e7109280001cd"
+    },
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "client_id": "040471abcd",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "succeeded",
+  "seq": 1866
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('36.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.10792s</span></dd>
+  </dl>
+</div>
+<div id="div_group_5" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_5" class="passed">查询换空调滤+PM2.5滤芯价格，client_id为用户标识（openid）。</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_price/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "曼牌 Mann",
+      "number": "528af433098e7180590042ca"
+    },
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "client_id": "040471abcd",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "price": 50.0,
+  "price_without_discount": 50.0,
+  "service_price": 50.0,
+  "discount": {
+  },
+  "pic_url": "http://intranet.kalading.com/assets/car_blue.png",
+  "name": "丰田(一汽) 兰德酷路泽 上门保养",
+  "parts": [
+    {
+      "空调滤清器": [
+        {
+          "brand": "曼牌 Mann",
+          "number": "528af433098e7180590042ca",
+          "spec": null,
+          "price": 0.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "卡拉丁",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    }
+  ],
+  "applicable_parts": [
+    {
+      "空调滤清器": [
+        {
+          "brand": "汉格斯特 Hengst",
+          "number": "5280cb96098e71d85e000354",
+          "spec": "",
+          "price": 74.0
+        },
+        {
+          "brand": "曼牌 Mann",
+          "number": "528af3e8098e71805900228a",
+          "spec": "双效活性炭",
+          "price": 120.0
+        },
+        {
+          "brand": "曼牌 Mann",
+          "number": "5246c8f1098e71092800024a",
+          "spec": "",
+          "price": 99.0
+        },
+        {
+          "brand": "马勒 ",
+          "number": "5298b96f098e716daf000889",
+          "spec": "",
+          "price": 49.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "卡拉丁",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    },
+    {
+      "机滤": [
+        {
+          "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
+          "price": 28.0
+        }
+      ]
+    },
+    {
+      "机油": [
+        {
+          "brand": "嘉实多",
+          "number": "金嘉护 SN 10W-40",
+          "price": 273.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "黄喜力HX5 10W-40",
+          "price": 276.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "磁护 SN 5W-40",
+          "price": 522.0
+        },
+        {
+          "brand": "美孚",
+          "number": "美孚1号 0W-40",
+          "price": 560.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "极护 SN 0W-40",
+          "price": 672.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "灰喜力ULTRA 5W-40",
+          "price": 708.0
+        }
+      ]
+    }
+  ]
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('45.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询换空调滤+PM2.5滤芯价格</span><span class='duration'>0.21309s</span></dd>
+  </dl>
+</div>
+<div id="div_group_6" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_6" class="passed">新建换空调滤+PM2.5滤芯订单，client_id为用户标识（openid）。</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_order/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "曼牌 Mann",
+      "number": "528af433098e7180590042ca"
+    },
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "client_id": "040471abcd",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "succeeded",
+  "seq": 1867
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('54.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.07107s</span></dd>
+  </dl>
+</div>
+<div id="div_group_7" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_7" class="passed">新建PM2.5滤芯订单，client_id为用户标识（openid）。</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_order/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "client_id": "040471abcd",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "succeeded",
+  "seq": 1868
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('63.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.05924s</span></dd>
+  </dl>
+</div>
+<div id="div_group_8" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_8" class="passed">新建换空调滤+PM2.5滤芯订单，用户来源为小熊(53eb2a0e9a94e4e940000907)。</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_order/531f1ed0098e71b3f80001fb.json
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "曼牌 Mann",
+      "number": "528af433098e7180590042ca"
+    },
+    {
+      "brand": "卡拉丁",
+      "number": "53672bab9a94e45d440005ae"
+    }
+  ],
+  "info": {
+    "address": "北京朝阳区光华路888号",
+    "name": "王一迅",
+    "phone_num": "13888888888",
+    "client_id": "040471abcd",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "卡拉丁汽车技术",
+    "client_comment": "请按时到场",
+    "city_id": "5307033e098e719c45000043",
+    "user_type_id": "53eb2a0e9a94e4e940000907"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "succeeded",
+  "seq": 1869
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('72.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单</span><span class='duration'>0.06287s</span></dd>
+  </dl>
+</div>
+<div id="div_group_9" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_9" class="passed">查询多个手机号的订单列表，phone_nums为手机号列表。支持分页，page为页数（从1开始），per为每页返回的订单个数。返回空表示到达最后一页。</dt>
+<h5>METHOD:&nbsp&nbspGET</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/orders.json?phone_nums[]=13888888888&phone_nums[]=13666666666&page=1&per=6
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+[
+  {
+    "id": "53eb2fb4421aa95e44000024",
     "name": "Name of client",
     "address": "Some address",
-    "phone_num": "13888888888",
+    "phone_num": "13666666666",
     "auto_km": "2000",
     "vin": "VIN of auto",
     "car_num": "京MM0588",
     "client_comment": "请按时到场",
-    "state": "服务完成",
-    "serve_datetime": "05-13 19:44",
+    "state": "已回访",
+    "serve_datetime": "2014-04-13 19:44",
     "auto_model": "五菱(上汽通用) 五菱宏光  1.4L 2010.01-2013.07",
     "service_types": [
       {
@@ -313,7 +864,31 @@ http://115.28.132.220:81/orders?auth_token=i43TT4GGMw7r4iiBicR_&page=1&per=2
     "cancel_reason": ""
   },
   {
-    "id": "53dd0f48421aa98eb4000004",
+    "id": "53eb2fb4421aa95e44000023",
+    "name": "Name of client",
+    "address": "Some address",
+    "phone_num": "13888888888",
+    "auto_km": "2000",
+    "vin": "VIN of auto",
+    "car_num": "京MM0588",
+    "client_comment": "请按时到场",
+    "state": "服务完成",
+    "serve_datetime": "2014-05-13 19:44",
+    "auto_model": "五菱(上汽通用) 五菱宏光  1.4L 2010.01-2013.07",
+    "service_types": [
+      {
+        "name": "换机油机滤空气滤"
+      }
+    ],
+    "parts": [
+
+    ],
+    "price": 150.0,
+    "pay_type": "刷卡",
+    "cancel_reason": ""
+  },
+  {
+    "id": "53eb2fb4421aa95e44000022",
     "name": "Name of client",
     "address": "Some address",
     "phone_num": "13888888888",
@@ -322,8 +897,94 @@ http://115.28.132.220:81/orders?auth_token=i43TT4GGMw7r4iiBicR_&page=1&per=2
     "car_num": "京N000M3",
     "client_comment": "请按时到场",
     "state": "已预约",
-    "serve_datetime": "05-16 15:44",
+    "serve_datetime": "2014-05-16 15:44",
     "auto_model": "大众(一汽) 高尔夫6 1.6L 2010.09-2014",
+    "service_types": [
+      {
+        "name": "换机油机滤空气滤"
+      }
+    ],
+    "parts": [
+
+    ],
+    "price": 150.0,
+    "pay_type": "刷卡",
+    "cancel_reason": ""
+  },
+  {
+    "id": "53eb2fb4421aa95e44000021",
+    "name": "Sheldon",
+    "address": "订单地址",
+    "phone_num": "13888888888",
+    "auto_km": "20000",
+    "vin": "VIN of auto",
+    "car_num": "京N333M3",
+    "client_comment": "请按时到场",
+    "state": "未预约",
+    "serve_datetime": "2014-05-18 12:00",
+    "auto_model": "一汽轿车 CA系列 1.8L 08/88 -> 12/90",
+    "service_types": [
+      {
+        "name": "换机油机滤空气滤"
+      },
+      {
+        "name": "换空调滤"
+      }
+    ],
+    "parts": [
+      {
+        "brand": "嘉实多",
+        "type": "机油",
+        "number": "金嘉护 SN 10W-40 4L",
+        "price": 138.0
+      },
+      {
+        "brand": "卡拉丁",
+        "type": "PM2.5特效滤芯",
+        "number": "PM2.5滤芯-1",
+        "price": 0.0
+      }
+    ],
+    "price": 200.0,
+    "pay_type": "刷卡",
+    "cancel_reason": ""
+  },
+  {
+    "id": "53eb2cc9421aa96802000046",
+    "name": "Name of client",
+    "address": "Some address",
+    "phone_num": "13666666666",
+    "auto_km": "2000",
+    "vin": "VIN of auto",
+    "car_num": "京MM0588",
+    "client_comment": "请按时到场",
+    "state": "已回访",
+    "serve_datetime": "2014-04-13 19:44",
+    "auto_model": "五菱(上汽通用) 五菱宏光  1.4L 2010.01-2013.07",
+    "service_types": [
+      {
+        "name": "换机油机滤空气滤"
+      }
+    ],
+    "parts": [
+
+    ],
+    "price": 150.0,
+    "pay_type": "刷卡",
+    "cancel_reason": ""
+  },
+  {
+    "id": "53eb2cc9421aa96802000045",
+    "name": "Name of client",
+    "address": "Some address",
+    "phone_num": "13888888888",
+    "auto_km": "2000",
+    "vin": "VIN of auto",
+    "car_num": "京MM0588",
+    "client_comment": "请按时到场",
+    "state": "服务完成",
+    "serve_datetime": "2014-05-13 19:44",
+    "auto_model": "五菱(上汽通用) 五菱宏光  1.4L 2010.01-2013.07",
     "service_types": [
       {
         "name": "换机油机滤空气滤"
@@ -338,72 +999,33 @@ http://115.28.132.220:81/orders?auth_token=i43TT4GGMw7r4iiBicR_&page=1&per=2
   }
 ]
 </pre></p>
-    <script type="text/javascript">moveProgressBar('20.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">列举第1页订单，每页2个</span><span class='duration'>0.25548s</span></dd>
+    <script type="text/javascript">moveProgressBar('81.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第1页订单，每页6个</span><span class='duration'>0.20574s</span></dd>
 <h5>METHOD:&nbsp&nbspGET</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://115.28.132.220:81/orders?auth_token=ncVcxFJKoCHy-LzMCvzy&page=3&per=2
+http://115.28.132.220:81/orders.json?phone_nums[]=13888888888&phone_nums[]=13666666666&page=100&per=6
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 [
 
 ]
 </pre></p>
-    <script type="text/javascript">moveProgressBar('40.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">列举第3页订单，到达最后一页</span><span class='duration'>0.15638s</span></dd>
+    <script type="text/javascript">moveProgressBar('90.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第100页订单，到达最后一页</span><span class='duration'>0.12013s</span></dd>
   </dl>
 </div>
-<div id="div_group_2" class="example_group passed">
+<div id="div_group_10" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_2" class="passed">设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，5: 服务完成，8：服务取消</dt>
+  <dt id="example_group_10" class="passed">设置订单属性，包括状态，取消原因等。状态取值：8：服务取消</dt>
 <h5>METHOD:&nbsp&nbspPUT</h5>
 <h4><strong>URL:&nbsp&nbsp
-http://115.28.132.220:81/orders/53dd0f48421aa98eb4000025?auth_token=CV8JghY478sxVASqoR47
+http://115.28.132.220:81/orders/53eb2fb4421aa95e44000043
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
   "order": {
     "state": 8,
-    "cancel_reason": "客户联系不上"
-  }
-}
-</pre></p>
-<h5>返回值（HTTP response body）:</h5><p><pre>
-{
-  "result": "ok"
-}
-</pre></p>
-    <script type="text/javascript">moveProgressBar('60.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">设置订单状态为服务取消，并说明原因为：客户联系不上</span><span class='duration'>0.27606s</span></dd>
-<h5>METHOD:&nbsp&nbspPUT</h5>
-<h4><strong>URL:&nbsp&nbsp
-http://115.28.132.220:81/orders/53dd0f49421aa98eb4000035?auth_token=bjXSE9NtFzjRPSayWHLW
-<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
-<h5>输入参数（HTTP request body）:</h5><p><pre>
-{
-  "order": {
-    "state": 4,
-    "serve_datetime": "2014-05-08 14:00"
-  }
-}
-</pre></p>
-<h5>返回值（HTTP response body）:</h5><p><pre>
-{
-  "result": "ok"
-}
-</pre></p>
-    <script type="text/javascript">moveProgressBar('80.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">设置订单状态为已预约，并修改服务时间</span><span class='duration'>0.24787s</span></dd>
-<h5>METHOD:&nbsp&nbspPUT</h5>
-<h4><strong>URL:&nbsp&nbsp
-http://115.28.132.220:81/orders/53dd0f49421aa98eb4000045?auth_token=nVwmS4zpNdZ7g_WPVi6o
-<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
-<h5>输入参数（HTTP request body）:</h5><p><pre>
-{
-  "order": {
-    "state": 5,
-    "serve_datetime": "2014-05-08 14:00",
-    "serve_end_datetime": "2014-05-08 16:00"
+    "cancel_reason": "有事先不做了"
   }
 }
 </pre></p>
@@ -413,11 +1035,11 @@ http://115.28.132.220:81/orders/53dd0f49421aa98eb4000045?auth_token=nVwmS4zpNdZ7
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">完成订单</span><span class='duration'>0.27255s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">设置订单状态为服务取消，并说明原因为：有事先不做了</span><span class='duration'>0.34969s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>1.20935 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "5 examples, 0 failures";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>1.72599 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "11 examples, 0 failures";</script>
 </div>
 </div>
 </body>
