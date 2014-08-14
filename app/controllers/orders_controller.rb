@@ -12,17 +12,12 @@ class OrdersController < ApplicationController
   def index
     if current_user
       if current_user.roles == ['5']
-        @orders = Order.where :engineer => current_user
-        if params[:state].blank?
-          @orders = @orders.where :state.gte => 3, :state.lte => 5
-        end
+        @orders = Order.where(:engineer => current_user).any_of({state: 3}, {state: 4, part_deliver_state: 1}, {state: 5}, {state: 6}, {state: 7})
       else
         @orders = Order.all
       end
     else
       if request.format.json?
-        #return render json: t(:open_id_needed), status: :bad_request if params[:client_id].blank?
-        #@orders = Order.where client_id: params[:client_id]
         return render json: t(:phone_num_needed), status: :bad_request if params[:phone_nums].blank?
         @orders = Order.all
       else
@@ -32,6 +27,10 @@ class OrdersController < ApplicationController
     
     if !params[:state].blank?
       @orders = @orders.where(state: params[:state])
+    end
+
+    if params[:states].present?
+      @orders = @orders.any_of(params[:states].collect { |x| {state: x.to_i} } )
     end
 
     if !params[:part_deliver_state].blank?
@@ -92,9 +91,7 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html {
         @orders = @orders.desc(:seq).page params[:page]
-        if params[:state].to_i == 4 && params[:part_deliver_state].to_i == 0
-          render layout: 'storehouses'
-        elsif params[:state].to_i == 5 && params[:part_deliver_state].to_i == 1
+        if params[:states]
           render layout: 'storehouses'
         end
       }
@@ -156,6 +153,7 @@ class OrdersController < ApplicationController
     o = Order.find(params[:id])
     @order = o.clone
     @order.state = 0
+    @order.part_deliver_state = 0
     @order.serve_datetime = DateTime.now.since(1.days)
     @order.discounts = nil
     @order.calc_price
@@ -242,27 +240,40 @@ class OrdersController < ApplicationController
         params[:order][:state] = 3
         notice = I18n.t(:order_assigned_notify, seq: @order.seq, name: u.name)
       when 3
-        params[:order][:state] = 4
-        notice = I18n.t(:order_scheduled_notify, seq: @order.seq)
-      when 4
-        if @order.part_deliver_state == 1
-          params[:order][:state] = 5
-          notice = I18n.t(:order_served_notify, seq: @order.seq)
+        if params[:order][:part_deliver_state] == '1'
+          params[:order][:state] = 3
+          notice = I18n.t(:order_delivered_notify, seq: @order.seq)
         else
           params[:order][:state] = 4
+          notice = I18n.t(:order_scheduled_notify, seq: @order.seq)
+        end
+      when 4
+        if params[:order][:part_deliver_state] == '1'
+          params[:order][:state] = 4
           notice = I18n.t(:order_delivered_notify, seq: @order.seq)
+        else
+          if @order.part_deliver_state == 0
+            return render json: {error: t(:order_create_failed)}, status: :bad_request
+          end
+          params[:order][:state] = 5
+          notice = I18n.t(:order_served_notify, seq: @order.seq)
         end
       when 5
-        if @order.part_deliver_state == 2
-          params[:order][:state] = 6
-          notice = I18n.t(:order_handovered_notify, seq: @order.seq)
-        else
+        if params[:order][:part_deliver_state] == '2'
           params[:order][:state] = 5
           notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
+        else
+          params[:order][:state] = 6
+          notice = I18n.t(:order_handovered_notify, seq: @order.seq)
         end
       when 6
         params[:order][:state] = 7
         notice = I18n.t(:order_revisited_notify, seq: @order.seq)
+      when 8
+        params[:order][:state] = 8
+        if params[:order][:part_deliver_state] == '2'
+          notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
+        end
       when 10
         params[:order][:state] = 5
         notice = I18n.t(:order_served_notify, seq: @order.seq)
@@ -642,11 +653,16 @@ class OrdersController < ApplicationController
   end
   
   def order_prompt
-    if !params[:state].blank?
-      @orders = Order.where(state: params[:state])
+    @orders = Order.all
+    if params[:state].present?
+      @orders = @orders.where(state: params[:state])
     end
 
-    if !params[:part_deliver_state].blank?
+    if params[:states].present?
+      @orders = @orders.any_of(params[:states].collect { |x| {state: x.to_i} } )
+    end
+
+    if params[:part_deliver_state].present?
       @orders = @orders.where(part_deliver_state: params[:part_deliver_state])
     end
     

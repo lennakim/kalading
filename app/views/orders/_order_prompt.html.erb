@@ -5,11 +5,14 @@
 
 <div class="modal-body">
   <ul>
-    <% if params[:state].to_i == 0 && @orders.count != 0 %>
+    <% if params[:states] == ['0'] %>
     <li><%= link_to t(:new_orders_prompt, n: @orders.count), orders_path(state: 0) %></li>
     <% end %>
-    <% if params[:state].to_i == 4 && params[:part_deliver_state].to_i == 0 && @orders.count != 0 %>
-    <li><%= link_to t(:not_delivered_orders_prompt, n: @orders.count), orders_path(state: 4, part_deliver_state: 0) %></li>
+    <% if params[:part_deliver_state].present? && params[:part_deliver_state].to_i == 0 %>
+    <li><%= link_to t(:not_delivered_orders_prompt, n: @orders.count), orders_path(states: [3, 4], part_deliver_state: 0) %></li>
+    <% end %>
+    <% if params[:part_deliver_state].present? && params[:part_deliver_state].to_i == 1 %>
+    <li><%= link_to t(:not_backed_orders_prompt, n: @orders.count), orders_path(states: [5, 8], part_deliver_state: 1) %></li>
     <% end %>
   </ul>
 </div>

@@ -1,14 +1,14 @@
 <div id="modal-prompt" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true"></div>
 <script type="text/javascript">
   function new_order_prompt() {
-    <% if state == 4 %>
-      $.getScript("<%= order_prompt_path(state: state, part_deliver_state: part_deliver_state) %>");
-    <% else %>
-      $.getScript("<%= order_prompt_path state: state %>");
+    <% if part_deliver_state.nil? %>
+      $.getScript("<%= order_prompt_path states: states %>");
+    <% elsif states %>
+      $.getScript("<%= order_prompt_path(states: states, part_deliver_state: part_deliver_state) %>");
     <% end %>
-    setTimeout(function() {new_order_prompt();}, 1000*60*2);
+    setTimeout(function() {new_order_prompt();}, 1000*60*5);
   }
   $(function() {
-    setTimeout(function() {new_order_prompt();}, 1000*60*2);
+    setTimeout(function() {new_order_prompt();}, 1000*60*5);
 });
 </script>

@@ -18,17 +18,13 @@
                   <li>
                 <% end %>
                   <% if can? :edit_all, Order %>
-                    <% if Order::STATE_STRINGS[s] == 'scheduled' %>
-                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 1).count.to_s + ')', orders_path(state: s, part_deliver_state: 1) %>
-                    <% elsif Order::STATE_STRINGS[s] == 'serve_done' %>
+                    <% if Order::STATE_STRINGS[s] == 'serve_done' %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
                     <% else %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
                     <% end %>
                   <% else %>
-                    <% if Order::STATE_STRINGS[s] == 'scheduled' %>
-                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 1).where(engineer: current_user).count.to_s + ')', orders_path(state: s, part_deliver_state: 1) %>
-                    <% elsif Order::STATE_STRINGS[s] == 'serve_done' %>
+                    <% if Order::STATE_STRINGS[s] == 'serve_done' %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).where(engineer: current_user).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
                     <% else %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).where(engineer: current_user).count.to_s + ')', orders_path(state: s) %>
@@ -62,6 +58,6 @@
       </footer>
 
     </div> <!-- /container -->
-    <%= render 'orders/prompt', state: 0 %>
+    <%= render 'orders/prompt', states: [0], part_deliver_state: nil if can? :edit_all, Order%>
   </body>
 </html>

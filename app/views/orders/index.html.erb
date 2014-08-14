@@ -1,12 +1,12 @@
 <%- model_class = Order -%>
 <div class="page-header">
   <h4>
-  <% if params[:state].present? %>
-    <% if Order::STATE_STRINGS[params[:state].to_i] == 'scheduled' && params[:part_deliver_state].to_i == 0 %>
+  <% if params[:state].present? || params[:states].present? %>
+    <% if params[:part_deliver_state] == '0' %>
       <%= t(:orders) + ' - ' + t(:to_be_delivered) %>
-    <% elsif Order::STATE_STRINGS[params[:state].to_i] == 'serve_done' && params[:part_deliver_state].to_i == 1 %>
+    <% elsif params[:part_deliver_state] == '1' %>
       <%= t(:orders) + ' - ' + t(:to_be_backed) %>
-    <% else %>
+    <% elsif params[:state].present? %>
       <%= t(:orders) + ' - ' + t(Order::STATE_STRINGS[params[:state].to_i])  %>
     <% end %>
   <% else %>

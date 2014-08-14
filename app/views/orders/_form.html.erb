@@ -123,6 +123,26 @@
       <%= f.button :submit, t(:ok), :class => 'btn-primary', :name => "cancel" %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
+  <% elsif params[:part_deliver] %>
+      <%= f.input :part_deliver_state, :as => :hidden, :input_html => { :value => "1" } %>
+      <h5><%= t(:part_infos) %></h5>
+      <div class="controls" id="delivering-parts">
+        <%= render 'parts_table', readonly: false %>
+      </div>
+      <div class="form-actions">
+        <%= f.button :submit, t(:finish_parts_deliver), :class => 'btn-primary' %>
+        <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+      </div>
+  <% elsif params[:part_back] %>
+    <%= f.input :part_deliver_state, :as => :hidden, :input_html => { :value => "2" } %>
+    <h5><%= t(:part_infos) %></h5>
+    <div class="controls" id="delivering-parts">
+      <%= render 'parts_table', readonly: false %>
+    </div>
+    <div class="form-actions">
+      <%= f.button :submit, t(:finish_parts_back), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
     <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
     <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: true %>
@@ -142,94 +162,70 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'scheduled' %>
-    <% if @order.part_deliver_state == 0 %>
-      <%= f.input :part_deliver_state, :as => :hidden, :input_html => { :value => "1" } %>
-      <h5><%= t(:part_infos) %></h5>
-      <div class="controls" id="delivering-parts">
-        <%= render 'parts_table', readonly: false %>
+    <h5><%= t(:gather_auto_info) %></h5>
+    <%= f.input :auto_km, label: t(:auto_km) %>
+    <%= f.input :oil_out, label: t(:oil_out) %>
+    <%= f.input :oil_in, label: t(:oil_in) %>
+    <%= f.input :front_wheels, label: t(:front_wheels) %>
+    <%= f.input :back_wheels, label: t(:back_wheels) %>
+    <%= f.input :auto_km_next, label: t(:auto_km_next) %>
+    <%= f.input :serve_datetime_next, label: t(:serve_datetime_next), :as => :datetime_picker %>
+    <%= f.input :vin %>
+    <%= f.input :engine_num, label: t(:engine_num) %>
+    <%= f.input :registration_date, as: :date_picker, label: t(:auto_reg_date) %>
+    <div class="control-group">
+      <label for="search-car-model" class="control-label"><%= t(:auto_submodel) %></label>
+      <div class="controls" id="search-car-model">
+        <input type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="<%= @order.auto_submodel ? @order.auto_submodel.full_name : '' %>"/>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
       </div>
-      <div class="form-actions">
-        <%= f.button :submit, t(:finish_parts_deliver), :class => 'btn-primary' %>
-        <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
-      </div>
-    <% else %>
-      <h5><%= t(:gather_auto_info) %></h5>
-      <%= f.input :auto_km, label: t(:auto_km) %>
-      <%= f.input :oil_out, label: t(:oil_out) %>
-      <%= f.input :oil_in, label: t(:oil_in) %>
-      <%= f.input :front_wheels, label: t(:front_wheels) %>
-      <%= f.input :back_wheels, label: t(:back_wheels) %>
-      <%= f.input :auto_km_next, label: t(:auto_km_next) %>
-      <%= f.input :serve_datetime_next, label: t(:serve_datetime_next), :as => :datetime_picker %>
-      <%= f.input :vin %>
-      <%= f.input :engine_num, label: t(:engine_num) %>
-      <%= f.input :registration_date, as: :date_picker, label: t(:auto_reg_date) %>
-      <div class="control-group">
-        <label for="search-car-model" class="control-label"><%= t(:auto_submodel) %></label>
-        <div class="controls" id="search-car-model">
-          <input type="text" autocomplete="off" id="car-model-search" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="<%= @order.auto_submodel ? @order.auto_submodel.full_name : '' %>"/>
-          <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
-        </div>
-      </div>
-      <%= f.input :auto_submodel_id, :as => :hidden %>
-      <div id="auto_submodels">
-      <% if @order.auto_submodel %>
-        <%= render 'auto_submodels/auto_submodels' %>
-      <% end %>
-      </div>
-      <h5><%= t(:finished_service_types) %></h5>
-      <%= f.input :oil_filter_changed, label: t(:oil_filter_changed), :as => :boolean %>
-      <%= f.input :air_filter_changed, label: t(:air_filter_changed), :as => :boolean %>
-      <%= f.input :cabin_filter_changed, label: t(:cabin_filter_changed), :as => :boolean %>
-      <%= f.input :charged, label: t(:charged, p: (humanized_money_with_symbol @order.price) ), :as => :boolean %>
-      <%= f.input :oil_gathered, label: t(:oil_gathered), :as => :boolean %>
-      <h5 id="others"><%= t(:others) %></h5>
-      <%= f.input :pay_type, label: t(:pay_type), collection: Order::PAY_TYPES, label_method:  lambda { |s| t(Order::PAY_TYPE_STRINGS[s]) }, include_blank: false %>
-      <%= f.input :reciept_type, label: t(:reciept_type), collection: Order::RECIEPT_TYPES, label_method:  lambda { |s| t(Order::RECIEPT_TYPE_STRINGS[s]) }, include_blank: false %>
-      <%= f.input :reciept_title, label: t(:reciept_title) %>
-      <%= f.input :reciept_address, label: t(:reciept_address) %>
-      <table id="pictures" class="table table-hover table-small">
-        <tbody>
-          <%= f.fields_for :pictures, :wrapper => false do |sf| %>
-            <tr class="fields">
-              <td>
-                <%= sf.input :p, label: t(:picture) %>
-              </td>
-              <td><%= image_tag sf.object.p.url(:small) %></td>
-              <td>
-                <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
-      <%= render 'comments', :f => f %>
-      <div class="form-actions">
-        <%= f.button :submit, t(:serve_ok), :class => 'btn-primary' %>
-        <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
-      </div>
-      <%= javascript_include_tag "application" %>
+    </div>
+    <%= f.input :auto_submodel_id, :as => :hidden %>
+    <div id="auto_submodels">
+    <% if @order.auto_submodel %>
+      <%= render 'auto_submodels/auto_submodels' %>
     <% end %>
+    </div>
+    <h5><%= t(:finished_service_types) %></h5>
+    <%= f.input :oil_filter_changed, label: t(:oil_filter_changed), :as => :boolean %>
+    <%= f.input :air_filter_changed, label: t(:air_filter_changed), :as => :boolean %>
+    <%= f.input :cabin_filter_changed, label: t(:cabin_filter_changed), :as => :boolean %>
+    <%= f.input :charged, label: t(:charged, p: (humanized_money_with_symbol @order.price) ), :as => :boolean %>
+    <%= f.input :oil_gathered, label: t(:oil_gathered), :as => :boolean %>
+    <h5 id="others"><%= t(:others) %></h5>
+    <%= f.input :pay_type, label: t(:pay_type), collection: Order::PAY_TYPES, label_method:  lambda { |s| t(Order::PAY_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :reciept_type, label: t(:reciept_type), collection: Order::RECIEPT_TYPES, label_method:  lambda { |s| t(Order::RECIEPT_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :reciept_title, label: t(:reciept_title) %>
+    <%= f.input :reciept_address, label: t(:reciept_address) %>
+    <table id="pictures" class="table table-hover table-small">
+      <tbody>
+        <%= f.fields_for :pictures, :wrapper => false do |sf| %>
+          <tr class="fields">
+            <td>
+              <%= sf.input :p, label: t(:picture) %>
+            </td>
+            <td><%= image_tag sf.object.p.url(:small) %></td>
+            <td>
+              <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
+    <%= render 'comments', :f => f %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:serve_ok), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+    <%= javascript_include_tag "application" %>
   <% elsif Order::STATE_STRINGS[@order.state] == 'serve_done' %>
-    <% if @order.part_deliver_state == 1 %>
-      <%= f.input :part_deliver_state, :as => :hidden, :input_html => { :value => "2" } %>
-      <h5><%= t(:part_infos) %></h5>
-      <div class="controls" id="delivering-parts">
-        <%= render 'parts_table', readonly: false %>
-      </div>
-      <div class="form-actions">
-        <%= f.button :submit, t(:finish_parts_back), :class => 'btn-primary' %>
-        <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
-      </div>
-    <% else %>
-      <%= render 'comments', :f => f %>
-      <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
-      <div class="form-actions">
-        <%= f.button :submit, t(:handover_ok), :class => 'btn-primary' %>
-        <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
-      </div>
-    <% end %>
+    <%= render 'comments', :f => f %>
+    <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:handover_ok), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'handovered' %>
     <%= render 'comments', :f => f %>
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>

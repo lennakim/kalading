@@ -30,20 +30,20 @@
               <li><%= link_to t('part_types'), part_types_path %></li>
               <li><%= link_to t('part_brands'), part_brands_path %></li>
               <li><%= link_to t('supplier'), suppliers_path %></li>
-              <% if @orders && params[:state].to_i == 4 && params[:part_deliver_state].to_i == 0 %>
+              <% if @orders && params[:part_deliver_state].to_i == 0 %>
                 <li class="active">
               <% else %>
                 <li>
               <% end %>
-                  <%= link_to t('to_be_delivered_orders', n: Order.where(state: 4, part_deliver_state: 0).count), orders_path(state: 4, part_deliver_state: 0) %>
+                  <%= link_to t('to_be_delivered_orders', n: Order.any_of({ state: 3 }, { state: 4 }).where(part_deliver_state: 0).count), orders_path(states: [3,4], part_deliver_state: 0) %>
                 </li>
 
-              <% if @orders && params[:state].to_i == 5 && params[:part_deliver_state].to_i == 1 %>
+              <% if @orders && params[:part_deliver_state].to_i == 1 %>
                 <li class="active">
               <% else %>
                 <li>
               <% end %>
-                  <%= link_to t('to_be_backed_orders', n: Order.where(state: 5, part_deliver_state: 1).count), orders_path(state: 5, part_deliver_state: 1) %>
+                  <%= link_to t('to_be_backed_orders', n: Order.any_of({ state: 5 }, { state: 8 }).where(part_deliver_state: 1).count), orders_path(states: [5, 8], part_deliver_state: 1) %>
                 </li>
             </ul>
           </div><!--/.well -->
@@ -59,6 +59,8 @@
       </footer>
 
     </div> <!-- /container -->
-    <%= render 'orders/prompt', state: 4, part_deliver_state: 0 %>
+    <% if params[:states] %>
+      <%= render 'orders/prompt', states: params[:states], part_deliver_state: params[:part_deliver_state] %>
+    <% end %>
   </body>
 </html>
