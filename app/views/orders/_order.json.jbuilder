@@ -31,3 +31,10 @@ json.price o.calc_price.to_f
 json.pay_type t(Order::PAY_TYPE_STRINGS[o.pay_type])
 json.cancel_reason o.cancel_reason
 json.part_deliver_state o.part_deliver_state
+if o.reciept_type == 0
+  json.reciept_need false
+else
+  json.reciept_need true
+  json.reciept_title o.reciept_title
+  json.reciept_address o.reciept_address
+end
