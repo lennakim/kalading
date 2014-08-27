@@ -723,7 +723,7 @@ private
 
   def check_discount
     if params[:discount]
-      discount = Discount.find params[:discount]
+      discount = Discount.find_by token: params[:discount]
       if discount
         if discount.expire_date < Date.today
           @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
