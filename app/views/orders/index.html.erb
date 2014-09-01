@@ -162,68 +162,67 @@
   </div>
 </div>
 <script type="text/javascript">
-  $(function(){
-    // 百度地图API功能
+$(function() {
     var map = new BMap.Map("map");
     map.enableScrollWheelZoom();
     map.enableContinuousZoom();
     var point = new BMap.Point(116.393597, 39.989918);
     map.centerAndZoom(point,15);
 
-    //$('#map-div').on('show', function () {
-      var myGeo = new BMap.Geocoder();
-      var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
-      points = [
-      <% @orders.select {|x| x.state >= 2 && x.state <=4 && x.city && x.city.name == t(:beijing) }.each do |o| %>
-        {
-          seq: "<%= o.seq %>",
-          state: "<%= t(Order::STATE_STRINGS[o.state]) %>",
-          address: "<%= o.address %>",
-          city: "<%= o.city.name %>",
-          color: colors["<%= o.state %>"] },
-      <% end %>
-      ];
-      points.forEach(function(v, i) {
-        myGeo.getPoint(v.address, function(point){
-          if (point) {
-            map.centerAndZoom(point,12);
-
-            var label = new BMap.Label(v.seq, {position: point, offset:new BMap.Size(1,-7)} );  // 创建文本标注对象
-            label.setStyle({
-              color : v.color,
-              fontSize : "12px",
-              height : "20px",
-              lineHeight : "20px",
-              fontFamily:"微软雅黑"
-            });
-            label.addEventListener("click", function(type, target) {
-              var prev = $('#order-' + v.seq).prev().prev();
-              if(prev.size() <= 0)
-                prev = $('#order-table');
-              document.getElementById(prev.attr("id")).scrollIntoView();
-            });
-            label.addEventListener("mouseover", function(type, target) {
-              this.setContent(v.seq + ' ' + v.state + ': ' + v.address);
-              this.setZIndex(100);
-            });
-            label.addEventListener("mouseout", function(type, target) {
-              this.setContent(v.seq);
-            });
-            map.addOverlay(label);
-
-            marker = new BMap.Marker(point);
-            marker.addEventListener("click", function(type, target) {
-              var prev = $('#order-' + v.seq).prev().prev();
-              if(prev.size() <= 0)
-                prev = $('#order-table');
-              document.getElementById(prev.attr("id")).scrollIntoView();
-            });
-            map.addOverlay(marker);
-          }
-        }, v.city);
-      });
+    var myGeo = new BMap.Geocoder();
+    var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
+    points = [
+    <% @orders.select {|x| x.state >= 2 && x.state <=4 && x.city && x.city.name == t(:beijing) }.each do |o| %>
+      {
+        seq: "<%= o.seq %>",
+        state: "<%= t(Order::STATE_STRINGS[o.state]) %>",
+        address: "<%= o.address %>",
+        city: "<%= o.city.name %>",
+        color: colors["<%= o.state %>"] },
+    <% end %>
+    ];
+    points.forEach(function(v, i) {
+        var options = {
+            onSearchComplete: function(results) {
+                if (local.getStatus() != BMAP_STATUS_SUCCESS || results.getCurrentNumPois() <= 0)
+                    return;
+                var label = new BMap.Label(v.seq, {position: results.getPoi(0).point, offset:new BMap.Size(1,-7)} );
+                label.setStyle({
+                  color : v.color,
+                  fontSize : "12px",
+                  height : "20px",
+                  lineHeight : "20px",
+                  fontFamily:"微软雅黑"
+                });
+                label.addEventListener("click", function(type, target) {
+                  var prev = $('#order-' + v.seq).prev().prev();
+                  if(prev.size() <= 0)
+                    prev = $('#order-table');
+                  document.getElementById(prev.attr("id")).scrollIntoView();
+                });
+                label.addEventListener("mouseover", function(type, target) {
+                  this.setContent(v.seq + ' ' + v.state + ': ' + v.address);
+                  this.setZIndex(100);
+                });
+                label.addEventListener("mouseout", function(type, target) {
+                  this.setContent(v.seq);
+                });
+                map.addOverlay(label);
+                marker = new BMap.Marker(point);
+                marker.addEventListener("click", function(type, target) {
+                  var prev = $('#order-' + v.seq).prev().prev();
+                  if(prev.size() <= 0)
+                    prev = $('#order-table');
+                  document.getElementById(prev.attr("id")).scrollIntoView();
+                });
+                map.addOverlay(marker);
+                break;
+            }
+        };
+        var local = new BMap.LocalSearch(map, options);
+        local.search(v.address);
     });
-  //});
+});
 </script>
 
 <div id="order-list">
