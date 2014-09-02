@@ -2,13 +2,13 @@ class MaintainsController < ApplicationController
   # GET /maintains
   # GET /maintains.json
   def index
-    if params[:car_location] && params[:car_location] != '' && params[:car_num] && params[:car_num] != ''
+    if params[:car_location].present? && params[:car_num].present?
       @maintains = []
       Order.where(car_location: params[:car_location], car_num: params[:car_num]).each do |o|
 	@maintains += o.maintains.desc(:created_at)
       end
     else
-      @maintains = Maintain.all
+      @maintains = []
     end
 
     respond_to do |format|
