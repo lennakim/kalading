@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   end
 
   def merge_json_params
-    if request.format.json? && !request.get?
+    if request.format.json?
       body = request.body.read
       request.body.rewind
       begin
