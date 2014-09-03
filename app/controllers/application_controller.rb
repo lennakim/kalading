@@ -46,10 +46,13 @@ class ApplicationController < ActionController::Base
   end
 
   def merge_json_params
-    if request.format.json?
+    if request.format.json? && !request.get?
       body = request.body.read
       request.body.rewind
-      params.merge!(ActiveSupport::JSON.decode(body)) unless body == ""
+      begin
+        params.merge!(ActiveSupport::JSON.decode(body)) unless body == ""
+      rescue
+      end
     end
   end
 end
