@@ -38,3 +38,5 @@ else
   json.reciept_title o.reciept_title
   json.reciept_address o.reciept_address
 end
+json.evaluation o.evaluation
+json.evaluation_score o.evaluation_score

@@ -29,6 +29,8 @@ class Order
   field :client_comment, type: String, default: ''
   field :cancel_reason, type: String, default: ''
   field :reciept_address, type: String, default: ''
+  field :evaluation, type: String, default: ''
+  field :evaluation_score, type: Integer, default: 0
 
   field :oil_filter_changed, type: Boolean, default: false
   field :air_filter_changed, type: Boolean, default: false
@@ -82,7 +84,7 @@ class Order
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
     :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state,
-    :serve_end_datetime
+    :serve_end_datetime, :evaluation, :evaluation_score
 
   auto_increment :seq
   index({ seq: 1 })
@@ -187,7 +189,7 @@ class Order
       :discount_num,:engineer_id, :front_wheels, :modifier_id, :oil_filter_changed, :oil_gathered, :oil_in, :oil_out,
       :phone_num  ,:serve_datetime ,:serve_datetime_next ,:updated_at, :version, :vin, :charged, :state, 
       :part_counts, :address, :buymyself, :car_location, :car_num, :name, :pay_type, :reciept_title, :reciept_type, :seq, :part_ids, :service_type_ids,
-      :auto_submodel_id, :price, :comments ]
+      :auto_submodel_id, :price, :comments, :evaluation, :evaluation_score ]
   end
   
   instance_eval do
