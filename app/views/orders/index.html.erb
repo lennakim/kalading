@@ -221,7 +221,7 @@ $(function() {
         };
         var local = new BMap.LocalSearch(map, options);
         a = [];
-        for(var i = points[0].address.length; i >= 9;i --) { a[a.length] = points[0].address.substring(0,i); }
+        for(var i = v.address.length; i >= 9;i -= 3) { a[a.length] = v.address.substring(0,i); }
         if(a.length > 0)
             local.search(a);
     });
