@@ -184,39 +184,44 @@ $(function() {
     points.forEach(function(v, i) {
         var options = {
             onSearchComplete: function(results) {
-                if (local.getStatus() != BMAP_STATUS_SUCCESS || results.getCurrentNumPois() <= 0)
+                if (local.getStatus() != BMAP_STATUS_SUCCESS)
                     return;
-                map.centerAndZoom(results.getPoi(0).point, 12);
-                var label = new BMap.Label(v.seq, {position: results.getPoi(0).point, offset:new BMap.Size(1,-7)} );
-                label.setStyle({
-                  color : v.color,
-                  fontSize : "12px",
-                  height : "20px",
-                  lineHeight : "20px",
-                  fontFamily:"微软雅黑"
-                });
-                label.addEventListener("click", function(type, target) {
-                  var prev = $('#order-' + v.seq).prev().prev();
-                  if(prev.size() <= 0)
-                    prev = $('#order-table');
-                  document.getElementById(prev.attr("id")).scrollIntoView();
-                });
-                label.addEventListener("mouseover", function(type, target) {
-                  this.setContent(v.seq + ' ' + v.state + ': ' + v.address);
-                  this.setZIndex(100);
-                });
-                label.addEventListener("mouseout", function(type, target) {
-                  this.setContent(v.seq);
-                });
-                map.addOverlay(label);
-                marker = new BMap.Marker(point);
-                marker.addEventListener("click", function(type, target) {
-                  var prev = $('#order-' + v.seq).prev().prev();
-                  if(prev.size() <= 0)
-                    prev = $('#order-table');
-                  document.getElementById(prev.attr("id")).scrollIntoView();
-                });
-                map.addOverlay(marker);
+                for(var i = 0; i < results.length; i++) {
+                    if(results[i].getCurrentNumPois() <= 0)
+                        continue;
+                    map.centerAndZoom(results[i].getPoi(0).point, 12);
+                    var label = new BMap.Label(v.seq, {position: results[i].getPoi(0).point, offset:new BMap.Size(1,-7)} );
+                    label.setStyle({
+                      color : v.color,
+                      fontSize : "12px",
+                      height : "20px",
+                      lineHeight : "20px",
+                      fontFamily:"微软雅黑"
+                    });
+                    label.addEventListener("click", function(type, target) {
+                      var prev = $('#order-' + v.seq).prev().prev();
+                      if(prev.size() <= 0)
+                        prev = $('#order-table');
+                      document.getElementById(prev.attr("id")).scrollIntoView();
+                    });
+                    label.addEventListener("mouseover", function(type, target) {
+                      this.setContent(v.seq + ' ' + v.state + ': ' + v.address);
+                      this.setZIndex(100);
+                    });
+                    label.addEventListener("mouseout", function(type, target) {
+                      this.setContent(v.seq);
+                    });
+                    map.addOverlay(label);
+                    marker = new BMap.Marker(point);
+                    marker.addEventListener("click", function(type, target) {
+                      var prev = $('#order-' + v.seq).prev().prev();
+                      if(prev.size() <= 0)
+                        prev = $('#order-table');
+                      document.getElementById(prev.attr("id")).scrollIntoView();
+                    });
+                    map.addOverlay(marker);
+                    break;
+                }
             }
         };
         var local = new BMap.LocalSearch(map, options);
