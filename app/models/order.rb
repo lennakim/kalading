@@ -31,6 +31,7 @@ class Order
   field :reciept_address, type: String, default: ''
   field :evaluation, type: String, default: ''
   field :evaluation_score, type: Integer, default: 0
+  field :evaluation_tags, type: Array, default: [0]
 
   field :oil_filter_changed, type: Boolean, default: false
   field :air_filter_changed, type: Boolean, default: false
@@ -110,6 +111,9 @@ class Order
 
   RECIEPT_TYPES = [0, 1, 2]
   RECIEPT_TYPE_STRINGS = %w[none personal firm]
+  
+  EVALUATION_TAG = [0, 1, 2, 3, 4]
+  EVALUATION_TAG_STRINGS = [none, service_resp_quickly, service_resp_quickly, service_good, service_bad]
 
   before_save :calc_price
   

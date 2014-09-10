@@ -40,3 +40,4 @@ else
 end
 json.evaluation o.evaluation
 json.evaluation_score o.evaluation_score
+json.evaluation_tags o.evaluation_tags
