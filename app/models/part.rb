@@ -11,6 +11,7 @@ class Part
   field :capacity, type: Integer, default: 1
   field :spec, type: String
   field :price, type: Money, default: 0.0
+  field :motoroil_type, type: Integer
   
   belongs_to :part_brand
   belongs_to :part_type
@@ -21,7 +22,7 @@ class Part
   has_and_belongs_to_many :orders
   has_many :image_texts
 
-  attr_accessible :capacity, :number, :match_rule, :spec,
+  attr_accessible :capacity, :number, :match_rule, :spec, :motoroil_type,
     :part_brand_id, :part_type_id,
     :auto_submodel_ids,
     :urlinfo_ids, :urlinfos_attributes, :price, :order_ids, :partbatch_ids,
@@ -30,6 +31,9 @@ class Part
   
   accepts_nested_attributes_for :urlinfos, :allow_destroy => true
   accepts_nested_attributes_for :urlinfos, :allow_destroy => true
+  
+  MOTOROIL_TYPE = [0, 1, 2]
+  MOTOROIL_TYPE_STRINGS = %w[mineral_oil semi_synthetic_oil fully_synthetic_oil]
   
   validates :number, uniqueness:  {case_sensitive: false}, presence: true
   #validates :stock_quantity, inclusion: { in: 0..999999 }, presence: true
@@ -84,7 +88,7 @@ class Part
   end
   
   def as_json(options = nil)
-    h = super except: [:price, :auto_submodel_ids, :updated_at, :spec, :created_at, :version, :order_ids, :part_brand_id, :part_type_id, :modifier_id, :capacity]
+    h = super except: [:price, :auto_submodel_ids, :updated_at, :spec, :created_at, :version, :order_ids, :part_brand_id, :part_type_id, :modifier_id, :capacity, :motoroil_type]
   end
   
   

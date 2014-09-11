@@ -14,6 +14,7 @@
       <th><%= t 'sell_price_history' %></th>
       <th><%= t 'capacity' %></th>
       <th><%= t 'spec' %></th>
+      <th><%= t 'motoroil_type' %></th>
       <th><%= t 'urls' %></th>
       <th><%= t 'update_time' %></th>
       <th><%= t 'actions' %></th>
@@ -53,6 +54,7 @@
         <td><%= humanized_money_with_symbol part.price if part.price %></td>
         <td><%= part.capacity.to_s + ' ' + part.part_type.unit %></td>
         <td><%= part.spec %></td>
+        <td><%= I18n.t(Part::MOTOROIL_TYPE_STRINGS[part.motoroil_type]) if part.motoroil_type %></td>
         <td id="<%= part.id %>_urls">
           <%= render 'urlinfo', part: part %>
         </td>
