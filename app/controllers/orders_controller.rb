@@ -680,6 +680,23 @@ class OrdersController < ApplicationController
       format.js
     end
   end
+  
+  def tag_stats
+    result = {}
+    auto_submodel_id = params[:auto_submodel_id]
+    orders = AutoSubmodel.find(auto_submodel_id).orders
+    Order::EVALUATION_TAG.each do |tag|
+      result[tag] = orders.where(evaluation: tag).count
+    end
+    respond_to do |format|
+      format.json { render json: result}
+    end
+  end
+  
+  def evaluation_list
+    auto_submodel_id = params[:auto_submodel_id]
+    @orders = AutoSubmodel.find(auto_submodel_id).orders.where(:evaluation_time.ne => nil).desc(:evaluation_time).page(params[:page]).per(params[:per])
+  end
 
 private
   def _create_auto_maintain_order

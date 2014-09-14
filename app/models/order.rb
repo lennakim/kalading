@@ -113,7 +113,7 @@ class Order
   RECIEPT_TYPES = [0, 1, 2]
   RECIEPT_TYPE_STRINGS = %w[none personal firm]
   
-  EVALUATION_TAG = [0, 1, 2, 3, 4]
+  EVALUATION_TAG = [1, 2, 3, 4]
   EVALUATION_TAG_STRINGS = %w[none service_resp_quickly service_resp_quickly service_good service_bad]
 
   before_save :calc_price

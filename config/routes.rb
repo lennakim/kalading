@@ -104,6 +104,8 @@ Kalading::Application.routes.draw do
   get 'auto_maintain_packs' => 'orders#auto_maintain_packs', :as => :auto_maintain_packs
   get 'order_prompt' => 'orders#order_prompt', :as => :order_prompt
   get 'order_seq_check' => 'orders#order_seq_check', :as => :order_seq_check
+  get 'order_tag_stats' => 'orders#tag_stats', :as => :order_tag_stats
+  get 'order_evaluation_list' => 'orders#evaluation_list', :as => :order_evaluation_list
     
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains
   get 'last_maintain/:id' => 'maintains#last_maintain', :as => :last_maintain
