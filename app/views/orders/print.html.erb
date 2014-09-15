@@ -45,7 +45,7 @@
               <td><%= st.name %></td><td><%= humanized_money_with_symbol st.price %></td>
             </tr>
             <% end %>
-            <tr><td><b><%= t :total %></b></td><td><b><%= humanized_money_with_symbol @order.calc_service_price%></b></td></tr>
+            <tr><td><b><%= t :total_2 %></b></td><td><b><%= humanized_money_with_symbol @order.calc_service_price%></b></td></tr>
           </tbody>
         </table>
       </div>
@@ -73,7 +73,7 @@
             </tr>
             <% end %>
             <tr>
-              <td colspan="4"><b><%= t :total %></b></td>
+              <td colspan="4"><b><%= t :total_2 %></b></td>
               <td><b><%= humanized_money_with_symbol @order.calc_parts_price %></b></td>
             </tr>
           </tbody>

@@ -917,7 +917,7 @@ zh-CN:
   not_backed_orders_prompt: '%{n}个订单待回库'
   serve_end_datetime: '服务结束时间'
   order_not_delivered_yet: '订单尚未出库'
-  total: '总计'
+  total_2: '总计'
   summary: '合计'
   due_charge: '应收款'
   real_charge: '实收款'

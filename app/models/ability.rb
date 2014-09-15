@@ -29,7 +29,7 @@ class Ability
       can :read, :all
       can :inout, Storehouse
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
-      can [:update, :edit_all, :calcprice], Order
+      can [:update, :edit_all, :calcprice, :print], Order
       can :order_prompt, Order
     end
 
@@ -50,7 +50,7 @@ class Ability
     
     if user.roles.include? ROLE_ID('dispatcher')
       can :read, :all
-      can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt], Order
+      can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print], Order
     end
   end
 end
