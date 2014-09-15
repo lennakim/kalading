@@ -17,65 +17,90 @@
   <body style="padding-top: 10px;">
     <a class="btn btn-primary pull-right" id="print-btn" onclick="$('#print-btn').hide(); window.print(); $('#print-btn').show();"><%= t(:print) %></a>
     <h3 class="text-center"><%= t :shigongdan %></h3>
+    <div class="row"><%= t :order_sheet_description_1 %></div>
+    <div class="row"><%= t :order_sheet_description_2 %></div>
+    <div class="row"><%= t :order_sheet_description_3 %></div>
     <div>
       <table class="table table-bordered table-condensed">
         <tbody>
             <tr>
-              <td><%= t :customer_name %></td><td><%= @order.name %></td><td><%= t :serve_datetime %></td><td><%= l @order.serve_datetime %></td>
+              <td><b><%= t :order_id %>:</b>&nbsp&nbsp<%= @order.seq %></td><td><b><%= t :serve_datetime %>:</b>&nbsp&nbsp<%= l @order.serve_datetime %></td><td><b><%= t :engineer_name %>:</b>&nbsp&nbsp<%= @order.engineer.name if @order.engineer %>&nbsp<%= @order.engineer.phone_num if @order.engineer %></td>
             </tr>
             <tr>
-              <td><%= t :user_type %></td><td><%= @order.user_type.name if @order.user_type %></td><td><%= t :address %></td><td><%= @order.address %></td>
-            </tr>
-            <tr>
-              <td><%= t :phone_num %></td><td><%= @order.phone_num %></td><td><%= t :engineer_name %></td><td><%= @order.engineer.name %></td>
-            </tr>
-            <tr>
-              <td><%= t :car_num_format, n: @order.car_location + @order.car_num %></td><td><%= t :vin_chs, n: @order.vin %></td><td colspan="2"><%= t :auto_model_format, n: @order.auto_submodel.full_name if @order.auto_submodel %></td>
+              <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= @order.name %></td><td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= @order.auto_submodel.full_name if @order.auto_submodel %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= @order.car_location + @order.car_num %></td>
             </tr>
         </tbody>
       </table>
-
-      <div>
-        <%= label_tag "checkbox-buymyself", t(:customer_buy_parts), {class: "checkbox inline"} %>
-        <%= check_box_tag "buymyself", "1", @order.buymyself, {:id => "checkbox-buymyself", readonly: true} %>
-        <%= label_tag "checkbox-needparts", t(:need_parts), {class: "checkbox inline"} %>
-        <%= check_box_tag "buymyself", "1", !@order.buymyself, {:id => "checkbox-needparts", readonly: true} %>
-        <%= label_tag "not_used", t(:other_types), {class: "checkbox inline"} %>
-      </div>
     </div>
     
     <div class="row">
-      <div class="span4">
+      <div class="span12">
         <table class="table table-bordered table-condensed">
           <thead>
             <tr><th><%= t :service_types %></th><th><%= t :service_fee %></th></tr>
           </thead>
           <tbody>
+            <% @order.service_types.each do |st| %>
             <tr>
-              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
+              <td><%= st.name %></td><td><%= humanized_money_with_symbol st.price %></td>
             </tr>
-            <tr>
-              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
-            </tr>
+            <% end %>
+            <tr><td><b><%= t :total %></b></td><td><b><%= humanized_money_with_symbol @order.calc_service_price%></b></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="span8">
+    </div>
+    <div>
+      <%= label_tag "checkbox-buymyself", t(:customer_buy_parts), {class: "checkbox inline"} %>
+      <%= check_box_tag "buymyself", "1", @order.buymyself, {:id => "checkbox-buymyself", readonly: true} %>
+      <%= label_tag "checkbox-needparts", t(:need_parts), {class: "checkbox inline"} %>
+      <%= check_box_tag "buymyself", "1", !@order.buymyself, {:id => "checkbox-needparts", readonly: true} %>
+    </div>
+    <div class="row">
+      <div class="span12">
         <table class="table table-bordered table-condensed">
           <thead>
-            <tr><th><%= t :part %></th><th><%= t :brand_and_number %></th></tr>
+            <tr><th><%= t :part_types %></th><th><%= t :brand_and_number %></th><th><%= t :quantity %></th><th><%= t :price %></th><th><%= t :summary %></th></tr>
           </thead>
           <tbody>
+            <% @order.parts.each do |p| %>
             <tr>
-              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
+              <td><%= p.part_type.name %></td>
+              <td><%= p.brand_and_number %></td>
+              <td><%= @order.part_counts[p.id.to_s] %></td>
+              <td><%= humanized_money_with_symbol p.ref_price %></td>
+              <td><%= humanized_money_with_symbol(p.ref_price * @order.part_counts[p.id.to_s].to_i ) %></td>
             </tr>
+            <% end %>
             <tr>
-              <td><%= t :customer_name %></td><td><%= @order.name %></td><td></td>
+              <td colspan="4"><b><%= t :total %></b></td>
+              <td><b><%= humanized_money_with_symbol @order.calc_parts_price %></b></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    
+    <div class="row">
+      <div class="span12">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><%= t :due_charge %></td>
+              <td><%= humanized_money_with_symbol @order.calc_price %></td>
+              <td colspan="4"><%= t :discount_card %></td>
+            </tr>
+            <tr>
+              <td colspan="2"><%= t :real_charge %></td>
+              <td colspan="2"><%= t :discount_charge %></td>
+              <td colspan="2"><%= t :free_charge %></td>
+            </tr>
+            <tr>
+              <td colspan="6"><%= t :client_signature %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
   </body>
 </html>
