@@ -525,11 +525,11 @@ class OrdersController < ApplicationController
       }
       format.csv {
         csv = CSV.generate({}) do |csv|
-          csv << ['ID', I18n.t(:owner_auto_brand), I18n.t(:series), I18n.t(:auto_submodel), I18n.t(:total_price_with_st)]
+          csv << ['ID', I18n.t(:owner_auto_brand), I18n.t(:owner_auto_brand)+'ID', I18n.t(:series), I18n.t(:series)+'ID', I18n.t(:auto_submodel), I18n.t(:engine_model), I18n.t(:total_price_with_st)]
           @asms.each do |asm|
             params[:asm_id] = asm.id.to_s
             auto_maintain
-            csv << [@order.auto_submodel.id, @order.auto_submodel.auto_model.auto_brand.name, @order.auto_submodel.auto_model.name, @order.auto_submodel.full_name, @order.calc_price ]
+            csv << [@order.auto_submodel.id, @order.auto_submodel.auto_model.auto_brand.name, @order.auto_submodel.auto_model.auto_brand.id.to_s, @order.auto_submodel.auto_model.name, @order.auto_submodel.auto_model.id.to_s, @order.auto_submodel.full_name, @order.auto_submodel.engine_model, @order.calc_price ]
           end
         end
         headers['Last-Modified'] = Time.now.httpdate
