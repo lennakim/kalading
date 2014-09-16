@@ -454,4 +454,14 @@ namespace :rename_asm do
       end
     end
   end
+
+  task :order_count_by_asm => :environment do
+    a = AutoSubmodel.all.select {|x| x.orders.exists?}.sort_by {|x| x.orders.size}
+    File.open '2.csv', 'w:UTF-8' do |f|
+      f.puts '车型,保养次数'
+      a.each do |a|
+        f.puts "#{a.full_name},#{a.orders.size}"
+      end
+    end
+  end
 end
