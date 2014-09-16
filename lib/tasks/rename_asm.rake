@@ -1,10 +1,7 @@
 ﻿# encoding: UTF-8
 
 namespace :rename_asm do
-  # This must be ran in irb, because 'spreadsheet' is not in Gemfile
   task :a => :environment do
-    require 'spreadsheet'
-    require 'csv'
     Spreadsheet.client_encoding = 'GBK'
     File.open 'deleted_asms.csv', 'w:UTF-8' do |deleted_f|
       deleted_f.puts 'ID,品牌,型号(系列),款式,排量,制造年代,备注'
@@ -100,45 +97,34 @@ namespace :rename_asm do
     collect_mann_name 'deleted_asms.csv', 'deleted_asms_with_mann_name.json', asm_id_to_oil_cap
   end
 
-  # must be ran in irb
-  task :c => :environment do
-    class String
-      def inspect
-        ''
-      end
-    end
-    
-    class Hash
-      def inspect
-        ''
-      end
-    end
-
+  # 根据曼牌数据产生车型配件数据表
+  task :d => :environment do
     class Array
       def inspect
         ''
       end
     end
-
-    require 'csv'
     require 'json'
+    require 'spreadsheet'
 
+    
     d = File.open 'utils/accessories_write_zf_second.text', 'r:UTF-8' do |f|
       f.read  
     end
     m_models = JSON.parse d
     puts m_models.count
-    mann_tuple_to_models = {}
-    # 解析曼牌的原始车型数据，产生hash
+
+    mann_tuple_to_parts = {}
+    # 识别曼牌的原始数据重复的车型
     m_models.each do |m|
       #{"brand_name"=>"一汽轿车(中国) / FAW", "series_name"=>"CA系列 / CA Series | 82-90", "model_name"=>"1.8L", "engine"=>" JW75", "year"=>"08/88->12/90", 
-      # "parts"=> {"type"=>"空气滤清器", "brand"=>"曼牌", "number"=>"C 22 117", "limit"=>[] } {"type"=>"机油滤清器", "brand"=>"曼牌", "number"=>"W 713/16", "limit"=>}{"type"=>"燃油滤清器", "brand"=>"曼牌", "number"=>"WK 834/1", "limit"=> []}
-      mann_tuple_to_models[ [m['brand_name'], m['series_name'], m['model_name'] ] ] ||= []
-      mann_tuple_to_models[ [m['brand_name'], m['series_name'], m['model_name'] ] ] << m
+      # "parts"=> [ {"type"=>"空气滤清器", "brand"=>"曼牌", "number"=>"C 22 117", "limit"=>[] }, {"type"=>"机油滤清器", "brand"=>"曼牌", "number"=>"W 713/16", "limit"=>}, {"type"=>"燃油滤清器", "brand"=>"曼牌", "number"=>"WK 834/1", "limit"=> []} ]
+      mann_tuple_to_parts[ [m['brand_name'], m['series_name'], m['model_name'], m['year'], m['engine'] ] ] ||= []
+      mann_tuple_to_parts[ [m['brand_name'], m['series_name'], m['model_name'], m['year'], m['engine'] ] ].concat m['parts']
+      mann_tuple_to_parts[ [m['brand_name'], m['series_name'], m['model_name'], m['year'], m['engine'] ] ].uniq!
     end
-    puts mann_tuple_to_models.size
-
-
+    puts mann_tuple_to_parts.count
+    
     d = File.open 'renamed_asms_with_mann_name.json', 'r:UTF-8' do |f|
       f.read  
     end
@@ -156,152 +142,316 @@ namespace :rename_asm do
     end
     to_be_deleted_asms = JSON.parse d
     puts "To be deleted auto submodels number: #{to_be_deleted_asms.count}"
-    # 遍历需要删除的车型数据，从mann_tuple_to_models删除
-    to_be_deleted_asms.each do |m|
-      mann_tuple_to_models.delete [ m['mann_brand'], m['mann_model'], m['mann_submodel'] ]
+    # 对需要删除的车型数据产生hash
+    mann_tuple_to_be_delete  = to_be_deleted_asms.group_by do |m|
+      [ m['mann_brand'], m['mann_model'], m['mann_submodel'] ]
     end
-    puts "After deleting expired models, mann: #{mann_tuple_to_models.size}"
 
-    # 计算剩余的车型数
-    c = mann_tuple_to_models.inject(0) {|sum, x| sum + x[1].size }
-    puts "After deleting expired models: #{c}"
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+    header_format = Spreadsheet::Format.new(
+      :weight => :bold,
+      :horizontal_align => :center,
+      :bottom => :thin,
+      :locked => true
+    )
+    sheet1.row(0).default_format = header_format
+    sheet1.row(0).replace ['品牌', '型号(系列)', '款式', '排量', '制造年代', '机油量', '机油1', '机油2', '机油3', '曼牌品牌', '曼牌系列', '曼牌款式', '曼牌制造年代' , '发动机型号', '机油滤清器1', '规则', '机油滤清器2', '规则', '机油滤清器3', '规则', '机油滤清器4', '规则', '空气滤清器1', '规则', '空气滤清器2', '规则', '空气滤清器3', '规则', '空气滤清器4', '规则', '空调滤清器1', '规则', '空调滤清器2', '规则', '空调滤清器3', '规则', '空调滤清器4', '规则', '空调滤清器5', '规则', '燃油滤清器1', '规则', '燃油滤清器2', '规则', '燃油滤清器3', '规则', '燃油滤清器4', '规则']
+    memo = memo1 = memo2 = memo3 = 0
+    i = 1
+    mann_tuple_to_parts.each do |k, v|
+      # 删除车型
+      if mann_tuple_to_be_delete[ [k[0], k[1], k[2]] ]
+        memo2 = memo2 + 1
+        next
+      end
 
-    # 改名，增加机油量，机油型号信息
-    memo = 0
-    memo1 = 0
-    mann_tuple_to_models.each do |k, v|
-      rename_info = mann_tuple_to_rename_info[k]
+      # 改名，增加机油量信息
+      rename_info = mann_tuple_to_rename_info[ [k[0], k[1], k[2]] ]
       if rename_info
-        v.each do |m|
-          m['brand_name'] = rename_info['brand']
-          m['series_name'] = rename_info['model']
-          m['model_name'] = rename_info['submodel']
-          m['engine_displacement'] = rename_info['displacement']
-          m['year'] = rename_info['year']
-          m['operatable'] = rename_info['operatable']
-          m['oil_cap'] = rename_info['oil_cap']
-          memo1 = memo1 + 1 if rename_info['oil_cap'].to_f != 0.0 
-          m['oil1'] = rename_info['oil1']
-          m['oil2'] = rename_info['oil2']
-          m['oil3'] = rename_info['oil3']
-          memo = memo + 1
-        end
+        brand = rename_info['brand']
+        model = rename_info['model']
+        submodel = rename_info['submodel']
+        engine_displacement = rename_info['displacement']
+        operatable = rename_info['operatable']
+        oil_cap = rename_info['oil_cap']
+        oil1 = rename_info['oil1'].to_s.delete('?')
+        oil2 = rename_info['oil2'].to_s.delete('?')
+        oil3 = rename_info['oil3'].to_s.delete('?')
+        memo1 = memo1 + 1 if rename_info['oil_cap'].to_f != 0.0 
+        memo = memo + 1
       else
-        v.each do |m|
-          a = m['year'].split('->')
-          start_year = a[0].split('/')[1]
-          if start_year > '14'
-            start_date = '19' + start_year + '.' + a[0].split('/')[0]
-          else
-            start_date = '20' + start_year + '.' + a[0].split('/')[0]
-          end
-          
-          end_date = '2014'
-          if a[1]
-            end_year = a[1].split('/')[1]
-            if end_year > '14'
-              end_date = '19' + end_year + '.' + a[1].split('/')[0]
-            else
-              end_date = '20' + end_year + '.' + a[1].split('/')[0]
-            end
-          end
-          m['year'] = start_date + '-' + end_date
-          m['series_name'] = m['series_name'].split('/')[0].split('(')[0].split('|')[0].strip
+        brand = k[0].split('/')[0].strip
+        model = k[1].split('/')[0].split('(')[0].split('|')[0].strip
+        submodel = k[2]
+        engine_displacement = ''
+        operatable = ''
+        oil_cap = ''
+        oil1 = ''
+        oil2 = ''
+        oil3 = ''
+      end
+
+      # 转换制造年代
+      a = k[3].split('->')
+      start_year = a[0].split('/')[1]
+      if start_year > '14'
+        start_date = '19' + start_year + '.' + a[0].split('/')[0]
+      else
+        start_date = '20' + start_year + '.' + a[0].split('/')[0]
+      end
+      
+      end_date = '2014'
+      if a[1]
+        end_year = a[1].split('/')[1]
+        if end_year > '14'
+          end_date = '19' + end_year + '.' + a[1].split('/')[0]
+        else
+          end_date = '20' + end_year + '.' + a[1].split('/')[0]
         end
       end
-    end
-    puts "Matched models: #{memo}"
-    puts "Has oil capacity: #{memo1}"
-    
-    # 输出全部配件信息为JSON文件
-    parts = []
-    mann_tuple_to_models.each do |k, v|
-      v.each do |m|
-        m['parts_index'] = parts.size
-        parts << m['parts']
+      if end_date[0..3] <= '2001'
+        memo3 = memo3 + 1
+        next
       end
-    end
-
-    File.open 'mann_parts.json', 'w:UTF-8' do |f|
-      f.puts JSON.pretty_generate(parts)
-    end
+      year = start_date + '-' + end_date
     
-    models = []
-    mann_tuple_to_models.each do |k, v|
-      v.each do |m|
-        models << [m['brand_name'], m['series_name'], m['model_name'], m['engine_displacement'], m['year'], m['engine'], k[0], k[1], k[2], m['parts_index'], m['operatable'], m['oil_cap'], m['oil1'], m['oil2'], m['oil3'] ]
+      a = [brand, model, submodel, engine_displacement, year, oil_cap, oil1, oil2, oil3, k[0], k[1], k[2], k[3], k[4]]
+      parts = v.group_by {|x| x['type'] }
+      types = ['机油滤清器', '空气滤清器', '空调滤清器', '燃油滤清器']
+      types.each do |t|
+        parts[t] ||= []
+        if t == '空调滤清器'
+          puts "Too much #{t} for #{k}, #{parts[t]} " or exit if parts[t].size > 5
+          for j in 0..4
+            parts[t][j] ||= {'number' =>'', 'limit' => [''] }
+            a << parts[t][j]['number'] << parts[t][j]['limit'].join(', ')
+          end
+        else
+          puts "Too much #{t} for #{k}, #{parts[t]} " or exit if parts[t].size > 4
+          for j in 0..3
+            parts[t][j] ||= {'number' =>'', 'limit' => [''] }
+            a << parts[t][j]['number'] << parts[t][j]['limit'].join(', ')
+          end
+        end
       end
-    end
-
-    book = Spreadsheet::Workbook.new
-    sheet1 = book.create_worksheet
-    
-    header_format = Spreadsheet::Format.new(
-      :weight => :bold,
-      :horizontal_align => :center,
-      :bottom => :thin,
-      :locked => true
-    )
-    
-    sheet1.row(0).default_format = header_format
-    sheet1.row(0).replace(['品牌', '型号(系列)', '款式', '排量', '制造年代' , '发动机型号', '曼牌品牌', '曼牌车型', '曼牌名称', '配件信息', '操作性', '机油量', '机油1', '机油2', '机油3'])
-    models.each_with_index do |r, i|
-      sheet1.row(i + 1).replace(r)
-    end
-    book.write('mann_models_renamed.xls')
-   
-    # 人工消除曼牌重复车型
-    # 补充排量信息
-  end
-  
-  # 转换曼牌数据为xls，人工检查重复车型
-  task :d => :environment do
-        d = File.open 'utils/accessories_write_zf_second.text', 'r:UTF-8' do |f|
-      f.read  
-    end
-    m_models = JSON.parse d
-    puts m_models.count
-
-    book = Spreadsheet::Workbook.new
-    sheet1 = book.create_worksheet
-    
-    header_format = Spreadsheet::Format.new(
-      :weight => :bold,
-      :horizontal_align => :center,
-      :bottom => :thin,
-      :locked => true
-    )
-
-    mann_tuple_to_parts = {}
-    m_models.each do |m|
-      #{"brand_name"=>"一汽轿车(中国) / FAW", "series_name"=>"CA系列 / CA Series | 82-90", "model_name"=>"1.8L", "engine"=>" JW75", "year"=>"08/88->12/90", 
-      # "parts"=> [ {"type"=>"空气滤清器", "brand"=>"曼牌", "number"=>"C 22 117", "limit"=>[] }, {"type"=>"机油滤清器", "brand"=>"曼牌", "number"=>"W 713/16", "limit"=>}, {"type"=>"燃油滤清器", "brand"=>"曼牌", "number"=>"WK 834/1", "limit"=> []} ]
-      mann_tuple_to_parts[ [m['brand_name'], m['series_name'], m['model_name'], m['year'], m['engine'] ] ] ||= []
-      mann_tuple_to_parts[ [m['brand_name'], m['series_name'], m['model_name'], m['year'], m['engine'] ] ].concat m['parts']
-      mann_tuple_to_parts[ [m['brand_name'], m['series_name'], m['model_name'], m['year'], m['engine'] ] ].uniq!
-    end
-    puts mann_tuple_to_parts.count
-    
-    sheet1.row(0).default_format = header_format
-    sheet1.row(0).replace ['品牌', '型号(系列)', '款式', '制造年代' , '发动机型号', '机油滤清器1', '机油滤清器2', '机油滤清器3', '机油滤清器4', '空气滤清器1', '空气滤清器2', '空调滤清器1', '空调滤清器2', '空调滤清器3', '空调滤清器4', '燃油滤清器1', '燃油滤清器2']
-    mann_tuple_to_parts.each_with_index do | (k, v), i|
-      part_type_to_number = v.group_by {|x| x['type'] }
-      part_type_to_number['机油滤清器'] ||= []
-      part_type_to_number['空气滤清器'] ||= []
-      part_type_to_number['空调滤清器'] ||= []
-      part_type_to_number['燃油滤清器'] ||= []
-      puts "Too much engine oil for #{k}, #{v} " or exit if part_type_to_number['机油滤清器'].size > 4
-      puts "Too much engine oil for #{k}, #{v} " or exit if part_type_to_number['空气滤清器'].size > 2
-      puts "Too much engine oil for #{k}, #{v} " or exit if part_type_to_number['空调滤清器'].size > 4
-      puts "Too much engine oil for #{k}, #{v} " or exit if part_type_to_number['燃油滤清器'].size > 2
-      a = [k[0], k[1], k[2], k[3], k[4]]
-      a.concat [part_type_to_number['机油滤清器'][0] || '', part_type_to_number['机油滤清器'][1] || '', part_type_to_number['机油滤清器'][2] || '', part_type_to_number['机油滤清器'][3] || '' ]
-      a.concat [part_type_to_number['空气滤清器'][0] || '', part_type_to_number['空气滤清器'][1] || '' ]
-      a.concat [part_type_to_number['空调滤清器'][0] || '', part_type_to_number['空调滤清器'][1] || '', part_type_to_number['空调滤清器'][2] || '', part_type_to_number['空调滤清器'][3] || '' ]
-      a.concat [part_type_to_number['燃油滤清器'][0] || '', part_type_to_number['燃油滤清器'][1] || '' ]
-      sheet1.row(i + 1).replace(a)
+      sheet1.row(i).replace(a)
+      i = i + 1
     end
     book.write('mann_models_and_parts.xls')
+    puts "Renamed models: #{memo}"
+    puts "Removed models: #{memo2}"
+    puts "Removed old models: #{memo3}"
+    puts "Has oil capacity: #{memo1}"
+    # 月份不同，发动机不同，配件相同
+    # 月份相同，发动机不同，配件不同
+    # 月份相同，发动机不同，配件相同
   end
 
+  task :e => :environment do
+    I18n.locale = 'zh-CN'
+    oil_filter_type = PartType.find_by name: I18n.t(:oil_filter)
+    puts "oil filter type not found" or exit if oil_filter_type.nil?
+    engine_oil_type = PartType.find_by name: I18n.t(:engine_oil)
+    puts "engine_oil_type not found" or exit if engine_oil_type.nil?
+    cabin_filter_type = PartType.find_by name: I18n.t(:cabin_filter)
+    puts "cabin_filter_type not found" or exit if cabin_filter_type.nil?
+    air_filter_type = PartType.find_by name: I18n.t(:air_filter)
+    puts "air_filter_type not found" or exit if air_filter_type.nil?
+    fuel_filter_type = PartType.find_by name: I18n.t(:fuel_filter)
+    puts "fuel_filter_type not found" or exit if fuel_filter_type.nil?
+    mann = PartBrand.find_by name: I18n.t(:mann)
+    puts 'mann not found' or exit if mann.nil?
+
+    book = Spreadsheet.open 'mann_models_and_parts.xls'
+    sheet1 = book.worksheet 0
+    sheet1.each 1 do |row|
+      ab = AutoBrand.where( name: row[0].gsub(/\s+/, ''), data_source: 2 ).first_or_create!
+      ab.update_attributes name_mann: row[9]
+      puts 'ab create failed' or exit if ab.nil?
+      am = AutoModel.where( name: row[1].gsub(/\s+/, ''), auto_brand: ab, data_source: 2 ).first_or_create!
+      am.update_attributes name_mann: row[10]
+      puts 'am create failed' or exit if am.nil?
+      asm = AutoSubmodel.where( name_mann: row[11].gsub(/\s+/, ''),
+        name: row[2].to_s.gsub(/\s+/, ''),
+        year_mann: row[12],
+        auto_model: am,
+        engine_model: row[13],
+        year_range: row[4],
+        engine_displacement: row[3],
+        data_source: 2,
+        motoroil_cap: row[5] ? row[5] : 5.0 ).first_or_create!
+      puts 'asm create failed' or exit if asm.nil?
+      full_name = row[0].gsub(/\s+/, '') + ' ' + row[1].gsub(/\s+/, '') + ' ' + row[2].to_s.gsub(/\s+/, '') + ' ' + row[3].strip + ' ' + row[4]
+      asm.update_attributes full_name: full_name, full_name_pinyin: PinYin.of_string(full_name.gsub(/\s+/, "")).join.gsub(/zhang/, 'chang')
+
+      # Engine oil
+      row[6..8].each do |spec|
+        next if spec.nil?
+        oils = Part.where number: /.*#{spec.gsub(/\s+/, "").split('').join(".*")}.*/i, part_type: engine_oil_type
+        puts "#{spec} oil not found" or exit if oils.empty?
+        oils.each do |p|
+          p.auto_submodels << asm
+          asm.parts << p
+        end
+      end
+      
+      search_and_add_part_to_asm = Proc.new do |number, t, asm, rule|
+        matches = Part.where number: /.*#{number.gsub(/\s+/, "").split('').join(".*")}.*/i, part_brand: mann, part_type: t
+        puts "#{number} not found" or exit if matches.empty?
+        len_matched = matches.select {|x| x.number.gsub(/\s+/, "").size == number.gsub(/\s+/, "").size }
+        puts "#{number} length not found" or exit if len_matched.empty?
+        if len_matched.size > 1
+          puts "#{number} length too much matched, merging"
+          len_matched[1..-1].each do |p|
+            p.urlinfos.each do |x|
+              len_matched[0].urlinfos << x
+            end
+            p.auto_submodels.each do |x|
+              len_matched[0].auto_submodels << x
+            end
+            p.partbatches.each do |x|
+              len_matched[0].partbatches << x
+            end
+            p.orders.each do |x|
+              len_matched[0].orders << x
+            end
+            if p.price.to_f != 0.0
+              len_matched[0].price = p.price
+            end
+            p.destroy
+          end
+        end
+        asm.parts << len_matched[0]
+        if rule
+          asm.part_rules << PartRule.new(text: rule, number: len_matched[0].number)
+        end
+      end
+
+      # Oil filter
+      row[14..21].each_slice(2) do |number, rule|
+        next if number.nil?
+        search_and_add_part_to_asm.call number, oil_filter_type, asm, rule
+      end
+
+      # Air filter
+      row[22..29].each_slice(2) do |number, rule|
+        next if number.nil?
+        search_and_add_part_to_asm.call number, air_filter_type, asm, rule
+      end
+
+      # Cabin filter
+      row[30..39].each_slice(2) do |number, rule|
+        next if number.nil?
+        search_and_add_part_to_asm.call number, cabin_filter_type, asm, rule
+      end
+
+      # Fuel filter
+      row[40..47].each_slice(2) do |number, rule|
+        next if number.nil?
+        search_and_add_part_to_asm.call number, fuel_filter_type, asm, rule
+      end
+    end
+  end
+
+  # Export all maintainable auto models
+  task :f => :environment do
+    I18n.locale = 'zh-CN'
+    oil_filter_type = PartType.find_by name: I18n.t(:oil_filter)
+    puts "oil filter type not found" or exit if oil_filter_type.nil?
+    engine_oil_type = PartType.find_by name: I18n.t(:engine_oil)
+    puts "engine_oil_type not found" or exit if engine_oil_type.nil?
+    cabin_filter_type = PartType.find_by name: I18n.t(:cabin_filter)
+    puts "cabin_filter_type not found" or exit if cabin_filter_type.nil?
+    air_filter_type = PartType.find_by name: I18n.t(:air_filter)
+    puts "air_filter_type not found" or exit if air_filter_type.nil?
+
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+    header_format = Spreadsheet::Format.new(
+      :weight => :bold,
+      :horizontal_align => :center,
+      :bottom => :thin,
+      :locked => true
+    )
+    sheet1.row(0).default_format = header_format
+    sheet1.row(0).replace ['ID', '品牌/型号(系列)/款式/排量/制造年代', '机油量', '机滤品牌', '机滤型号','空滤品牌', '空滤型号', '空调滤品牌', '空调滤型号']
+    i = 1
+    AutoSubmodel.where(data_source: 2).asc(:full_name_pinyin).each do |asm|
+      oil_filter = asm.parts.find_by part_type: oil_filter_type
+      next if oil_filter.nil?
+      air_filter = asm.parts.find_by part_type: air_filter_type
+      next if air_filter.nil?
+      cabin_filter = asm.parts.find_by part_type: cabin_filter_type
+      next if cabin_filter.nil?
+      a = [asm.id.to_s, asm.full_name, asm.motoroil_cap, oil_filter.part_brand.name, oil_filter.number, air_filter.part_brand.name, air_filter.number, cabin_filter.part_brand.name, cabin_filter.number]
+      sheet1.row(i).replace(a)
+      i = i + 1
+    end
+    book.write('可保养车型列表 王哲 03172014.xls')
+  end
+  
+    # Export all auto models
+  task :g => :environment do
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+    header_format = Spreadsheet::Format.new(
+      :weight => :bold,
+      :horizontal_align => :center,
+      :bottom => :thin,
+      :locked => true
+    )
+    sheet1.row(0).default_format = header_format
+    sheet1.row(0).replace ['品牌/型号(系列)']
+    i = 1
+    AutoModel.where(data_source: 2).sort_by(&:full_name).each do |am|
+      a = [am.full_name]
+      sheet1.row(i).replace(a)
+      i = i + 1
+    end
+    book.write('车型系列列表 王哲 03182014.xls')
+  end
+  
+  task :h => :environment do
+    I18n.locale = 'zh-CN'
+    AutoSubmodel.any_of({data_source: 2}, {data_source: 3}, {data_source: 4}).each do |asm|
+      asm.sum_sanlv_store
+    end
+  end
+
+  task :i => :environment do
+    I18n.locale = 'zh-CN'
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+    header_format = Spreadsheet::Format.new(
+      :weight => :bold,
+      :horizontal_align => :center,
+      :bottom => :thin,
+      :locked => true
+    )
+    sheet1.row(0).default_format = header_format
+    sheet1.row(0).replace ['品牌/型号(系列)/年款', '机油档次', '配件类型', '配件型号', '配件价格', '配件类型', '配件型号', '配件价格', '配件类型', '配件型号', '配件价格', '配件类型', '配件型号', '配件价格', '配件类型', '配件型号', '配件价格', '配件类型', '配件型号', '配件价格']
+    AutoSubmodel.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:full_name_pinyin).each_with_index do |asm, i|
+      a = [asm.full_name, asm.motoroil_group.name]
+      asm.parts_by_type.each do |t, parts|
+        next if t.name == I18n.t(:engine_oil)
+        parts.each do |p|
+          a += [t.name, p.brand_and_number, p.ref_price] 
+        end
+      end
+      sheet1.row(i + 1).replace(a)
+    end
+    book.write('可保养车型列表 王哲 03292014.xls')
+  end
+
+  task :order_counter => :environment do
+    a = Order.where(:state.ne => 8).group_by {|x|x.car_location+x.car_num}
+    a = a.select{|k, v| k.size > 3}.sort_by {|k,v| -v.count }
+    File.open '1.csv', 'w:UTF-8' do |f|
+      f.puts '车牌号,保养次数'
+      a.each do |k,v|
+        f.puts "#{k},#{v.size}"
+      end
+    end
+  end
 end
