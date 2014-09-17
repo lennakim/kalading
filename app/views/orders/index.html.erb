@@ -169,10 +169,9 @@ $(function() {
     var point = new BMap.Point(116.393597, 39.989918);
     map.centerAndZoom(point,15);
 
-    var myGeo = new BMap.Geocoder();
     var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
     points = [
-    <% @orders.select {|x| x.state >= 2 && x.state <=4 && x.city && x.city.name == t(:beijing) }.each do |o| %>
+    <% @orders.select {|x| x.state >= 2 && x.state <= 4 }.each do |o| %>
       {
         seq: "<%= o.seq %>",
         state: "<%= t(Order::STATE_STRINGS[o.state]) %>",
@@ -212,7 +211,7 @@ $(function() {
                       this.setContent(v.seq);
                     });
                     map.addOverlay(label);
-                    marker = new BMap.Marker(point);
+                    marker = new BMap.Marker(results[i].getPoi(0).point);
                     marker.addEventListener("click", function(type, target) {
                       var prev = $('#order-' + v.seq).prev().prev();
                       if(prev.size() <= 0)

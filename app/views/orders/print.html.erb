@@ -29,6 +29,12 @@
             <tr>
               <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= @order.name %></td><td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= @order.auto_submodel.full_name if @order.auto_submodel %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= @order.car_location + @order.car_num %></td>
             </tr>
+            <tr>
+              <td colspan="3"><%= t(:motoroil_cap, n: @order.auto_submodel.motoroil_cap) if @order.auto_submodel %></td>
+            </tr>
+            <tr>
+              <td colspan="3"><textarea cols="150" rows="1" placeholder="<%= t :comment_for_print %>" class="input-block-level"></textarea></td>
+            </tr>
         </tbody>
       </table>
     </div>
