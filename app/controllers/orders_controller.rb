@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
-  load_and_authorize_resource :except => @except_actions + [:auto_maintain_pack, :create_auto_maintain_order3]
+  load_and_authorize_resource :except => @except_actions + [:auto_maintain_query, :create_auto_maintain_order3, :create_auto_maintain_order4]
 
   # GET /orders
   # GET /orders.json
@@ -504,7 +504,7 @@ class OrdersController < ApplicationController
     end
   end
 
-  def auto_maintain_pack
+  def auto_maintain_query
     auto_maintain
     render 'auto_maintain'
   end
@@ -598,6 +598,23 @@ class OrdersController < ApplicationController
     return render json: {result: t(:parts_needed)}, status: :bad_request if @order.parts.empty?
     @order.city = City.find_by name: I18n.t(:beijing)
     @order.user_type = UserType.find_or_create_by name: I18n.t(:baichebao)
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+
+  def create_auto_maintain_order4
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    _create_auto_maintain_order
+    return render json: {result: t(:parts_needed)}, status: :bad_request if @order.parts.empty?
+    @order.city = City.find_by name: I18n.t(:beijing)
+    @order.user_type = UserType.find_or_create_by name: I18n.t(:weiche)
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!

@@ -114,8 +114,12 @@ Kalading::Application.routes.draw do
   post 'tool_records/:id/uploadpic' => 'tool_records#uploadpic', :as => :uploadpic_tool_records
 
   # For baichebao
-  get 'auto_maintain_pack/:asm_id' => 'orders#auto_maintain_pack', :as => :auto_maintain_pack
   post 'auto_maintain_pack/:asm_id' => 'orders#create_auto_maintain_order3', :as => :create_auto_maintain_pack
+
+  # For weiche
+  get 'auto_sms' => 'auto_brands#auto_sms', :as => :auto_sms
+  get 'auto_maintain_query/:asm_id' => 'orders#auto_maintain_query', :as => :auto_maintain_query
+  post 'auto_maintain_order_weiche/:asm_id' => 'orders#create_auto_maintain_order4', :as => :create_auto_maintain_order_weiche
 
   get 'auto_submodels_oil_cap_edit' => 'auto_submodels#oil_cap_edit', :as => :auto_submodels_oil_cap_edit
   post 'auto_submodels_oil_cap_modify' => 'auto_submodels#oil_cap_modify', :as => :auto_submodels_oil_cap_modify

@@ -9,12 +9,30 @@ shared_context "create user", :need_user => true do
     # 测试之前，创建临时账户
     @user = create(:user)
     @baichebao_user = create(:baichebao_user)
+    @weiche_user = create(:weiche_user)
+    
+        # 测试之前登录
+    response_json = RestClient.post "http://localhost:3000/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password}.to_json, :content_type => :json, :accept => :json
+    expect(response_json.code).to be(201)
+    @token = JSON.parse(response_json)["authentication_token"]
+    expect(@token).not_to be(nil)
+
+    response_json = RestClient.post "http://localhost:3000/users/sign_in", {:phone_num => @baichebao_user.phone_num, :password => @baichebao_user.password}.to_json, :content_type => :json, :accept => :json
+    expect(response_json.code).to be(201)
+    @baichebao_token = JSON.parse(response_json)["authentication_token"]
+    expect(@baichebao_token).not_to be(nil)
+
+    response_json = RestClient.post "http://localhost:3000/users/sign_in", {:phone_num => @weiche_user.phone_num, :password => @weiche_user.password}.to_json, :content_type => :json, :accept => :json
+    expect(response_json.code).to be(201)
+    @weiche_token = JSON.parse(response_json)["authentication_token"]
+    expect(@weiche_token).not_to be(nil)
   }
   
   after {
     # 测试之后，删除账户
     @user.destroy
     @baichebao_user.destroy
+    @weiche_user.destroy
   }
   
   def puts_req(s)

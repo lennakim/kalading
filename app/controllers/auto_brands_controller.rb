@@ -3,8 +3,9 @@ class AutoBrandsController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show]
   before_filter :set_default_operator
   # API test for Jason
-  load_and_authorize_resource :except => [:index, :show]
+  load_and_authorize_resource :except => [:index, :show, :auto_sms]
   caches_action :index, :if => Proc.new { request.format.json? && params[:all] }
+  caches_action :auto_sms
   
   # GET /auto_brands
   # GET /auto_brands.json
@@ -20,6 +21,12 @@ class AutoBrandsController < ApplicationController
     end
   end
 
+  def auto_sms
+    params[:all] = 1
+    index
+    render 'index'
+  end
+  
   # GET /auto_brands/1
   # GET /auto_brands/1.json
   def show

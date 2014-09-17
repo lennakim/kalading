@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>RSpec results</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <style type="text/css">
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-size: 80%;
+  }
+  </style>
+  <script type="text/javascript">
+    // <![CDATA[
+
+function addClass(element_id, classname) {
+  document.getElementById(element_id).className += (" " + classname);
+}
+
+function removeClass(element_id, classname) {
+  var elem = document.getElementById(element_id);
+  var classlist = elem.className.replace(classname,'');
+  elem.className = classlist;
+}
+
+function moveProgressBar(percentDone) {
+  document.getElementById("rspec-header").style.width = percentDone +"%";
+}
+
+function makeRed(element_id) {
+  removeClass(element_id, 'passed');
+  removeClass(element_id, 'not_implemented');
+  addClass(element_id,'failed');
+}
+
+function makeYellow(element_id) {
+  var elem = document.getElementById(element_id);
+  if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
+    if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
+      removeClass(element_id, 'passed');
+      addClass(element_id,'not_implemented');
+    }
+  }
+}
+
+function apply_filters() {
+  var passed_filter = document.getElementById('passed_checkbox').checked;
+  var failed_filter = document.getElementById('failed_checkbox').checked;
+  var pending_filter = document.getElementById('pending_checkbox').checked;
+
+  assign_display_style("example passed", passed_filter);
+  assign_display_style("example failed", failed_filter);
+  assign_display_style("example not_implemented", pending_filter);
+
+  assign_display_style_for_group("example_group passed", passed_filter);
+  assign_display_style_for_group("example_group not_implemented", pending_filter, pending_filter || passed_filter);
+  assign_display_style_for_group("example_group failed", failed_filter, failed_filter || pending_filter || passed_filter);
+}
+
+function get_display_style(display_flag) {
+  var style_mode = 'none';
+  if (display_flag == true) {
+    style_mode = 'block';
+  }
+  return style_mode;
+}
+
+function assign_display_style(classname, display_flag) {
+  var style_mode = get_display_style(display_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    elems[i].style.display = style_mode;
+  }
+}
+
+function assign_display_style_for_group(classname, display_flag, subgroup_flag) {
+  var display_style_mode = get_display_style(display_flag);
+  var subgroup_style_mode = get_display_style(subgroup_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    var style_mode = display_style_mode;
+    if ((display_flag != subgroup_flag) && (elems[i].getElementsByTagName('dt')[0].innerHTML.indexOf(", ") != -1)) {
+      elems[i].style.display = subgroup_style_mode;
+    } else {
+      elems[i].style.display = display_style_mode;
+    }
+  }
+}
+
+    // ]]>
+  </script>
+  <style type="text/css">
+#rspec-header {
+  background: #65C400; color: #fff; height: 4em;
+}
+
+.rspec-report h1 {
+  margin: 0px 10px 0px 10px;
+  padding: 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  font-size: 1.8em;
+  position: absolute;
+}
+
+#label {
+  float:left;
+}
+
+#display-filters {
+  float:left;
+  padding: 28px 0 0 40%;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+}
+
+#summary {
+  float:right;
+  padding: 5px 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  text-align: right;
+}
+
+#summary p {
+  margin: 0 0 0 2px;
+}
+
+#summary #totals {
+  font-size: 1.2em;
+}
+
+.example_group {
+  margin: 0 10px 5px;
+  background: #fff;
+}
+
+dl {
+  margin: 0; padding: 0 0 5px;
+  font: normal 11px "Lucida Grande", Helvetica, sans-serif;
+}
+
+dt {
+  padding: 3px;
+  background: #65C400;
+  color: #fff;
+  font-weight: bold;
+}
+
+dd {
+  margin: 5px 0 5px 5px;
+  padding: 3px 3px 3px 18px;
+}
+
+dd .duration {
+  padding-left: 5px;
+  text-align: right;
+  right: 0px;
+  float:right;
+}
+
+dd.example.passed {
+  border-left: 5px solid #65C400;
+  border-bottom: 1px solid #65C400;
+  background: #DBFFB4; color: #3D7700;
+}
+
+dd.example.not_implemented {
+  border-left: 5px solid #FAF834;
+  border-bottom: 1px solid #FAF834;
+  background: #FCFB98; color: #131313;
+}
+
+dd.example.pending_fixed {
+  border-left: 5px solid #0000C2;
+  border-bottom: 1px solid #0000C2;
+  color: #0000C2; background: #D3FBFF;
+}
+
+dd.example.failed {
+  border-left: 5px solid #C20000;
+  border-bottom: 1px solid #C20000;
+  color: #C20000; background: #FFFBD3;
+}
+
+
+dt.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+dt.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+dt.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+#rspec-header.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+#rspec-header.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+#rspec-header.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+.backtrace {
+  color: #000;
+  font-size: 12px;
+}
+
+a {
+  color: #BE5C00;
+}
+
+/* Ruby code, style similar to vibrant ink */
+.ruby {
+  font-size: 12px;
+  font-family: monospace;
+  color: white;
+  background-color: black;
+  padding: 0.1em 0 0.2em 0;
+}
+
+.ruby .keyword { color: #FF6600; }
+.ruby .constant { color: #339999; }
+.ruby .attribute { color: white; }
+.ruby .global { color: white; }
+.ruby .module { color: white; }
+.ruby .class { color: white; }
+.ruby .string { color: #66FF00; }
+.ruby .ident { color: white; }
+.ruby .method { color: #FFCC00; }
+.ruby .number { color: white; }
+.ruby .char { color: white; }
+.ruby .comment { color: #9933CC; }
+.ruby .symbol { color: white; }
+.ruby .regex { color: #44B4CC; }
+.ruby .punct { color: white; }
+.ruby .escape { color: white; }
+.ruby .interp { color: white; }
+.ruby .expr { color: white; }
+
+.ruby .offending { background-color: gray; }
+.ruby .linenum {
+  width: 75px;
+  padding: 0.1em 1em 0.2em 0;
+  color: #000000;
+  background-color: #FFFBD3;
+}
+
+  </style>
+</head>
+<body>
+<div class="rspec-report">
+
+<div id="rspec-header">
+  <div id="label">
+    <h1>RSpec Code Examples</h1>
+  </div>
+
+  <div id="display-filters">
+    <input id="passed_checkbox"  name="passed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="1" /> <label for="passed_checkbox">Passed</label>
+    <input id="failed_checkbox"  name="failed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="2" /> <label for="failed_checkbox">Failed</label>
+    <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked="checked" onchange="apply_filters()" value="3" /> <label for="pending_checkbox">Pending</label>
+  </div>
+
+  <div id="summary">
+    <p id="totals">&#160;</p>
+    <p id="duration">&#160;</p>
+  </div>
+</div>
+
+
+<div class="results">
+<div id="div_group_1" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_1" class="passed">用户登录，返回authentication_token用于其它API调用</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/users/sign_in
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "phone_num": "6666666666666666",
+  "password": "12345678"
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok",
+  "authentication_token": "xB8JLHDMSn9xwe5Coabs",
+  "name": "微车下单专用"
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('25.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">登录成功，返回authentication_token</span><span class='duration'>0.31624s</span></dd>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_2" class="passed">查询车型三级列表。返回三级JSON数组（品牌，系列，年款）。年款的id用于查询套餐和下单。auth_token为登录返回的token</dt>
+<h5>METHOD:&nbsp&nbspGET</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_sms.json?auth_token=wpf6Y3Fh8fRLNMu5h9t2
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+[
+  {
+    "name": "大众(一汽)",
+    "ams": [
+      {
+        "name": "CC",
+        "asms": [
+          {
+            "_id": "531f1f02098e71b3f8000cf4",
+            "name": " 1.8 TSI 2010.07-2014"
+          },
+          {
+            "_id": "531f1f03098e71b3f8000cfc",
+            "name": " 2.0 TSI 2010.07-2014"
+          }
+        ]
+      },
+      {
+        "name": "宝来",
+        "asms": [
+          {
+            "_id": "531f1efd098e71b3f8000c32",
+            "name": " 1.4 TSI 2010.06-2014"
+          },
+          {
+            "_id": "531f1efd098e71b3f8000c3d",
+            "name": " 1.6L 2004.10-2008.09"
+          },
+          {
+            "_id": "531f1efe098e71b3f8000c4a",
+            "name": " 1.6L 2002.07-2004.10"
+          },
+          {
+            "_id": "531f1efe098e71b3f8000c57",
+            "name": " 1.6L 2010.06-2014"
+          },
+          {
+            "_id": "531f1efe098e71b3f8000c61",
+            "name": " 1.6L 2008.11-2010.06"
+          },
+          {
+            "_id": "531f1eff098e71b3f8000c6f",
+            "name": " 1.8L 2001.12-2006.12"
+          },
+          {
+            "_id": "531f1eff098e71b3f8000c7c",
+            "name": " 1.8T 2001.12-2006.12"
+          },
+          {
+            "_id": "531f1f00098e71b3f8000c96",
+            "name": " 2.0L 2008.11-2010.12"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "雪佛兰(上海通用)",
+    "ams": [
+      {
+        "name": "爱唯欧",
+        "asms": [
+          {
+            "_id": "531f1fdc098e71b3f8003561",
+            "name": " 1.4L (T300) 2011.05-2014"
+          },
+          {
+            "_id": "531f1fdc098e71b3f8003566",
+            "name": " 1.6L (T300) 2011.05-2014"
+          }
+        ]
+      },
+      {
+        "name": "景程",
+        "asms": [
+          {
+            "_id": "531f1fdc098e71b3f800359e",
+            "name": " 1.8L 2009.10-2014"
+          },
+          {
+            "_id": "531f1fdd098e71b3f80035a3",
+            "name": " 2.0L 2006.04-2009.09"
+          }
+        ]
+      },
+      {
+        "name": "科鲁兹",
+        "asms": [
+          {
+            "_id": "531f1fdc098e71b3f8003584",
+            "name": " 1.6 T 2010.11-2014"
+          },
+          {
+            "_id": "531f1fdc098e71b3f800358b",
+            "name": " 1.6L 2009.04-2014"
+          },
+          {
+            "_id": "531f1fdc098e71b3f8003593",
+            "name": " 1.8L 2009.04-2010.12"
+          }
+        ]
+      },
+      {
+        "name": "科帕奇",
+        "asms": [
+          {
+            "_id": "531f1fdc098e71b3f800357d",
+            "name": " 2.4L 2007.08-2012.03"
+          }
+        ]
+      }
+    ]
+  }
+]
+</pre></p>
+    <script type="text/javascript">moveProgressBar('50.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">车型三级列表</span><span class='duration'>0.24018s</span></dd>
+  </dl>
+</div>
+<div id="div_group_3" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_3" class="passed">查询某个车型的保养默认套餐和适用配件信息。auth_token为登录返回的token。applicable_parts为所有适用配件的信息，包括品牌，ID，价格。</dt>
+<h5>METHOD:&nbsp&nbspGET</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_query/531f1ed0098e71b3f80001fb.json?auth_token=R3883v33R7qxk9zcwHpJ
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "price": 530.0,
+  "price_without_discount": 530.0,
+  "service_price": 150.0,
+  "discount": {
+  },
+  "pic_url": "http://intranet.kalading.com/assets/car_blue.png",
+  "name": "丰田(一汽) 兰德酷路泽 上门保养",
+  "parts": [
+    {
+      "机油": [
+        {
+          "brand": "嘉实多",
+          "number": "金嘉护 SN 10W-40",
+          "price": 273.0
+        }
+      ]
+    },
+    {
+      "机滤": [
+        {
+          "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
+          "price": 28.0
+        }
+      ]
+    },
+    {
+      "空调滤清器": [
+        {
+          "brand": "卡拉丁",
+          "number": "539d513b9a94e4de840005a3",
+          "spec": "PM2.5空调滤清器",
+          "price": 79.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "[需和空调滤清器同时购买]",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    }
+  ],
+  "applicable_parts": [
+    {
+      "空调滤清器": [
+        {
+          "brand": "卡拉丁",
+          "number": "539d513b9a94e4de840005a3",
+          "spec": "PM2.5空调滤清器",
+          "price": 79.0
+        },
+        {
+          "brand": "汉格斯特 Hengst",
+          "number": "5280cb96098e71d85e000354",
+          "spec": "",
+          "price": 74.0
+        },
+        {
+          "brand": "曼牌 Mann",
+          "number": "528af3e8098e71805900228a",
+          "spec": "双效活性炭",
+          "price": 120.0
+        },
+        {
+          "brand": "马勒 ",
+          "number": "5298b96f098e716daf000889",
+          "spec": "",
+          "price": 49.0
+        }
+      ]
+    },
+    {
+      "机滤": [
+        {
+          "brand": "马勒 ",
+          "number": "5298b983098e716daf000d5d",
+          "price": 28.0
+        }
+      ]
+    },
+    {
+      "PM2.5特效滤芯": [
+        {
+          "brand": "[需和空调滤清器同时购买]",
+          "number": "53672bab9a94e45d440005ae",
+          "price": 0.0
+        }
+      ]
+    },
+    {
+      "机油": [
+        {
+          "brand": "嘉实多",
+          "number": "金嘉护 SN 10W-40",
+          "price": 273.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "黄喜力HX5 10W-40",
+          "price": 278.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "磁护 SN 5W-40",
+          "price": 492.0
+        },
+        {
+          "brand": "美孚",
+          "number": "美孚1号 0W-40",
+          "price": 560.0
+        },
+        {
+          "brand": "嘉实多",
+          "number": "极护 SN 0W-40",
+          "price": 672.0
+        },
+        {
+          "brand": "壳牌",
+          "number": "灰喜力ULTRA 5W-40",
+          "price": 294.0
+        }
+      ]
+    }
+  ]
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('75.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">查询车型531f1ed0098e71b3f80001fb的保养套餐</span><span class='duration'>11.64673s</span></dd>
+  </dl>
+</div>
+<div id="div_group_4" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_4" class="passed">新建微车保养订单，需指定车型ID。parts为用户选择的配件,配件的brand和number从查询套餐的接口获得。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+http://115.28.132.220:81/auto_maintain_order_weiche/531f1ed0098e71b3f80001fb.json?auth_token=K7dn_J-Py8C-Ro4ezzwd
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "parts": [
+    {
+      "brand": "嘉实多",
+      "number": "极护 SN 0W-40"
+    },
+    {
+      "brand": "汉格斯特 Hengst",
+      "number": "5280cb8e098e71d85e0000d0"
+    },
+    {
+      "brand": "曼牌 Mann",
+      "number": "5246c7e5098e7109280001cd"
+    }
+  ],
+  "info": {
+    "address": "客户地址信息",
+    "name": "客户姓名",
+    "phone_num": "13888888888",
+    "car_location": "京",
+    "car_num": "N333M3",
+    "serve_datetime": "2014-06-09 15:44",
+    "pay_type": 1,
+    "reciept_type": 1,
+    "reciept_title": "发票抬头",
+    "client_comment": "客户的特殊要求"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "succeeded",
+  "seq": 3051
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('100.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">新建保养订单成功</span><span class='duration'>4.32110s</span></dd>
+  </dl>
+</div>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>16.52610 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "4 examples, 0 failures";</script>
+</div>
+</div>
+</body>
+</html>
