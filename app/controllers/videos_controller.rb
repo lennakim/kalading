@@ -1,5 +1,7 @@
 class VideosController < ApplicationController
   before_filter :authenticate_user!, :except => [:create]
+  load_and_authorize_resource
+
   # GET /videos
   # GET /videos.json
   def index
