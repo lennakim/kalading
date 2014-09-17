@@ -331,6 +331,41 @@ class Maintain
     score += self.calc_score("others")
   end
   
+  OILTYPE_TO_KM = [5000, 7500, 10000]
+  SERVICES_GROUP1 = %w[oil_filter_changed]
+  SERVICES_GROUP2 = %w[oil_filter_changed cabin_filter_changed]
+  SERVICES_GROUP3 = %w[oil_filter_changed air_filter_changed cabin_filter_changed]
+  NEXT_SERVICES_RULE = {5000 => {0 => SERVICES_GROUP1, 1 => SERVICES_GROUP3},
+                      7500 => {0 => SERVICES_GROUP2, 1 => SERVICES_GROUP3},
+                      10000 => {0 => SERVICES_GROUP2, 1 => SERVICES_GROUP3}}
+  
+  def next_maintain_km_by_oil
+    km = 0
+    self.order.parts.each do |p|
+      if p.part_type.name == I18n.t(:engine_oil)
+        km = OILTYPE_TO_KM[p.motoroil_type] if p.motoroil_type
+      end
+    end
+    km
+  end
+  
+  def next_maintain_time
+    next_date = ''
+    km_period = self.next_maintain_km_by_oil
+    if km_period != 0 && self.buy_date && self.curr_km.to_i != 0
+      days = km_period * (self.created_at.to_date - self.buy_date) / self.curr_km.to_i
+      next_date = self.created_at.to_date + days
+    end
+    next_date
+  end
+  
+  def next_maintain_services
+    services = []
+    km_period = self.next_maintain_km_by_oil
+    services = NEXT_SERVICES_RULE[km_period][(self.curr_km.to_i / km_period).to_i % 2] if km_period != 0 
+    services
+  end
+  
   validates :order_id, presence: true
 
   def as_json(options = nil)

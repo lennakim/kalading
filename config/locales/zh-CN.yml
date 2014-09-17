@@ -821,6 +821,7 @@ zh-CN:
   spare_tire_desc: '备胎'
   km_be_zero_info: '保养归零信息'
   km_be_zero: '保养归零'
+  km: '公里'
   curr_km: '车辆行驶里程（公里）'
   last_km: '上次保养里程（新用户）'
   next_maintain_km: '建议下次保养里程或时间'

@@ -2,8 +2,8 @@ o = Order.find(m.order_id)
 json.car_num o.car_location + o.car_num
 json.serve_datetime o.serve_datetime.strftime('%Y-%m-%d %H:%M')
 json.curr_km m.curr_km
-json.next_maintain_km "10000公里"
-json.next_maintain_time "2013-11-28"
+json.next_maintain_km (m.curr_km.to_i + m.next_maintain_km_by_oil).to_s + t(:km) if m.next_maintain_km_by_oil != 0
+json.next_maintain_time m.next_maintain_time
 json.lights do
   json.array! m.lights do |light|
     json.name light.name
@@ -63,7 +63,7 @@ json.score do
   json.others (s4 * 100 / 8).to_i
   json.total (s1 + s2 + s3 + s4).to_i
 end
-json.next_maintain_service ["换空调滤","更换机滤"]
+json.next_maintain_service m.next_maintain_services.collect{|s| t(s)}
 json.outlook_pics do
   json.array! m.outlook_pics do |p|
     json.url p.p.url
