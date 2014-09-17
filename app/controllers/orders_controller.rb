@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
       end
     else
       if request.format.json?
-        return render json: t(:phone_num_needed), status: :bad_request if params[:phone_nums].blank?
+        return render json: t(:phone_num_needed), status: :bad_request if params[:login_phone_num].blank? && params[:client_id].blank?
         @orders = Order.all
       else
         return redirect_to new_user_session_url
@@ -86,6 +86,20 @@ class OrdersController < ApplicationController
 
     if params[:history]
       @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'order').desc(:created_at)).page(0).per(5)
+    end
+    
+    if !params[:login_phone_num].blank? && !params[:client_id].blank?
+      phone_num = params[:login_phone_num]
+      @orders = @orders.any_of({login_phone_num: phone_num}, {phone_num: phone_num}, {client_id: params[:client_id]})
+    end
+
+    if !params[:login_phone_num].blank? && params[:client_id].blank?
+      phone_num = params[:login_phone_num]
+      @orders = @orders.any_of({login_phone_num: phone_num}, {phone_num: phone_num})
+    end
+
+    if params[:login_phone_num].blank? && !params[:client_id].blank?
+      @orders = @orders.where(client_id: params[:client_id])
     end
 
     respond_to do |format|
