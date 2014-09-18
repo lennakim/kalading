@@ -445,7 +445,7 @@ namespace :rename_asm do
   end
 
   task :order_counter => :environment do
-    a = Order.where(:state.ne => 8).group_by {|x|x.car_location+x.car_num}
+    a = Order.not_in(:state => [1,8,9]).group_by {|x|x.car_location+x.car_num}
     a = a.select{|k, v| k.size > 3}.sort_by {|k,v| -v.count }
     File.open '1.csv', 'w:UTF-8' do |f|
       f.puts '车牌号,保养次数'

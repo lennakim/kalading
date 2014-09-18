@@ -99,9 +99,12 @@ class CitiesController < ApplicationController
     h = {}
     (d1..d2).each do |d|
       h[d] = @city.order_capacity
+      if d == Date.tomorrow && DateTime.now.hour >= 17
+        h[d] = 0
+      end
     end
     Order.within_datetime_range(0, 4, d1.beginning_of_day, d2.end_of_day, @city).group_by {|o| o.serve_datetime.to_date}.each do |k, v|
-      h[k] = [@city.order_capacity - v.count, 0].max
+      h[k] = [@city.order_capacity - v.count, 0].max if h[k] != 0
     end
     render json: h
   end
