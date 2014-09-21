@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
       end
     else
       if request.format.json?
-        return render json: t(:phone_num_needed), status: :bad_request if params[:login_phone_num].blank? && params[:client_id].blank?
+        return render json: t(:phone_num_needed), status: :bad_request if params[:login_phone_num].blank? && params[:client_id].blank? && params[:phone_nums].blank?
         @orders = Order.all
       else
         return redirect_to new_user_session_url
