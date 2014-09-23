@@ -36,6 +36,7 @@ if o.reciept_type == 0
   json.reciept_need false
 else
   json.reciept_need true
+  json.reciept_type t(Order::RECIEPT_TYPE_STRINGS[o.reciept_type])
   json.reciept_title o.reciept_title
   json.reciept_address o.reciept_address
 end
