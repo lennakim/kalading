@@ -1,4 +1,5 @@
 json.id o.id
+json.seq o.seq
 json.name o.name
 json.address o.address
 json.phone_num o.phone_num
@@ -38,3 +39,4 @@ else
   json.reciept_title o.reciept_title
   json.reciept_address o.reciept_address
 end
+json.evaluation o.evaluation_time ? 1 : 0
