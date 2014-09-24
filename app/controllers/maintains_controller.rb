@@ -157,9 +157,23 @@ class MaintainsController < ApplicationController
     @maintains = []
     if params[:order_id].present?
       @maintains = Maintain.where(order_id: params[:order_id]).desc(:created_at).page(params[:page]).per(params[:per])
-    elsif params[:phone_nums].present?
-      Order.any_in(phone_num: params[:phone_nums]).where(:state.gte => 5,:state.lte => 7).each do |o|
-        @maintains += o.maintains
+    elsif params[:phone_nums].present? || !params[:login_phone_num].blank? || !params[:client_id].blank?
+      if params[:phone_nums].present?
+	orders = Order.any_in(phone_num: params[:phone_nums])
+      end
+      if !params[:login_phone_num].blank? && !params[:client_id].blank?
+	phone_num = params[:login_phone_num]
+	orders = Order.any_of({login_phone_num: phone_num}, {phone_num: phone_num}, {client_id: params[:client_id]})
+      end
+      if !params[:login_phone_num].blank? && params[:client_id].blank?
+	phone_num = params[:login_phone_num]
+	orders = Order.any_of({login_phone_num: phone_num}, {phone_num: phone_num})
+      end
+      if params[:login_phone_num].blank? && !params[:client_id].blank?
+	orders = Order.where(client_id: params[:client_id])
+      end
+      orders.where(:state.gte => 5,:state.lte => 7).desc(:seq).each do |o|
+	@maintains += o.maintains.desc(:created_at)
       end
       @maintains = Kaminari.paginate_array(@maintains).page(params[:page]).per(params[:per])
     end
