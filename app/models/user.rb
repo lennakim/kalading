@@ -38,6 +38,7 @@ class User
   # field :locked_at,       :type => Time
 
   field :name,    :type => String
+  field :name_pinyin,    :type => String
   field :phone_num,    :type => String
   field :phone_num2,    :type => String
   field :remark,    :type => String
@@ -45,7 +46,7 @@ class User
   field :roles,    :type => Array, :default => [0]
   field :title, :default => ''
   
-  attr_accessible :name, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title
+  attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title
   
   has_and_belongs_to_many :autos
   accepts_nested_attributes_for :autos, :allow_destroy => true

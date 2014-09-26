@@ -17,10 +17,13 @@
   <body style="padding-top: 10px;">
     <a class="btn btn-primary pull-right" id="print-btn" onclick="$('#print-btn').hide(); window.print(); $('#print-btn').show();"><%= t(:print) %></a>
     <h3 class="text-center"><%= t :shigongdan %></h3>
-    <div class="row"><%= t :order_sheet_description_1 %></div>
-    <div class="row"><%= t :order_sheet_description_2 %></div>
-    <div class="row"><%= t :order_sheet_description_3 %></div>
-    <div>
+    <div class="row">
+      <div class="span12"><%= t :order_sheet_description_1 %></div>
+      <div class="span12"><%= t :order_sheet_description_2 %></div>
+      <div class="span12"><%= t :order_sheet_description_3 %></div>
+    </div>
+    <div class="row">
+      <div class="span12">
       <table class="table table-bordered table-condensed">
         <tbody>
             <tr>
@@ -30,13 +33,14 @@
               <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= @order.name %></td><td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= @order.auto_submodel.full_name if @order.auto_submodel %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= @order.car_location + @order.car_num %></td>
             </tr>
             <tr>
-              <td colspan="3"><%= t(:motoroil_cap, n: @order.auto_submodel.motoroil_cap) if @order.auto_submodel %></td>
+              <td><b><%= t :user_type %>:</b>&nbsp&nbsp<%= @order.user_type.name if @order.user_type %></td><td colspan="2"><%= t(:motoroil_cap, n: @order.auto_submodel.motoroil_cap) if @order.auto_submodel %></td>
             </tr>
             <tr>
-              <td colspan="3"><textarea cols="150" rows="1" placeholder="<%= t :comment_for_print %>" class="input-block-level"></textarea></td>
+              <td colspan="3"><b><%= t :comment %>:</b>&nbsp&nbsp<%= @order.client_comment %></td>
             </tr>
         </tbody>
       </table>
+      </div>
     </div>
     
     <div class="row">
@@ -69,7 +73,8 @@
             <tr><th><%= t :part_types %></th><th><%= t :brand_and_number %></th><th><%= t :quantity %></th><th><%= t :price %></th><th><%= t :summary %></th></tr>
           </thead>
           <tbody>
-            <% @order.parts.each do |p| %>
+            <% @order.parts.group_by {|part| part.part_type}.sort_by { |k, v| AutoSubmodel::PART_SORT_ORDER[k.name] }.each do |t, parts| %>
+            <% parts.each do |p| %>
             <tr>
               <td><%= p.part_type.name %></td>
               <td><%= p.brand_and_number %></td>
@@ -77,6 +82,7 @@
               <td><%= humanized_money_with_symbol p.ref_price %></td>
               <td><%= humanized_money_with_symbol(p.ref_price * @order.part_counts[p.id.to_s].to_i ) %></td>
             </tr>
+            <% end %>
             <% end %>
             <tr>
               <td colspan="4"><b><%= t :total_2 %></b></td>
@@ -107,6 +113,5 @@
         </table>
       </div>
     </div>
-  
   </body>
 </html>

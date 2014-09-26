@@ -12,6 +12,7 @@ class Part
   field :spec, type: String
   field :price, type: Money, default: 0.0
   field :motoroil_type, type: Integer
+  field :remark, type: String
   
   belongs_to :part_brand
   belongs_to :part_type
@@ -22,7 +23,7 @@ class Part
   has_and_belongs_to_many :orders
   has_many :image_texts
 
-  attr_accessible :capacity, :number, :match_rule, :spec, :motoroil_type,
+  attr_accessible :capacity, :number, :match_rule, :spec, :motoroil_type, :remark,
     :part_brand_id, :part_type_id,
     :auto_submodel_ids,
     :urlinfo_ids, :urlinfos_attributes, :price, :order_ids, :partbatch_ids,
@@ -88,7 +89,7 @@ class Part
   end
   
   def as_json(options = nil)
-    h = super except: [:price, :auto_submodel_ids, :updated_at, :spec, :created_at, :version, :order_ids, :part_brand_id, :part_type_id, :modifier_id, :capacity, :motoroil_type]
+    h = super except: [:price, :auto_submodel_ids, :updated_at, :spec, :created_at, :version, :order_ids, :part_brand_id, :part_type_id, :modifier_id, :capacity, :motoroil_type, :remark]
   end
   
   
