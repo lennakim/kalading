@@ -27,6 +27,7 @@
     <%= f.input :name, label: t(:client_name) %>
     <%= f.input :auto_owner_name, label: t(:auto_owner_name) %>
     <%= f.association :user_type, collection: UserType.all, prompt: t('choose_user_type'), label: t('user_type'), include_blank: false %>
+    <%= f.association :dispatcher, label: t(:curr_dispatcher), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }, include_blank: true %>
     <% if %w[unscheduled scheduled serve_done handovered].include? Order::STATE_STRINGS[@order.state] %>
       <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
       <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: true %>

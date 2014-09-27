@@ -53,6 +53,7 @@ class User
   
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
   has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2
+  has_many :serve_orders3, class_name: "Order", inverse_of: :dispatcher
   has_many :partbatches
   
   validates_uniqueness_of :phone_num, :allow_blank => true

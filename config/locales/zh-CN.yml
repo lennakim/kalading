@@ -706,6 +706,7 @@ zh-CN:
   total_times: '总次数'
   auto_owner_name: '车主姓名'
   user_type: '客户类别'
+  curr_dispatcher: '当前调度'
   choose_user_type: '请选择用户类型'
   list_by_state: '按状态查询'
   auto_reg_date: '车辆注册日期'

@@ -25,7 +25,7 @@
         <th><%= t(:part) %></th>
         <th><%= t(:total_price) %></th>
         <th><%= t(:create_order_time) %></th>
-        <th><%= t(:maintain_record) %></th>
+        <th><%= t(:comment) %></th>
         <th><%=t 'actions' %></th>
       </tr>
     </thead>
@@ -88,13 +88,13 @@
           <td><%= humanized_money_with_symbol order.price %></td>
           <td><%=l order.created_at %></td>
           <td>
-            <% if order.maintains.empty? %>
+            <% if order.comments.empty? %>
               <%= t(:nothing) %>
             <% else %>
-              <a class="btn btn-link" data-toggle="collapse" data-target="#<%= order.id %>_maintains"><%= t(:view) %></a>
-              <div id="<%= order.id %>_maintains" class="collapse">
-              <% order.maintains.desc(:created_at).each do |m| %>
-              <p><%= link_to m.created_at.strftime('%Y-%m-%d %H:%M'), maintain_path(m) %></p>
+              <a class="btn btn-link" data-toggle="collapse" data-target="#<%= order.id %>_comments"><%= t(:view) %></a>
+              <div id="<%= order.id %>_comments" class="collapse">
+              <% order.comments.desc(:created_at).each do |c| %>
+              <p><%= c.text %></p>
               <% end %>
               </div>
             <% end %>

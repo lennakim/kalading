@@ -17,6 +17,7 @@
       <th><%= t 'motoroil_type' %></th>
       <th><%= t 'urls' %></th>
       <th><%= t 'update_time' %></th>
+      <th><%= t 'remark' %></th>
       <th><%= t 'actions' %></th>
     </tr>
   </thead>
@@ -59,6 +60,7 @@
           <%= render 'urlinfo', part: part %>
         </td>
         <td><%= l part.updated_at %></td>
+        <td><%= part.remark %></td>
         <td>
           <%= link_to t('edit'), edit_part_path(part), :class => 'btn btn-mini', :target => '_blank' if can? :update, part %>
           <%= link_to t('destroy'),

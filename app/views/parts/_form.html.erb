@@ -5,6 +5,7 @@
   <%= f.input :price, label: t('price') %>
   <%= f.input :capacity, label: t('capacity_all') %>
   <%= f.input :spec, label: t('spec') %>
+  <%= f.input :remark, label: t('remark') %>
   <%= f.input :motoroil_type, label: t('motoroil_type'), collection: Part::MOTOROIL_TYPE, label_method:  lambda { |s| t(Part::MOTOROIL_TYPE_STRINGS[s]) } %>
   <%= f.fields_for :urlinfos do |sf| %>
     <%= sf.input :name, label: t('urlname')%>

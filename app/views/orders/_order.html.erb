@@ -31,6 +31,10 @@
       <td><%= @order.user_type.name if @order.user_type %></td>
     </tr>
     <tr>
+      <td><%= t(:curr_dispatcher) %></td>
+      <td><%= @order.dispatcher.name if @order.dispatcher %></td>
+    </tr>
+    <tr>
       <td><%= t(:serve_datetime) %></td>
       <td><%= l @order.serve_datetime %></td>
     </tr>
