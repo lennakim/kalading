@@ -455,12 +455,70 @@ namespace :rename_asm do
     end
   end
 
-  task :order_count_by_asm => :environment do
-    a = AutoSubmodel.all.select {|x| x.orders.exists?}.sort_by {|x| x.orders.size}
+  task :order_counter_by_car_num => :environment do
+    ut1 = UserType.find_by name: /中进/
+    ut2 = UserType.find_by name: /良好/
+    a = Order.not_in(:state => [1,8,9], :user_type => [ut1, ut2]).group_by {|x|x.car_location+x.car_num}
+    a = a.select{|k, v| k.size > 3 && k != '京123456'}.sort_by {|k,v| -v.count }
+    puts "车牌号数：#{a.size}"
+    File.open '1.csv', 'w:UTF-8' do |f|
+      f.puts '车牌号,保养次数'
+      a.each do |k,v|
+        f.puts "#{k},#{v.size}"
+      end
+    end
+  end
+
+  task :asm_stats => :environment do
+    ut1 = UserType.find_by name: /中进/
+    ut2 = UserType.find_by name: /良好/
+    a = AutoSubmodel.all.select {|x| x.orders.not_in(:state => [1,8,9], :user_type => [ut1, ut2]).exists?}.sort_by {|x| -x.orders.size}
+    puts "服务车型数：#{a.count}"
+    (0..9).each do |i|
+      puts "车型：#{a[i].full_name}，保养次数：#{a[i].orders.count}"
+    end
+  end
+
+  task :order_count => :environment do
+    ut1 = UserType.find_by name: /中进/
+    ut2 = UserType.find_by name: /良好/
+    orders = Order.not_in(:state => [1,8,9], :user_type => [ut1, ut2])
+    puts "个人客户有效订单数：#{orders.count}"
+    puts "保养订单数：#{orders.select {|x| x.service_types.find_by(name: '换机油机滤')}.count}"
+    puts "单换PM2.5空调滤芯订单数：#{orders.select {|x| x.service_types.count == 1 && x.service_types.first.name == '单换PM2.5空调滤'}.count}"
+  end
+
+  task :order_price_stats => :environment do
+    ut1 = UserType.find_by name: /中进/
+    ut2 = UserType.find_by name: /良好/
+    orders = Order.not_in(:state => [1,8,9], :user_type => [ut1, ut2])
+    maintain_orders = orders.select {|x| x.service_types.find_by(name: '换机油机滤')}
+    puts "保养订单数：#{maintain_orders.count}"
+    puts "保养订单平均价格：#{(maintain_orders.sum{|x| x.price.to_f} / maintain_orders.count).round(1)}"
+    puts "价格150元以下(含)保养订单数：#{orders.where(:price.lte => Money.new(15000)).select {|x| x.service_types.find_by(name: '换机油机滤')}.count}"
+    puts "价格150元-400元保养订单数：#{orders.where(:price.gte => Money.new(15000), :price.lt => Money.new(40000)).select {|x| x.service_types.find_by(name: '换机油机滤')}.count}"
+    puts "价格400元-600元保养订单数：#{orders.where(:price.gte => Money.new(40000), :price.lt => Money.new(60000)).select {|x| x.service_types.find_by(name: '换机油机滤')}.count}"
+    puts "价格600元-800元保养订单数：#{orders.where(:price.gte => Money.new(60000), :price.lt => Money.new(80000)).select {|x| x.service_types.find_by(name: '换机油机滤')}.count}"
+    puts "价格800元以上保养订单数：#{orders.where(:price.gte => Money.new(80000)).select {|x| x.service_types.find_by(name: '换机油机滤')}.count}"
+    day1 = DateTime.parse("2014-01-01 00:00")
+    (1..9).each do |m|
+      a = orders.where(:serve_datetime.gte => (m - 1).month.since(day1), :serve_datetime.lt => m.month.since(day1), :price.gt => Money.new(15000) ).select {|x| x.service_types.find_by(name: '换机油机滤')}
+      puts "#{m}月份非自带配件保养订单：#{a.count}个，均价：#{(a.sum{|x| x.price.to_f} / a.count).round(1)}"
+    end
+  end
+
+  task :car_num_stats => :environment do
+    ut1 = UserType.find_by name: /中进/
+    ut2 = UserType.find_by name: /良好/
+    day1 = DateTime.parse("2014-03-31 00:00")
+    orders = Order.not_in(:state => [1,8,9], :user_type => [ut1, ut2])
+    a = orders.where(:serve_datetime.lte => day1).select {|x| x.service_types.find_by(name: '换机油机滤')}.group_by {|x| [x.car_location, x.car_num] }
+    a = a.select{|k, v| k[0].size + k[1].size > 3 && k != ['京', '123456']}.sort_by {|k,v| 0 - orders.where(car_location: k[0], car_num: k[1]).count }
+    puts "3月31日前用户个数：#{a.count}"
     File.open '2.csv', 'w:UTF-8' do |f|
-      f.puts '车型,保养次数'
-      a.each do |a|
-        f.puts "#{a.full_name},#{a.orders.size}"
+      f.puts '车牌号,服务次数'
+      a.each do |k, v|
+        f.puts "#{k[0] + k[1]},#{orders.where(car_location: k[0], car_num: k[1]).count}"
       end
     end
   end
