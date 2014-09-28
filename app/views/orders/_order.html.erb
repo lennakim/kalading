@@ -50,7 +50,7 @@
       <td><%= t(:auto_reg_date) %></td>
       <td>
         <% if @order.maintains.exists? %>
-          <%= l @order.maintains.first.buy_date %>
+          <%= l @order.maintains.first.buy_date if @order.maintains.first.buy_date %>
         <% else %>
           <%= l @order.registration_date if @order.registration_date %>
         <% end %>
