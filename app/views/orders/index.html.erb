@@ -171,7 +171,7 @@ $(function() {
 
     var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
     points = [
-    <% @orders.select {|x| x.state >= 2 && x.state <= 4 }.each do |o| %>
+    <% @orders.select {|x| [0,2,3,4].include? x.state }.each do |o| %>
       {
         seq: "<%= o.seq %>",
         state: "<%= t(Order::STATE_STRINGS[o.state]) %>",
