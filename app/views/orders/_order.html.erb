@@ -48,43 +48,81 @@
     </tr>
     <tr>
       <td><%= t(:auto_reg_date) %></td>
-      <td><%= l @order.registration_date if @order.registration_date %></td>
+      <td>
+        <% if @order.maintains.exists? %>
+          <%= l @order.maintains.first.buy_date %>
+        <% else %>
+          <%= l @order.registration_date if @order.registration_date %>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:vin) %></td>
-      <td><%= @order.vin %></td>
+      <td>
+        <% if @order.maintains.exists? %>
+          <%= @order.maintains.first.VIN %>
+        <% else %>
+          <%= @order.vin %>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:engine_num) %></td>
-      <td><%= @order.engine_num %></td>
+      <td>
+        <% if @order.maintains.exists? %>
+          <%= @order.maintains.first.engine_num %>
+        <% else %>
+          <%= @order.engine_num %>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:auto_km) %></td>
-      <td><%= @order.auto_km %></td>
+      <td>
+        <% if @order.maintains.exists? %>
+          <%= @order.maintains.first.curr_km %>
+        <% else %>
+          <%= @order.auto_km %>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:oil_out) %></td>
-      <td><%= @order.oil_out %></td>
+      <td>
+        <% if @order.maintains.exists? %>
+          <%= @order.maintains.first.oil_out %>
+        <% else %>
+          <%= @order.oil_out %>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:oil_in) %></td>
-      <td><%= @order.oil_in %></td>
-    </tr>
-    <tr>
-      <td><%= t(:front_wheels) %></td>
-      <td><%= @order.front_wheels %></td>
-    </tr>
-    <tr>
-      <td><%= t(:back_wheels) %></td>
-      <td><%= @order.back_wheels %></td>
-    </tr>
-    <tr>
-      <td><%= t(:back_wheels) %></td>
-      <td><%= @order.back_wheels %></td>
+      <td>
+        <% if @order.maintains.exists? %>
+          <%= @order.maintains.first.oil_in %>
+        <% else %>
+          <%= @order.oil_in %>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:auto_km_next) %></td>
-      <td><%= @order.auto_km_next %></td>
+      <td>
+        <% if @order.maintains.exists? %>
+          <%= @order.maintains.first.next_maintain_km %>
+        <% else %>
+          <%= @order.auto_km_next %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= t(:maintain_record) %></td>
+      <td>
+        <% @order.maintains.desc(:created_at).each do |m| %>
+          <p><%= link_to t(:view), maintain_path(m), :class => 'btn btn-info' %></p>
+        <% end %>
+      </td>
     </tr>
     <tr>
       <td><%= t(:assigned_to_engineer) %></td>
