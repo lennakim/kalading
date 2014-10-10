@@ -172,6 +172,7 @@ class OrdersController < ApplicationController
     @order.part_deliver_state = 0
     @order.serve_datetime = DateTime.now.since(1.days)
     @order.discounts = nil
+    @order.friend_phone_num = ''
     @order.calc_price
     @auto_submodel = @order.auto_submodel
     @auto_submodels = Kaminari.paginate_array([@order.auto_submodel]).page(0) if @order.auto_submodel
@@ -218,7 +219,6 @@ class OrdersController < ApplicationController
     end
     respond_to do |format|
       if @order.save
-        Auto.find_or_create_by(car_location: @order.car_location, car_num: @order.car_num, auto_submodel_id: @order.auto_submodel.id ) if @order.auto_submodel
         format.html { redirect_to orders_url, notice: I18n.t(notice, seq: @order.seq) }
         format.json { render json: @order, status: :created, location: @order }
         format.mobile { render  :action => "show.mobile.erb"}
@@ -244,6 +244,13 @@ class OrdersController < ApplicationController
       notice = I18n.t(:order_saved_notify, seq: @order.seq)
     elsif params[:cancel]
       params[:order][:state] = 8
+      if @order.balance_pay > 0
+        params[:order][:balance_pay] = 8
+        c = Client.find_or_create_by phone_num: @order.phone_num
+        if c
+          c.update_attributes balance: c.balance + @order.balance_pay
+        end
+      end
       notice = I18n.t(:order_cancelled, seq: @order.seq)
     else
       params[:order][:state] = 1
@@ -352,6 +359,17 @@ class OrdersController < ApplicationController
     if d && d.expire_date >= Date.today && d.orders.count < d.times
       @order.discounts << d
     end
+
+    p = @order.calc_price
+    if p > 0.0 && @order.phone_num.present?
+      c = Client.find_by phone_num: @order.phone_num
+      if c && c.balance > 0.0
+        #使用账户余额
+        used = [c.balance, p].min
+        @order.balance_pay = used
+      end
+    end
+    
     respond_to do |format|
       format.html
       format.js
@@ -734,7 +752,7 @@ class OrdersController < ApplicationController
 private
   def _create_auto_maintain_order
     @order = Order.new
-    if params[:asm_id]
+    if params[:asm_id].present?
       asm = AutoSubmodel.find(params[:asm_id])
       @order.auto_submodel = asm
     end
@@ -772,7 +790,7 @@ private
   end
 
   def check_discount
-    if params[:discount]
+    if params[:discount].present?
       discount = Discount.find_by token: params[:discount]
       if discount
         if discount.expire_date < Date.today

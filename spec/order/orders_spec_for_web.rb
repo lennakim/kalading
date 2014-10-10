@@ -141,12 +141,12 @@ describe '新建换空调滤+PM2.5滤芯订单，client_id为用户标识（open
     expect(h['result']).to eq('succeeded')
     expect(h['seq']).to be
     o = Order.find_by(seq: h['seq'])
-    expect(o.price.to_f).to be(50.0)
+    expect(o.calc_price.to_f).to be(50.0)
     o.destroy
   end
 end
 
-describe '新建PM2.5滤芯订单，client_id为用户标识（openid）。', :need_user => true do
+describe '新建PM2.5滤芯订单，client_id随便写。', :need_user => true do
   it "新建保养订单" do
     o = {
       parts: [
@@ -176,7 +176,7 @@ describe '新建PM2.5滤芯订单，client_id为用户标识（openid）。', :n
     expect(h['result']).to eq('succeeded')
     expect(h['seq']).to be
     o = Order.find_by(seq: h['seq'])
-    expect(o.price.to_f).to be(50.0)
+    expect(o.calc_price.to_f).to be(50.0)
     o.destroy
   end
 end
@@ -281,5 +281,60 @@ describe '设置订单属性，包括状态，取消原因等。状态取值：8
     expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[8]))
     expect(order['cancel_reason']).to eq('有事先不做了')
   end
+end
 
+describe '新建PM2.5滤芯订单，指定朋友手机号。', :need_user => true do
+  it "新建保养订单" do
+    o = {
+      parts: [
+              {
+                brand: "卡拉丁",
+                number: "53672bab9a94e45d440005ae"
+              }
+      ],
+      info: {
+              address: "北京朝阳区光华路888号",
+              name: "王一迅",
+              phone_num: @user.phone_num,
+              client_id: "040471abcd",
+              car_location: "京",
+              car_num: "N333M3",
+              serve_datetime: "2014-06-09 15:44",
+              pay_type: 1,
+              reciept_type: 1,
+              reciept_title: "卡拉丁汽车技术",
+              client_comment: "请按时到场",
+              city_id: City.find_by(name: '北京市').id.to_s,
+              friend_phone_num: @weiche_user.phone_num
+      }
+    }
+    c = Client.find_or_create_by phone_num: @weiche_user.phone_num
+    expect(c).to be
+    response_json = post_json "http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json", o
+    expect(response_json.code).to be(200)
+    h = JSON.parse(response_json)
+    expect(h['result']).to eq('succeeded')
+    expect(h['seq']).to be
+    o = Order.find_by(seq: h['seq'])
+    expect(o.calc_price.to_f).to be(50.0)
+    c = Client.find_by phone_num: @user.phone_num
+    expect(c).to be
+    c.destroy
+    c = Client.find_by phone_num: @weiche_user.phone_num
+    expect(c.balance.to_f).to be(50.0)
+    c.destroy
+    o.destroy
+  end
+end
+
+describe '查询账户余额。phone_num为客户手机号。balance为余额（单位：元）', :need_user => true do
+  it "查询13810190339的账户余额" do
+    c = Client.find_or_create_by phone_num: 13810190339
+    c.update_attributes balance: 150.0
+    response_json = get_json "http://localhost:3000/client_query.json?phone_num=#{c.phone_num}"
+    expect(response_json.code).to be(200)
+    h = JSON.parse(response_json)
+    expect(h['balance'].to_f).to be(150.0)
+    c.destroy
+  end
 end

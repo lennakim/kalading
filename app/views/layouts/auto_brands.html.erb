@@ -10,7 +10,6 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header"></li>
-              <li><%= link_to t('autos'), autos_path %></li>
               <li><%= link_to t('auto_submodels', n: AutoSubmodel.where(data_source: 2).count), auto_submodels_path %></li>
               <li><%= link_to t('auto_models'), auto_models_path %></li>
               <li class="active"><%= link_to t('auto_brands'), auto_brands_path  %></li>

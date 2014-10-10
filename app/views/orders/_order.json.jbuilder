@@ -29,6 +29,7 @@ json.parts do
   end
 end
 json.price o.calc_price.to_f
+json.balance_pay o.balance_pay.to_f
 json.pay_type t(Order::PAY_TYPE_STRINGS[o.pay_type])
 json.cancel_reason o.cancel_reason
 json.part_deliver_state o.part_deliver_state

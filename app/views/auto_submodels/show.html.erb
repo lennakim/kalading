@@ -8,9 +8,6 @@
   <dd><%= @auto_submodel.full_name %></dd>
   <dt><strong><%= t(:motoroil_capacity) %>:</strong></dt>
   <dd><%= @auto_submodel.motoroil_cap %></dd>
-  <dd></dd>
-  <dt><strong><%= t(:auto_count) %>:</strong></dt>
-  <dd><%= @auto_submodel.autos.count %></dd>
 </dl>
   <%= render 'parts', parts: @auto_submodel.parts_by_type_ignore_quantity %>
 

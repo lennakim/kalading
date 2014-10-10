@@ -1,4 +1,7 @@
 Kalading::Application.routes.draw do
+  resources :clients
+
+
   resources :image_texts
 
 
@@ -149,6 +152,8 @@ Kalading::Application.routes.draw do
 
   get 'city_capacity/:id' => 'cities#capacity', :as => :city_capacity
   get 'orders/:id/print' => 'orders#print', :as => :print_order
+  
+  get 'client_query' => 'clients#find', :as => :client_query
   
   resources :auto_brands
   root :to => 'orders#index'

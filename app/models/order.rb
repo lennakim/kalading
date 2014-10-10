@@ -18,7 +18,6 @@ class Order
   field :serve_datetime, type: DateTime
   field :serve_end_datetime, type: DateTime
   field :registration_date, type: Date
-  field :price, type: Money
   field :car_location, type: String, default: I18n.t(:jing)
   field :car_num, type: String, default: ''
   field :vin, type: String, default: ''
@@ -51,12 +50,15 @@ class Order
   field :engine_num, type: String, default: ''
   field :client_id, type: String, default: ''
   field :login_phone_num, type: String, default: ''
+  field :friend_phone_num, type: String, default: ''
+  # 使用账户余额付的款
+  field :balance_pay, type: Money, default: 0.0
 
   belongs_to :engineer, class_name: "User", inverse_of: :serve_orders
   belongs_to :engineer2, class_name: "User", inverse_of: :serve_orders2
   belongs_to :dispatcher, class_name: "User", inverse_of: :serve_orders3
+  belongs_to :friend, class_name: "Client", inverse_of: :friend_orders
 
-  belongs_to :auto
   belongs_to :auto_submodel
   has_and_belongs_to_many :service_types
   has_and_belongs_to_many :discounts
@@ -76,7 +78,7 @@ class Order
   accepts_nested_attributes_for :comments, :allow_destroy => true
 
   attr_accessible :state, :address, :phone_num,:buymyself,:serve_datetime,
-    :customer_id, :engineer_id, :auto_id, :engineer2_id, :dispatcher_id,
+    :customer_id, :engineer_id, :auto_id, :engineer2_id, :dispatcher_id, :friend_id, :balance_pay,
     :service_type_ids,
     :auto_id,
     :discount_ids,
@@ -88,7 +90,7 @@ class Order
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
     :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state,
-    :serve_end_datetime, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :login_phone_num
+    :serve_end_datetime, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :login_phone_num, :friend_phone_num
 
   auto_increment :seq
   index({ seq: 1 })
@@ -118,8 +120,6 @@ class Order
   EVALUATION_TAG = [1, 2, 3, 4]
   EVALUATION_TAG_STRINGS = %w[none service_resp_quickly service_resp_quickly service_good service_bad]
 
-  before_save :calc_price
-  
   def calc_parts_price
     p = Money.new(0.0)
     self.parts.each do |pi|
@@ -166,19 +166,19 @@ class Order
   end
   
   def calc_price
-    self.price = 0.0
-    self.price += self.calc_service_price
-    self.price += self.calc_parts_price
+    price = Money.new(0.0)
+    price += self.calc_service_price
+    price += self.calc_parts_price
     self.discounts.each do |d|
       next if d.expire_date < Date.today || d.orders.count >= d.times
       if d.discount != 0
-        self.price -= d.discount
+        price -= d.discount
       elsif d.percent != 0
-        self.price = self.price - self.price * d.percent / 100
+        price = price - price * d.percent / 100
       end
     end
-    self.price = 0.0 if self.price < 0.0
-    self.price
+    price = 0.0 if price < 0.0
+    price - self.balance_pay
   end
 
   def parts_by_type
@@ -196,7 +196,7 @@ class Order
       :discount_num,:engineer_id, :front_wheels, :modifier_id, :oil_filter_changed, :oil_gathered, :oil_in, :oil_out,
       :phone_num  ,:serve_datetime ,:serve_datetime_next ,:updated_at, :version, :vin, :charged, :state, 
       :part_counts, :address, :buymyself, :car_location, :car_num, :name, :pay_type, :reciept_title, :reciept_type, :seq, :part_ids, :service_type_ids,
-      :auto_submodel_id, :price, :comments, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time ]
+      :auto_submodel_id, :comments, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :balance_pay ]
   end
   
   instance_eval do
@@ -205,4 +205,27 @@ class Order
     end
   end
 
+  after_create do |o|
+    if STATE_STRINGS[o.state] != 'inquiry'
+      p = o.calc_price
+      # 使用账户余额
+      if p > 0 && o.phone_num.present?
+        # 查询或创建账户
+        c = Client.find_or_create_by phone_num: o.phone_num
+        if c && c.balance > 0.0
+          used = [c.balance, p].min
+          o.update_attributes balance_pay: used
+          c.update_attributes balance: c.balance - used
+        end
+      end
+      # 给朋友的账户加钱
+      if o.friend_phone_num.present? && o.friend_phone_num != o.phone_num
+        c = Client.find_by phone_num: o.friend_phone_num
+        if c
+          c.friend_orders << o
+          c.update_attributes :balance => c.balance.to_f + 50.0
+        end
+      end
+    end
+  end
 end

@@ -55,7 +55,7 @@ describe '新建百车宝保养订单，需指定车型ID。parts为用户选择
     expect(h['seq']).to be
     o = Order.find_by(seq: h['seq'])
     expect(o.parts.count).to be(3)
-    expect(o.price.to_f).not_to be(0.0)
+    expect(o.calc_price.to_f).not_to be(0.0)
     expect(o.city.name).to eq('北京市')
     expect(o.user_type.name).to eq('百车宝')
     o.destroy

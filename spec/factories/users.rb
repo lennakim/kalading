@@ -1,7 +1,7 @@
 #encoding: UTF-8
 FactoryGirl.define do
   factory :user do
-    phone_num "33123113131313"
+    phone_num "38910721074"
     email "test_engineer_rspec@kalading.com"
     name "app"
     password  "12345678"
@@ -9,7 +9,7 @@ FactoryGirl.define do
   end
 
   factory :baichebao_user, class: User do
-    phone_num "444444444444444"
+    phone_num "38910721075"
     email "baichebao_test@kalading.com"
     name "baichebao"
     password  "12345678"
@@ -17,7 +17,7 @@ FactoryGirl.define do
   end
 
   factory :weiche_user, class: User do
-    phone_num "6666666666666666"
+    phone_num "48910721881"
     email "weiche_test@kalading.com"
     name "微车下单专用"
     password  "12345678"

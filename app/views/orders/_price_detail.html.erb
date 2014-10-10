@@ -21,6 +21,13 @@
       <%= @order.discounts.first.name if @order.discounts.exists? %>
     </strong></p>
     <% end %>
+    
+    <% if @order.balance_pay > 0 %>
+      <p><strong>
+      <%= t(:balance_pay) + ' ' + humanized_money_with_symbol(@order.balance_pay) %>
+      </strong></p>
+    <% end %>
+      
     <h3>  
       <%= t(:summary_price) + " " + humanized_money_with_symbol(@order.calc_price) %>
     </h3>

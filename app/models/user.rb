@@ -48,9 +48,6 @@ class User
   
   attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title
   
-  has_and_belongs_to_many :autos
-  accepts_nested_attributes_for :autos, :allow_destroy => true
-  
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
   has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2
   has_many :serve_orders3, class_name: "Order", inverse_of: :dispatcher

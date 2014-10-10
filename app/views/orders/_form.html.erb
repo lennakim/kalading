@@ -191,7 +191,7 @@
     <%= f.input :oil_filter_changed, label: t(:oil_filter_changed), :as => :boolean %>
     <%= f.input :air_filter_changed, label: t(:air_filter_changed), :as => :boolean %>
     <%= f.input :cabin_filter_changed, label: t(:cabin_filter_changed), :as => :boolean %>
-    <%= f.input :charged, label: t(:charged, p: (humanized_money_with_symbol @order.price) ), :as => :boolean %>
+    <%= f.input :charged, label: t(:charged, p: (humanized_money_with_symbol @order.calc_price) ), :as => :boolean %>
     <%= f.input :oil_gathered, label: t(:oil_gathered), :as => :boolean %>
     <h5 id="others"><%= t(:others) %></h5>
     <%= f.input :pay_type, label: t(:pay_type), collection: Order::PAY_TYPES, label_method:  lambda { |s| t(Order::PAY_TYPE_STRINGS[s]) }, include_blank: false %>

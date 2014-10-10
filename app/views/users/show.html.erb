@@ -8,10 +8,6 @@
   <dd><%= @user.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:phone_num) %>:</strong></dt>
   <dd><%= @user.phone_num %></dd>
-  <dt><strong><%= t(:autos) %>:</strong></dt>
-  <% @user.autos.each do |auto| %>
-    <dd><%= link_to auto.number, auto_path(auto) %></dd>
-  <% end %>
 </dl>
 
 <div class="form-actions">

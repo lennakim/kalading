@@ -476,9 +476,6 @@ namespace :export_automodel do
           asm1.parts.each do |p|
             x[1][0].parts << p
           end
-          asm1.autos.each do |a|
-            x[1][0].autos << a
-          end
           to_be_destroyed << asm1  
         end
       end

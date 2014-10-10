@@ -13,7 +13,6 @@
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
                 <li class="nav-header"></li>
-                <li><%= link_to t('autos'), autos_path %></li>
                 <% if [3,4].include?(@ds) ||params[:sanlv_ready] || params[:motoroil_cap] || params[:oilf_soldout] || params[:airf_soldout] || params[:cabinf_soldout] || params[:part_rule_exists] || params[:motoroil_not_set] %>
                   <li><%= link_to t('auto_submodels', n: AutoSubmodel.where(data_source: 2).count), auto_submodels_path %></li>
                 <% else %>

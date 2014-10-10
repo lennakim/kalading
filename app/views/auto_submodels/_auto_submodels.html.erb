@@ -12,7 +12,6 @@
       <th><%= t 'motoroil_group' %></th>
       <th><%= t 'engine_displacement' %></th>
       <th><%= t 'parts_store' %></th>
-      <th><%= t 'auto_count' %></th>
       <th><%= t 'service_level' %></th>
       <th><%= t 'match_rule' %></th>
       <th><%= t 'remark' %></th>
@@ -48,7 +47,6 @@
               </tr>
           </table>
         </td>
-        <td><%= auto_submodel.autos.count %></td>
         <td><%= t(AutoSubmodel::SERV_LEVEL_STRINGS[auto_submodel.service_level]) %></td>
         <td>
           <ul>

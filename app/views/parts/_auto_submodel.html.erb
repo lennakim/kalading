@@ -4,7 +4,6 @@
   <td><%= auto_submodel.engine_displacement %></td>
   <td><%= auto_submodel.engine_model %></td>
   <td><%= t(:total_models, count: auto_submodel.parts.size) %></td>
-  <td><%= auto_submodel.autos.count %></td>
   <td>
     <%= link_to t('destroy_match'),
                 delete_part_auto_submodel_path(@part, auto_submodel),
