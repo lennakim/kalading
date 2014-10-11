@@ -44,7 +44,6 @@ class AutoSubmodel
 
   belongs_to :auto_model
   has_and_belongs_to_many :parts, after_add: :check_sanlv_add,  before_remove: :check_sanlv_removal
-  has_many :autos
   has_many :orders
   embeds_many :pictures, :cascade_callbacks => true
   embeds_many :part_rules, :cascade_callbacks => true
