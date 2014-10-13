@@ -180,7 +180,7 @@ class StorehousesController < ApplicationController
     u = User.find_by phone_num: '13384517937'
     return render json: "user not found" if u.nil?
 
-    part = Part.find_or_create_by number: params[I18n.t(:number)], part_brand_id: part_brand.id, part_type_id: part_type.id
+    part = Part.find_or_create_by number: params[I18n.t(:part_number)], part_brand_id: part_brand.id, part_type_id: part_type.id
     supplier = Supplier.find_by name: /.*#{params[I18n.t(:part_supplier)]}.*/
     supplier = Supplier.create name: params[I18n.t(:part_supplier)] if supplier.nil?
     price = 0.0
@@ -193,5 +193,68 @@ class StorehousesController < ApplicationController
       remained_quantity: 100,
       user_id: u.id
     return render json: 'ok'
+  end
+  
+  def statistics
+    respond_to do |format|
+      format.csv {
+        csv_data = CSV.generate do |csv|
+          # CSV Header
+          d1 = Date.today.ago(1.year).beginning_of_month
+          first_ht_dt = HistoryTracker.asc(:created_at).first.created_at
+          d1 = first_ht_dt.beginning_of_month if d1 < first_ht_dt
+          d2 = Date.today.ago(1.month).end_of_month
+          a = [I18n.t(:part_brand), I18n.t(:part_number), I18n.t(:part_type)]
+          a += [I18n.t(:in_quantity), I18n.t(:remained_quantity), I18n.t(:batch_price), I18n.t(:sell_price_history)]
+          d = d1
+          while d < d2
+            a << I18n.t(:month_delivered, y: d.year, m: d.month)
+            d = 1.month.since(d)
+          end
+          a += [I18n.t(:total_delivered), I18n.t(:needed_this_week), I18n.t(:store_warning), I18n.t(:max_delivered), I18n.t(:remark)]
+          csv << a
+          # CSV lines
+          map = %Q{
+            function() {
+                emit(this.part_id, { quantity: this.quantity, remained_quantity: this.remained_quantity });
+              }
+          }
+          reduce = %Q{
+            function(key, values) {
+              var result = { quantity: 0, remained_quantity: 0 };
+              values.forEach(function(value) {
+                result.quantity += value.quantity;
+                result.remained_quantity += value.remained_quantity;
+              });
+              return result;
+            }
+          }
+          Partbatch.map_reduce(map, reduce).out(inline: 1).each do |data|
+            p = Part.find data['_id']
+            a = [p.part_brand.name, p.number, p.part_type.name]
+            a += [data['value']['quantity'], data['value']['remained_quantity'], p.partbatches.last.price.to_f, p.ref_price.to_f ]
+            d = d1
+            while d < d2
+              delivered = p.partbatches.sum do |pb|
+                HistoryTracker.where(association_chain: [{"name"=>"Partbatch", "id" => pb.id}], :created_at.gte => d, :created_at.lt => 1.month.since(d) ).sum do |x|
+                  x.original["remained_quantity"].to_i - x.modified["remained_quantity"].to_i
+                end
+              end
+              a << delivered
+              d = 1.month.since(d)
+            end
+            a << data['value']['quantity'] - data['value']['remained_quantity']
+            last_month_delivered = a[-2].to_f
+            a << (last_month_delivered * 1.5 + 3 - data['value']['remained_quantity']).to_i
+            a << (last_month_delivered + 3).to_i
+            a << (last_month_delivered * 1.5 + 3).to_i
+            a << p.remark
+            csv << a
+          end
+        end
+        headers['Last-Modified'] = Time.now.httpdate
+        send_data csv_data, :filename => I18n.l(DateTime.now) + '.csv'
+      }
+    end
   end
 end

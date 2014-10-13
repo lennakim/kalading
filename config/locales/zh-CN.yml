@@ -601,7 +601,7 @@ zh-CN:
   all_models: '所有型号'
   part_brand: "配件品牌"
   class: "类别"
-  number: "型号"
+  part_number: "型号"
   part_supplier: "配件供应商"
   engine_oil: '机油'
   confirm_delete_url: '您确定删除价格信息 %{p}？'
@@ -934,3 +934,9 @@ zh-CN:
   motoroil_cap: '机油加注量：%{n}升'
   comment_for_print: '附加信息'
   balance_pay: '使用账户余额支付：'
+  total_delivered: '累积出货量'
+  max_delivered: '最高库存(上月出库*1.5+3)'
+  needed_this_week: '本周应补货(最高库存-剩余数量)'
+  store_warning: '库存预警(上月出库+3)'
+  month_delivered: '%{y}-%{m}出库'
+  export_part_statistics: '导出出库统计'

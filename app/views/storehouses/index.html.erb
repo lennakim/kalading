@@ -1,4 +1,7 @@
 <%- model_class = Storehouse -%>
+<div class="pull-right">
+  <%= link_to t(:export_part_statistics), part_statistics_path(format: :csv), :class => 'btn btn-info' if can? :create, Partbatch %>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>
