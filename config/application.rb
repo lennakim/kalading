@@ -46,7 +46,8 @@ module Kalading
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    # request-log-analyzer can't parse pic_data
+    config.filter_parameters += [:password, :pic_data]
 
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
