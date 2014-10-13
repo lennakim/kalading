@@ -69,4 +69,16 @@ $ ->
         items: 16
     $('a.datetime-shortcut').click ->
         $('#order_serve_datetime').val($(this).data('msg'))
+    $('a.serve-datetime-shortcut').click ->
+        $('#serve_datetime_start').val($(this).data('msg'))
+        $('#serve_datetime_end').val($(this).data('msg'))
+    $('a.serve-datetime-clear').click ->
+        $('#serve_datetime_start').val('')
+        $('#serve_datetime_end').val('')
+    $('a.created-at-shortcut').click ->
+        $('#created_at_start').val($(this).data('msg'))
+        $('#created_at_end').val($(this).data('msg'))
+    $('a.created-at-clear').click ->
+        $('#created_at_start').val('')
+        $('#created_at_end').val('')
     $(".form_datetime").datetimepicker({pickTime: false, language: 'zh-CN'});

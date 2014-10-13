@@ -85,7 +85,7 @@
       <%= label_tag :serve_datetime_start, t('serve_datetime_segment'), class: 'control-label' %>
       <div class="controls form-inline" id="serve_datetime">
         <div class="form-inline input-append form_datetime">
-          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_start" value="<%= params[:serve_datetime_start] %>"></input>
+          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_start" id="serve_datetime_start" value="<%= params[:serve_datetime_start] %>"></input>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar">
             </i>
@@ -93,11 +93,41 @@
         </div>
         <%= t :to %>
         <div class="form-inline input-append form_datetime">
-          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_end" value="<%= params[:serve_datetime_end] %>"></input>
+          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_end" id="serve_datetime_end" value="<%= params[:serve_datetime_end] %>"></input>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar">
             </i>
           </span>
+        </div>
+        <div class="btn-group">
+          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.today.strftime '%Y-%m-%d' %>"><%= t(:today) %></a>
+          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.yesterday.strftime '%Y-%m-%d' %>"><%= t(:yesterday) %></a>
+          <a class="btn serve-datetime-clear"><%= t(:clear) %></a>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :create_at_start, t('created_at_segment'), class: 'control-label' %>
+      <div class="controls form-inline" id="create_at">
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="created_at_start" id="created_at_start" value="<%= params[:created_at_start] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
+        <%= t :to %>
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="created_at_end" id="created_at_end" value="<%= params[:created_at_end] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
+        <div class="btn-group">
+          <a class="btn created-at-shortcut" data-msg="<%= Date.today.strftime '%Y-%m-%d' %>"><%= t(:today) %></a>
+          <a class="btn created-at-shortcut" data-msg="<%= Date.yesterday.strftime '%Y-%m-%d' %>"><%= t(:yesterday) %></a>
+          <a class="btn created-at-clear"><%= t(:clear) %></a>
         </div>
       </div>
     </div>

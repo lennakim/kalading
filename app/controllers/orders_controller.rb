@@ -72,14 +72,24 @@ class OrdersController < ApplicationController
       @orders = @orders.where(user_type: UserType.find(params[:user_type]))
     end
 
-    if !params[:serve_datetime_start].blank?
+    if params[:serve_datetime_start].present?
       sds = Date.parse params[:serve_datetime_start]
       @orders = @orders.where :serve_datetime.gte => sds.beginning_of_day
     end
 
-    if !params[:serve_datetime_end].blank?
+    if params[:serve_datetime_end].present?
       sds = Date.parse params[:serve_datetime_end]
       @orders = @orders.where :serve_datetime.lte => sds.end_of_day
+    end
+
+    if params[:created_at_start].present?
+      sds = Date.parse params[:created_at_start]
+      @orders = @orders.where :created_at.gte => sds.beginning_of_day
+    end
+
+    if params[:created_at_end].present?
+      sds = Date.parse params[:created_at_end]
+      @orders = @orders.where :created_at.lte => sds.end_of_day
     end
 
     if !params[:city].blank?

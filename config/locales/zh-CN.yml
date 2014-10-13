@@ -940,3 +940,7 @@ zh-CN:
   store_warning: '库存预警(上月出库+3)'
   month_delivered: '%{y}-%{m}出库'
   export_part_statistics: '导出出库统计'
+  created_at_segment: '下单时间从'
+  today: '今天'
+  yesterday: '昨天'
+  clear: '清空'
