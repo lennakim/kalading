@@ -59,6 +59,7 @@ class Order
   belongs_to :dispatcher, class_name: "User", inverse_of: :serve_orders3
   belongs_to :friend, class_name: "Client", inverse_of: :friend_orders
 
+  belongs_to :auto
   belongs_to :auto_submodel
   has_and_belongs_to_many :service_types
   has_and_belongs_to_many :discounts
@@ -227,5 +228,7 @@ class Order
         end
       end
     end
+    # 保存订单车辆信息
+    Auto.find_or_create_by(car_location: o.car_location, car_num: o.car_num, auto_submodel_id: o.auto_submodel.id ) if o.auto_submodel
   end
 end

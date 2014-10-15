@@ -3,16 +3,15 @@
   <%= render '/layouts/header' %>
   <body>
     <%= render '/layouts/menu' %>
-
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header"></li>
-              <li><%= link_to t('autos'), autos_path %></li>
+              <li class="active"><%= link_to t('autos'), autos_path %></li>
               <li><%= link_to t('auto_submodels', n: AutoSubmodel.where(data_source: 2).count), auto_submodels_path %></li>
-              <li class="active"><%= link_to t('auto_models'), auto_models_path %></li>
+              <li><%= link_to t('auto_models'), auto_models_path %></li>
               <li><%= link_to t('auto_brands'), auto_brands_path  %></li>
               <li><%= link_to t('pending_auto_submodels_list', n: AutoSubmodel.where(data_source: 3).count ), auto_submodels_path(data_source: 3) %></li>
               <li><%= link_to t('oil_nil_submodels', n: AutoSubmodel.where(motoroil_cap: 0).count), auto_submodels_path(motoroil_cap: 0) %></li>
@@ -23,6 +22,7 @@
               <li><%= link_to t('hidden_submodels', n: AutoSubmodel.where(data_source: 4).count ), auto_submodels_path(data_source: 4) %></li>
               <li><%= link_to t('motoroil_not_set_asms', n: AutoSubmodel.where(data_source: 2, motoroil_group: nil).count ), auto_submodels_path(motoroil_not_set: 1) %></li>
               <li><%= link_to t('motoroil_group_list'), motoroil_groups_path %></li>
+
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
