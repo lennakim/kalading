@@ -642,7 +642,6 @@ class OrdersController < ApplicationController
     return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
     return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
     _create_auto_maintain_order
-    return render json: {result: t(:parts_needed)}, status: :bad_request if @order.parts.empty?
     @order.city = City.find_by name: I18n.t(:beijing)
     @order.user_type = UserType.find_or_create_by name: I18n.t(:weiche)
     @order.update_attributes params[:info]
