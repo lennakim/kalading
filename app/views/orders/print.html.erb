@@ -30,13 +30,13 @@
               <td><b><%= t :order_id %>:</b>&nbsp&nbsp<%= @order.seq %></td><td><b><%= t :serve_datetime %>:</b>&nbsp&nbsp<%= l @order.serve_datetime %></td><td><b><%= t :engineer_name %>:</b>&nbsp&nbsp<%= @order.engineer.name if @order.engineer %>&nbsp<%= @order.engineer.phone_num if @order.engineer %></td>
             </tr>
             <tr>
-              <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= @order.name %></td><td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= @order.auto_submodel.full_name if @order.auto_submodel %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= @order.car_location + @order.car_num %></td>
+              <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= @order.name %></td><td><b><%= t :user_type %>:</b>&nbsp&nbsp<%= @order.user_type.name if @order.user_type %></td><td><b><%= t :customer_phone %>:</b>&nbsp&nbsp<%= @order.phone_num %></td>
             </tr>
             <tr>
-              <td><b><%= t :user_type %>:</b>&nbsp&nbsp<%= @order.user_type.name if @order.user_type %></td><td colspan="2"><%= t(:motoroil_cap, n: @order.auto_submodel.motoroil_cap) if @order.auto_submodel %></td>
+              <td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= @order.auto_submodel.full_name if @order.auto_submodel %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= @order.car_location + @order.car_num %></td><td><%= t(:motoroil_cap, n: @order.auto_submodel.motoroil_cap) if @order.auto_submodel %></td>
             </tr>
             <tr>
-              <td colspan="3"><b><%= t :comment %>:</b>&nbsp&nbsp<%= @order.client_comment %></td>
+              <td colspan="3"><b><%= t :comment %>:</b>&nbsp&nbsp<%= @order.client_comment %>&nbsp&nbsp<%= t(:reciept) + ": " + t(Order::RECIEPT_TYPE_STRINGS[@order.reciept_type]) + " " + @order.reciept_title if @order.reciept_type != 0 %></td>
             </tr>
         </tbody>
       </table>
