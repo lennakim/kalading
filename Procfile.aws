@@ -1,3 +1,4 @@
 web1:   bundle exec thin start -p 3001 -e production --socket /tmp/thin.0.sock
 web2:   bundle exec thin start -p 3002 -e production --socket /tmp/thin.1.sock
 web3:   bundle exec thin start -p 3003 -e production --socket /tmp/thin.2.sock
+web4:   bundle exec thin start -p 3003 -e production --socket /tmp/thin.3.sock
