@@ -44,6 +44,11 @@ class OrdersController < ApplicationController
       @orders = @orders.any_of({engineer: e}, {engineer2: e})
     end
 
+    if !params[:dispatcher].blank?
+      e = User.find params[:dispatcher]
+      @orders = @orders.where dispatcher: e
+    end
+
     if !params[:car_num].blank?
       @orders = @orders.where(car_num: /.*#{params[:car_num]}.*/i)
     end
@@ -255,7 +260,7 @@ class OrdersController < ApplicationController
     elsif params[:cancel]
       params[:order][:state] = 8
       if @order.balance_pay > 0
-        params[:order][:balance_pay] = 8
+        params[:order][:balance_pay] = 0
         c = Client.find_or_create_by phone_num: @order.phone_num
         if c
           c.update_attributes balance: c.balance + @order.balance_pay

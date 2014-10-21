@@ -101,7 +101,8 @@
         </div>
         <div class="btn-group">
           <a class="btn serve-datetime-shortcut" data-msg="<%= Date.today.strftime '%Y-%m-%d' %>"><%= t(:today) %></a>
-          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.yesterday.strftime '%Y-%m-%d' %>"><%= t(:yesterday) %></a>
+          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.tomorrow.strftime '%Y-%m-%d' %>"><%= t(:tomorrow) %></a>
+          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.tomorrow.tomorrow.strftime '%Y-%m-%d' %>"><%= t(:the_day_after_tomo) %></a>
           <a class="btn serve-datetime-clear"><%= t(:clear) %></a>
         </div>
       </div>
@@ -168,6 +169,26 @@
           <% end %>
           <% User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }.each do |t| %>
             <% if params[:engineer] == t.id.to_s %>
+              <option value="<%= t.id %>" selected><%= t.name %></option>
+            <% else %>
+              <option value="<%= t.id %>"><%= t.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :dispatcher, t('dispatcher'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="dispatcher" id="dispatcher">
+          <% if params[:dispatcher].blank? %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }.each do |t| %>
+            <% if params[:dispatcher] == t.id.to_s %>
               <option value="<%= t.id %>" selected><%= t.name %></option>
             <% else %>
               <option value="<%= t.id %>"><%= t.name %></option>
