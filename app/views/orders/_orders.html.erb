@@ -36,7 +36,7 @@
       <% colors = %w[success error info warning] %>
       <% @orders.each_with_index do |order, i| %>
         <tr class="<%= colors[ i % colors.length] %>" id="order-<%= order.seq %>">
-          <td><%= order.seq %></td>
+          <td><i class="icon-map-marker" id="mm-<%= order.seq %>" style="display: none;"></i><%= order.seq %></td>
           <td>
             <%= t(Order::STATE_STRINGS[order.state]) %>
             <% if order.state == 8 %>

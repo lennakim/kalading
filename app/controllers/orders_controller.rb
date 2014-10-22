@@ -121,7 +121,9 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @orders = @orders.desc(:seq).page params[:page]
+        params[:per] ||= 20
+        params[:per] = @orders.count if params[:state] = 2
+        @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
         if params[:states]
           render layout: 'storehouses'
         end

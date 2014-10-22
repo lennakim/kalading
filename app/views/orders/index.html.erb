@@ -239,6 +239,7 @@ $(function() {
                 for(var i = 0; i < results.length; i++) {
                     if(results[i].getCurrentNumPois() <= 0)
                         continue;
+                    $('#mm-' + v.seq).fadeIn();
                     map.centerAndZoom(results[i].getPoi(0).point, 12);
                     var label = new BMap.Label(v.seq, {position: results[i].getPoi(0).point, offset:new BMap.Size(1,-7)} );
                     label.setStyle({
