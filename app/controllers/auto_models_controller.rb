@@ -38,7 +38,11 @@ class AutoModelsController < ApplicationController
       }
       format.json {
         # Only show maintainable asms on web site
-        render json: @auto_model.auto_submodels.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:name)
+        if params[:pm25].blank?
+          render json: @auto_model.auto_submodels.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:name)
+        else
+          render json: @auto_model.auto_submodels.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:name).select {|sm| sm.parts.where(part_type_id: '522b2ed6098e713672000004', part_brand_id: '539d4d019a94e4de84000567').count > 0}
+        end
       }
     end
   end
