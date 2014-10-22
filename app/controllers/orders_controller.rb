@@ -122,7 +122,7 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html {
         params[:per] ||= 20
-        params[:per] = @orders.count if params[:state] == 2
+        params[:per] = @orders.count if (params[:state] == 2 && params[:serve_datetime_start].present? && params[:serve_datetime_start] == params[:serve_datetime_end])
         @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
         if params[:states]
           render layout: 'storehouses'
