@@ -261,7 +261,7 @@ class OrdersController < ApplicationController
       notice = I18n.t(:order_saved_notify, seq: @order.seq)
     elsif params[:cancel]
       params[:order][:state] = 8
-      notify_order_state_change @order
+      notify_order_state_change @order, params[:order][:state]
       if @order.balance_pay > 0
         params[:order][:balance_pay] = 0
         c = Client.find_or_create_by phone_num: @order.phone_num
@@ -286,7 +286,7 @@ class OrdersController < ApplicationController
           notice = I18n.t(:order_delivered_notify, seq: @order.seq)
         else
           params[:order][:state] = 4
-          notify_order_state_change @order
+          notify_order_state_change @order, params[:order][:state]
           notice = I18n.t(:order_scheduled_notify, seq: @order.seq)
         end
       when 4
@@ -298,7 +298,7 @@ class OrdersController < ApplicationController
             return render json: {error: t(:order_create_failed)}, status: :bad_request
           end
           params[:order][:state] = 5
-          notify_order_state_change @order
+          notify_order_state_change @order, params[:order][:state]
           notice = I18n.t(:order_served_notify, seq: @order.seq)
         end
       when 5
@@ -825,13 +825,13 @@ private
     end
   end
 
-  def notify_order_state_change(o)
+  def notify_order_state_change( o, state)
     ut = UserType.find_by name: I18n.t(:weiche)
     if ut && o.user_type == ut
       require 'net/http'
-      s = Digest::MD5.hexdigest "channel=kalading&order_id=#{o.seq}&order_status=#{o.state}&withkey=oMi5guNg6Py4l8YOKeL_NEq2uLI8"
+      s = Digest::MD5.hexdigest "channel=kalading&order_id=#{o.seq}&order_status=#{state}&withkey=oMi5guNg6Py4l8YOKeL_NEq2uLI8"
       r = Net::HTTP.post_form URI.parse('http://wx.wcar.net.cn/script/weiche_order_feedback.php'),
-        { channel: 'kalading', order_id: o.seq, order_status: o.state, sign: s }
+        { channel: 'kalading', order_id: o.seq, order_status: state, sign: s }
       logger.info "Notify weiche order: #{r.body}"
     end
   end
