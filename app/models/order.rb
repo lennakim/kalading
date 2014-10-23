@@ -118,8 +118,8 @@ class Order
   RECIEPT_TYPES = [0, 1, 2]
   RECIEPT_TYPE_STRINGS = %w[none personal firm]
   
-  EVALUATION_TAG = [1, 2, 3, 4]
-  EVALUATION_TAG_STRINGS = %w[none service_resp_quickly service_resp_quickly service_good service_bad]
+  EVALUATION_TAG = [1, 2, 3, 4, 5]
+  EVALUATION_TAG_STRINGS = %w[none service_standard attitude_good part_good_quality cheap_price will_recommand_to_friends]
 
   def calc_parts_price
     p = Money.new(0.0)
