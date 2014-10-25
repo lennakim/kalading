@@ -461,8 +461,8 @@ namespace :rename_asm do
     a = Order.not_in(:state => [1,8,9], :user_type => [ut1, ut2]).group_by {|x|x.car_location+x.car_num}
     a = a.select{|k, v| k.size > 3 && k != '京123456'}.sort_by {|k,v| -v.count }
     puts "车牌号数：#{a.size}"
-    File.open '1.csv', 'w:UTF-8' do |f|
-      f.puts '车牌号,保养次数'
+    File.open 'tmp/车牌号和购买服务次数.csv', 'w:UTF-8' do |f|
+      f.puts '车牌号,购买次数'
       a.each do |k,v|
         f.puts "#{k},#{v.size}"
       end
@@ -492,6 +492,9 @@ namespace :rename_asm do
     ut1 = UserType.find_by name: /中进/
     ut2 = UserType.find_by name: /良好/
     orders = Order.not_in(:state => [1,8,9], :user_type => [ut1, ut2])
+    orders.each do |o|
+      o.update_attribute :price, o.calc_price
+    end
     maintain_orders = orders.select {|x| x.service_types.find_by(name: '换机油机滤')}
     puts "保养订单数：#{maintain_orders.count}"
     puts "保养订单平均价格：#{(maintain_orders.sum{|x| x.price.to_f} / maintain_orders.count).round(1)}"
@@ -515,11 +518,13 @@ namespace :rename_asm do
     a = orders.where(:serve_datetime.lte => day1).select {|x| x.service_types.find_by(name: '换机油机滤')}.group_by {|x| [x.car_location, x.car_num] }
     a = a.select{|k, v| k[0].size + k[1].size > 3 && k != ['京', '123456']}.sort_by {|k,v| 0 - orders.where(car_location: k[0], car_num: k[1]).count }
     puts "3月31日前用户个数：#{a.count}"
-    File.open '2.csv', 'w:UTF-8' do |f|
+    File.open 'tmp/3月31日前个人客户购买保养服务次数.csv', 'w:UTF-8' do |f|
       f.puts '车牌号,服务次数'
       a.each do |k, v|
         f.puts "#{k[0] + k[1]},#{orders.where(car_location: k[0], car_num: k[1]).count}"
       end
     end
   end
+  
+  task :stats_all => [:order_counter, :order_counter_by_car_num, :asm_stats, :order_count, :order_price_stats, :car_num_stats]
 end

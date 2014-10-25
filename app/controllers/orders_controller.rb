@@ -767,6 +767,15 @@ class OrdersController < ApplicationController
     @orders = AutoSubmodel.find(auto_submodel_id).orders.where(:evaluation_time.ne => nil).desc(:evaluation_time).page(params[:page]).per(params[:per])
   end
 
+  def tomorrow_orders
+    @unassigned_orders = Order.where state: 2,  :serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day
+    @unscheduled_orders = Order.where state: 3, :serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day
+    @scheduled_orders = Order.where state: 4, :serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day
+    @order_count = @unassigned_orders.count + @unscheduled_orders.count + @scheduled_orders.count
+    @engineers = User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }
+    render layout: false
+  end
+
 private
   def _create_auto_maintain_order
     @order = Order.new

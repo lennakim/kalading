@@ -53,6 +53,8 @@ class Order
   field :friend_phone_num, type: String, default: ''
   # 使用账户余额付的款
   field :balance_pay, type: Money, default: 0.0
+  # 仅用于统计
+  field :price, type: Money, default: 0.0
 
   belongs_to :engineer, class_name: "User", inverse_of: :serve_orders
   belongs_to :engineer2, class_name: "User", inverse_of: :serve_orders2

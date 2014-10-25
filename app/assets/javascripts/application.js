@@ -18,6 +18,11 @@
 //= require jquery_nested_form
 //= require bootstrap-datetimepicker
 //= require jquery.ba-throttle-debounce.min
+//= require raphael-min
+//= require g.raphael-min.js
+//= require g.pie-min.js
+//= require g.bar-min.js
+//= require g.line-min.js
 //= require_directory .
 
 
