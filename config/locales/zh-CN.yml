@@ -758,7 +758,7 @@ zh-CN:
   hidden_submodels: '隐藏车型(%{n})'
   hidden_auto_submodels_title: '隐藏车型'
   show: '显示'
-  view_map: '显示隐藏地图'
+  view_map: '地图'
   inquiry: '咨询单'
   savs_as_inquiry: '保存为咨询单'
   inquiry_created: '咨询单%{seq} 保存成功！'
@@ -950,3 +950,4 @@ zh-CN:
   the_day_after_tomo: '后天'
   tomorrow_orders: '明日订单状态'
   jishiapp_download: '技师App下载'
+  close: '关闭'

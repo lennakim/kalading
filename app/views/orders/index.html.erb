@@ -204,22 +204,41 @@
   <% end %>
 </div>
 
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=xmcLHVWegnz5MYzrExa46wqg"></script>
-<a class="btn btn-link" data-target="#map-div" data-toggle="collapse"><%= t(:view_map) %></a>
-<div id="map-div" class="collapse">
-  <div class="row">
-    <div class="span12" id="map" style="height: 600px;">
-    </div>
-  </div>
+<div class="navbar navbar-fixed-bottom">
+  <a href="#" class="btn btn-success" data-target="#modal-map" data-toggle="modal"><i class="icon-map-marker"></i><%= t(:view_map) %></a>
 </div>
+<div id="modal-map" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true" style="position: fixed; top: 0%; left: 0%; width: 100%; height: 100%; padding: 0; margin: 0 !important;">
+  <div>
+    <button type="button" class="btn btn-info pull-right" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
+    <button type="button" class="btn btn-info pull-left" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
+  </div>
+  <div id="map" style="width: 100%; height: 100%;"></div>
+</div>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=xmcLHVWegnz5MYzrExa46wqg"></script>
 <script type="text/javascript">
 $(function() {
     var map = new BMap.Map("map");
     map.enableScrollWheelZoom();
     map.enableContinuousZoom();
-    var point = new BMap.Point(116.393597, 39.989918);
-    map.centerAndZoom(point,15);
+    var point = new BMap.Point(116.393773, 39.989387);
+    map.centerAndZoom(point,12);
 
+    stations = [
+      {lo: 116.393773, la: 39.989387},
+      {lo: 116.281635, la: 39.957515},
+      {lo: 116.353042, la: 39.855491},
+      {lo: 116.466308, la: 39.839325},
+      {lo: 116.543052, la: 39.875762},
+      {lo: 116.495819, la: 39.960586},
+      {lo: 116.304563, la: 40.101134},
+    ]
+    stations.forEach(function(v, i) {
+      var point = new BMap.Point(v.lo, v.la);
+      var circle1 = new BMap.Circle(point,300,{fillColor: "blue", fillOpacity: 1.0});
+      map.addOverlay(circle1);
+      var circle2 = new BMap.Circle(point,4000,{fillColor: "red", fillOpacity: 0.1, strokeColor:"blue", strokeWeight:1, strokeOpacity:0.1});
+      map.addOverlay(circle2);
+    });
     var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
     points = [
     <% @orders.select {|x| [0,2,3,4].include? x.state }.each do |o| %>
@@ -240,7 +259,6 @@ $(function() {
                     if(results[i].getCurrentNumPois() <= 0)
                         continue;
                     $('#mm-' + v.seq).fadeIn();
-                    map.centerAndZoom(results[i].getPoi(0).point, 12);
                     var label = new BMap.Label(v.seq, {position: results[i].getPoi(0).point, offset:new BMap.Size(1,-7)} );
                     label.setStyle({
                       color : v.color,
@@ -254,6 +272,7 @@ $(function() {
                       if(prev.size() <= 0)
                         prev = $('#order-table');
                       document.getElementById(prev.attr("id")).scrollIntoView();
+                      $('#modal-map').modal('hide');
                     });
                     label.addEventListener("mouseover", function(type, target) {
                       this.setContent(v.seq + ' ' + v.state + ': ' + v.address);
