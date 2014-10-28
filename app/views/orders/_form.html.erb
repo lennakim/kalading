@@ -22,6 +22,7 @@
       <div id="order-list-by-phone-num" class="order-list"></div>
     </div>
   
+    <%= f.input :friend_phone_num, label: t(:friend_phone_num) %>
     <%= f.association :city, collection: City.asc(:name), prompt: t('choose_city'), label: t('cities'), include_blank: false, input_html: { "data-msg-required" => t(:city_required) } %>
     <%= f.input :address, label: t(:address), input_html: { minlength: "4", maxlength: "512", "data-msg-required" => t(:address_required), "data-msg-minlength" => t(:address_minlength), "data-msg-maxlength" => t(:address_maxlength)} %>
     <%= f.input :name, label: t(:client_name) %>
