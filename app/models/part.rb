@@ -31,13 +31,11 @@ class Part
     :image_text_ids, :image_texts_attributes
   
   accepts_nested_attributes_for :urlinfos, :allow_destroy => true
-  accepts_nested_attributes_for :urlinfos, :allow_destroy => true
   
   MOTOROIL_TYPE = [0, 1, 2]
   MOTOROIL_TYPE_STRINGS = %w[mineral_oil semi_synthetic_oil fully_synthetic_oil]
   
   validates :number, uniqueness:  {case_sensitive: false}, presence: true
-  #validates :stock_quantity, inclusion: { in: 0..999999 }, presence: true
   validates :part_brand_id, presence: true
   validates :part_type_id, presence: true
   validates :capacity, presence: true
@@ -50,11 +48,6 @@ class Part
     rq
   end
   
-  def as_json(options = nil)
-    h = super :except => [:updated_at, :created_at, :auto_submodel_ids, :version, :modifier_id, :price, :part_brand_id, :part_type_id, :match_rule, :spec, :order_ids, :capacity]
-    h[:brand_name] = self.part_brand.name
-    h
-  end
   paginates_per 10
   
   def url_price
@@ -89,7 +82,7 @@ class Part
   end
   
   def as_json(options = nil)
-    h = super except: [:price, :auto_submodel_ids, :updated_at, :spec, :created_at, :version, :order_ids, :part_brand_id, :part_type_id, :modifier_id, :capacity, :motoroil_type, :remark]
+    super except: [:price, :auto_submodel_ids, :updated_at, :spec, :created_at, :version, :order_ids, :part_brand_id, :part_type_id, :modifier_id, :capacity, :motoroil_type, :remark]
   end
   
   

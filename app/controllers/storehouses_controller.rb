@@ -113,7 +113,7 @@ class StorehousesController < ApplicationController
       @order.part_delivered_counts[@part.id.to_s] += @quantity
     end
     @order.save!
-    @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
+    #@history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
   end
 
   # POST /storehouses
