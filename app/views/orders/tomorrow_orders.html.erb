@@ -9,40 +9,40 @@
     <%= javascript_include_tag "application" %>
   </head>
   <body>
-    <div class="row">
-      <div class="span12" id="pie1" style="width: 100%;height: 400px;">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12" id="pie1" style="width: 100%;height: 400px;">
+        </div>
       </div>
+      
     </div>
     <script type="text/javascript">
-    $(function() {
-      var r = Raphael("pie1");
-      var pie = r.piechart(320, 240, 100,
-          [<%= @unassigned_orders.count * 100 / @order_count %>, <%= @unscheduled_orders.count * 100 / @order_count %>, <%= @scheduled_orders.count * 100 / @order_count %>],
-          {
-            legend: ["%%.%% - <%= t(:unassigned) %> <%= @unassigned_orders.count %><%= t(:default_unit) %>", "%%.%% - <%= t(:unscheduled) %> <%= @unscheduled_orders.count %><%= t(:default_unit) %>", "%%.%% - <%= t(:scheduled) %> <%= @scheduled_orders.count %><%= t(:default_unit) %>"],
-            legendpos: "east", href: ["#", "#", "#"]
-          });
-      r.text(320, 100, "<%= t(:tomorrow_orders) %>").attr({ font: "20px sans-serif" });
-      pie.hover(function () {
-          this.sector.stop();
-          this.sector.scale(1.1, 1.1, this.cx, this.cy);
-          if (this.label) {
-              this.label[0].stop();
-              this.label[0].attr({ r: 7.5 });
-              this.label[1].attr({ "font-weight": 800 });
-          }
-      }, function () {
-          this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
-          if (this.label) {
-              this.label[0].animate({ r: 5 }, 500, "bounce");
-              this.label[1].attr({ "font-weight": 400 });
-          }
+      $(function() {
+        var r = Raphael("pie1");
+        var pie = r.piechart(320, 240, 100,
+            [<%= @unassigned_orders.count * 100 / @order_count %>, <%= @unscheduled_orders.count * 100 / @order_count %>, <%= @scheduled_orders.count * 100 / @order_count %>],
+            {
+              legend: ["%%.%% - <%= t(:unassigned) %> <%= @unassigned_orders.count %><%= t(:default_unit) %>", "%%.%% - <%= t(:unscheduled) %> <%= @unscheduled_orders.count %><%= t(:default_unit) %>", "%%.%% - <%= t(:scheduled) %> <%= @scheduled_orders.count %><%= t(:default_unit) %>"],
+              legendpos: "east", href: ["#", "#", "#"]
+            });
+        r.text(320, 100, "<%= t(:tomorrow_orders) %>").attr({ font: "20px sans-serif" });
+        pie.hover(function () {
+            this.sector.stop();
+            this.sector.scale(1.1, 1.1, this.cx, this.cy);
+            if (this.label) {
+                this.label[0].stop();
+                this.label[0].attr({ r: 7.5 });
+                this.label[1].attr({ "font-weight": 800 });
+            }
+        }, function () {
+            this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
+            if (this.label) {
+                this.label[0].animate({ r: 5 }, 500, "bounce");
+                this.label[1].attr({ "font-weight": 400 });
+            }
+        });
       });
-    });
     </script>
-
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=xmcLHVWegnz5MYzrExa46wqg"></script>
-    <% @engineers.each do |e| %>
-    <% end %>
   </body>
 </html>

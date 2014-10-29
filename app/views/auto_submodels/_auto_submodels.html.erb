@@ -12,6 +12,7 @@
       <th><%= t 'motoroil_group' %></th>
       <th><%= t 'engine_displacement' %></th>
       <th><%= t 'parts_store' %></th>
+      <th><%= t 'order_count' %></th>
       <th><%= t 'service_level' %></th>
       <th><%= t 'match_rule' %></th>
       <th><%= t 'remark' %></th>
@@ -47,6 +48,7 @@
               </tr>
           </table>
         </td>
+        <td><%= link_to auto_submodel.orders.count.to_s, orders_path(auto_submodel: auto_submodel), :class => 'btn btn-mini btn-info' %></td>
         <td><%= t(AutoSubmodel::SERV_LEVEL_STRINGS[auto_submodel.service_level]) %></td>
         <td>
           <ul>

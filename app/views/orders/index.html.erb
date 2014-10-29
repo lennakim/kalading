@@ -1,16 +1,18 @@
 <%- model_class = Order -%>
 <div class="page-header">
   <h4>
+  <%= t(:orders) %>
   <% if params[:state].present? || params[:states].present? %>
     <% if params[:part_deliver_state] == '0' %>
-      <%= t(:orders) + ' - ' + t(:to_be_delivered) %>
+      <%= ' - ' + t(:to_be_delivered) %>
     <% elsif params[:part_deliver_state] == '1' %>
-      <%= t(:orders) + ' - ' + t(:to_be_backed) %>
+      <%= ' - ' + t(:to_be_backed) %>
     <% elsif params[:state].present? %>
-      <%= t(:orders) + ' - ' + t(Order::STATE_STRINGS[params[:state].to_i])  %>
+      <%= ' - ' + t(Order::STATE_STRINGS[params[:state].to_i])  %>
     <% end %>
-  <% else %>
-    <%= t(:orders) %>
+  <% end %>
+  <% if params[:auto_submodel].present? %>
+    <%= ' - ' + AutoSubmodel.find(params[:auto_submodel]).full_name %>
   <% end %>
   <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary pull-right' if can? :create, Order %>
   <%= link_to t('create_maintain'), new_maintain_path, :class => 'btn btn-primary pull-right' if can? :create, Maintain %>

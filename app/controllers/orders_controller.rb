@@ -119,6 +119,10 @@ class OrdersController < ApplicationController
       @orders = @orders.where(client_id: params[:client_id])
     end
 
+    if params[:auto_submodel].present?
+      @orders = @orders.where auto_submodel_id: params[:auto_submodel]
+    end
+
     respond_to do |format|
       format.html {
         params[:per] ||= 20
@@ -768,9 +772,10 @@ class OrdersController < ApplicationController
   end
 
   def tomorrow_orders
-    @unassigned_orders = Order.where state: 2,  :serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day
-    @unscheduled_orders = Order.where state: 3, :serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day
-    @scheduled_orders = Order.where state: 4, :serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day
+    @d = Date.parse(params[:date]) || Date.tomorrow
+    @unassigned_orders = Order.where state: 2,  :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day
+    @unscheduled_orders = Order.where state: 3, :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day
+    @scheduled_orders = Order.where state: 4, :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day
     @order_count = @unassigned_orders.count + @unscheduled_orders.count + @scheduled_orders.count
     @engineers = User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }
     render layout: false
