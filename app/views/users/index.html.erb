@@ -11,6 +11,7 @@
       <th><%= t(:title) %></th>
       <th><%= t(:email) %></th>
       <th><%= t(:role) %></th>
+      <th><%= t(:belong) %></th>
       <th><%= t 'remark' %></th>
       <th><%=t 'actions' %></th>
     </tr>
@@ -29,6 +30,7 @@
           <% end %>
           </ul>
         </td>
+        <td><%= user.storehouse.name if user.storehouse %></td>
         <td><%= user.remark %></td>
         <td>
           <%= link_to t('edit'),

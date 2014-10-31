@@ -46,12 +46,13 @@ class User
   field :roles,    :type => Array, :default => [0]
   field :title, :default => ''
   
-  attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title
+  attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title, :storehouse_id
 
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
   has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2
   has_many :serve_orders3, class_name: "Order", inverse_of: :dispatcher
   has_many :partbatches
+  belongs_to :storehouse
   
   validates_uniqueness_of :phone_num, :allow_blank => true
 

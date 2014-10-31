@@ -119,6 +119,12 @@
       <% end %>
       <%= link_to t('cancel'), orders_path(state: 0), :class => 'btn' %>
     </div>
+  <% elsif params[:add_comment] %>
+    <%= render 'comments', :f => f %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:ok), :class => 'btn-primary', name: "add_comment"%>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
   <% elsif params[:cancel] %>
     <%= f.input :cancel_reason, label: t('cancel_reason'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
     <div class="form-actions">
