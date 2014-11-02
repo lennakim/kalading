@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
       if current_user.roles.empty?
         authorize! :read, Order
       elsif current_user.roles == ['5']
-        @orders = Order.where(:engineer => current_user).any_of({state: 3}, {state: 4, part_deliver_state: 1}, {state: 5}, {state: 6}, {state: 7})
+        @orders = Order.where(:engineer => current_user)
       else
         @orders = Order.all
       end
