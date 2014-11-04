@@ -15,10 +15,6 @@
       <td><%= @order.phone_num %></td>
     </tr>
     <tr>
-      <td><%= t(:friend_phone_num) %></td>
-      <td><%= @order.friend_phone_num %></td>
-    </tr>
-    <tr>
       <td><%= t(:address) %></td>
       <td><%= @order.address %></td>
     </tr>
@@ -131,10 +127,6 @@
     <tr>
       <td><%= t(:assigned_to_engineer) %></td>
       <td><%= @order.engineer.name if @order.engineer %></td>
-    </tr>
-    <tr>
-      <td><%= t(:assigned_to_engineer2) %></td>
-      <td><%= @order.engineer2.name if @order.engineer2 %></td>
     </tr>
   </tbody>
 </table>
