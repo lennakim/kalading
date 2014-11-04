@@ -5,9 +5,19 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.page params[:page]
+    if params[:belong]
+      if params[:belong] == 'all'
+        @users = User.all.asc(:name_pinyin)
+      else
+        @users = Storehouse.find(params[:belong]).users
+      end
+      @users = @users.select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }
+    else
+      @users = User.page params[:page]
+    end
 
     respond_to do |format|
+      format.js
       format.html # index.html.erb
       format.json { render json: @users }
     end

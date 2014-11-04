@@ -30,8 +30,24 @@
     <%= f.association :user_type, collection: UserType.all, prompt: t('choose_user_type'), label: t('user_type'), include_blank: false %>
     <%= f.association :dispatcher, label: t(:curr_dispatcher), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }, include_blank: true %>
     <% if %w[unscheduled scheduled serve_done handovered].include? Order::STATE_STRINGS[@order.state] %>
-      <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
-      <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: true %>
+      <div class="control-group">
+        <label for="select-belong" class="control-label"><%= t(:belong) %></label>
+        <div class="controls" id="select-belong">
+          <select id="engineer-belong-select">
+            <option value="all"></option>
+            <% City.find_by(name: I18n.t(:beijing)).storehouses.each do |s| %>
+              <% if @order.engineer.storehouse_id == s.id %>
+                <option value="<%= s.id %>" selected ><%= s.name %></option>
+              <% else %>
+                <option value="<%= s.id %>" ><%= s.name %></option>
+              <% end %>
+            <% end %>
+          </select>
+        </div>
+      </div>
+      <% users = @order.engineer.storehouse_id.present?? Storehouse.find(@order.engineer.storehouse_id).users : User.all %>
+      <%= f.association :engineer, label: t(:assigned_to_engineer), collection: users.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
+      <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: users.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: true %>
     <% end %>
   
     <div class="control-group">
@@ -152,6 +168,17 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
+    <div class="control-group">
+      <label for="select-belong" class="control-label"><%= t(:belong) %></label>
+      <div class="controls" id="select-belong">
+        <select id="engineer-belong-select">
+          <option value="all" selected></option>
+          <% City.find_by(name: I18n.t(:beijing)).storehouses.each do |s| %>
+            <option value="<%= s.id %>"><%= s.name %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
     <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>
     <%= f.association :engineer2, label: t(:assigned_to_engineer2), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: true %>
     <%= render 'comments', :f => f %>
@@ -251,3 +278,10 @@
   <% end %>
 <% end %>
 <span id="service-type-at-least-one" class="hide"><%= t(:service_type_at_least_one) %></span>
+<script type="text/javascript">
+  $("#engineer-belong-select").change(function(){
+    if($(this).val() != ""){
+      $.getScript("<%= users_path %>" + "?belong=" + $(this).val());
+    }
+  });
+</script> 
