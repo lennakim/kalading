@@ -25,6 +25,10 @@ class Ability
       can :view, Video
     end
     
+    if user.roles.include? ROLE_ID('video_inspector')
+      can [:view, :read], Video
+    end
+
     if user.roles.include? ROLE_ID('storehouse_admin')
       can :read, :all
       can :inout, Storehouse

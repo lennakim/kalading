@@ -5,10 +5,7 @@ class VideosController < ApplicationController
   # GET /videos
   # GET /videos.json
   def index
-    # desc doesn't work
-    # @videos = Video.desc :create_time
-    @videos = Video.all.sort {|x, y| y.create_time <=> x.create_time }
-    @videos = Kaminari.paginate_array(@videos).page(params[:page]).per(15)
+    @videos = Video.desc(:create_time).page(params[:page]).per(15)
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @videos }
