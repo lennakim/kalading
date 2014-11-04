@@ -257,4 +257,44 @@ class StorehousesController < ApplicationController
       }
     end
   end
+
+  def part_transfer
+    @storehouse = Storehouse.find(params[:id])
+    @part = PartBrand.desc(:name).first.parts.first
+    @q = @storehouse.partbatches.where(part: @part).sum(:remained_quantity)
+    respond_to do |format|
+      format.html
+      format.js # show.js.erb
+    end
+  end
+
+  def part_transfer_to
+    @storehouse = Storehouse.find params[:id]
+    @target_storehouse = Storehouse.find params[:target_storehouse][:id]
+    @part = Part.find params[:part][:id]
+    @partbatches = @storehouse.partbatches.where(part: @part).asc(:created_at)
+    @quantity = params[:quantity].to_i
+    need_q = @quantity
+    @partbatches.each do |pb|
+      c = [need_q, pb.remained_quantity].min
+      pb.update_attribute :remained_quantity, pb.remained_quantity - c
+      pb.part.auto_submodels.each do |asm|
+        asm.on_part_inout pb.part, -c
+      end
+      need_q -= c
+      break if need_q <= 0
+    end
+    supplier = Supplier.find_or_create_by name: I18n.t(:fake_supplier_for_transfer)
+    @target_storehouse.partbatches.create! part_id: @part.id,
+      supplier_id: supplier.id,
+      price: @part.ref_price,
+      quantity: @quantity,
+      remained_quantity: @quantity,
+      user_id: current_user.id
+    respond_to do |format|
+      format.html
+      format.js # show.js.erb
+    end
+  end
+
 end

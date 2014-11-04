@@ -42,7 +42,8 @@
               </tr>
             </thead>
             <tbody>
-            <% part.partbatches.each do |pb| %>
+            <% part.partbatches.asc(:storehouse).each do |pb| %>
+              <% next if pb.remained_quantity <= 0 %>
               <tr>
                 <td><%= pb.storehouse.name %></td>
                 <td><%= humanized_money_with_symbol pb.price %>

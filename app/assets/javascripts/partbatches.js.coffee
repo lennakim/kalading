@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 $ ->
     $("#part_part_brand_id").change ->
-        $.getScript($(this).attr('rel') + '/' + $(this).val())
+        $.getScript($(this).attr('rel') + '/' + $(this).val() + "?sh_id=" + ($("#storehouse_id").val() || "") )
         return false
     part_number_table = {}
     $('#part-number-search').typeahead
@@ -23,5 +23,5 @@ $ ->
         highlighter: (item) ->
             return '<strong>' + item + '</strong>'
         updater: (item) ->
-            $.get('/parts/' + part_number_table[item], null, null, "script")
+            $.get('/parts/' + part_number_table[item] + "?sh_id=" + ($("#storehouse_id").val() || ""), null, null, "script")
             return item

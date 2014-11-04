@@ -29,3 +29,13 @@ $ ->
     $(document).on "change", "#part_match_brand_id", ->
         s = 'brand_id=' + $(this).val() + '&type_id=' + $("#part-match-type").prop('value')
         $.get($(this).attr("rel"), s, null, "script")
+    $(document).on "change", "#part_id", ->
+        $.getScript($(this).attr('rel') + '/' + $(this).val() + "?sh_id=" + ($("#storehouse_id").val() || "") )
+        return false
+    $("#storehouse_part_transfer_to").submit ->
+        return false if !window.confirm $("#confirm_part_transfer_msg").text() + "\n" +
+            $("#storehouse_name").text() + " -> " +
+            $("#target_storehouse_id").find("option:selected").text() + "\n" +
+            $("#part_part_brand_id").find("option:selected").text() + " " +
+            $("#part_id").find("option:selected").text() + "\n" +
+            $("label[for='quantity'").text() + ": " + $("#quantity").val()

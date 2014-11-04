@@ -8,6 +8,9 @@
         <%= link_to new_storehouse_partbatches_path(@storehouse), :class => 'btn btn-success', :target => '_blank' do %>
           <i class="icon-plus-sign"></i>&nbsp<%= t('storehouse_in') %>
         <% end %>
+        <%= link_to storehouse_part_transfer_path(@storehouse), :class => 'btn btn-success', :target => '_blank' do %>
+          <i class="icon-arrow-right"></i>&nbsp<%= t('part_transfer') %>
+        <% end %>
         <%= link_to t(:export), storehouse_path(@storehouse, format: :csv), :class => 'btn btn-info' %>
       <% end %>
     </div>

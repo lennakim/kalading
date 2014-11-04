@@ -1,0 +1,17 @@
+<% q = @storehouse.partbatches.where(part: @part).sum(:remained_quantity) %>
+$("#remained_quantity").val("<%= q %>");
+$("#quantity").prop("max", $("#remained_quantity").val());
+$("#quantity").val("");
+<% if q <= 0 %>
+  $("#part-transfer-btn").prop('disabled', true).prop("class", "btn btn-disabled");
+<% else %>
+$("#part-transfer-btn").prop('disabled', false).prop("class", "btn btn-primary");
+<% end %>
+window.alert("<%= t(:part_transfer_succeeded)%>" + "\n" +
+            $("#part_part_brand_id").find("option:selected").text() + " " +
+            $("#part_id").find("option:selected").text() + "\n" +
+            $("#storehouse_name").text() + " " + "<%= t(:remained_quantity) %>" + ": " + $("#remained_quantity").val() + "\n" +
+            $("#target_storehouse_id").find("option:selected").text() + " " + "<%= t(:remained_quantity) %>" + ": " +
+            "<%= @target_storehouse.partbatches.where(part: @part).sum(:remained_quantity) %>"
+            );
+

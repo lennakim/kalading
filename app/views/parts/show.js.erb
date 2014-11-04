@@ -1,3 +1,15 @@
 $("#part_part_brand_id, #partbatch_part_brand_id").val("<%= @part.part_brand._id %>");
 $("#partbatch_part_type_id").val("<%= @part.part_type._id %>");
-$("#partbatch_part_id").html("<%= escape_javascript( options_for_select(@part.part_brand.parts.asc(:number).map {|p| [p.number, p.id]})) %>").val("<%= @part._id %>");
+$("#partbatch_part_id, #part_id").html("<%= escape_javascript( options_for_select(@part.part_brand.parts.asc(:number).map {|p| [p.number, p.id]})) %>").val("<%= @part._id %>");
+$("#part-number-search").val("<%= @part.number %>");
+<% if params[:sh_id].present? %>
+  <% q = Storehouse.find(params[:sh_id]).partbatches.where(part: @part).sum(:remained_quantity) %>
+  $("#remained_quantity").val("<%= q %>");
+  $("#quantity").prop("max", $("#remained_quantity").val());
+  $("#quantity").val("");
+  <% if q <= 0 %>
+    $("#part-transfer-btn").prop('disabled', true).prop("class", "btn btn-disabled");
+  <% else %>
+    $("#part-transfer-btn").prop('disabled', false).prop("class", "btn btn-primary");
+  <% end %>
+<% end %>
