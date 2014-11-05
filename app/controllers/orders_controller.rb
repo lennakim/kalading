@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
     if current_user
       if current_user.roles.empty?
         authorize! :read, Order
-      elsif current_user.roles.include? ['5']
+      elsif current_user.roles.include? '5'
         @orders = Order.where(:engineer => current_user)
       else
         @orders = Order.all
