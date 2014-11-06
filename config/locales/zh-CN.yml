@@ -372,6 +372,7 @@ zh-CN:
   part_auto_submodel_exists: '车型 %{name} 已经存在'
   add_match: '添加匹配'
   print: '打印'
+  print_time: '打印时间'
   out_quantity: '出库数量'
   part_type_name: '名称'
   new_part_type: '新建配件类型'
@@ -962,3 +963,9 @@ zh-CN:
   fake_supplier_for_transfer: '调货'
   part_transfer_succeeded: '调货完成。'
   video_inspector: '视频检查员'
+  dispatch_card: '派送单'
+  service_done_info: '服务完成情况'
+  pay_info: '结费状况'
+  kalading_dispatch_card: '卡拉丁派送流转单'
+  deliverer : '派送员'
+  

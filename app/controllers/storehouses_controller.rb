@@ -296,5 +296,10 @@ class StorehousesController < ApplicationController
       format.js # show.js.erb
     end
   end
+  
+  def print_dispatch_card
+    @storehouse = Storehouse.find(params[:id])
+    render layout: false
+  end
 
 end

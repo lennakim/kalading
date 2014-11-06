@@ -90,6 +90,7 @@ Kalading::Application.routes.draw do
   delete 'part_urlinfo/:id' => 'parts#destroy_urlinfo', :as => :delete_part_urlinfo
   get 'storehouses/:id/part_transfer' => 'storehouses#part_transfer', :as => :storehouse_part_transfer
   post 'storehouses/:id/part_transfer_to' => 'storehouses#part_transfer_to', :as => :storehouse_part_transfer_to
+  get 'storehouse/:id/print_dispatch_card' => 'storehouses#print_dispatch_card', :as=> :print_dispatch_card
 
   get 'auto_parts' => 'orders#query_parts', :as => :query_parts
   get 'orders_history' => 'orders#history', :as => :order_history
