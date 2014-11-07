@@ -12,7 +12,7 @@
   <body style="padding-top: 10px; padding-left: 40px">
     <a class="btn btn-primary pull-right" id="print-btn" onclick="$('#print-btn').hide(); window.print(); $('#print-btn').show();"><%= t(:print) %></a>
     <% @storehouse.users.each do |u|%>
-    <% tomorrow_orders = u.serve_orders.where(:serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day) %>
+    <% tomorrow_orders = u.serve_orders.asc(:seq).where(:serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day) %>
     <% if tomorrow_orders.count > 0 %>
     <h3 class="text-center"><%= t :kalading_dispatch_card %></h3>
     <div class="row">
