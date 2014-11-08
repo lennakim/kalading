@@ -526,5 +526,14 @@ namespace :rename_asm do
     end
   end
   
+  task :orders => :environment do
+    File.open 'tmp/orders.csv', 'w:UTF-8' do |f|
+      f.puts '服务时间,客户姓名,客户电话,客户类型,地址,车牌号,车型,订单总价'
+      Order.not_in(:state => [0,1,2,3,4,8,9]).asc(:serve_datetime).each do |o|
+        f.puts "#{o.serve_datetime.strftime('%Y-%m-%d')},#{o.name},#{o.phone_num},#{o.user_type.name if o.user_type},#{o.address},#{o.car_location+o.car_num},#{o.auto_submodel.full_name.gsub(',','') if o.auto_submodel},#{o.calc_price}"
+      end
+    end
+  end
+
   task :stats_all => [:order_counter, :order_counter_by_car_num, :asm_stats, :order_count, :order_price_stats, :car_num_stats]
 end
