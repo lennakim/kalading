@@ -31,7 +31,7 @@ class Ability
 
     if user.roles.include? ROLE_ID('storehouse_admin')
       can :read, :all
-      can :inout, Storehouse
+      can [:inout, :print_dispatch_card], Storehouse
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can [:update, :edit_all, :calcprice, :print], Order
       can :order_prompt, Order

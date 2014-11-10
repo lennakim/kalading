@@ -128,6 +128,8 @@ Kalading::Application.routes.draw do
   get 'auto_sms' => 'auto_brands#auto_sms', :as => :auto_sms
   get 'auto_maintain_query/:asm_id' => 'orders#auto_maintain_query', :as => :auto_maintain_query
   post 'auto_maintain_order_weiche/:asm_id' => 'orders#create_auto_maintain_order4', :as => :create_auto_maintain_order_weiche
+  # For renbao
+  post 'auto_maintain_order_renbao/:asm_id' => 'orders#create_auto_maintain_order5', :as => :create_auto_maintain_order_renbao
 
   get 'auto_submodels_oil_cap_edit' => 'auto_submodels#oil_cap_edit', :as => :auto_submodels_oil_cap_edit
   post 'auto_submodels_oil_cap_modify' => 'auto_submodels#oil_cap_modify', :as => :auto_submodels_oil_cap_modify
