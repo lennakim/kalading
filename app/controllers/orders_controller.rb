@@ -279,6 +279,7 @@ class OrdersController < ApplicationController
       case @order.state
       when 0..1
         params[:order][:state] = 2
+        _send_sms_notify @order, params[:order][:state]
         notice = I18n.t(:order_verified_notify, seq: @order.seq)
       when 2
         u = User.find(params[:order][:engineer_id])
@@ -862,6 +863,20 @@ private
       r = Net::HTTP.post_form URI.parse('http://wx.wcar.net.cn/script/weiche_order_feedback.php'),
         { channel: 'kalading', order_id: o.seq, order_status: state, sign: s }
       logger.info "Notify weiche order: #{r.body}"
+    end
+  end
+
+  def _send_sms_notify(o, state)
+    if state == 2
+      servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}'
+      url = 'http://kalading.com/desktop/login?phone=' + o.phone_num
+      r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
+        { 'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
+          'mobile' => o.phone_num,
+          'tpl_id' => '584231',
+          'tpl_value' =>
+            "#name#=#{o.name}&#order#=#{o.seq}&#servicetypes#=#{o.service_types.first.name}&#servedate#=#{servedate}&#url#=#{url}"}
+      logger.info "Send SMS notify: #{r.body} status: #{r.code}"
     end
   end
 end

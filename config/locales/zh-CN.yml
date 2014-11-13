@@ -969,4 +969,6 @@ zh-CN:
   kalading_dispatch_card: '卡拉丁派送流转单'
   deliverer : '派送员'
   renbao: '人保'
-  
+  cancel_pending: '待审核'
+  month: '月'
+  day: '日'
