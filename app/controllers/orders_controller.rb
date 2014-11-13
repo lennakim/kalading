@@ -279,7 +279,6 @@ class OrdersController < ApplicationController
       case @order.state
       when 0..1
         params[:order][:state] = 2
-        _send_sms_notify @order, params[:order][:state]
         notice = I18n.t(:order_verified_notify, seq: @order.seq)
       when 2
         u = User.find(params[:order][:engineer_id])
@@ -332,6 +331,7 @@ class OrdersController < ApplicationController
     
     respond_to do |format|
       if @order.update_attributes(params[:order])
+        _send_sms_notify @order, params[:order][:state]
         if params[:order][:discount_num]
           @order.discounts = nil
           d = Discount.find_by token: params[:order][:discount_num]
@@ -868,15 +868,17 @@ private
 
   def _send_sms_notify(o, state)
     if state == 2
-      servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}'
-      url = 'http://kalading.com/desktop/login?phone=' + o.phone_num
+      require 'net/http'
+      servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}"
+      url = CGI.escape('http://kalading.com/desktop/login?phone=' + o.phone_num)
       r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
-        { 'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
+        {
+          'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
           'mobile' => o.phone_num,
           'tpl_id' => '584231',
-          'tpl_value' =>
-            "#name#=#{o.name}&#order#=#{o.seq}&#servicetypes#=#{o.service_types.first.name}&#servedate#=#{servedate}&#url#=#{url}"}
-      logger.info "Send SMS notify: #{r.body} status: #{r.code}"
+          'tpl_value' => "#name#=#{o.name}&#order#=#{o.seq}&#servicetypes#=#{o.service_types.first.name}&#servedate#=#{servedate}&#url#=#{url}"
+        }
+      r
     end
   end
 end
