@@ -139,6 +139,12 @@
       <%= f.button :submit, t(:ok), :class => 'btn-primary', name: "add_comment"%>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
+  <% elsif params[:invoice] %>
+    <%= f.input :reciept_state, label: t(:reciept_state), collection: Order::RECIEPT_STATES, label_method:  lambda { |s| t(Order::RECIEPT_STATE_STRINGS[s]) }, include_blank: false %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:ok), :class => 'btn-primary', name: "invoice"%>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
   <% elsif params[:cancel] %>
     <%= f.input :cancel_reason, label: t('cancel_reason'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
     <div class="form-actions">

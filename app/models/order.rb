@@ -25,6 +25,7 @@ class Order
   field :pay_type, type: Integer, default: 0
   field :reciept_type, type: Integer, default: 0
   field :reciept_title, type: String, default: ''
+  field :reciept_state, type: Integer, default: 0
   field :client_comment, type: String, default: ''
   field :cancel_reason, type: String, default: ''
   field :reciept_address, type: String, default: ''
@@ -89,7 +90,7 @@ class Order
     :picture_ids, :pictures_attributes,
     :comment_ids, :comments_attributes,
     :auto_submodel_id,
-    :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :client_comment,
+    :car_location, :car_num, :vin, :discount_num, :name, :pay_type, :reciept_type, :reciept_title, :reciept_state, :client_comment,
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
     :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state,
@@ -119,6 +120,8 @@ class Order
 
   RECIEPT_TYPES = [0, 1, 2]
   RECIEPT_TYPE_STRINGS = %w[none personal firm]
+  RECIEPT_STATES = [0, 1]
+  RECIEPT_STATE_STRINGS = %w[not_wrote wrote]
   
   EVALUATION_TAG = [1, 2, 3, 4, 5]
   EVALUATION_TAG_STRINGS = %w[none service_standard attitude_good part_good_quality cheap_price will_recommand_to_friends]

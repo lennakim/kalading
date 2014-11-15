@@ -56,8 +56,8 @@ class User
   
   validates_uniqueness_of :phone_num, :allow_blank => true
 
-  ROLES = [0, 1, 2, 3, 4, 5, 6, 7]
-  ROLE_STRINGS = %w[customer role_admin manager storehouse_admin data_admin engineer dispatcher video_inspector]
+  ROLES = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  ROLE_STRINGS = %w[customer role_admin manager storehouse_admin data_admin engineer dispatcher video_inspector finance]
   
   def role_str
     self.roles.map {|s| I18n.t(User::ROLE_STRINGS[s.to_i])}.join(',')

@@ -29,6 +29,12 @@
         <% if can? :manage, :all %>
         <th><%= t(:maintain_record) %></th>
         <% end %>
+        <% if current_user && current_user.roles.include?('8') %>
+        <th><%= t(:reciept_state) %></th>
+        <th><%= t(:reciept_type) %></th>
+        <th><%= t(:reciept_title) %></th>
+        <th><%= t(:reciept_address) %></th>
+        <% end %>
         <th><%=t 'actions' %></th>
       </tr>
     </thead>
@@ -114,14 +120,21 @@
             <% end %>  
           </td>
         <% end %>
+          <% if current_user && current_user.roles.include?('8') %>
+            <td><%= t(Order::RECIEPT_STATE_STRINGS[order.reciept_state]) %></td>
+            <td><%= t(Order::RECIEPT_TYPE_STRINGS[order.reciept_type]) %></td>
+            <td><%= order.reciept_title %></td>
+            <td><%= order.reciept_address %></td>
+          <% end %>
           <td>
             <% if mobile_device? %>
               <%= link_to t(:detail), order, { :class => 'btn btn-info btn-mini' } %>
             <% else %>
               <%= link_to t(:detail), order, {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window', :class => 'btn btn-info btn-mini' } %>
             <% end %>
+            <%= link_to t(:reciept), edit_order_path(order, invoice: 1), :class => 'btn btn-info btn-mini', :remote => true if current_user && current_user.roles.include?('8') && Order::STATE_STRINGS[order.state] == 'serve_done' %>
               
-            <% if can? :update, Order %>
+            <% if can? :update, Order && !current_user.roles.include?('8') %>
               <% if !(%w[revisited inquiry].include? Order::STATE_STRINGS[order.state]) %>
                 <% if order.part_deliver_state == 0 %>
                   <% if %w[unscheduled scheduled].include? Order::STATE_STRINGS[order.state] %>

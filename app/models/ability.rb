@@ -56,5 +56,9 @@ class Ability
       can :read, :all
       can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print], Order
     end
+    
+    if user.roles.include? ROLE_ID('finance')
+      can [:read, :update], Order
+    end
   end
 end

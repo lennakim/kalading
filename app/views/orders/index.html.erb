@@ -199,6 +199,46 @@
         </select>
       </div>
     </div>
+    
+    <div class="control-group select">
+      <%= label_tag :reciept_type, t('reciept_type'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="reciept_type" id="reciept_type">
+          <% if params[:reciept_type].blank? %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% Order::RECIEPT_TYPES.each do |type| %>
+            <% if !params[:reciept_type].blank? && params[:reciept_type].to_i == type %>
+              <option value="<%= type %>" selected><%= t(Order::RECIEPT_TYPE_STRINGS[type]) %></option>
+            <% else %>
+              <option value="<%= type %>"><%= t(Order::RECIEPT_TYPE_STRINGS[type]) %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    
+    <div class="control-group select">
+      <%= label_tag :reciept_state, t('reciept_state'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="reciept_state" id="reciept_state">
+          <% if params[:reciept_state].blank? %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% Order::RECIEPT_STATES.each do |s| %>
+            <% if !params[:reciept_state].blank? && params[:reciept_state].to_i == s %>
+              <option value="<%= s %>" selected><%= t(Order::RECIEPT_STATE_STRINGS[s]) %></option>
+            <% else %>
+              <option value="<%= s %>"><%= t(Order::RECIEPT_STATE_STRINGS[s]) %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
 
     <div class="form-actions">
       <%= submit_tag t(:search), class: 'btn btn-primary' %>

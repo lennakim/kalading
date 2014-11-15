@@ -122,6 +122,14 @@ class OrdersController < ApplicationController
     if params[:auto_submodel].present?
       @orders = @orders.where auto_submodel_id: params[:auto_submodel]
     end
+    
+    if !params[:reciept_type].blank?
+      @orders = @orders.where reciept_type: params[:reciept_type]
+    end
+    
+    if !params[:reciept_state].blank?
+      @orders = @orders.where reciept_state: params[:reciept_state]
+    end
 
     respond_to do |format|
       format.html {
