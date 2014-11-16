@@ -134,7 +134,7 @@
             <% end %>
             <%= link_to t(:reciept), edit_order_path(order, invoice: 1), :class => 'btn btn-info btn-mini', :remote => true if current_user && current_user.roles.include?('8') && Order::STATE_STRINGS[order.state] == 'serve_done' %>
               
-            <% if can? :update, Order && !current_user.roles.include?('8') %>
+            <% if can? :update, Order %>
               <% if !(%w[revisited inquiry].include? Order::STATE_STRINGS[order.state]) %>
                 <% if order.part_deliver_state == 0 %>
                   <% if %w[unscheduled scheduled].include? Order::STATE_STRINGS[order.state] %>
