@@ -2,6 +2,64 @@
 <div class="page-header">
   <h1><%= t 'employees' %><%= link_to t('new_user'), new_user_path, :class => 'btn btn-primary pull-right' if can? :create, User %></h1>
 </div>
+<a class="btn btn-link" data-target="#user-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
+<div id="user-search-form" class="collapse in">
+  <%= form_tag users_path, :method => 'get', :id => "userSs_search", :class => 'form-horizontal' do %>
+    <div class="control-group">
+      <%= label_tag :name, t('employees_name'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :name, params[:name], class: 'control' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :phone_num, t('phone_num'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :phone_num, params[:phone_num], class: 'control', placeholder: t(:phone_num_hint) %>
+      </div>
+    </div>
+    <div class="control-group select">
+      <%= label_tag :role, t('role'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="role" id="role">
+          <% if params[:role].nil? || params[:role] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% User::ROLES.each do |r| %>
+            <% if params[:role] == r.to_s %>
+              <option value="<%= r %>" selected><%= t(User::ROLE_STRINGS[r]) %></option>
+            <% else %>
+              <option value="<%= r %>"><%= t(User::ROLE_STRINGS[r]) %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <div class="control-group select">
+      <%= label_tag :belong, t('belong'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="belong" id="belong">
+          <% if params[:belong].nil? || params[:belong] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% Storehouse.each do |s| %>
+            <% if params[:belong] == s.id.to_s %>
+              <option value="<%= s.id %>" selected><%= s.name %></option>
+            <% else %>
+              <option value="<%= s.id %>"><%= s.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <%= submit_tag t(:search), class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>
 <%= paginate @users %>
 <table class="table table-striped">
   <thead>

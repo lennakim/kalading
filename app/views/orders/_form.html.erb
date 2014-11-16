@@ -176,7 +176,7 @@
       <label for="select-belong" class="control-label"><%= t(:belong) %></label>
       <div class="controls" id="select-belong">
         <select id="engineer-belong-select">
-          <option value="all" selected></option>
+          <option value="" selected></option>
           <% City.find_by(name: I18n.t(:beijing)).storehouses.each do |s| %>
             <option value="<%= s.id %>"><%= s.name %></option>
           <% end %>
@@ -283,8 +283,6 @@
 <span id="service-type-at-least-one" class="hide"><%= t(:service_type_at_least_one) %></span>
 <script type="text/javascript">
   $("#engineer-belong-select").change(function(){
-    if($(this).val() != ""){
-      $.getScript("<%= users_path %>" + "?belong=" + $(this).val());
-    }
+    $.getScript("<%= users_path %>" + "?belong=" + $(this).val() + "&role=5");
   });
 </script> 
