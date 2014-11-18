@@ -1,6 +1,6 @@
 <%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
   <% if !params[:cancel] && !params[:add_comment] && ( (%w[unverified verify_error].include? Order::STATE_STRINGS[@order.state]) || params[:edit_all] ) %>
-  <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
+    <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
     <div class="control-group">
       <label for="select-car-location" class="control-label"><%= t(:car_num) %></label>
       <div class="controls form-inline">
@@ -78,7 +78,7 @@
       <%= render 'auto_submodels/auto_submodels' %>
     <% end %>
     </div>
-  <h5 id="service_types"><%= t(:service_types) %></h5>
+    <h5 id="service_types"><%= t(:service_types) %></h5>
     <div class="control-group">
       <label for="select-service-types" class="control-label"><%= t(:service_item) %></label>
       <div class="controls" id="select-service-types">
@@ -86,7 +86,7 @@
       </div>
     </div>
   
-<h5 id="parts"><%= t(:part) %></h5>
+    <h5 id="parts"><%= t(:part) %></h5>
     <%= f.input :buymyself, label: t(:buymyself), as: :boolean %>
     <div class="control-group">
       <label for="select-parts" class="control-label"><%= t(:applicable_parts) %></label>
@@ -105,7 +105,7 @@
     </div>
     <div id="discount-info"></div>
     
-  <h5 id="pay-infos"><%= t(:pay_info) %></h5>
+    <h5 id="pay-infos"><%= t(:pay_info) %></h5>
     <div class="control-group">
       <label for="price-info" class="control-label"><%= t(:price_info) %></label>
       <div class="controls form-inline" id="price-info">
@@ -118,7 +118,7 @@
     <%= f.input :reciept_type, label: t(:reciept_type), collection: Order::RECIEPT_TYPES, label_method:  lambda { |s| t(Order::RECIEPT_TYPE_STRINGS[s]) }, include_blank: false %>
     <%= f.input :reciept_title, label: t(:reciept_title) %>
     <%= f.input :reciept_address, label: t(:reciept_address) %>
-  <h5 id="others"><%= t(:others) %></h5>
+    <h5 id="others"><%= t(:others) %></h5>
     <%= render 'comments', :f => f %>
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">
@@ -146,7 +146,8 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif params[:cancel] %>
-    <%= f.input :cancel_reason, label: t('cancel_reason'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
+    <%= f.input :cancel_type, label: t(:cancel_reason), collection: Order::CANCEL_TYPES, label_method:  lambda { |s| t(Order::CANCEL_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :cancel_reason, label: t('custom_reason'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
     <div class="form-actions">
       <%= f.button :submit, t(:ok), :class => 'btn-primary', :name => "cancel" %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
@@ -276,6 +277,13 @@
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">
       <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% elsif Order::STATE_STRINGS[@order.state] == 'cancel_pending' %>
+    <%= f.input :cancel_type, label: t(:cancel_reason), collection: Order::CANCEL_TYPES, label_method:  lambda { |s| t(Order::CANCEL_TYPE_STRINGS[s]) }, include_blank: false %>
+    <%= f.input :cancel_reason, label: t('custom_reason'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:cancel_confirm), :class => 'btn-primary', name: 'cancel_confirm' %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% end %>

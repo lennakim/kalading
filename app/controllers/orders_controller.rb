@@ -131,6 +131,10 @@ class OrdersController < ApplicationController
       @orders = @orders.where reciept_state: params[:reciept_state]
     end
 
+    if params[:cancel_type].present?
+      @orders = @orders.where cancel_type: params[:cancel_type]
+    end
+
     respond_to do |format|
       format.html {
         params[:per] ||= 20
@@ -272,8 +276,7 @@ class OrdersController < ApplicationController
     elsif params[:edit_all] || params[:add_comment] || params[:invoice]
       notice = I18n.t(:order_saved_notify, seq: @order.seq)
     elsif params[:cancel]
-      params[:order][:state] = 8
-      notify_order_state_change @order, params[:order][:state]
+      params[:order][:state] = 10
       if @order.balance_pay > 0
         params[:order][:balance_pay] = 0
         c = Client.find_or_create_by phone_num: @order.phone_num
@@ -281,6 +284,10 @@ class OrdersController < ApplicationController
           c.update_attributes balance: c.balance + @order.balance_pay
         end
       end
+      notice = I18n.t(:order_cancel_pending, seq: @order.seq)
+    elsif params[:cancel_confirm]
+      params[:order][:state] = 8
+      notify_order_state_change @order, params[:order][:state]
       notice = I18n.t(:order_cancelled, seq: @order.seq)
     else
       params[:order][:state] = 1

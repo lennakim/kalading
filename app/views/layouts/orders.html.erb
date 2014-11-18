@@ -20,8 +20,21 @@
                   <% if can? :edit_all, Order %>
                     <% if Order::STATE_STRINGS[s] == 'serve_done' %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
-                    <% else %>
+                     <% else %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
+                    <% end %>
+                    <% if Order::STATE_STRINGS[s] == 'cancel_pending' %>
+                      <ul class="nav nav-list">
+                        <% Order::CANCEL_TYPES.reverse_each do |t| %>
+                          <% if params[:cancel_type].present? && params[:cancel_type].to_i == t %>
+                          <li class="active">
+                          <% else %>
+                          <li>
+                          <% end %>
+                            <%= link_to t(Order::CANCEL_TYPE_STRINGS[t]) + ' (' + Order.where(state: s, cancel_type: t).count.to_s + ')', orders_path(state: s, cancel_type: t) %>
+                          </li>
+                        <% end %>
+                      </ul>
                     <% end %>
                   <% else %>
                     <% if Order::STATE_STRINGS[s] == 'serve_done' %>

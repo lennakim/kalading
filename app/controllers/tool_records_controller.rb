@@ -50,10 +50,10 @@ class ToolRecordsController < ApplicationController
   # POST /tool_records
   # POST /tool_records.json
   def create
-    @tool_record = ToolRecord.new(params[:tool_record])
+    @tool_record = ToolRecord.find_or_create_by :created_at.gte => Date.today.beginning_of_day, :created_at.lte => Date.today.end_of_day, :engineer_name => params[:tool_record][:engineer_name]
 
     respond_to do |format|
-      if @tool_record.save
+      if @tool_record.update params[:tool_record]
         format.html { redirect_to @tool_record, notice: 'Tool record was successfully created.' }
         format.json { render json: {id: @tool_record.id}, status: :created, location: @tool_record }
       else

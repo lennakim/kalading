@@ -78,6 +78,9 @@ class Order
   field :part_delivered_counts, type: Hash, default: {}
   field :part_deliver_state, type: Integer, default: 0
   
+  # 固定的取消原因，cancel_reason放的是自定义原因
+  field :cancel_type, type: Integer, default: 0
+
   accepts_nested_attributes_for :pictures, :allow_destroy => true
   accepts_nested_attributes_for :comments, :allow_destroy => true
 
@@ -94,7 +97,7 @@ class Order
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
     :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state,
-    :serve_end_datetime, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :login_phone_num, :friend_phone_num
+    :serve_end_datetime, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :login_phone_num, :friend_phone_num, :cancel_type
 
   auto_increment :seq
   index({ seq: 1 })
@@ -105,10 +108,10 @@ class Order
   validates :address, length: { in: 4..512 }, presence: true
   validates :city, presence: true
   
-  # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询
-  STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled inquiry]
-  STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit edit]
+  # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询, 10: 取消待审核
+  STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled inquiry cancel_pending]
+  STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit edit cancel_confirm]
   STATE_CHANGED_STRS = %w[reverify verify_failed verify_ok assign_ok schedule_ok serve_ok handover_ok revisit_ok]
 
   # 出库状态：0: 未出库，1：已出库，未回库，2：已回库
@@ -125,6 +128,10 @@ class Order
   
   EVALUATION_TAG = [1, 2, 3, 4, 5]
   EVALUATION_TAG_STRINGS = %w[none service_standard attitude_good part_good_quality cheap_price will_recommand_to_friends]
+
+  # 取消类型：0: 自定义取消原因，1：客户未到场，2：客户改约，3：配件错误。
+  CANCEL_TYPES = [0, 1, 2, 3]
+  CANCEL_TYPE_STRINGS = %w[custom_reason client_absent client_reschedule part_error]
 
   def calc_parts_price
     p = Money.new(0.0)

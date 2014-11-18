@@ -140,24 +140,28 @@
                   <% if %w[unscheduled scheduled].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(:parts_deliver), edit_order_path(order, part_deliver: 1), :class => 'btn btn-mini', :remote => true if can?(:inout, Storehouse) %>
                   <% end %>
-                  <% if %w[unverified verify_error unassigned unscheduled].include? Order::STATE_STRINGS[order.state] %>
+                  <% if %w[unverified verify_error unassigned].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
                   <% end %>
                 <% elsif order.part_deliver_state == 1 %>
                   <% if %w[serve_done service_cancelled].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(:storehouse_back), edit_order_path(order, part_back: 1), :class => 'btn btn-mini', :remote => true if can?(:inout, Storehouse) %>
                   <% end %>
-                  <% if  %w[scheduled unscheduled].include? Order::STATE_STRINGS[order.state] %>
+                  <% if  %w[scheduled].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
                   <% end %>
                 <% elsif order.part_deliver_state == 2 %>
-                  <% if %w[unscheduled scheduled serve_done].include? Order::STATE_STRINGS[order.state] %>
+                  <% if %w[scheduled serve_done].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => true %>
                   <% end %>
                 <% end %>
               <% end %>
               
-              <% if !(%w[service_cancelled].include? Order::STATE_STRINGS[order.state]) %>
+              <% if Order::STATE_STRINGS[order.state] == 'cancel_pending' %>
+                <%= link_to t(:verify), edit_order_path(order), :class => 'btn btn-mini', :remote => true if can? :update, order %>
+              <% end %>
+
+              <% if !(%w[service_cancelled cancel_pending].include? Order::STATE_STRINGS[order.state]) %>
                 <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
               <% end %>
               <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
