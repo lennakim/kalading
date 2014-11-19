@@ -32,20 +32,8 @@
         <td><%= link_to auto_submodel.motoroil_group.name, auto_submodel.motoroil_group if auto_submodel.motoroil_group %></td>
         <td><%= auto_submodel.engine_displacement %></td>
         <td>
-          <table>
-            <thead>
-              <tr>
-                <th><%= t 'oil_filter_count' %></th>
-                <th><%= t 'air_filter_count' %></th>
-                <th><%= t 'cabin_filter_count' %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><%= auto_submodel.oil_filter_count %></td>
-                <td><%= auto_submodel.air_filter_count %></td>
-                <td><%= auto_submodel.cabin_filter_count %></td>
-              </tr>
+          <%= link_to t(:view), auto_submodels_available_parts_path(auto_submodel), :class => 'btn btn-mini', :remote => true %>
+          <table id="part-tb-<%= auto_submodel.id %>">
           </table>
         </td>
         <td><%= link_to auto_submodel.orders.count.to_s, orders_path(auto_submodel: auto_submodel), :class => 'btn btn-mini btn-info' %></td>

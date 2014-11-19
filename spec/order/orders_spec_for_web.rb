@@ -176,7 +176,7 @@ describe '新建PM2.5滤芯订单，client_id随便写。', :need_user => true d
     expect(h['result']).to eq('succeeded')
     expect(h['seq']).to be
     o = Order.find_by(seq: h['seq'])
-    expect(o.calc_price.to_f).to be(50.0)
+    expect(o.calc_price.to_f).to be(150.0)
     o.destroy
   end
 end
@@ -310,18 +310,19 @@ describe '新建PM2.5滤芯订单，指定朋友手机号。', :need_user => tru
     }
     c = Client.find_or_create_by phone_num: @weiche_user.phone_num
     expect(c).to be
+    old_balance = c.balance.to_f
     response_json = post_json "http://localhost:3000/auto_maintain_order/531f1ed0098e71b3f80001fb.json", o
     expect(response_json.code).to be(200)
     h = JSON.parse(response_json)
     expect(h['result']).to eq('succeeded')
     expect(h['seq']).to be
     o = Order.find_by(seq: h['seq'])
-    expect(o.calc_price.to_f).to be(50.0)
+    expect(o.calc_price.to_f).to be(150.0)
     c = Client.find_by phone_num: @user.phone_num
     expect(c).to be
     c.destroy
     c = Client.find_by phone_num: @weiche_user.phone_num
-    expect(c.balance.to_f).to be(50.0)
+    expect(c.balance.to_f).to be(old_balance + 50.0)
     c.destroy
     o.destroy
   end

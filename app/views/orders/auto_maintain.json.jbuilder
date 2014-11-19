@@ -20,12 +20,13 @@ parts_to_user_friendly = Proc.new do |parts|
   b = {}
   a = parts.each do |p|
       if p.part_type.name == I18n.t(:engine_oil)
-        b[{brand: p.part_brand.name, number: p.spec}] ||= { brand: p.part_brand.name, number: p.spec, price: 0}
+        b[{brand: p.part_brand.name, number: p.spec}] ||= { brand: p.part_brand.name, number: p.spec, price: 0, quantity: 0}
         b[{brand: p.part_brand.name, number: p.spec}][:price] += p.ref_price.to_f * @order.auto_submodel.cals_part_count(p)
+        b[{brand: p.part_brand.name, number: p.spec}][:quantity] += p.partbatches.sum(&:remained_quantity)
       elsif p.part_type.name == I18n.t(:cabin_filter)
-        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, spec: p.spec, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p) }
+        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, spec: p.spec, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.sum(&:remained_quantity) }
       else
-        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p) }
+        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.sum(&:remained_quantity) }
       end
   end
   b.values

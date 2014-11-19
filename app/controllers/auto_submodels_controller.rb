@@ -197,8 +197,12 @@ class AutoSubmodelsController < ApplicationController
   end
   
   def available_parts
-    p = AutoSubmodel.find(params[:id]).parts_includes_motoroil
-    @parts = p.select {|part| part.part_type.name==params[:type]}
+    @auto_submodel = AutoSubmodel.find(params[:id])
+    if params[:type].present?
+      @parts = @auto_submodel.parts_includes_motoroil.select {|part| part.part_type.name == params[:type]}
+    else
+      @parts = @auto_submodel.parts
+    end
   end
 
 end

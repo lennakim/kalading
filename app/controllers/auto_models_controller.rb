@@ -38,7 +38,7 @@ class AutoModelsController < ApplicationController
       }
       format.json {
         # Only show maintainable asms on web site
-        sms1 = @auto_model.auto_submodels.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:name)
+        sms1 = @auto_model.auto_submodels.where(data_source: 2, service_level: 1).asc(:name)
         if params[:pm25].blank?
           render json: sms1
         else

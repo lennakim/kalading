@@ -1,0 +1,14 @@
+<thead>
+  <tr>
+    <th><%= t 'oil_filter_count' %></th>
+    <th><%= t 'air_filter_count' %></th>
+    <th><%= t 'cabin_filter_count' %></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><%= @parts.where(part_type: PartType.find_by(name: t(:oil_filter))).sum {|p| p.partbatches.sum(&:remained_quantity) } %></td>
+    <td><%= @parts.where(part_type: PartType.find_by(name: t(:air_filter))).sum {|p| p.partbatches.sum(&:remained_quantity) } %></td>
+    <td><%= @parts.where(part_type: PartType.find_by(name: t(:cabin_filter))).sum {|p| p.partbatches.sum(&:remained_quantity) } %></td>
+  </tr>
+</tbody>
