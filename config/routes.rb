@@ -126,6 +126,7 @@ Kalading::Application.routes.draw do
 
   # For weiche
   get 'auto_sms' => 'auto_brands#auto_sms', :as => :auto_sms
+  get 'auto_sms_with_pm25' => 'auto_brands#auto_sms_with_pm25', :as => :auto_sms_with_pm25
   get 'auto_maintain_query/:asm_id' => 'orders#auto_maintain_query', :as => :auto_maintain_query
   post 'auto_maintain_order_weiche/:asm_id' => 'orders#create_auto_maintain_order4', :as => :create_auto_maintain_order_weiche
   # For renbao

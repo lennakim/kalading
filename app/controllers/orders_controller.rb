@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
-  load_and_authorize_resource :except => @except_actions + [:auto_maintain_query, :create_auto_maintain_order3, :create_auto_maintain_order4]
+  load_and_authorize_resource :except => @except_actions + [:auto_maintain_query, :create_auto_maintain_order3, :create_auto_maintain_order4, :create_auto_maintain_order5]
 
   # GET /orders
   # GET /orders.json
