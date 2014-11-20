@@ -27,7 +27,11 @@
     <%= f.input :name, label: t(:client_name) %>
     <%= f.input :auto_owner_name, label: t(:auto_owner_name) %>
     <%= f.association :user_type, collection: UserType.all, prompt: t('choose_user_type'), label: t('user_type'), include_blank: false %>
-    <%= f.association :dispatcher, label: t(:curr_dispatcher), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }, include_blank: true %>
+    <% if (%w[new duplicate].include? params[:action]) %>
+      <%= f.association :dispatcher, label: t(:curr_dispatcher), collection: User.all.asc(:name_pinyin).where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]), include_blank: true %>
+    <% else %>
+      <%= f.association :dispatcher, label: t(:curr_dispatcher), collection: User.all.asc(:name_pinyin).where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]), include_blank: true, readonly: true, disabled: true %>
+    <% end %>
     <% if %w[unscheduled scheduled serve_done handovered].include? Order::STATE_STRINGS[@order.state] %>
       <div class="control-group">
         <label for="select-belong" class="control-label"><%= t(:belong) %></label>

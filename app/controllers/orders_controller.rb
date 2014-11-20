@@ -851,6 +851,7 @@ private
     end
 
     check_discount
+    @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).sample
   end
 
   def check_discount

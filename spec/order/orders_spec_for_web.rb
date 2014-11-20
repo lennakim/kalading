@@ -70,7 +70,10 @@ describe '新建保养订单。city_id为城市的ID，client_id为用户标识�
     h = JSON.parse(response_json)
     expect(h['result']).to eq('succeeded')
     expect(h['seq']).to be
-    Order.find_by(seq: h['seq']).destroy
+    o = Order.find_by(seq: h['seq'])
+    expect(o.dispatcher).to be
+    puts o.dispatcher.name
+    o.destroy
   end
 end
 
