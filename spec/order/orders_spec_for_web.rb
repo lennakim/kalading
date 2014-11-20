@@ -72,7 +72,7 @@ describe '新建保养订单。city_id为城市的ID，client_id为用户标识�
     expect(h['seq']).to be
     o = Order.find_by(seq: h['seq'])
     expect(o.dispatcher).to be
-    puts o.dispatcher.name
+    #puts o.dispatcher.name
     o.destroy
   end
 end
