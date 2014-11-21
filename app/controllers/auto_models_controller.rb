@@ -38,17 +38,11 @@ class AutoModelsController < ApplicationController
       }
       format.json {
         # Only show maintainable asms on web site
-        sms1 = @auto_model.auto_submodels.where(data_source: 2, service_level: 1).asc(:name)
+        sms = @auto_model.auto_submodels.where(data_source: 2, service_level: 1).asc(:name)
         if params[:pm25].blank?
-          render json: sms1
-        else
-          sms = []
-          sms1.each do |sm|
-            sm.parts.find_by(part_type_id: '522b2ed6098e713672000004', part_brand_id: '539d4d019a94e4de84000567') do |part|
-              sms << sm if part.total_remained_quantity > 0
-            end
-          end
           render json: sms
+        else
+          render json: sms.select {|sm| sm.parts.where(part_type_id: '522b2ed6098e713672000004', part_brand_id: '539d4d019a94e4de84000567').count > 0}
         end
       }
     end

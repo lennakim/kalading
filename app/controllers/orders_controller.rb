@@ -551,7 +551,7 @@ class OrdersController < ApplicationController
     maintain_service = ServiceType.find '527781377ef560ccbc000003'
     return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
     @order.service_types << maintain_service
-    asm.parts_by_type.each do |t, parts|
+    asm.parts_by_type_ignore_quantity.each do |t, parts|
       if t.name == I18n.t(:engine_oil)
         parts.group_by(&:spec)[parts.first.spec].each do |p|
           @order.parts << p
