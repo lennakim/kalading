@@ -71,6 +71,6 @@
       </footer>
 
     </div> <!-- /container -->
-    <%= render 'orders/prompt', states: [0], part_deliver_state: nil if can? :edit_all, Order%>
+    <%= render 'orders/prompt', states: [0, 10], part_deliver_state: nil if can? :edit_all, Order%>
   </body>
 </html>

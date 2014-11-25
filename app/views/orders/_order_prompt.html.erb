@@ -5,8 +5,14 @@
 
 <div class="modal-body">
   <ul>
-    <% if params[:states] == ['0'] %>
-    <li><%= link_to t(:new_orders_prompt, n: @orders.count), orders_path(state: 0) %></li>
+    <% if params[:part_deliver_state].blank? %>
+        <% if current_user.roles == [User::ROLE_STRINGS.index('dispatcher').to_s] %>
+            <li><%= link_to t(:new_orders_prompt_per_dispatcher, n: @orders.where(state: 0).count), orders_path(state: 0, dispatcher: current_user.id) %></li>
+            <li><%= link_to t(:cancel_pending_orders_prompt_per_dispatcher, n: @orders.where(state: 10).count), orders_path(state: 10, dispatcher: current_user.id) %></li>
+        <% else %>
+            <li><%= link_to t(:new_orders_prompt, n: @orders.where(state: 0).count), orders_path(state: 0) %></li>
+            <li><%= link_to t(:cancel_pending_orders_prompt, n: @orders.where(state: 10).count), orders_path(state: 10) %></li>
+        <% end %>
     <% end %>
     <% if params[:part_deliver_state].present? && params[:part_deliver_state].to_i == 0 %>
     <li><%= link_to t(:not_delivered_orders_prompt, n: @orders.count), orders_path(states: [3, 4], part_deliver_state: 0) %></li>

@@ -772,6 +772,9 @@ class OrdersController < ApplicationController
       @orders = @orders.where(part_deliver_state: params[:part_deliver_state])
     end
     
+    if current_user.roles == [User::ROLE_STRINGS.index('dispatcher').to_s]
+      @orders = @orders.where dispatcher: current_user
+    end
     respond_to do |format|
       format.json
       format.js
