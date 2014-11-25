@@ -983,3 +983,4 @@ zh-CN:
   client_absent: '客户未到场'
   client_reschedule: '客户改约'
   part_error: '配件错误'
+  processing: '处理中'
