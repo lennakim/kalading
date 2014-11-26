@@ -38,7 +38,7 @@ json.parts @order.parts.group_by {|x| x.part_type.name} do |v|
   end
 end
 
-json.applicable_parts @order.auto_submodel.parts_includes_motoroil.group_by {|x| x.part_type.name} do |v|
+json.applicable_parts @order.auto_submodel.parts_includes_motoroil_ignore_quantity.group_by {|x| x.part_type.name} do |v|
   json.set! v[0] do
     json.array! parts_to_user_friendly.call(v[1])
   end
