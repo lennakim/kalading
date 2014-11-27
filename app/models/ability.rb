@@ -50,6 +50,9 @@ class Ability
       can :update, Order do |o|
         o.engineer == user
       end
+      can :update_realtime_info, User do |u|
+        u == user
+      end
     end
     
     if user.roles.include? ROLE_ID('dispatcher')

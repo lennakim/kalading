@@ -79,6 +79,8 @@ Kalading::Application.routes.draw do
   get 'users_new' => 'users#new', :as => :new_user
   post 'users' => 'users#create', :as => :create_user
   delete 'users/:id' => 'users#destroy', :as => :user
+  put 'user_realtime_info' => 'users#update_realtime_info', :as => :update_user_realtime_info
+  get 'user_realtime_info' => 'users#get_realtime_info', :as => :get_user_realtime_info
   
   get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
   post 'storehouses_inout/:id' => 'storehouses#inout', :as => :inout_storehouse

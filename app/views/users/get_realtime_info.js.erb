@@ -1,0 +1,29 @@
+window.engineer_markers.forEach(function(v, i) {
+  window.map.removeOverlay(v);
+});
+window.engineer_markers = [];
+$("#engineer-select").html('');
+var points = [
+<% @engineers.each do |u| %>
+  <% next if u.location[0] == 0.0 %>
+  [<%= u.location[0] %>, <%= u.location[1] %>, "<%= t(:location_updated_at, m: ((DateTime.now - u.update_datetime)* 24 * 60).to_i ) %>", "<%= u.name %>", "<%= u.phone_num %>"],
+<% end %>
+];
+points.forEach(function (v, i) {
+  var point = new BMap.Point(v[0], v[1]);
+  $("#engineer-select").append('<option value="' + v[4] + '">' + v[3] + '</option>');
+  var myIcon = new BMap.Icon("<%= image_path 'man.png' %>", new BMap.Size(53, 29));
+  var marker = new BMap.Marker(point, {title: v[3], icon: myIcon});
+  var opts = {
+    width : 200,
+    height: 100,
+    title : v[3]
+  }
+  var infoWindow = new BMap.InfoWindow(v[2] + "<br/><%= t :phone_num %>: " + v[4], opts);
+  marker.addEventListener("click", function(){          
+    map.openInfoWindow(infoWindow,point);
+  });
+  window.map.addOverlay(marker);
+  window.engineer_markers.push(marker);
+  marker.setAnimation(BMAP_ANIMATION_DROP);
+});

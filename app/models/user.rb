@@ -45,8 +45,15 @@ class User
   field :weixin_num,    :type => String
   field :roles,    :type => Array, :default => [0]
   field :title, :default => ''
+  # Location: [longititude, latitude]
+  field :location, type: Array, :default => [0.0, 0.0]
+  field :battery_level,    :type => Float, :default => 100.0
+  field :update_datetime, :type => DateTime
   
-  attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title, :storehouse_id
+  index({"location" => "2d"})
+  
+  attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title, :storehouse_id,
+    :location, :battery_level
 
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
   has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2

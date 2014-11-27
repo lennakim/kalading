@@ -97,4 +97,23 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def update_realtime_info
+    if params[:location]
+      current_user.location = params[:location]
+    end
+    if params[:battery_level]
+      current_user.battery_level = params[:battery_level]
+    end
+    current_user.update_datetime = DateTime.now
+    current_user.save!
+    render json: {result: 'ok'}
+  end
+  
+  def get_realtime_info
+    @engineers = User.where(roles: ['5'])
+    respond_to do |format|
+      format.js
+    end
+  end
 end

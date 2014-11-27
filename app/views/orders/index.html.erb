@@ -15,7 +15,6 @@
     <%= ' - ' + AutoSubmodel.find(params[:auto_submodel]).full_name %>
   <% end %>
   <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary pull-right' if can? :create, Order %>
-  <%= link_to t('create_maintain'), new_maintain_path, :class => 'btn btn-primary pull-right' if can? :create, Maintain %>
   </h4>
   <% if mobile_device? %>
   <div class="btn-group">
@@ -253,6 +252,8 @@
   <div>
     <button type="button" class="btn btn-info pull-right" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
     <button type="button" class="btn btn-info pull-left" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
+    <select id="engineer-select" class="pull-left"></select>
+    <button type="button" class="btn btn-success pull-left" id="locate-engineer-btn"><%= t(:locate_engineer) %></button>
   </div>
   <div id="map" style="width: 100%; height: 100%;"></div>
 </div>
@@ -341,6 +342,34 @@ $(function() {
         for(var i = v.address.length; i >= 9;i -= 3) { a[a.length] = v.address.substring(0,i); }
         if(a.length > 0)
             local.search(a);
+    });
+    window.map = map;
+    window.engineer_markers = [];
+    var timer = null;
+    function timer_func() {
+        $.getScript('<%= get_user_realtime_info_path %>');
+        timer = setTimeout(timer_func, 1 * 60 * 1000);
+    }
+    $('#modal-map').on('show', function () {
+      if(!timer) {
+        timer = setTimeout(timer_func, 0);
+      }
+    });
+    $('#modal-map').on('hidden', function () {
+      if(timer) {
+        clearTimeout(timer);
+        timer = null;  
+      }
+    });
+    $('#locate-engineer-btn').click(function (e) {
+      var textSelected   = $("option:selected", $('#engineer-select')).text();
+      window.engineer_markers.every(function(v) {
+        if(v.getTitle() == textSelected) {
+          map.centerAndZoom(v.getPosition(), 13);
+          return false;
+        }
+        return true;
+      });
     });
 });
 </script>

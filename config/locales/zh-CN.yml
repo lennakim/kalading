@@ -987,3 +987,5 @@ zh-CN:
   cancel_pending_orders_prompt_per_dispatcher: '您有%{n}个取消订单待审核'
   cancel_pending_orders_prompt: '%{n}个取消订单待审核'
   new_orders_prompt_per_dispatcher: '您有%{n}个新订单待处理'
+  location_updated_at: '%{m}分钟前在此地'
+  locate_engineer: '定位技师'
