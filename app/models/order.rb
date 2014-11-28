@@ -243,4 +243,24 @@ class Order
     # 保存订单车辆信息
     Auto.find_or_create_by(car_location: o.car_location, car_num: o.car_num, auto_submodel_id: o.auto_submodel.id ) if o.auto_submodel
   end
+  
+  instance_eval do
+    # 待出库
+    def to_be_delivered
+      any_of({ state: 3 }, { state: 4 }).where(part_deliver_state: 0)
+    end
+    
+    def to_be_delivered_hash
+      {states: [3,4], part_deliver_state: 0}
+    end
+  
+    # 待回库
+    def to_be_backed
+      any_of({ state: 5 }, { state: 8 }, {state: 10}).where(part_deliver_state: 1)
+    end
+    
+    def to_be_backed_hash
+      {states: [5, 8, 10], part_deliver_state: 1}
+    end
+  end
 end

@@ -35,7 +35,7 @@
               <% else %>
                 <li>
               <% end %>
-                  <%= link_to t('to_be_delivered_orders', n: Order.any_of({ state: 3 }, { state: 4 }).where(part_deliver_state: 0).count), orders_path(states: [3,4], part_deliver_state: 0) %>
+                  <%= link_to t('to_be_delivered_orders', n: Order.to_be_delivered.count), orders_path(Order.to_be_delivered_hash) %>
                 </li>
 
               <% if @orders && params[:part_deliver_state].to_i == 1 %>
@@ -43,7 +43,7 @@
               <% else %>
                 <li>
               <% end %>
-                  <%= link_to t('to_be_backed_orders', n: Order.any_of({ state: 5 }, { state: 8 }).where(part_deliver_state: 1).count), orders_path(states: [5, 8], part_deliver_state: 1) %>
+                  <%= link_to t('to_be_backed_orders', n: Order.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
                 </li>
             </ul>
           </div><!--/.well -->

@@ -144,7 +144,7 @@
                     <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
                   <% end %>
                 <% elsif order.part_deliver_state == 1 %>
-                  <% if %w[serve_done service_cancelled].include? Order::STATE_STRINGS[order.state] %>
+                  <% if %w[serve_done service_cancelled cancel_pending].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(:storehouse_back), edit_order_path(order, part_back: 1), :class => 'btn btn-mini', :remote => true if can?(:inout, Storehouse) %>
                   <% end %>
                   <% if  %w[scheduled].include? Order::STATE_STRINGS[order.state] %>
