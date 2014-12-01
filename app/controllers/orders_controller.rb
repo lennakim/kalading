@@ -693,7 +693,12 @@ class OrdersController < ApplicationController
     return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
     _create_auto_maintain_order
     @order.city = City.find_by name: I18n.t(:beijing)
-    @order.user_type = UserType.find_or_create_by name: I18n.t(:renbao)
+    if !params[:free].blank?
+      @order.user_type = UserType.find_or_create_by name: I18n.t(:renbaodianxiao)
+    else
+      @order.user_type = UserType.find_or_create_by name: I18n.t(:renbao)
+    end
+    
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
