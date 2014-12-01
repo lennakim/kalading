@@ -322,6 +322,7 @@ class OrdersController < ApplicationController
         end
       when 5
         if params[:order][:part_deliver_state] == '2'
+          params[:order][:state] = 5
           notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
         else
           params[:order][:state] = 6
@@ -336,10 +337,10 @@ class OrdersController < ApplicationController
           notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
         end
       when 10
+        params[:order][:state] = 10
         if params[:order][:part_deliver_state] == '2'
           notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
         else
-          params[:order][:state] = 5
           notice = I18n.t(:order_served_notify, seq: @order.seq)
         end
       else
