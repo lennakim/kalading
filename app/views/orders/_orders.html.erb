@@ -132,7 +132,7 @@
             <% else %>
               <%= link_to t(:detail), order, {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window', :class => 'btn btn-info btn-mini' } %>
             <% end %>
-            <%= link_to t(:reciept), edit_order_path(order, invoice: 1), :class => 'btn btn-info btn-mini', :remote => true if current_user && current_user.roles.include?('8') && Order::STATE_STRINGS[order.state] == 'serve_done' %>
+            <%= link_to t(:reciept), edit_order_path(order, invoice: 1), :class => 'btn btn-info btn-mini', :remote => true if current_user && current_user.roles.include?('8') && !(%w[unverified verify_error service_cancelled inquiry cancel_pending].include? Order::STATE_STRINGS[order.state]) %>
               
             <% if can? :update, Order %>
               <% if !(%w[revisited inquiry].include? Order::STATE_STRINGS[order.state]) %>
