@@ -1,6 +1,7 @@
 <%- model_class = Part -%>
 <div class="page-header">
   <h1><%=t 'part' %></h1>
+  <%= render_qr_code part_url(@part) %>
 </div>
 
 <h5><%= t('common_info') %></h5>
