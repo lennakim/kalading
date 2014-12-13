@@ -82,8 +82,8 @@ class PicturesController < ApplicationController
       @picture = o.pictures.find(params[:id])
       @picture.destroy
     elsif params[:auto_submodel_id]
-      a = AutoSubmodel.find(params[:auto_submodel_id])
-      @picture = a.pictures.find(params[:id])
+      o = AutoSubmodel.find(params[:auto_submodel_id])
+      @picture = o.pictures.find(params[:id])
       @picture.destroy
     end
 

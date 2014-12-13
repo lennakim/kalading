@@ -14,7 +14,7 @@
   <table class="table">
   <% @auto_submodel.pictures.each do |p| %>
     <tr>
-      <td><%= image_tag( p.p.url(:small)) %></td>
+      <td><%= image_tag( p.p.url) %></td>
       <td><%= p.p_file_name %></td>
       <td><%= link_to t('destroy'),
               auto_submodel_picture_path(@auto_submodel, p),

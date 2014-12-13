@@ -43,6 +43,8 @@ gem "twitter-bootstrap-rails"
 gem 'devise'
 gem 'mongoid'
 gem 'mongoid-paperclip', :require => "mongoid_paperclip"
+gem 'paperclip-qiniu', :github => 'lidaobing/paperclip-qiniu'
+gem 'paperclip-meta'
 gem 'thin'
 gem 'rails_admin'
 gem "cancan"

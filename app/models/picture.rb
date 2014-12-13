@@ -19,5 +19,5 @@ class Picture
   embedded_in :maintain, :inverse_of => :tire_spare_pics
   embedded_in :maintain, :inverse_of => :oil_and_battery_pics
 
-  has_mongoid_attached_file :p, :styles => { small: 'x100' }, :url => "/system/:class/:id/p/:style.:extension"
+  has_mongoid_attached_file :p, :path => ":class/:attachment/:id/:basename.:extension"
 end

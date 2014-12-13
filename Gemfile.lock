@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/lidaobing/paperclip-qiniu.git
+  revision: a6b0ab8d012d532edd9139c4c218acdf90cf7caf
+  specs:
+    paperclip-qiniu (0.1.0)
+      paperclip
+      qiniu-rs (~> 3.0)
+
+GIT
   remote: git://github.com/teriyakisan/mongoid_auto_increment.git
   revision: 59dd71a911b9b6883d45770a6052cc6f6119b993
   specs:
@@ -157,6 +165,8 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.0)
       mime-types
+    paperclip-meta (1.1.0)
+      paperclip (>= 3.0.2, < 5.0)
     polyglot (0.3.3)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -169,6 +179,11 @@ GEM
       win32console (~> 1.3)
     pry-rails (0.3.2)
       pry (>= 0.9.10)
+    qiniu-rs (3.4.10)
+      json (~> 1.7)
+      mime-types (~> 1.19)
+      rest-client (~> 1.6)
+      ruby-hmac (~> 0.4)
     quiet_assets (1.0.2)
       railties (>= 3.1, < 5.0)
     rack (1.4.5)
@@ -235,6 +250,7 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
+    ruby-hmac (0.4.0)
     ruby-ole (1.2.11.7)
     ruby-pinyin (0.2.4)
     safe_yaml (0.9.7)
@@ -309,6 +325,8 @@ DEPENDENCIES
   mongoid-paperclip
   mongoid_auto_increment!
   nested_form
+  paperclip-meta
+  paperclip-qiniu!
   pry-rails
   quiet_assets
   rails (= 3.2.12)
