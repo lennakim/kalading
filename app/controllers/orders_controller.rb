@@ -1,11 +1,11 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:index, :order_begin, :choose_service]
   @except_actions = [
-    :index, :update, :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order, :tag_stats, :evaluation_list
+    :index, :update, :uploadpic, :order_begin, :choose_service, :create, :choose_auto_model, :choose_auto_submodel, :pay, :discount_apply, :order_finish, :order_preview, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order, :tag_stats, :evaluation_list, :create_auto_special_order
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
-  load_and_authorize_resource :except => @except_actions + [:auto_maintain_query, :create_auto_maintain_order3, :create_auto_maintain_order4, :create_auto_maintain_order5, :create_auto_special_order]
+  load_and_authorize_resource :except => @except_actions + [:auto_maintain_query, :create_auto_maintain_order3, :create_auto_maintain_order4, :create_auto_maintain_order5]
 
   # GET /orders
   # GET /orders.json
@@ -192,6 +192,7 @@ class OrdersController < ApplicationController
   def new
     @order = Order.new
     @order.serve_datetime = DateTime.now.since(1.days)
+    @order.incoming_call_num = params[:customerNumber] if params[:customerNumber].present?
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @order }
@@ -741,14 +742,15 @@ class OrdersController < ApplicationController
     render json: {result: 'succeeded', seq: @order.seq }
   end
   
-  #only phone_num and car num
+  # only phone_num and car_num, default city is beijing
   def create_auto_special_order
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
     return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
     return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
-
+    @order = Order.new
     @order.service_types << ServiceType.find('527781867ef560ccbc000007')
     @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).sample
+    @order.city = City.find_by name: I18n.t(:beijing)
     check_discount
     @order.update_attributes params[:info]
     @order.car_num.upcase!

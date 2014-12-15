@@ -11,6 +11,10 @@
       <td><%= @order.car_location+ @order.car_num %></td>
     </tr>
     <tr>
+      <td><%= t(:incoming_call_num) %></td>
+      <td><%= @order.incoming_call_num %></td>
+    </tr>
+    <tr>
       <td><%= t(:phone_num) %></td>
       <td><%= @order.phone_num %></td>
     </tr>
@@ -36,7 +40,7 @@
     </tr>
     <tr>
       <td><%= t(:serve_datetime) %></td>
-      <td><%= l @order.serve_datetime %></td>
+      <td><%= l @order.serve_datetime if @order.serve_datetime %></td>
     </tr>
     <tr>
       <td><%= t(:serve_end_datetime) %></td>

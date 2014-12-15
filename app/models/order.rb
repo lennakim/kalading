@@ -52,6 +52,7 @@ class Order
   field :client_id, type: String, default: ''
   field :login_phone_num, type: String, default: ''
   field :friend_phone_num, type: String, default: ''
+  field :incoming_call_num, type: String, default: ''
   # 使用账户余额付的款
   field :balance_pay, type: Money, default: 0.0
   # 仅用于统计
@@ -97,7 +98,8 @@ class Order
     :oil_filter_changed, :air_filter_changed, :cabin_filter_changed, :charged, :auto_km, :oil_out, :oil_in,
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
     :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state,
-    :serve_end_datetime, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :login_phone_num, :friend_phone_num, :cancel_type
+    :serve_end_datetime, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :login_phone_num, :friend_phone_num, :cancel_type,
+    :incoming_call_num
 
   auto_increment :seq
   index({ seq: 1 })
@@ -105,7 +107,7 @@ class Order
   index({ car_location: 1, car_num: 1})
 
   validates :phone_num, length: { in: 8..13 }, presence: true
-  validates :address, length: { in: 4..512 }, presence: true
+  #validates :address, length: { in: 4..512 }, presence: true
   validates :city, presence: true
   
   # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询, 10: 取消待审核

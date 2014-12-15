@@ -1,5 +1,13 @@
 <%- model_class = Order -%>
-<div class="page-header">
-  <h1><%=t 'new_order' %></h1>
-</div>
-<%= render :partial => 'form' %>
+<% if params[:customerNumber].present? && Order.any_of({incoming_call_num: params[:customerNumber]},{phone_num: params[:customerNumber]}).exists? %>
+  <% @orders = Order.any_of({incoming_call_num: params[:customerNumber]},{phone_num: params[:customerNumber]}).desc(:seq).page(params[:page]).per(20) %>
+  <div class="page-header">
+    <h3><%= t(:old_customer_call_prompt, num: params[:customerNumber], count: @orders.size) %></h3>
+  </div>
+  <%= render 'orders' %>
+<% else %>
+  <div class="page-header">
+    <h1><%=t 'new_order' %></h1>
+  </div>
+  <%= render :partial => 'form' %>
+<% end %>
