@@ -106,6 +106,7 @@ Kalading::Application.routes.draw do
   post 'auto_verify_order' => 'orders#create_auto_verify_order', :as => :create_auto_verify_order
   post 'auto_test_order' => 'orders#create_auto_test_order', :as => :create_auto_test_order
   post 'auto_maintain_order2' => 'orders#create_auto_maintain_order2', :as => :create_auto_maintain_order2
+  post 'auto_special_order' => 'orders#create_auto_special_order', :as => :create_auto_special_order
   get 'auto_test_order' => 'orders#auto_test_order', :as => :auto_test_order
   get 'auto_verify_order' => 'orders#auto_verify_order', :as => :auto_verify_order
   post 'auto_test_price' => 'orders#auto_test_price', :as => :auto_test_price

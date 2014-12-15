@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
-  load_and_authorize_resource :except => @except_actions + [:auto_maintain_query, :create_auto_maintain_order3, :create_auto_maintain_order4, :create_auto_maintain_order5]
+  load_and_authorize_resource :except => @except_actions + [:auto_maintain_query, :create_auto_maintain_order3, :create_auto_maintain_order4, :create_auto_maintain_order5, :create_auto_special_order]
 
   # GET /orders
   # GET /orders.json
@@ -734,6 +734,21 @@ class OrdersController < ApplicationController
     st = ServiceType.find '52c186d4098e7133cd000005'
     return render json: t(:auto_test_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
+    check_discount
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+  
+  #only phone_num and car num
+  def create_auto_special_order
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+
+    @order.service_types << ServiceType.find('527781867ef560ccbc000007')
+    @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).sample
     check_discount
     @order.update_attributes params[:info]
     @order.car_num.upcase!
