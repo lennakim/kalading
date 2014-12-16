@@ -134,6 +134,14 @@ class OrdersController < ApplicationController
     if params[:cancel_type].present?
       @orders = @orders.where cancel_type: params[:cancel_type]
     end
+    
+    if params[:normal].present?
+      if params[:normal] == 'true'
+        @orders = @orders.where :name.ne => ''
+      else
+        @orders = @orders.where :name => ''
+      end
+    end
 
     respond_to do |format|
       format.html {
