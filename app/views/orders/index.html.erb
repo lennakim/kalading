@@ -37,6 +37,12 @@
 <% end %>
   <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
     <input name="state" type="hidden" value="<%= params[:state] %>" />
+    <% if params[:states].present? %>
+      <% params[:states].each do |s| %>
+        <input name="states[]" type="hidden" value="<%= s %>" />
+      <% end %>
+    <% end %>
+    <input name="part_deliver_state" type="hidden" value="<%= params[:part_deliver_state] %>" />
     <div class="control-group">
       <%= label_tag :phone_num, t('phone_num'), class: 'control-label' %>
       <div class="controls form-inline">

@@ -53,13 +53,14 @@ class User
   index({"location" => "2d"})
   
   attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title, :storehouse_id,
-    :location, :battery_level
+    :location, :battery_level, :city_id
 
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
   has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2
   has_many :serve_orders3, class_name: "Order", inverse_of: :dispatcher
   has_many :partbatches
   belongs_to :storehouse
+  belongs_to :city
   
   validates_uniqueness_of :phone_num, :allow_blank => true
 

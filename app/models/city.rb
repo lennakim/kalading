@@ -10,6 +10,7 @@ class City
   accepts_nested_attributes_for :districts, :allow_destroy => true
   has_many :orders
   has_many :storehouses
+  has_many :users
   
   def as_json(opts = nil)
     super except: [:order_capacity]
