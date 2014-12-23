@@ -28,7 +28,7 @@ gem 'jbuilder'
 # gem 'debugger'
 
 group :test, :development do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.0'
   gem 'spreadsheet'
 end
 
@@ -41,6 +41,7 @@ end
 
 gem "twitter-bootstrap-rails"
 gem 'devise'
+gem 'devise-token_authenticatable'
 gem 'mongoid'
 gem 'mongoid-paperclip', :require => "mongoid_paperclip"
 gem 'paperclip-qiniu', :github => 'lidaobing/paperclip-qiniu'
@@ -57,7 +58,7 @@ gem 'rb-readline', '~> 0.5.0', require: 'readline'
 gem 'quiet_assets', :group => :development
 gem 'money-rails'
 gem 'nested_form'
-gem 'datetimepicker-rails', :require => 'datetimepicker-rails', :git => 'git://github.com/zpaulovics/datetimepicker-rails.git'
+gem 'datetimepicker-rails', git: 'git://github.com/zpaulovics/datetimepicker-rails', tag: 'v1.0.0'
 gem 'jquery_mobile_rails'
 gem 'mongoid-history'
 gem 'jquery-validation-rails'

@@ -12,6 +12,7 @@ class OrdersController < ApplicationController
   def index
     if current_user
       if current_user.roles.empty?
+        logger.info "Current user name: #{current_user.name}"
         authorize! :read, Order
       elsif current_user.roles.include? '5'
         @orders = Order.where(:engineer => current_user)
