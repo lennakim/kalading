@@ -72,6 +72,7 @@ class Order
   embeds_many :comments, :cascade_callbacks => true
   belongs_to :user_type
   belongs_to :city
+  belongs_to :storehouse
   
   has_many :maintains
 
@@ -99,7 +100,7 @@ class Order
     :front_wheels, :back_wheels, :auto_km_next, :serve_datetime_next, :oil_gathered, :part_counts, :user_type_id, :auto_owner_name,
     :registration_date, :engine_num, :cancel_reason, :city_id, :reciept_address, :client_id, :part_deliver_state,
     :serve_end_datetime, :evaluation, :evaluation_score, :evaluation_tags, :evaluation_time, :login_phone_num, :friend_phone_num, :cancel_type,
-    :incoming_call_num
+    :incoming_call_num, :storehouse_id
 
   auto_increment :seq
   index({ seq: 1 })

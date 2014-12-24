@@ -144,6 +144,10 @@ class OrdersController < ApplicationController
       end
     end
 
+    if !params[:storehouse].blank?
+      @orders = @orders.where(storehouse: Storehouse.find(params[:storehouse]))
+    end
+    
     respond_to do |format|
       format.html {
         params[:per] ||= 20
@@ -201,7 +205,10 @@ class OrdersController < ApplicationController
   def new
     @order = Order.new
     @order.serve_datetime = DateTime.now.since(1.days)
-    @order.incoming_call_num = params[:customerNumber] if params[:customerNumber].present?
+    if params[:customerNumber].present?
+      @order.incoming_call_num = params[:customerNumber]
+      @order.phone_num = params[:customerNumber]
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @order }
@@ -357,7 +364,7 @@ class OrdersController < ApplicationController
         notice = I18n.t(:order_saved_notify, seq: @order.seq)
       end
     end
-    
+
     respond_to do |format|
       if @order.update_attributes(params[:order])
         _send_sms_notify @order, params[:order][:state]
@@ -367,6 +374,9 @@ class OrdersController < ApplicationController
           if d && d.expire_date >= Date.today && d.orders.count < d.times
             @order.discounts << d
           end
+        end
+        if params[:order][:state] == 2 && @order.city.name == I18n.t(:beijing)
+          assign_belong
         end
         format.html { redirect_to session.delete(:return_to), notice: notice }
         format.json { render json: {result: 'ok'} }
@@ -929,10 +939,44 @@ private
         {
           'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
           'mobile' => o.phone_num,
-          'tpl_id' => '584231',
-          'tpl_value' => "#name#=#{o.name}&#order#=#{o.seq}&#servicetypes#=#{o.service_types.first.name}&#servedate#=#{servedate}&#url#=#{url}"
+          'tpl_id' => '640307',
+          'tpl_value' => "#autoname#=#{o.auto_submodel.full_name}&#servicetypes#=#{o.service_types.first.name}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
         }
       r
     end
+    if state == 3
+      require 'net/http'
+      r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
+        {
+          'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
+          'mobile' => o.phone_num,
+          'tpl_id' => '640313',
+          'tpl_value' => "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
+        }
+      r
+    end
+  end
+  
+  def assign_belong
+    stations = [
+      {:name => '北京 峻峰华亭中心库', :id => '5246caae098e71092800027a', :lo => 116.393773, :la => 39.989387},
+      {:name => '北京 史各庄点部', :id => '54814c521298d6da89000009', :lo => 116.304563, :la => 40.101134},
+      {:name => '北京 草桥点部', :id => '54814c721298d6da8900000b', :lo => 116.353042, :la => 39.855491},
+      {:name => '北京 王四营点部', :id => '547f39721298d6da89000003', :lo => 116.543052, :la => 39.875762},
+      {:name => '北京 分钟寺点部', :id => '54814c2f1298d6da89000007', :lo => 116.462558, :la => 39.866659},
+      {:name => '北京 十里居点部', :id => '5495378a255188d10c002550', :lo => 116.495819, :la => 39.960586},
+      {:name => '北京 四季青点部', :id => '548127a21298d6da89000005', :lo => 116.281635, :la => 39.957515}
+    ]
+    sortest_distance = 1000000
+    storehouse_name = ''
+    point = get_latitude_longitude(@order.city.name, @order.address)
+    stations.each do |s|
+      distance = (haversine_distance(point, [s[:lo], s[:la]]) / 100).to_i
+      if distance < sortest_distance
+        sortest_distance = distance
+        storehouse_name = s[:name]
+      end
+    end
+    @order.storehouse = Storehouse.find_by(name: storehouse_name)
   end
 end

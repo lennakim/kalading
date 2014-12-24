@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.asc(:phone_num)
+    @users = User.all.asc(:name_pinyin)
     if !params[:name].blank?
       @users = @users.where(name: /.*#{params[:name]}.*/i)
     end
