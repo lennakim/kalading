@@ -709,8 +709,7 @@ class OrdersController < ApplicationController
     return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
     return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
     return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+
     _create_auto_maintain_order
     @order.city = City.find_by name: I18n.t(:beijing)
     if !params[:free].blank?
@@ -959,24 +958,26 @@ private
   
   def assign_belong
     stations = [
-      {:name => '北京 峻峰华亭中心库', :id => '5246caae098e71092800027a', :lo => 116.393773, :la => 39.989387},
-      {:name => '北京 史各庄点部', :id => '54814c521298d6da89000009', :lo => 116.304563, :la => 40.101134},
-      {:name => '北京 草桥点部', :id => '54814c721298d6da8900000b', :lo => 116.353042, :la => 39.855491},
-      {:name => '北京 王四营点部', :id => '547f39721298d6da89000003', :lo => 116.543052, :la => 39.875762},
-      {:name => '北京 分钟寺点部', :id => '54814c2f1298d6da89000007', :lo => 116.462558, :la => 39.866659},
-      {:name => '北京 十里居点部', :id => '5495378a255188d10c002550', :lo => 116.495819, :la => 39.960586},
-      {:name => '北京 四季青点部', :id => '548127a21298d6da89000005', :lo => 116.281635, :la => 39.957515}
+      {:name => '北京 峻峰华亭中心库', :lo => 116.393773, :la => 39.989387},
+      {:name => '北京 史各庄点部', :lo => 116.304563, :la => 40.101134},
+      {:name => '北京 草桥点部', :lo => 116.353042, :la => 39.855491},
+      {:name => '北京 王四营点部', :lo => 116.543052, :la => 39.875762},
+      {:name => '北京 分钟寺点部', :lo => 116.462558, :la => 39.866659},
+      {:name => '北京 十里居点部', :lo => 116.495819, :la => 39.960586},
+      {:name => '北京 四季青点部', :lo => 116.281635, :la => 39.957515}
     ]
     sortest_distance = 1000000
     storehouse_name = ''
     point = get_latitude_longitude(@order.city.name, @order.address)
-    stations.each do |s|
-      distance = (haversine_distance(point, [s[:lo], s[:la]]) / 100).to_i
-      if distance < sortest_distance
-        sortest_distance = distance
-        storehouse_name = s[:name]
+    if !point.empty?
+      stations.each do |s|
+        distance = (haversine_distance(point, [s[:lo], s[:la]]) / 100).to_i
+        if distance < sortest_distance
+          sortest_distance = distance
+          storehouse_name = s[:name]
+        end
       end
+      @order.storehouse = Storehouse.find_by(name: storehouse_name)
     end
-    @order.storehouse = Storehouse.find_by(name: storehouse_name)
   end
 end
