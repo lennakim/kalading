@@ -116,8 +116,8 @@ Kalading::Application.routes.draw do
   get 'order_seq_check' => 'orders#order_seq_check', :as => :order_seq_check
   get 'order_tag_stats' => 'orders#tag_stats', :as => :order_tag_stats
   get 'order_evaluation_list' => 'orders#evaluation_list', :as => :order_evaluation_list
-  get 'tomorrow_orders' => 'orders#tomorrow_orders', :as => :tomorrow_orders
   get 'orders/:id/send_sms_notify' => 'orders#send_sms_notify', :as => :send_sms_notify
+  get 'daily_orders' => 'orders#daily_orders', :as => :daily_orders
     
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains
   get 'last_maintain/:id' => 'maintains#last_maintain', :as => :last_maintain

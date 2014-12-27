@@ -1,0 +1,21 @@
+<script type="text/javascript">
+  $(function() {
+    var map = window.map;
+    stations = [
+      {lo: 116.393773, la: 39.989387},
+      {lo: 116.281635, la: 39.957515},
+      {lo: 116.353042, la: 39.855491},
+      {lo: 116.462558, la: 39.866659},
+      {lo: 116.543052, la: 39.875762},
+      {lo: 116.495819, la: 39.960586},
+      {lo: 116.304563, la: 40.101134},
+    ]
+    stations.forEach(function(v, i) {
+      var point = new BMap.Point(v.lo, v.la);
+      var circle1 = new BMap.Circle(point,300,{fillColor: "blue", fillOpacity: 1.0});
+      map.addOverlay(circle1);
+      var circle2 = new BMap.Circle(point,5000,{fillColor: "red", fillOpacity: 0.1, strokeColor:"blue", strokeWeight:1, strokeOpacity:0.1});
+      map.addOverlay(circle2);
+    });
+  });
+</script>

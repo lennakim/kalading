@@ -166,26 +166,6 @@
     </div>
 
     <div class="control-group select">
-      <%= label_tag :storehouse, t('belong'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <select name="storehouse" id="storehouse">
-          <% if params[:storehouse].nil? || params[:storehouse] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% City.find_by(name: I18n.t(:beijing)).storehouses.each do |s| %>
-            <% if params[:storehouse] == s.id.to_s %>
-              <option value="<%= s.id %>" selected ><%= s.name %></option>
-            <% else %>
-              <option value="<%= s.id %>" ><%= s.name %></option>
-            <% end %>
-          <% end %>
-        </select>
-      </div>
-    </div>
-    
-    <div class="control-group select">
       <%= label_tag :engineer, t('engineer'), class: 'control-label' %>
       <div class="controls form-inline">
         <select name="engineer" id="engineer">
@@ -243,31 +223,10 @@
   </div>
   <div id="map" style="width: 100%; height: 100%;"></div>
 </div>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=xmcLHVWegnz5MYzrExa46wqg"></script>
+<%= render 'dianbu_map' %>
 <script type="text/javascript">
 $(function() {
-    var map = new BMap.Map("map");
-    map.enableScrollWheelZoom();
-    map.enableContinuousZoom();
-    var point = new BMap.Point(116.393773, 39.989387);
-    map.centerAndZoom(point,12);
-
-    stations = [
-      {lo: 116.393773, la: 39.989387},
-      {lo: 116.281635, la: 39.957515},
-      {lo: 116.353042, la: 39.855491},
-      {lo: 116.462558, la: 39.866659},
-      {lo: 116.543052, la: 39.875762},
-      {lo: 116.495819, la: 39.960586},
-      {lo: 116.304563, la: 40.101134},
-    ]
-    stations.forEach(function(v, i) {
-      var point = new BMap.Point(v.lo, v.la);
-      var circle1 = new BMap.Circle(point,300,{fillColor: "blue", fillOpacity: 1.0});
-      map.addOverlay(circle1);
-      var circle2 = new BMap.Circle(point,5000,{fillColor: "red", fillOpacity: 0.1, strokeColor:"blue", strokeWeight:1, strokeOpacity:0.1});
-      map.addOverlay(circle2);
-    });
+    var map = window.map;
     var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
     points = [
     <% @orders.select {|x| [0,2,3,4].include? x.state }.each do |o| %>
@@ -329,7 +288,6 @@ $(function() {
         if(a.length > 0)
             local.search(a);
     });
-    window.map = map;
     window.engineer_markers = [];
     var timer = null;
     function timer_func() {

@@ -378,9 +378,6 @@ class OrdersController < ApplicationController
             @order.discounts << d
           end
         end
-        if params[:order][:state] == 2 && @order.city.name == I18n.t(:beijing)
-          assign_belong
-        end
         format.html { redirect_to session.delete(:return_to), notice: notice }
         format.json { render json: {result: 'ok'} }
       else
@@ -853,13 +850,24 @@ class OrdersController < ApplicationController
     @orders = AutoSubmodel.find(auto_submodel_id).orders.where(:evaluation_time.ne => nil).desc(:evaluation_time).page(params[:page]).per(params[:per])
   end
 
-  def tomorrow_orders
-    @d = Date.parse(params[:date]) || Date.tomorrow
-    @unassigned_orders = Order.where state: 2,  :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day
-    @unscheduled_orders = Order.where state: 3, :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day
-    @scheduled_orders = Order.where state: 4, :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day
-    @order_count = @unassigned_orders.count + @unscheduled_orders.count + @scheduled_orders.count
-    @engineers = User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }
+  def daily_orders
+    @d = Date.parse(params[:date]) if params[:date]
+    @d ||= Date.tomorrow
+    @unassigned_orders = Order.where(state: 2,  :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime)
+    @city_unassigned_orders = @unassigned_orders.group_by(&:city)
+    @engineer_order_hash_am = {}
+    @engineer_order_hash_pm = {}
+    assigned_orders = Order.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime)
+    assigned_orders.each do |o|
+      if o.serve_datetime.hour <= 12
+        @engineer_order_hash_am[o.engineer] ||= []
+        @engineer_order_hash_am[o.engineer] << o
+      else
+        @engineer_order_hash_pm[o.engineer] ||= []
+        @engineer_order_hash_pm[o.engineer] << o
+      end
+    end
+    @storehouse_engineers = User.where(roles: ['5']).asc(:storehouse).group_by(&:storehouse)
     render layout: false
   end
   
@@ -983,32 +991,6 @@ private
           'tpl_value' => "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
         }
       r
-    end
-  end
-  
-  def assign_belong
-    stations = [
-      {:name => '北京 峻峰华亭中心库', :lo => 116.393773, :la => 39.989387},
-      {:name => '北京 史各庄点部', :lo => 116.304563, :la => 40.101134},
-      {:name => '北京 草桥点部', :lo => 116.353042, :la => 39.855491},
-      {:name => '北京 王四营点部', :lo => 116.543052, :la => 39.875762},
-      {:name => '北京 分钟寺点部', :lo => 116.462558, :la => 39.866659},
-      {:name => '北京 十里居点部', :lo => 116.495819, :la => 39.960586},
-      {:name => '北京 四季青点部', :lo => 116.281635, :la => 39.957515}
-    ]
-    sortest_distance = 1000000
-    storehouse_name = ''
-    point = get_latitude_longitude(@order.city.name, @order.address)
-    if !point.empty?
-      stations.each do |s|
-        distance = (haversine_distance(point, [s[:lo], s[:la]]) / 100).to_i
-        if distance < sortest_distance
-          sortest_distance = distance
-          storehouse_name = s[:name]
-        end
-      end
-      @order.storehouse = Storehouse.find_by(name: storehouse_name)
-      @order.save
     end
   end
 end

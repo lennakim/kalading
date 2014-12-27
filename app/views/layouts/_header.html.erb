@@ -6,10 +6,11 @@
   <%= csrf_meta_tags %>
 
   <%= stylesheet_link_tag "application", :media => "all" %>
-
   <!-- For all other devices -->
   <!-- Size should be 32 x 32 pixels -->
   <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
-
+  <% if ['orders'].include? params[:controller] %>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=xmcLHVWegnz5MYzrExa46wqg"></script>
+  <% end %>
   <%= javascript_include_tag "application" %>
 </head>

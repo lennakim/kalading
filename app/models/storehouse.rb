@@ -13,7 +13,6 @@ class Storehouse
   has_many :users
   accepts_nested_attributes_for :partbatches, :allow_destroy => true
   belongs_to :city
-  has_many :orders
   
   def to_csv(options = {})
     CSV.generate(options) do |csv|

@@ -15,14 +15,11 @@
 //= require jquery.validate
 //= require jquery.validate.additional-methods
 //= require twitter/bootstrap
+//= require bootstrap-tooltip
 //= require jquery_nested_form
 //= require bootstrap-datetimepicker
 //= require jquery.ba-throttle-debounce.min
-//= require raphael-min
-//= require g.raphael-min.js
-//= require g.pie-min.js
-//= require g.bar-min.js
-//= require g.line-min.js
+//= require jquery.splitter-0.14.0
 //= require_directory .
 
 

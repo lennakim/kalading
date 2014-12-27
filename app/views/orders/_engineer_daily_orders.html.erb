@@ -1,0 +1,15 @@
+<div class="tooltip-div">
+  <table class="table table-condensed">
+    <% orders.each do |o| %>
+      <tr class="assigned-order-tr" id="<%= o.id %>" data-city="<%= o.city.name %>" data-state="<%= t(Order::STATE_STRINGS[o.state]) %>">
+        <td>
+          <i class="icon-question-sign" id="mqm-<%= o.seq %>"></i>
+          <i class="icon-map-marker" id="mm-<%= o.seq %>" style="display: none;"></i>&nbsp
+          <a class="order-a" href="#" id="<%= o.id %>" data-seq="<%= o.seq %>" draggable="true"><%= o.seq %></a>
+          <span data-toggle="tooltip" title="<%= o.serve_datetime.strftime('%H:%M') %>">&nbsp<i class="icon-time"></i></span>
+          <span data-toggle="tooltip" title="<%= o.address %>">&nbsp<i class="icon-info-sign"></i></span>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
