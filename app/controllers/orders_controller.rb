@@ -209,6 +209,9 @@ class OrdersController < ApplicationController
       @order.incoming_call_num = params[:customerNumber]
       @order.phone_num = params[:customerNumber]
     end
+    if params[:customerAreaCode].present?
+      @order.city = City.find_by area_code: params[:customerAreaCode]
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @order }
@@ -367,7 +370,7 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       if @order.update_attributes(params[:order])
-        _send_sms_notify @order, params[:order][:state]
+        _auto_send_sms_notify @order, params[:order][:state]
         if params[:order][:discount_num]
           @order.discounts = nil
           d = Discount.find_by token: params[:order][:discount_num]
@@ -859,6 +862,33 @@ class OrdersController < ApplicationController
     @engineers = User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }
     render layout: false
   end
+  
+  def send_sms_notify
+    require 'net/http'
+    session[:return_to] ||= request.referer
+    @order = Order.find(params[:id])
+    if @order.state == 0
+      reason = I18n.t(:sms_reason_unverified)
+    end
+    if @order.state == 10
+      if @order.cancel_type == 2
+        reason == I18n.t(:sms_reason_client_reschedule)
+      end
+      if @order.cancel_type == 3
+        reason == I18n.t(:sms_reason_part_error)
+      end
+    end
+    r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
+      {
+        'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
+        'mobile' => @order.phone_num,
+        'tpl_id' => '644857',
+        'tpl_value' => "#servicetypes#=#{@order.service_types.first.name}&#reason#=#{reason}"
+      }
+    r
+    @order.comments << Comment.new(text: I18n.t(:sms_comment, dispatcher: @order.dispatcher.name, time: Time.now.strftime('%m-%d %H:%M')))
+    redirect_to session.delete(:return_to), notice: I18n.t(:send_sms_successful, seq: @order.seq)
+  end
 
 private
   def _create_auto_maintain_order
@@ -929,7 +959,7 @@ private
     end
   end
 
-  def _send_sms_notify(o, state)
+  def _auto_send_sms_notify(o, state)
     if state == 2
       require 'net/http'
       servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}"
