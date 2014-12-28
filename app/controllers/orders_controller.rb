@@ -1008,6 +1008,7 @@ private
         end
       end
       @order.storehouse = Storehouse.find_by(name: storehouse_name)
+      @order.save
     end
   end
 end
