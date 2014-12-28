@@ -855,24 +855,19 @@ class OrdersController < ApplicationController
     @d ||= Date.tomorrow
     @unassigned_orders = Order.where(state: 2,  :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime)
     @city_unassigned_orders = @unassigned_orders.group_by(&:city)
-    @engineer_order_hash_am = {}
-    @engineer_order_hash_pm = {}
-    assigned_orders = Order.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime)
-    assigned_orders.each do |o|
-      if o.serve_datetime.hour <= 12
-        @engineer_order_hash_am[o.engineer] ||= []
-        @engineer_order_hash_am[o.engineer] << o
-      else
-        @engineer_order_hash_pm[o.engineer] ||= []
-        @engineer_order_hash_pm[o.engineer] << o
-      end
-    end
+    City.each {|c| @city_unassigned_orders[c] ||= []}
+    @engineer_order_hash = Order.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime).group_by(&:engineer)
     @storehouse_engineers = User.where(roles: ['5']).asc(:storehouse).group_by(&:storehouse)
+    @dianbu_postions = {}
+    Storehouse.asc(:city).each do |sh|
+      @dianbu_postions[sh] = get_latitude_longitude(sh.city.name, sh.address)
+    end
     render layout: false
   end
   
   def send_sms_notify
     require 'net/http'
+    return if Rails.env.development?
     session[:return_to] ||= request.referer
     @order = Order.find(params[:id])
     if @order.state == 0 || @order.state == 1
@@ -968,6 +963,7 @@ private
   end
 
   def _auto_send_sms_notify(o, state)
+    return if Rails.env.development?
     if state == 2
       require 'net/http'
       servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}"

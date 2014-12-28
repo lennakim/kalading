@@ -41,10 +41,10 @@
     <tbody>
       <% colors = %w[success error info warning] %>
       <% @orders.each_with_index do |order, i| %>
-        <tr class="<%= colors[ i % colors.length] %>" id="order-<%= order.seq %>">
+        <tr class="<%= colors[ i % colors.length] %> order-tr" id="order-tr-<%= order.seq %>" data-city="<%= order.city.name %>">
           <td><i class="icon-map-marker" id="mm-<%= order.seq %>" style="display: none;"></i><%= order.seq %></td>
           <td>
-            <%= t(Order::STATE_STRINGS[order.state]) %>
+            <span class="order-state" data-state="<%= order.state %>"><%= t(Order::STATE_STRINGS[order.state]) %></span>
             <% if order.state == 8 %>
               <p class="alert alert-error"><%= order.cancel_reason %></p>
             <% end %>
@@ -62,7 +62,7 @@
           </td>
           <td><%= order.car_location + order.car_num %></td>
           <td><%= order.auto_submodel.full_name if order.auto_submodel %></td>
-          <td><%= order.address %></td>
+          <td class="order-address"><%= order.address %></td>
           <td><%= order.phone_num %></td>
           <td><%= order.name %></td>
           <td>

@@ -14,7 +14,10 @@
   <% if params[:auto_submodel].present? %>
     <%= ' - ' + AutoSubmodel.find(params[:auto_submodel]).full_name %>
   <% end %>
-  <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary pull-right' if can? :create, Order %>
+  <div class="pull-right">
+    <%= link_to t('tomorrow_orders_assign'), daily_orders_path(date: Date.tomorrow), :class => 'btn btn-success' if can? :create, Order %>
+    <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary' if can? :create, Order %>
+  </div>
   </h4>
   <% if mobile_device? %>
   <div class="btn-group">
@@ -223,71 +226,13 @@
   </div>
   <div id="map" style="width: 100%; height: 100%;"></div>
 </div>
+<div id="order-list">
+  <%= t(:total, count: @orders.size) %><br/>
+  <%= render 'orders' %>
+</div>
 <%= render 'dianbu_map' %>
 <script type="text/javascript">
 $(function() {
-    var map = window.map;
-    var colors = {'0':'black', '1':'yellow', '2':'blue', '3':'red', '4':'green', '5':'black', '6':'black', '7':'black', '8':'grey'};
-    points = [
-    <% @orders.select {|x| [0,2,3,4].include? x.state }.each do |o| %>
-      {
-        seq: "<%= o.seq %>",
-        state: "<%= t(Order::STATE_STRINGS[o.state]) %>",
-        address: "<%= o.address %>",
-        city: "<%= o.city.name %>",
-        color: colors["<%= o.state %>"] },
-    <% end %>
-    ];
-    points.forEach(function(v, i) {
-        var options = {
-            onSearchComplete: function(results) {
-                if (local.getStatus() != BMAP_STATUS_SUCCESS)
-                    return;
-                for(var i = 0; i < results.length; i++) {
-                    if(results[i].getCurrentNumPois() <= 0)
-                        continue;
-                    $('#mm-' + v.seq).fadeIn();
-                    var label = new BMap.Label(v.seq, {position: results[i].getPoi(0).point, offset:new BMap.Size(1,-7)} );
-                    label.setStyle({
-                      color : v.color,
-                      fontSize : "12px",
-                      height : "20px",
-                      lineHeight : "20px",
-                      fontFamily:"微软雅黑"
-                    });
-                    label.addEventListener("click", function(type, target) {
-                      var prev = $('#order-' + v.seq).prev().prev();
-                      if(prev.size() <= 0)
-                        prev = $('#order-table');
-                      document.getElementById(prev.attr("id")).scrollIntoView();
-                      $('#modal-map').modal('hide');
-                    });
-                    label.addEventListener("mouseover", function(type, target) {
-                      this.setContent(v.seq + ' ' + v.state + ': ' + v.address);
-                      this.setZIndex(100);
-                    });
-                    label.addEventListener("mouseout", function(type, target) {
-                      this.setContent(v.seq);
-                    });
-                    map.addOverlay(label);
-                    marker = new BMap.Marker(results[i].getPoi(0).point);
-                    marker.addEventListener("click", function(type, target) {
-                      var prev = $('#order-' + v.seq).prev().prev();
-                      if(prev.size() <= 0)
-                        prev = $('#order-table');
-                      document.getElementById(prev.attr("id")).scrollIntoView();
-                    });
-                    map.addOverlay(marker);
-                    break;
-                }
-            }
-        };
-        var local = new BMap.LocalSearch(map, options);
-        a = [];
-        for(var i = v.address.length; i >= 9;i -= 3) { a[a.length] = v.address.substring(0,i); }
-        if(a.length > 0)
-            local.search(a);
-    });
     window.engineer_markers = [];
     var timer = null;
     function timer_func() {
@@ -309,7 +254,7 @@ $(function() {
       var textSelected   = $("option:selected", $('#engineer-select')).text();
       window.engineer_markers.every(function(v) {
         if(v.getTitle() == textSelected) {
-          map.centerAndZoom(v.getPosition(), 13);
+          window.map.centerAndZoom(v.getPosition(), 13);
           return false;
         }
         return true;
@@ -317,15 +262,3 @@ $(function() {
     });
 });
 </script>
-
-<div id="order-list">
-  <%= t(:total, count: @orders.size) %><br/>
-  <%= render 'orders' %>
-</div>
-
-<% if params[:history] %>
-<div class="well">
-  <h4><%= t(:op_history) %></h4>
-  <div id="history_trackers"><%= render 'history' %></div>
-</div>
-<% end %>

@@ -5,8 +5,9 @@ class Storehouse
   field :name, type: String
   field :address, type: String
   field :phone_num, type: String
+  field :comment, type: String
   
-  attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes, :city_id
+  attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes, :city_id, :comment
   
 
   has_many :partbatches, dependent: :destroy

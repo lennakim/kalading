@@ -69,11 +69,8 @@ class ApplicationController < ActionController::Base
     [ h['results'][0]['location']['lng'], h['results'][0]['location']['lat'] ]
   end
   
-  EQUATOR_RADIUS = 6378137.0
   RAD_PER_DEG = 0.017453293  #  PI/180
-  Rmiles = 3956           # radius of the great circle in miles
   Rkm = 6371              # radius in kilometers...some algorithms use 6367
-  Rfeet = Rmiles * 5282   # radius in feet
   Rmeters = Rkm * 1000    # radius in meters
 
   # 计算两点之间的距离，单位为米。输入参数为两个经纬度数组

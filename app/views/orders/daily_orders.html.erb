@@ -5,28 +5,32 @@
     <div id="hsplitter" style="width: 100%; height: 700px;">
       <div id="vsplitter">
         <div id="assigned-orders-div">
-          <h5><%= l @d %>&nbsp<%= t 'assigned' %></h5>
-          <table class="table table-striped table-bordered table-condensed" id="engineer-order-list">
+          <h5><%= l @d %>&nbsp<%= t 'engineer_work_plan' %></h5>
+          <table class="table table-hover table-bordered table-condensed" id="engineer-order-list">
             <thead>
               <tr>
-                <th><%= t(:engineer_name) %></th>
-                <th><%= t 'am' %></th>
-                <th><%= t 'pm' %></th>
+                <th><%= t(:dianbu_engineer_seq) %></th>
+                <th><%= t :serve_datetime %></th>
+                <th><%= t :address %></th>
               </tr>
             </thead>
             <tbody>
               <% @storehouse_engineers.each do |k, es| %>
-                <tr id="dianbu-<%= k.id if k %>">
-                  <td colspan="3"><strong><%= (k.name if k) || t(:individual_engineer) %></strong></td>
-                </tr>
-                <% es.each do |e| %>
-                  <% a = @engineer_order_hash_am[e] || [] %>
-                  <% b = @engineer_order_hash_pm[e] || [] %>
-                  <tr class="engineer-tr" id="engineer-<%= e.id %>">
-                    <td>&nbsp&nbsp&nbsp&nbsp<%= e.name %>&nbsp<span class="badge badge-success"><%= a.size + b.size %></span></td>
-                    <td><%= render 'engineer_daily_orders', orders: a %></td>
-                    <td><%= render 'engineer_daily_orders', orders: b %></td>
+                <% if k %>
+                  <tr class="warning" data-id="<%= k.id %>">
+                    <td colspan="3"><a class="dianbu-a" href="#"><strong><%= k.name %></strong></a></td>
                   </tr>
+                <% else %>
+                  <tr class="warning" id="dianbu-none">
+                    <td colspan="3"><strong><%= t(:individual_engineer) %></strong></td>
+                  </tr>
+                <% end %>
+                <% es.each do |e| %>
+                  <% a = @engineer_order_hash[e] || [] %>
+                  <tr class="engineer-tr error" id="<%= e.id %>">
+                    <td colspan="3">&nbsp&nbsp&nbsp&nbsp<strong><%= e.name %></strong>&nbsp<span class="badge badge-success"><%= a.size %></span></td>
+                  </tr>
+                  <%= render 'engineer_daily_orders', orders: a %>
                 <% end %>
               <% end %>
             </tbody>
@@ -34,30 +38,25 @@
         </div>
         <div id="unassigned-orders-div">
           <h5><%= l @d %>&nbsp<%= t 'unassigned' %></h5>
-          <table class="table table-striped table-bordered table-condensed unassigned-orders" id="unassigned-orders-list">
+          <table class="table table-bordered table-condensed table-hover unassigned-orders" id="unassigned-orders-list">
             <thead>
               <tr>
-                <th><%= t :order_id %></th>
+                <th><%= t :city_dianbu_seq %></th>
                 <th><%= t :serve_datetime %></th>
                 <th><%= t :address %></th>
               </tr>
             </thead>
             <tbody>
-              <% @city_unassigned_orders.each do |k, v| %>
-                <tr id="city-<%= k.id if k %>">
-                  <td colspan="3"><strong><%= (k.name if k) || t(:no_city_info) %></strong></td>
+              <% Storehouse.asc(:city).each do |s| %>
+                <tr class="dianbu-tr warning" data-id="<%= s.id %>">
+                  <td colspan="3"><a class="dianbu-a" href="#"><strong><%= s.name %></strong></a></td>
                 </tr>
-                <% v.each do |o| %>
-                  <tr class="unassigned-order-tr" id="<%= o.id %>" data-city="<%= k.name if k %>" data-state="<%= t(Order::STATE_STRINGS[o.state]) %>">
-                    <td>
-                      <i class="icon-question-sign" id="mqm-<%= o.seq %>"></i>
-                      <i class="icon-map-marker" id="mm-<%= o.seq %>" style="display: none;"></i>&nbsp
-                      <a class="order-a" href="#" id="<%= o.id %>" data-seq="<%= o.seq %>" draggable="true"><%= o.seq %></a>
-                    </td>
-                    <td><%= o.serve_datetime.strftime('%H:%M') %></td>
-                    <td><%= o.address %></td>
-                  </tr>
-                <% end %>
+              <% end %>
+              <% @city_unassigned_orders.each do |k, v| %>
+                <tr class="city-tr" id="city-<%= k.id %>" data-name="<%= k.name %>">
+                  <td colspan="3"><strong><%= k.name %></strong></td>
+                </tr>
+                <%= render 'engineer_daily_orders', orders: v %>
               <% end %>
             </tbody>
           </table>
@@ -66,6 +65,5 @@
       <div id="map"></div>
     </div>
     <%= render 'dianbu_map' %>
-    <%= render 'progress_dlg' %>
   </body>
 </html>

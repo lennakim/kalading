@@ -29,7 +29,7 @@
     </tbody>
   </table>
   <p><%= f.link_to_add t('add_part_rule'), :part_rules, :data => { :target => "#part_rules > tbody" }, class: 'btn btn-small btn-info' %></p>
-  
+  <h5><%= t :knowledge_base_imgs %></h5>
   <table id="pictures" class="table table-hover table-small">
     <tbody>
       <%= f.fields_for :pictures, :wrapper => false do |sf| %>

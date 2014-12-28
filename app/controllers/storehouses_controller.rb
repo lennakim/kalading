@@ -123,7 +123,7 @@ class StorehousesController < ApplicationController
 
     respond_to do |format|
       if @storehouse.save
-        format.html { redirect_to @storehouse, notice: 'Storehouse was successfully created.' }
+        format.html { redirect_to storehouses_url, notice: 'Storehouse was successfully created.' }
         format.json { render json: @storehouse, status: :created, location: @storehouse }
       else
         format.html { render action: "new" }
@@ -139,7 +139,7 @@ class StorehousesController < ApplicationController
 
     respond_to do |format|
       if @storehouse.update_attributes(params[:storehouse])
-        format.html { redirect_to @storehouse, notice: 'Storehouse was successfully updated.' }
+        format.html { redirect_to storehouses_url, notice: 'Storehouse was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

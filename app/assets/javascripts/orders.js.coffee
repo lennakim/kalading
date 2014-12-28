@@ -1,3 +1,4 @@
+#encoding: UTF-8
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
@@ -81,16 +82,78 @@ $ ->
         $('#created_at_start').val('')
         $('#created_at_end').val('')
     $(".form_datetime").datetimepicker({pickTime: false, language: 'zh-CN'})
+
     $('.order-a').on 'dragstart', (evt) ->
-        evt.originalEvent.dataTransfer.setData("text", evt.originalEvent.target.id)
-    $('.engineer-tr, .unassigned-orders').on 'drop', (evt) ->
-        evt.preventDefault()
-        data = evt.originalEvent.dataTransfer.getData("text")
-        evt.originalEvent.target.appendChild(document.getElementById(data))
-    $('.engineer-tr, .unassigned-orders').on 'dragover', (evt) ->
+        evt.originalEvent.dataTransfer.setData("text", $(evt.originalEvent.target).closest('tr').attr('id'))
+
+    $('.engineer-tr, .unassigned-orders, .daily-order-tr').on 'dragover', (evt) ->
         evt.preventDefault()
 
-    $('.tooltip-div').tooltip {selector: "span[data-toggle=tooltip]"}
+    assign_order_to_engineer = (order_tr, engineer_tr, old_engineer_tr) ->
+        # console.log order_tr.data('seq') + '  ' + old_engineer_tr.find('strong').text() + ' -> ' + engineer_tr.find('strong').text()
+        return if old_engineer_tr? and old_engineer_tr.is(engineer_tr)
+        $.ajax
+            url: '/orders/' + order_tr.attr('id')
+            type: 'PUT'
+            contentType: 'application/json'
+            data: JSON.stringify({state: 3, engineer_id: engineer_tr.attr('id')})
+            dataType: 'json'
+            success: ->
+                # 保证订单按照服务时间排序，找到合适的位置，插入订单
+                tr = engineer_tr.next('tr')
+                while tr.hasClass('daily-order-tr') and tr.children('td.order-time').text() < order_tr.children('td.order-time').text()
+                    tr = tr.next('tr')
+                if old_engineer_tr.get(0)?
+                    b = $(old_engineer_tr.find('.badge'))
+                    b.text(parseInt(b.text()) - 1).fadeOut().fadeIn() if b?
+                order_tr.insertBefore(tr)
+                b = engineer_tr.find('.badge')
+                b.text(parseInt(b.text()) + 1).fadeOut().fadeIn() if b?
+            error: ->
+                alert 'Network error.'
+    
+    # 拖拽到技师tr上，可能是换技师，也可能是分配新订单
+    $('.engineer-tr').on 'drop', (evt) ->
+        evt.preventDefault()
+        order_tr = document.getElementById(evt.originalEvent.dataTransfer.getData("text"))
+        return if !order_tr? or !$(order_tr).hasClass('daily-order-tr')
+        old_engineer_tr = $($(order_tr).prevAll('tr.engineer-tr')[0])
+        assign_order_to_engineer $(order_tr), $(this), old_engineer_tr
+
+    $('.daily-order-tr').on 'drop', (evt) ->
+        evt.preventDefault()
+        order_tr = document.getElementById(evt.originalEvent.dataTransfer.getData("text"))
+        return if !order_tr? or !$(order_tr).hasClass('daily-order-tr')
+        if !$(this).closest('table').hasClass('unassigned-orders')
+            # 换技师，也可能是分配新订单
+            engineer_tr = $($(this).prevAll('tr.engineer-tr')[0])
+            old_engineer_tr = $($(order_tr).prevAll('tr.engineer-tr')[0])
+            assign_order_to_engineer $(order_tr), engineer_tr, old_engineer_tr
+
+    # 如果从已分配table拖拽到未分配table，是取消分配
+    $('.unassigned-orders').on 'drop', (evt) ->
+        evt.preventDefault()
+        order_tr = document.getElementById(evt.originalEvent.dataTransfer.getData("text"))
+        return if !order_tr? or !$(order_tr).hasClass('daily-order-tr')
+        return if $(order_tr).closest('table').hasClass('unassigned-orders')
+        # console.log '取消分配 ' + $(order_tr).data('seq')
+        $.ajax
+            url: '/orders/' + $(order_tr).attr('id')
+            type: 'PUT'
+            contentType: 'application/json'
+            data: JSON.stringify({state: 2})
+            dataType: 'json'
+            success: =>
+                old_engineer_tr = $($(order_tr).prevAll('tr.engineer-tr')[0])
+                if old_engineer_tr.get(0)?
+                    b = old_engineer_tr.find('.badge')
+                    b.text(parseInt(b.text()) - 1).fadeOut().fadeIn() if b?
+                if !make_order_tr_close_to_dianbu $(order_tr)
+                    $(order_tr).insertAfter($('tr.city-tr[data-name=\'' + $(order_tr).data('city') + '\']')[0])
+            error: ->
+                alert 'Network error.'
+
+    $('.tooltip-parent').tooltip {selector: "span[data-toggle=tooltip]"}
     $('#hsplitter').split(
         orientation: 'horizontal',
         limit: 10,
@@ -109,13 +172,81 @@ $ ->
         map.centerAndZoom (new BMap.Point(116.393773, 39.989387)), 12
         window.map = map
         $('.order-a').on 'click', ->
-            m = window.order_marker_table[$(this).data('seq')]
+            m = $(this).closest('tr').data('marker')
             if m?
                 map.centerAndZoom m.getPosition(), 13
-                m.setAnimation BMAP_ANIMATION_DROP
+                m.setAnimation(BMAP_ANIMATION_BOUNCE)
+                window.animate_mark.setAnimation(null) if window.animate_mark?
+                window.animate_mark = m
 
+        $('.dianbu-a').on 'click', ->
+            d = $('#' + $(this).closest('tr').data('id'))
+            if d?
+                point = new BMap.Point parseFloat(d.data('lng')), parseFloat(d.data('lat'))
+                map.centerAndZoom point, 13
+
+        add_dianbu_mark = (point, name, id, city) ->
+            circle1 = new BMap.Circle point, 300, {fillColor: "blue", fillOpacity: 1.0}
+            map.addOverlay(circle1)
+            circle2 = new BMap.Circle point, 5000, {fillColor: "red", fillOpacity: 0.1, strokeColor:"blue", strokeWeight:1, strokeOpacity:0.1}
+            map.addOverlay(circle2)
+            label = new BMap.Label name, {position: point, offset:new BMap.Size(-5,1)}
+            label.setStyle(
+              color : 'white',
+              backgroundColor: 'black'
+              fontSize : "10px",
+              height : "12px",
+              lineHeight : "12px"
+            )
+            label.addEventListener "click", (type, target) ->
+                e.scrollIntoView() for e in $('tr[data-id=\'' + id + '\']').get()
+            map.addOverlay(label)
+            
+        for li in $('.dianbu-li') when $(li).text()
+            do (li) ->
+                if $(li).data('lng')
+                    # 从后端获得经纬度
+                    point = new BMap.Point parseFloat($(li).data('lng')), parseFloat($(li).data('lat'))
+                    add_dianbu_mark point, $(li).data('name'), li.id, $(li).data('city')
+                else
+                    options = 
+                        onSearchComplete: (results) ->
+                            return if local_search.getStatus() != BMAP_STATUS_SUCCESS
+                            for r in results when r.getCurrentNumPois() > 0
+                                add_dianbu_mark r.getPoi(0).point, $(li).data('name'), li.id, $(li).data('city')
+                                $(li).data('lng', r.getPoi(0).point.lng).data('lat', r.getPoi(0).point.lat)
+                                break
+                    local_search = new BMap.LocalSearch($(li).data('city'), options)
+                    local_search.search([$(li).text()])
+        
+        # 计算两点之间的距离，单位为米。输入参数为两个经纬度数组
+        haversine_distance = ( lng_lat1, lng_lat2 ) ->
+            RAD_PER_DEG = 0.017453293  #  PI/180
+            Rkm = 6371              # radius in kilometers...some algorithms use 6367
+            Rmeters = Rkm * 1000    # radius in meters
+            dlon = lng_lat2[0] - lng_lat1[0]
+            dlat = lng_lat2[1] - lng_lat1[1]
+            dlon_rad = dlon * RAD_PER_DEG
+            dlat_rad = dlat * RAD_PER_DEG
+            lat1_rad = lng_lat1[1] * RAD_PER_DEG
+            lat2_rad = lng_lat2[1] * RAD_PER_DEG
+            a = (Math.sin(dlat_rad/2))**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * (Math.sin(dlon_rad/2))**2
+            c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a))
+            Math.round(Rmeters * c)
+
+        # 将未分配订单按照最近的点部（10公里内）分组
+        make_order_tr_close_to_dianbu = (tr) ->
+            max_dis = 10 * 1000.0
+            dianbu_tr = null
+            for li in $('.dianbu-li') when $(li).data('lng') and tr.data('city') == $(li).data('city') 
+                dis = haversine_distance [ tr.data('marker').getPosition().lng, tr.data('marker').getPosition().lat], [parseFloat($(li).data('lng')), parseFloat($(li).data('lat'))]
+                # console.log tr.data('seq') + ' -- ' + $(li).data('name') + ': ' + dis + '米'
+                if dis < max_dis
+                    max_dis = dis
+                    dianbu_tr = $('tr.dianbu-tr[data-id=\'' + li.id + '\']')[0]
+            if dianbu_tr
+                tr.insertAfter dianbu_tr
         add_order_marker_points = (points) ->
-            window.order_marker_table ||= {}
             for v in points
                 # closure to prevent v from being shared
                 do (v) ->
@@ -127,48 +258,43 @@ $ ->
                                 $('#mm-' + v.seq).fadeIn()
                                 label = new BMap.Label v.seq, {position: r.getPoi(0).point, offset:new BMap.Size(1,-7)}
                                 label.setStyle(
-                                  color : v.color,
-                                  fontSize : "12px",
-                                  height : "20px",
-                                  lineHeight : "20px"
+                                  color : 'red',
+                                  fontSize : "10px",
+                                  height : "15px",
+                                  lineHeight : "14px"
                                 )
+                                label.setZIndex 10
                                 label.addEventListener "click", (type, target) ->
-                                  prev = $('#order-' + v.seq).prev().prev()
-                                  prev = $('#order-table') if prev.size() <= 0
-                                  document.getElementById(prev.attr("id")).scrollIntoView()
+                                  document.getElementById(v.id)?.scrollIntoView()
                                   $('#modal-map').modal('hide')
                                 label.addEventListener "mouseover", (type, target) ->
                                   this.setContent v.seq + ' ' + v.state + ': ' + v.address
-                                  this.setZIndex 100
                                 label.addEventListener "mouseout", (type, target) ->
                                   this.setContent(v.seq)
                                 map.addOverlay(label)
                                 marker = new BMap.Marker(r.getPoi(0).point)
                                 marker.addEventListener "click", (type, target) ->
-                                  prev = $('#order-' + v.seq).prev().prev()
-                                  prev = $('#order-table') if prev.size() <= 0
-                                  e = document.getElementById(prev.attr("id"))
-                                  e.scrollIntoView() if e?
+                                  document.getElementById(v.id)?.scrollIntoView()
                                 map.addOverlay(marker)
-                                window.order_marker_table[v.seq] = marker
+                                $('#' + v.id).data 'marker', marker
+                                if $('#' + v.id).closest('table').hasClass('unassigned-orders')
+                                    make_order_tr_close_to_dianbu $('#' + v.id)
                                 break
-                    a = []
-                    for i in [v.address.length..9] by -3
-                        a[a.length] = v.address.substring 0, i
-                    if a.length > 0
-                        local_search = new BMap.LocalSearch(map, options)
-                        local_search.search(a) 
-        points = for tr in $('.unassigned-order-tr')
-            seq: $(tr).find('a').data('seq')
+                    a =  for i in [v.address.length..9] by -3
+                        v.address.substring 0, i
+                    local_search = new BMap.LocalSearch(v.city, options)
+                    local_search.search(a)
+        points = for tr in $('.daily-order-tr').get().reverse() when $(tr).find('td:last-child').text()
+            seq: $(tr).data('seq')
             state: $(tr).data('state')
             address: $(tr).find('td:last-child').text()
             city: $(tr).data('city')
-            color: 'blue'
+            id: tr.id
         add_order_marker_points points
-        points = for tr in $('.assigned-order-tr')
-            seq: $(tr).find('a').data('seq')
-            state: $(tr).data('state')
-            address: $(tr).find('span:last-child').prop('title')
+        points = for tr in $('.order-tr') when $(tr).children('td.order-address').text() and $(tr).find('span.order-state').data('state') in [0, 2, 3, 4]
+            seq: $(tr).children('td:first-child').text()
+            state: $(tr).find('span.order-state').text()
+            address: $(tr).children('td.order-address').text()
             city: $(tr).data('city')
-            color: 'red'
+            id: tr.id
         add_order_marker_points points
