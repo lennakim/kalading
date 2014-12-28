@@ -57,7 +57,7 @@ class Ability
     
     if user.roles.include? ROLE_ID('dispatcher')
       can :read, :all
-      can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print], Order
+      can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print, :send_sms_notify], Order
     end
     
     if user.roles.include? ROLE_ID('finance')
