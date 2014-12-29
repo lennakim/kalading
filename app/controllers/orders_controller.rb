@@ -867,7 +867,7 @@ class OrdersController < ApplicationController
     require 'net/http'
     session[:return_to] ||= request.referer
     @order = Order.find(params[:id])
-    if @order.state == 0
+    if @order.state == 0 || @order.state == 1
       reason = I18n.t(:sms_reason_unverified)
     end
     if @order.state == 10
