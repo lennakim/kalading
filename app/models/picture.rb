@@ -2,13 +2,11 @@ class Picture
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
-  #include Paperclip::Validators
 
   embedded_in :order, :inverse_of => :pictures
   embedded_in :auto_submodel, :inverse_of => :pictures
   embedded_in :wheel, :inverse_of => :pictures
   embedded_in :tool_record, :inverse_of => :pictures
-  embedded_in :iamge_text, :inverse_of => :pictures
   embedded_in :maintain, :inverse_of => :outlook_pics
   embedded_in :maintain, :inverse_of => :oil_pics
   embedded_in :maintain, :inverse_of => :air_filter_pics
@@ -21,5 +19,5 @@ class Picture
   embedded_in :maintain, :inverse_of => :oil_and_battery_pics
 
   has_mongoid_attached_file :p, :path => ":class/:attachment/:id/:basename.:extension"
-  #validates_attachment_content_type :file_name, :content_type => %w(image/jpeg image/jpg image/png)
+  validates_attachment_content_type :p, :content_type => %w(image/jpeg image/jpg image/png)
 end
