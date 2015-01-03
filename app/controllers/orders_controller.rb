@@ -883,10 +883,10 @@ class OrdersController < ApplicationController
     end
     r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
       {
-        'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
+        'apikey' => 'c9bd661a0aa53ee2fa262f1ad6c027dc',
         'mobile' => @order.phone_num,
-        'tpl_id' => '644857',
-        'tpl_value' => "#servicetypes#=#{@order.service_types.first.name}&#reason#=#{reason}"
+        'tpl_id' => '647223',
+        'tpl_value' => "#reason#=#{reason}"
       }
     r
     @order.comments << Comment.new(text: I18n.t(:sms_comment, dispatcher: @order.dispatcher.name, time: Time.now.strftime('%m-%d %H:%M')))
@@ -970,9 +970,9 @@ private
       url = CGI.escape('http://kalading.com/desktop/login?phone=' + o.phone_num)
       r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
         {
-          'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
+          'apikey' => 'c9bd661a0aa53ee2fa262f1ad6c027dc',
           'mobile' => o.phone_num,
-          'tpl_id' => '640307',
+          'tpl_id' => '647221',
           'tpl_value' => "#autoname#=#{o.auto_submodel.full_name}&#servicetypes#=#{o.service_types.first.name}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
         }
       r
@@ -981,9 +981,9 @@ private
       require 'net/http'
       r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
         {
-          'apikey' => 'b898453f2ea218bbbe953ae0208d11dc',
+          'apikey' => 'c9bd661a0aa53ee2fa262f1ad6c027dc',
           'mobile' => o.phone_num,
-          'tpl_id' => '640313',
+          'tpl_id' => '647217',
           'tpl_value' => "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
         }
       r
