@@ -37,16 +37,7 @@
        <div class="control-group">
         <label for="select-belong" class="control-label"><%= t(:belong) %></label>
         <div class="controls" id="select-belong">
-          <select id="engineer-belong-select">
-            <option value="all"></option>
-            <% Storehouse.asc(:name).each do |s| %>
-              <% if @order.engineer.storehouse_id == s.id %>
-                <option value="<%= s.id %>" selected ><%= s.name %></option>
-              <% else %>
-                <option value="<%= s.id %>" ><%= s.name %></option>
-              <% end %>
-            <% end %>
-          </select>
+          <%= collection_select(@order.engineer, :storehouse_id, Storehouse.asc(:name), :id, :name, {:selected => @order.engineer.storehouse_id}, {:id => 'engineer-belong-select'} ) %>
         </div>
       </div>
       <% users = @order.engineer.storehouse_id.present?? Storehouse.find(@order.engineer.storehouse_id).users : User.all %>
@@ -181,12 +172,7 @@
     <div class="control-group">
       <label for="select-belong" class="control-label"><%= t(:belong) %></label>
       <div class="controls" id="select-belong">
-        <select id="engineer-belong-select">
-          <option value="" selected></option>
-          <% Storehouse.asc(:name).each do |s| %>
-            <option value="<%= s.id %>"><%= s.name %></option>
-          <% end %>
-        </select>
+        <%= collection_select(@order.engineer, :storehouse_id, Storehouse.asc(:name), :id, :name, {include_blank: true}, {:id => 'engineer-belong-select'} ) %>
       </div>
     </div>
     <%= f.association :engineer, label: t(:assigned_to_engineer), collection: User.all.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }, label_method: :name_and_order_num, include_blank: false %>

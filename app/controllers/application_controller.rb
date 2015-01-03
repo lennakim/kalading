@@ -87,4 +87,16 @@ class ApplicationController < ActionController::Base
     dMeters
   end
 
+  def send_sms(phone_num, tpl_id, params)
+    return if Rails.env.development?
+    require 'net/http'
+    r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
+      {
+        'apikey' => 'c9bd661a0aa53ee2fa262f1ad6c027dc',
+        'mobile' => phone_num,
+        'tpl_id' => tpl_id,
+        'tpl_value' => params
+      }
+    r
+  end
 end

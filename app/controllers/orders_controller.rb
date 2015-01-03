@@ -866,8 +866,6 @@ class OrdersController < ApplicationController
   end
   
   def send_sms_notify
-    require 'net/http'
-    return if Rails.env.development?
     session[:return_to] ||= request.referer
     @order = Order.find(params[:id])
     if @order.state == 0 || @order.state == 1
@@ -881,14 +879,7 @@ class OrdersController < ApplicationController
         reason == I18n.t(:sms_reason_part_error)
       end
     end
-    r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
-      {
-        'apikey' => 'c9bd661a0aa53ee2fa262f1ad6c027dc',
-        'mobile' => @order.phone_num,
-        'tpl_id' => '647223',
-        'tpl_value' => "#reason#=#{reason}"
-      }
-    r
+    send_sms @order.phone_num, '647223', "#reason#=#{reason}"
     @order.comments << Comment.new(text: I18n.t(:sms_comment, dispatcher: @order.dispatcher.name, time: Time.now.strftime('%m-%d %H:%M')))
     redirect_to session.delete(:return_to), notice: I18n.t(:send_sms_successful, seq: @order.seq)
   end
@@ -963,30 +954,13 @@ private
   end
 
   def _auto_send_sms_notify(o, state)
-    return if Rails.env.development?
     if state == 2
-      require 'net/http'
       servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}"
       url = CGI.escape('http://kalading.com/desktop/login?phone=' + o.phone_num)
-      r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
-        {
-          'apikey' => 'c9bd661a0aa53ee2fa262f1ad6c027dc',
-          'mobile' => o.phone_num,
-          'tpl_id' => '647221',
-          'tpl_value' => "#autoname#=#{o.auto_submodel.full_name}&#servicetypes#=#{o.service_types.first.name}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
-        }
-      r
+      send_sms o.phone_num, '647221', "#autoname#=#{o.auto_submodel.full_name}&#servicetypes#=#{o.service_types.first.name}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
     end
     if state == 3
-      require 'net/http'
-      r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
-        {
-          'apikey' => 'c9bd661a0aa53ee2fa262f1ad6c027dc',
-          'mobile' => o.phone_num,
-          'tpl_id' => '647217',
-          'tpl_value' => "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
-        }
-      r
+      send_sms o.phone_num, '647217', "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
     end
   end
 end
