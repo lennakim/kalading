@@ -39,7 +39,7 @@
         <div class="controls" id="select-belong">
           <select id="engineer-belong-select">
             <option value="all"></option>
-            <% City.find_by(name: I18n.t(:beijing)).storehouses.each do |s| %>
+            <% Storehouse.asc(:name).each do |s| %>
               <% if @order.engineer.storehouse_id == s.id %>
                 <option value="<%= s.id %>" selected ><%= s.name %></option>
               <% else %>
@@ -183,7 +183,7 @@
       <div class="controls" id="select-belong">
         <select id="engineer-belong-select">
           <option value="" selected></option>
-          <% City.find_by(name: I18n.t(:beijing)).storehouses.each do |s| %>
+          <% Storehouse.asc(:name).each do |s| %>
             <option value="<%= s.id %>"><%= s.name %></option>
           <% end %>
         </select>

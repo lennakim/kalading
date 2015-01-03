@@ -536,4 +536,26 @@ namespace :rename_asm do
   end
 
   task :stats_all => [:order_counter, :order_counter_by_car_num, :asm_stats, :order_count, :order_price_stats, :car_num_stats]
+  
+  task :cabin_filters => :environment do
+    I18n.locale = 'zh-CN'
+    cabin_filter_type = PartType.find_by name: I18n.t(:cabin_filter)
+    asms = AutoSubmodel.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:auto_model)
+    asms_groups = asms.group_by {|asm| [asm.auto_model, asm.engine_displacement]}
+    puts "#{asms_groups.size} models"
+    order_count = two_or_more_order_count = 0
+    two_or_more = asms_groups.sum do |k, v|
+      cfts = v.group_by {|asm| asm.parts.where(part_type: cabin_filter_type).asc(:number)[0].number}
+      if cfts.size > 1
+        puts k[0].auto_brand.name + ' ' + k[0].name + ' ' + k[1] + ': ' + cfts.size.to_s
+        two_or_more_order_count += v.sum {|asm| asm.orders.not_in(:state => [0,1,2,3,4,8,9]).count}
+        1
+      else
+        order_count += v.sum {|asm| asm.orders.not_in(:state => [0,1,2,3,4,8,9]).count}
+        0
+      end
+    end
+    puts "#{two_or_more} models has 2 or more cabin filters, has #{two_or_more_order_count} orders"
+    puts "#{asms_groups.size - two_or_more} models has 1 cabin filter, has #{order_count} orders"
+  end
 end

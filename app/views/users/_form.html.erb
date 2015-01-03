@@ -6,7 +6,7 @@
   <%= f.input :title, label: t('title') %>
   <%= f.input :phone_num, label: t('phone_num') %>
   <%= f.input :email, :required => true, :autofocus => true %>
-  <%= f.association :storehouse, label: t('belong'), collection: City.find_by(name: I18n.t(:beijing)).storehouses %>
+  <%= f.association :storehouse, label: t('belong'), collection: Storehouse.asc(:name) %>
   <%= f.input :remark, label: t('remark') %>
   <% if params[:action] == 'new' %>
     <%= f.input :password,  label: t(:password), :required => true %>
