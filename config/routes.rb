@@ -94,10 +94,7 @@ Kalading::Application.routes.draw do
   post 'storehouses/:id/part_transfer_to' => 'storehouses#part_transfer_to', :as => :storehouse_part_transfer_to
   get 'storehouse/:id/print_dispatch_card' => 'storehouses#print_dispatch_card', :as=> :print_dispatch_card
 
-  get 'auto_parts' => 'orders#query_parts', :as => :query_parts
-  get 'orders_history' => 'orders#history', :as => :order_history
   get 'latest_orders' => 'orders#latest_orders', :as => :latest_orders
-  post 'orders/:id/uploadpic' => 'orders#uploadpic', :as => :uploadpic_orders
   get 'orders/:id/duplicate' => 'orders#duplicate', :as => :duplicate_order
   match 'orders_calcprice' => 'orders#calcprice', via: [:put, :post], :as => :calcprice_order
   get 'auto_maintain_order/:asm_id' => 'orders#auto_maintain', :as => :auto_maintain_order
@@ -149,16 +146,6 @@ Kalading::Application.routes.draw do
   get 'parts_by_brand_and_type' => 'parts#parts_by_brand_and_type', :as => :parts_by_brand_and_type
 
   post 'partbatch_import' => 'storehouses#import', :as => :partbatch_import
-
-  # singular for weixin app
-  get 'm' => 'orders#order_begin', :as => :order_begin
-  get 'choose_service' => 'orders#choose_service', :as => :order_choose_service
-  get 'choose_auto_model' => 'orders#choose_auto_model', :as => :order_choose_auto_model
-  get 'choose_auto_submodel' => 'orders#choose_auto_submodel', :as => :order_choose_auto_submodel
-  get 'pay' => 'orders#pay', :as => :order_pay
-  get 'discount_apply' => 'orders#discount_apply', :as => :discount_apply
-  get 'order_preview' => 'orders#order_preview', :as => :order_preview
-  get 'order_finish' => 'orders#order_finish', :as => :order_finish
 
   get 'discount_query' => 'discounts#query', :as => :discount_query
 
