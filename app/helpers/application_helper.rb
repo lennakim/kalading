@@ -16,11 +16,4 @@ module ApplicationHelper
       end
     end
   end
-  
-  Array.instance_eval do
-    def each_with_prev
-      self.inject(nil){|prev, curr| yield prev, curr; curr}
-      self
-    end
-  end
 end

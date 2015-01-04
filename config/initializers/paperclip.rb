@@ -7,3 +7,10 @@ Paperclip::Attachment.default_options[:bucket] = 'kalading'
 Paperclip::Attachment.default_options[:use_timestamp] = false
 Paperclip::Attachment.default_options[:qiniu_host] =
   'http://kalading.qiniudn.com'
+
+module Enumerable
+  def each_with_prev
+    self.inject(nil){|prev, curr| yield prev, curr; curr}
+    self
+  end
+end
