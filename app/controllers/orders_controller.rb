@@ -710,7 +710,7 @@ class OrdersController < ApplicationController
   def daily_orders
     @d = Date.parse(params[:date]) if params[:date]
     @d ||= Date.tomorrow
-    @unassigned_orders = Order.where(state: 2,  :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime)
+    @unassigned_orders = Order.where(state: 2,  :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:address)
     @city_unassigned_orders = @unassigned_orders.group_by(&:city)
     City.each {|c| @city_unassigned_orders[c] ||= []}
     @engineer_order_hash = Order.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime).group_by(&:engineer)

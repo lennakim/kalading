@@ -1,5 +1,10 @@
-<% orders.each do |o| %>
-  <tr class="daily-order-tr tooltip-parent" id="<%= o.id %>" data-seq="<%= o.seq %>" data-city="<%= o.city.name %>" data-state="<%= t(Order::STATE_STRINGS[o.state]) %>">
+<% orders.each_with_prev do |prev, o| %>
+  <% if prev && prev.address == o.address %>
+  <% a = ' alert' %>
+  <% else %>
+  <% a = '' %>
+  <% end %>
+  <tr class="daily-order-tr tooltip-parent<%= a %>" id="<%= o.id %>" data-seq="<%= o.seq %>" data-city="<%= o.city.name %>" data-state="<%= t(Order::STATE_STRINGS[o.state]) %>">
     <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
       <i class="icon-question-sign" id="mqm-<%= o.seq %>"></i>
       <i class="icon-map-marker" id="mm-<%= o.seq %>" style="display: none;"></i>
