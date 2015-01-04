@@ -74,6 +74,11 @@
       <%= render 'auto_submodels/auto_submodels' %>
     <% end %>
     </div>
+    <div id="models_and_parts_info">
+    <% if @order.auto_submodel %>
+      <%= render 'auto_submodels/models_has_same_displacement', asm: @order.auto_submodel %>
+    <% end %>
+    </div>
     <h5 id="service_types"><%= t(:service_types) %></h5>
     <div class="control-group">
       <label for="select-service-types" class="control-label"><%= t(:service_item) %></label>

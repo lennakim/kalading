@@ -236,5 +236,16 @@ class AutoSubmodel
       end
     end
   end
+
+  def models_and_parts_with_same_displacement(part_types)
+    asms = self.auto_model.auto_submodels.where(data_source: 2, :engine_displacement => self.engine_displacement)
+    return [asms.count, [1] * part_types.size ] if asms.count == 1
+    [
+      asms.count,
+      (part_types.map do |t|
+        asms.group_by {|asm| asm.parts.where(part_type: PartType.find_by(name: I18n.t(t))).asc(:number)[0]}.count
+      end)
+    ]
+  end
   
 end

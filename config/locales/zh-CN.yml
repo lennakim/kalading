@@ -1015,3 +1015,5 @@ zh-CN:
   offline: '离线'
   on_vacation: '休假'
   dimission: '离职'
+  models_with_same_displacement : '姐，%{name}有%{n}个年款'
+  parts_with_same_displacement: '%{pt}有%{n}种款式'

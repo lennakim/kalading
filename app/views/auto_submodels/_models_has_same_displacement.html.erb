@@ -1,0 +1,12 @@
+<% part_types = [:oil_filter, :air_filter, :cabin_filter] %>
+<% a = asm.models_and_parts_with_same_displacement [:cabin_filter, :oil_filter, :air_filter] %>
+<p><strong><%= t :models_with_same_displacement, name: asm.auto_model.full_name + ' ' + asm.engine_displacement,  n: a[0] %></strong></p>
+<% if a[0] > 1 %>
+<ul>
+  <% part_types.each_with_index do |pt, i| %>
+  <li>
+    <%= t :parts_with_same_displacement, pt: t(pt), n: a[1][i] %>
+  </li>
+  <% end %>
+</ul>
+<% end %>
