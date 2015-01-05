@@ -109,6 +109,8 @@ $ ->
                 order_tr.insertBefore(tr)
                 b = engineer_tr.find('.badge')
                 b.text(parseInt(b.text()) + 1).fadeOut().fadeIn() if b?
+                order_tr.data('label').setStyle({color: 'grey', opacity: 0.5, borderStyle: 'dotted' })
+                order_tr.data('label').setZIndex 9
             error: ->
                 alert 'Network error.'
     
@@ -150,6 +152,8 @@ $ ->
                     b.text(parseInt(b.text()) - 1).fadeOut().fadeIn() if b?
                 if !make_order_tr_close_to_dianbu $(order_tr)
                     $(order_tr).insertAfter($('tr.city-tr[data-name=\'' + $(order_tr).data('city') + '\']')[0])
+                $(order_tr).data('label').setStyle({color: 'red', opacity: 1.0, borderStyle: 'solid' })
+                $(order_tr).data('label').setZIndex 10
             error: ->
                 alert 'Network error.'
 
@@ -277,8 +281,14 @@ $ ->
                                   document.getElementById(v.id)?.scrollIntoView()
                                 map.addOverlay(marker)
                                 $('#' + v.id).data 'marker', marker
+                                $('#' + v.id).data 'label', label
                                 if $('#' + v.id).closest('table').hasClass('unassigned-orders')
                                     make_order_tr_close_to_dianbu $('#' + v.id)
+                                else
+                                    # 已分配的置灰
+                                    if $('#' + v.id).hasClass('daily-order-tr')
+                                        label.setStyle({color: 'grey', opacity: 0.5, borderStyle: 'dotted' })
+                                        label.setZIndex 9
                                 break
                     a =  for i in [v.address.length..9] by -3
                         v.address.substring 0, i
