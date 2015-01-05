@@ -70,6 +70,7 @@
       <th><%= t(:title) %></th>
       <th><%= t(:role) %></th>
       <th><%= t(:belong) %></th>
+      <th><%= t(:state) %></th>
       <th><%= t 'remark' %></th>
       <th><%= t 'actions' %></th>
     </tr>
@@ -89,6 +90,7 @@
           </ul>
         </td>
         <td><%= user.storehouse.name if user.storehouse %></td>
+        <td><%= t(User::STATE_STRINGS[user.state.to_i]) %></td>
         <td><%= user.remark %></td>
         <td>
           <%= link_to t('edit'),

@@ -1011,3 +1011,7 @@ zh-CN:
   city_dianbu_seq: '城市/点部/订单号'
   tomorrow_orders_assign: '明日订单分配'
   knowledge_base_imgs: '知识库图片'
+  online: '在线'
+  offline: '离线'
+  on_vacation: '休假'
+  dimission: '离职'

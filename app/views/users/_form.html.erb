@@ -1,5 +1,6 @@
 <%= simple_form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :roles, label: t(:roles), collection: User::ROLES, label_method: lambda { |s| t(User::ROLE_STRINGS[s]) }, prompt: t('choose_role'), as: :check_boxes %>
+  <%= f.input :state, label: t('state'), collection: User::STATES, label_method: lambda { |s| t(User::STATE_STRINGS[s])}, :include_blank => false %>
   <%= f.association :city, label: t('choose_city'), collection: City.asc(:name), :include_blank => false %>
   <%= f.input :name, label: t('user_name') %>
   <%= f.input :name_pinyin, label: t('pinyin') %>
@@ -7,7 +8,7 @@
   <%= f.input :phone_num, label: t('phone_num') %>
   <%= f.input :email, :required => true, :autofocus => true %>
   <%= f.association :storehouse, label: t('belong'), collection: Storehouse.asc(:name) %>
-  <%= f.input :remark, label: t('remark') %>
+  <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
   <% if params[:action] == 'new' %>
     <%= f.input :password,  label: t(:password), :required => true %>
     <%= f.input :password_confirmation,  label: t(:password_confirmation), :required => true %>

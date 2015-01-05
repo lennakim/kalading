@@ -201,6 +201,9 @@ class OrdersController < ApplicationController
   def new
     @order = Order.new
     @order.serve_datetime = DateTime.now.since(1.days)
+    if current_user && current_user.roles.include?('6')
+      @order.dispatcher = current_user
+    end
     if params[:customerNumber].present?
       @order.incoming_call_num = params[:customerNumber]
       @order.phone_num = params[:customerNumber]
@@ -624,7 +627,12 @@ class OrdersController < ApplicationController
     return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
     @order = Order.new
     @order.service_types << ServiceType.find('527781867ef560ccbc000007')
-    @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).sample
+    if (8..19).include? DateTime.now.hour
+      dispatcher_states = [0]
+    else
+      dispatcher_states = [0, 1]
+    end
+    @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).any_in(state: dispatcher_states).sample
     @order.city = City.find_by name: I18n.t(:beijing)
     check_discount
     @order.update_attributes params[:info]
@@ -779,7 +787,13 @@ private
     end
 
     check_discount
-    @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).sample
+    #8:00-20:00 online dispatchers are available, 20:00-tomorrow 8:00 online and offline dispatchers are available
+    if (8..19).include? DateTime.now.hour
+      dispatcher_states = [0]
+    else
+      dispatcher_states = [0, 1]
+    end
+    @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).any_in(state: dispatcher_states).sample
   end
 
   def check_discount

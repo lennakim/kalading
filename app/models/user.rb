@@ -49,11 +49,12 @@ class User
   field :location, type: Array, :default => [0.0, 0.0]
   field :battery_level,    :type => Float, :default => 100.0
   field :update_datetime, :type => DateTime
+  field :state, :type => Integer, :default => 0
   
   index({"location" => "2d"})
   
   attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title, :storehouse_id,
-    :location, :battery_level, :city_id
+    :location, :battery_level, :city_id, :state
 
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
   has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2
@@ -66,6 +67,9 @@ class User
 
   ROLES = [0, 1, 2, 3, 4, 5, 6, 7, 8]
   ROLE_STRINGS = %w[customer role_admin manager storehouse_admin data_admin engineer dispatcher video_inspector finance]
+  
+  STATES = [0, 1, 2, 3]
+  STATE_STRINGS = %w[online offline on_vacation dimission]
   
   def role_str
     self.roles.map {|s| I18n.t(User::ROLE_STRINGS[s.to_i])}.join(',')
