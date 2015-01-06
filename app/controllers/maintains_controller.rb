@@ -172,6 +172,9 @@ class MaintainsController < ApplicationController
       if params[:login_phone_num].blank? && !params[:client_id].blank?
 	orders = Order.where(client_id: params[:client_id])
       end
+      if !params[:car_id].blank?
+	orders = orders.where(auto_submodel: AutoSubmodel.find(params[:car_id]))
+      end
       orders.where(:state.gte => 5,:state.lte => 7).desc(:seq).each do |o|
 	@maintains += o.maintains.desc(:created_at)
       end
