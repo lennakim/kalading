@@ -44,6 +44,7 @@ class AutoSubmodel
 
   belongs_to :auto_model
   has_and_belongs_to_many :parts, after_add: :check_sanlv_add,  before_remove: :check_sanlv_removal
+  has_and_belongs_to_many :cities
   has_many :autos
   has_many :orders
   embeds_many :pictures, :cascade_callbacks => true
@@ -53,7 +54,7 @@ class AutoSubmodel
   accepts_nested_attributes_for :pictures, :allow_destroy => true
   accepts_nested_attributes_for :part_rules, :allow_destroy => true
   
-  attr_accessible :name, :auto_model, :auto_model_id, :part_ids, :auto_ids, :motoroil_cap, :engine_displacement,
+  attr_accessible :name, :auto_model, :auto_model_id, :part_ids, :city_ids, :auto_ids, :motoroil_cap, :engine_displacement,
     :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes,
     :year_range, :name_mann, :full_name_pinyin, :full_name, :data_source, :oil_filter_oe, :fuel_filter_oe, :air_filter_oe,
     :year_mann, :part_rules_attributes, :motoroil_group_id

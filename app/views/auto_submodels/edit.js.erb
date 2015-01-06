@@ -1,0 +1,6 @@
+$(".td-auto-submodel-form").hide();
+$("#td-<%= @auto_submodel.id.to_s %>").html("<%= escape_javascript(render("form")) %>").fadeIn();
+$(".cancel-edit-btn").click(function() {
+    $(".td-auto-submodel-form").fadeOut();
+    return false;
+});

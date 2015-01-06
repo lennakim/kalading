@@ -48,6 +48,7 @@
         <td><%= auto_submodel.remark %></td>
         <td>
           <%= link_to t('edit'), edit_auto_submodel_path(auto_submodel), :class => 'btn btn-mini' if can? :update, auto_submodel %>
+          <%= link_to t('cities'), edit_auto_submodel_path(auto_submodel, city: 1), :class => 'btn btn-mini', :remote => true if can? :update, auto_submodel %>
           <% if auto_submodel.data_source == 3 %>
             <%= link_to t(:verify_ok), auto_submodel_path(auto_submodel, auto_submodel: {data_source: 2} ), :method => :put, :class => 'btn btn-mini btn-info' if can? :update, auto_submodel %>
           <% elsif auto_submodel.data_source == 4 %>
@@ -56,6 +57,9 @@
             <%= link_to t(:hide), auto_submodel_path(auto_submodel, auto_submodel: {data_source: 4} ), :method => :put, :class => 'btn btn-mini btn-warning' if can? :update, auto_submodel %>
           <% end %>
         </td>
+      </tr>
+      <tr>
+        <td class="td-auto-submodel-form" colspan="14" style="display: none;" id="td-<%= auto_submodel.id.to_s %>"></td>
       </tr>
     <% end %>
   </tbody>

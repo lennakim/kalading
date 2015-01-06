@@ -1,64 +1,73 @@
 <%= simple_nested_form_for @auto_submodel, :html => { :class => 'form-horizontal' } do |f| %>
-  <%= f.association :auto_model, collection: AutoModel.where(data_source: 2).asc(:auto_brand), prompt: t('choose_model'), label: t('owner_auto_model'), label_method: :full_name %>
-  <%= f.input :name, label: t('auto_submodel_name'), placeholder: t(:placeholder_submodel_name) %>
-  <% if ["edit", "update"].include? params[:action] %>
-    <%= f.input :full_name, label: t('full_name') %>
-    <%= f.input :full_name_pinyin, label: t('pinyin') %>
-  <% else %>
-    
-  <% end %>
-  <%= f.input :service_level, label: t('service_level'), collection: AutoSubmodel::SERV_LEVEL, label_method: lambda { |s| t(AutoSubmodel::SERV_LEVEL_STRINGS[s]) }, value_method: :to_i, prompt: t('choose_serv_level') %>
-  <%= f.input :motoroil_cap, label: t('motoroil_capacity') %>
-  <%= f.association :motoroil_group, collection: MotoroilGroup.asc(:name), prompt: t('choose_motoroil_group'), label: t('choose_motoroil_group'), label_method: :name %>
-  <%= f.input :engine_displacement, label: t('engine_displacement'), placeholder: t('placeholder_engine_displacement') %>
-  <%= f.input :engine_model, label: t('engine_model') %>
-  <%= f.input :year_range, label: t('year_range') %>
-  <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
-
-  <table id="part_rules" class="table table-hover table-small">
-    <tbody>
-      <%= f.fields_for :part_rules, :wrapper => false do |sf| %>
-        <tr class="fields">
-          <td><%= sf.input :number, label: t(:choose_part_number) %></td>
-          <td><%= sf.input :text, label: t(:rule) %></td>
-          <td>
-            <%= sf.link_to_remove t('remove_part_rule'), class: 'btn btn-small btn-warning' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <p><%= f.link_to_add t('add_part_rule'), :part_rules, :data => { :target => "#part_rules > tbody" }, class: 'btn btn-small btn-info' %></p>
-  <h5><%= t :knowledge_base_imgs %></h5>
-  <table id="pictures" class="table table-hover table-small">
-    <tbody>
-      <%= f.fields_for :pictures, :wrapper => false do |sf| %>
-        <tr class="fields">
-          <td>
-            <%= sf.input :p, label: t(:picture) %>
-          </td>
-          <td><%= image_tag sf.object.p.url(:small) %></td>
-          <td>
-            <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
-
-  <div class="control-group">
-    <label for="search-car-model" class="control-label"><%= t(:matched_auto_submodel) %></label>
-    <div class="controls" id="search-car-model">
-      <input class="required" type="text" autocomplete="off" id="car-model-search" name="matched_auto_submodel" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" />
-      <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+  <% if params[:city]%>
+    <%= f.association :cities, label: t('cities'), collection: City.all, label_method: :name, as: :check_boxes, item_wrapper_class: 'inline' %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:ok), :class => 'btn-primary'%>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
-  </div>
-  <div id="auto_submodels"></div>
-
-  <div class="form-actions">
-    <%= f.button :submit, t('save'), :class => 'btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                auto_submodels_path, :class => 'btn' %>
-  </div>
+  <% else %>
+    <%= f.association :auto_model, collection: AutoModel.where(data_source: 2).asc(:auto_brand), prompt: t('choose_model'), label: t('owner_auto_model'), label_method: :full_name %>
+    <%= f.input :name, label: t('auto_submodel_name'), placeholder: t(:placeholder_submodel_name) %>
+    <% if ["edit", "update"].include? params[:action] %>
+      <%= f.input :full_name, label: t('full_name') %>
+      <%= f.input :full_name_pinyin, label: t('pinyin') %>
+    <% else %>
+      
+    <% end %>
+    <%= f.input :service_level, label: t('service_level'), collection: AutoSubmodel::SERV_LEVEL, label_method: lambda { |s| t(AutoSubmodel::SERV_LEVEL_STRINGS[s]) }, value_method: :to_i, prompt: t('choose_serv_level') %>
+    <%= f.input :motoroil_cap, label: t('motoroil_capacity') %>
+    <%= f.association :motoroil_group, collection: MotoroilGroup.asc(:name), prompt: t('choose_motoroil_group'), label: t('choose_motoroil_group'), label_method: :name %>
+    <%= f.input :engine_displacement, label: t('engine_displacement'), placeholder: t('placeholder_engine_displacement') %>
+    <%= f.input :engine_model, label: t('engine_model') %>
+    <%= f.input :year_range, label: t('year_range') %>
+    <%= f.association :cities, label: t('cities'), collection: City.all, label_method: :name, as: :check_boxes, item_wrapper_class: 'inline' %>
+    <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
+  
+    <table id="part_rules" class="table table-hover table-small">
+      <tbody>
+        <%= f.fields_for :part_rules, :wrapper => false do |sf| %>
+          <tr class="fields">
+            <td><%= sf.input :number, label: t(:choose_part_number) %></td>
+            <td><%= sf.input :text, label: t(:rule) %></td>
+            <td>
+              <%= sf.link_to_remove t('remove_part_rule'), class: 'btn btn-small btn-warning' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p><%= f.link_to_add t('add_part_rule'), :part_rules, :data => { :target => "#part_rules > tbody" }, class: 'btn btn-small btn-info' %></p>
+    <h5><%= t :knowledge_base_imgs %></h5>
+    <table id="pictures" class="table table-hover table-small">
+      <tbody>
+        <%= f.fields_for :pictures, :wrapper => false do |sf| %>
+          <tr class="fields">
+            <td>
+              <%= sf.input :p, label: t(:picture) %>
+            </td>
+            <td><%= image_tag sf.object.p.url(:small) %></td>
+            <td>
+              <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
+  
+    <div class="control-group">
+      <label for="search-car-model" class="control-label"><%= t(:matched_auto_submodel) %></label>
+      <div class="controls" id="search-car-model">
+        <input class="required" type="text" autocomplete="off" id="car-model-search" name="matched_auto_submodel" data-link="<%= auto_submodels_path %>" placeholder="<%= t(:auto_model_search_hint) %>" value="" />
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+    </div>
+    <div id="auto_submodels"></div>
+  
+    <div class="form-actions">
+      <%= f.button :submit, t('save'), :class => 'btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  auto_submodels_path, :class => 'btn' %>
+    </div>
+  <% end %>
 <% end %>

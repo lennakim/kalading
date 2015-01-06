@@ -1,5 +1,5 @@
 <%= simple_nested_form_for @city, :html => { :class => 'form-horizontal' } do |f| %>
-  <%= f.input :name, label: t('city_name'), readonly: true %>
+  <%= f.input :name, label: t('city_name') %>
   <%= f.input :area_code, label: t('area_code') %>
   <%= f.input :order_capacity, label: t(:order_capacity), :as => :numeric, input_html: {min: "1", max: "9999", required: '', "data-msg-required" => t(:order_capacity_required) }, placeholder: t(:order_capacity_placeholder) %>
   <table>

@@ -13,6 +13,7 @@ class City
   has_many :orders
   has_many :storehouses
   has_many :users
+  has_and_belongs_to_many :auto_submodels
   
   def as_json(opts = nil)
     super except: [:order_capacity]
