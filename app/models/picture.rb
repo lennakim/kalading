@@ -18,6 +18,7 @@ class Picture
   embedded_in :maintain, :inverse_of => :tire_spare_pics
   embedded_in :maintain, :inverse_of => :oil_and_battery_pics
 
+  field :desc, type: String, default: ''
   has_mongoid_attached_file :p, :path => ":class/:attachment/:id/:basename.:extension"
   validates_attachment_content_type :p, :content_type => %w(image/jpeg image/jpg image/png)
 end

@@ -281,7 +281,7 @@ a {
 <div class="results">
 <div id="div_group_1" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_1" class="passed">用户登录，返回authentication_token用于其它API调用</dt>
+  <dt id="example_group_1" class="passed">订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 asm_pics为车型图文列表，url为图片url，bytes为图片大小字节数，desc为图片的描述</dt>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 intranet.kalading.com/users/sign_in
@@ -296,217 +296,99 @@ intranet.kalading.com/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "ynTYzByQ4D-tmpdU6z1V",
-  "name": "app"
-}
-</pre></p>
-<h5>METHOD:&nbsp&nbspPOST</h5>
-<h4><strong>URL:&nbsp&nbsp
-intranet.kalading.com/users/sign_in
-<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
-<h5>输入参数（HTTP request body）:</h5><p><pre>
-{
-  "phone_num": "38910721074",
-  "password": "12345678",
-  "format": "json"
-}
-</pre></p>
-<h5>返回值（HTTP response body）:</h5><p><pre>
-{
-  "result": "ok",
-  "authentication_token": "ynTYzByQ4D-tmpdU6z1V",
-  "name": "app"
-}
-</pre></p>
-    <script type="text/javascript">moveProgressBar('33.3');</script>
-    <dd class="example passed"><span class="passed_spec_name">登录成功，返回authentication_token</span><span class='duration'>0.55288s</span></dd>
-  </dl>
-</div>
-<div id="div_group_2" class="example_group passed">
-  <dl style="margin-left: 0px;">
-  <dt id="example_group_2" class="passed">查询某个车型的保养默认套餐和适用配件信息。auth_token为登录返回的token。applicable_parts为所有适用配件的信息，包括品牌，ID，价格。</dt>
-<h5>METHOD:&nbsp&nbspPOST</h5>
-<h4><strong>URL:&nbsp&nbsp
-intranet.kalading.com/users/sign_in
-<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
-<h5>输入参数（HTTP request body）:</h5><p><pre>
-{
-  "phone_num": "38910721074",
-  "password": "12345678",
-  "format": "json"
-}
-</pre></p>
-<h5>返回值（HTTP response body）:</h5><p><pre>
-{
-  "result": "ok",
-  "authentication_token": "BKFXjDw_PXSZw3EnKxey",
+  "authentication_token": "3KDuLfkscmBSxsuZf_jh",
   "name": "app"
 }
 </pre></p>
 <h5>METHOD:&nbsp&nbspGET</h5>
 <h4><strong>URL:&nbsp&nbsp
-intranet.kalading.com/auto_maintain_order/531f1ed0098e71b3f80001fb
+intranet.kalading.com/orders
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
-{
-  "price": 550.0,
-  "price_without_discount": 550.0,
-  "service_price": 150.0,
-  "pic_url": "http://intranet.kalading.com/assets/car_blue.png",
-  "name": "丰田(一汽) 兰德酷路泽 上门保养",
-  "parts": [
-    {
-      "机油": [
-        {
-          "brand": "嘉实多",
-          "number": "金嘉护 SN 10W-40",
-          "price": 273.0,
-          "quantity": 342
-        }
-      ]
-    },
-    {
-      "机滤": [
-        {
-          "brand": "马勒 ",
-          "number": "5298b983098e716daf000d5d",
-          "price": 28.0,
-          "quantity": 9
-        }
-      ]
-    },
-    {
-      "空调滤清器": [
-        {
-          "brand": "曼牌 Mann",
-          "number": "5246c8f1098e71092800024a",
-          "spec": "",
-          "price": 99.0,
-          "quantity": 0
-        }
-      ]
-    }
-  ],
-  "applicable_parts": [
-    {
-      "空调滤清器": [
-        {
-          "brand": "曼牌 Mann",
-          "number": "5246c8f1098e71092800024a",
-          "spec": "",
-          "price": 99.0,
-          "quantity": 0
-        },
-        {
-          "brand": "曼牌 Mann",
-          "number": "528af3e8098e71805900228a",
-          "spec": "双效活性炭",
-          "price": 120.0,
-          "quantity": 9
-        },
-        {
-          "brand": "汉格斯特 Hengst",
-          "number": "5298b96a098e716daf00073a",
-          "spec": "",
-          "price": 0.0,
-          "quantity": 0
-        },
-        {
-          "brand": "汉格斯特 Hengst",
-          "number": "5280cb96098e71d85e000354",
-          "spec": "",
-          "price": 74.0,
-          "quantity": 5
-        },
-        {
-          "brand": "卡拉丁",
-          "number": "539d513b9a94e4de840005a3",
-          "spec": "PM2.5空调滤清器",
-          "price": 79.0,
-          "quantity": 725
-        },
-        {
-          "brand": "马勒 ",
-          "number": "5298b96f098e716daf000889",
-          "spec": "",
-          "price": 49.0,
-          "quantity": 12
-        },
-        {
-          "brand": "马勒 ",
-          "number": "5298b997098e716daf001263",
-          "spec": "双效活性炭",
-          "price": 78.0,
-          "quantity": 0
-        }
-      ]
-    },
-    {
-      "机滤": [
-        {
-          "brand": "马勒 ",
-          "number": "5298b983098e716daf000d5d",
-          "price": 28.0,
-          "quantity": 9
-        }
-      ]
-    },
-    {
-      "机油": [
-        {
-          "brand": "嘉实多",
-          "number": "金嘉护 SN 10W-40",
-          "price": 273.0,
-          "quantity": 342
-        },
-        {
-          "brand": "嘉实多",
-          "number": "金嘉护 SN 5W-30 4L",
-          "price": 1043.0,
-          "quantity": 0
-        },
-        {
-          "brand": "壳牌",
-          "number": "黄喜力HX5 10W-40",
-          "price": 278.0,
-          "quantity": 84
-        },
-        {
-          "brand": "嘉实多",
-          "number": "磁护 SN 5W-40",
-          "price": 473.0,
-          "quantity": 299
-        },
-        {
-          "brand": "美孚",
-          "number": "美孚1号 0W-40",
-          "price": 560.0,
-          "quantity": 367
-        },
-        {
-          "brand": "嘉实多",
-          "number": "极护 SN 0W-40",
-          "price": 623.0,
-          "quantity": 106
-        },
-        {
-          "brand": "壳牌",
-          "number": "灰喜力ULTRA 5W-40",
-          "price": 716.0,
-          "quantity": 51
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "54ae4f49b9972d6f7e000005",
+    "seq": 19658,
+    "name": "Name of client",
+    "address": "Some address",
+    "phone_num": "13888888888",
+    "auto_km": "100",
+    "vin": "VIN of auto",
+    "car_num": "京N000M3",
+    "client_comment": "请按时到场",
+    "state": "已预约",
+    "serve_datetime": "2014-05-16 15:44",
+    "auto_model": "奔驰(进口) C级系列 C 200 Kompressor (204) 1.8T 2007.03-2009.12",
+    "service_types": [
+      {
+        "name": "换机油机滤"
+      }
+    ],
+    "parts": [
+
+    ],
+    "price": 150.0,
+    "balance_pay": 0.0,
+    "pay_type": "刷卡",
+    "cancel_reason": "",
+    "part_deliver_state": 0,
+    "reciept_need": true,
+    "reciept_type": "个人",
+    "reciept_title": "卡拉丁汽车技术",
+    "reciept_address": "",
+    "evaluation": 0,
+    "asm_pics": [
+      {
+        "url": "http://kalading.qiniudn.com/pictures/ps/54ae42d1b9972d5485000001/SaturnRings.png",
+        "bytes": 6242,
+        "desc": "机滤照片"
+      },
+      {
+        "url": "http://kalading.qiniudn.com/pictures/ps/54ae4b09b9972d5485000002/Mario.png",
+        "bytes": 58033,
+        "desc": "空滤照片"
+      }
+    ]
+  },
+  {
+    "id": "54ae4f49b9972d6f7e000004",
+    "seq": 19657,
+    "name": "Name of client",
+    "address": "Some address",
+    "phone_num": "13666666666",
+    "auto_km": "2000",
+    "vin": "VIN of auto",
+    "car_num": "京MM0588",
+    "client_comment": "请按时到场",
+    "state": "已回访",
+    "serve_datetime": "2014-04-13 19:44",
+    "auto_model": "克莱斯勒(进口) Voyager 大捷龙 3.6L 2012.010-2015",
+    "service_types": [
+      {
+        "name": "换机油机滤"
+      }
+    ],
+    "parts": [
+
+    ],
+    "price": 150.0,
+    "balance_pay": 0.0,
+    "pay_type": "刷卡",
+    "cancel_reason": "",
+    "part_deliver_state": 0,
+    "reciept_need": true,
+    "reciept_type": "个人",
+    "reciept_title": "卡拉丁汽车技术",
+    "reciept_address": "",
+    "evaluation": 0,
+    "asm_pics": [
+
+    ]
+  }
+]
 </pre></p>
-    <script type="text/javascript">moveProgressBar('66.6');</script>
-    <dd class="example passed"><span class="passed_spec_name">查询车型531f1ed0098e71b3f80001fb的保养套餐</span><span class='duration'>0.73142s</span></dd>
-  </dl>
-</div>
-<div id="div_group_3" class="example_group passed">
-  <dl style="margin-left: 0px;">
-  <dt id="example_group_3" class="passed">新建百车宝保养订单，需指定车型ID。parts为用户选择的配件,配件的brand和number从查询套餐的接口获得。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。</dt>
+    <script type="text/javascript">moveProgressBar('20.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第1页订单，每页2个</span><span class='duration'>0.84719s</span></dd>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 intranet.kalading.com/users/sign_in
@@ -521,52 +403,142 @@ intranet.kalading.com/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "unLjhsNwr6zkN3XVAqP4",
+  "authentication_token": "Rr96dhGT3A_srfMxCoup",
   "name": "app"
 }
 </pre></p>
+<h5>METHOD:&nbsp&nbspGET</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/orders
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+[
+
+]
+</pre></p>
+    <script type="text/javascript">moveProgressBar('40.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第3页订单，到达最后一页</span><span class='duration'>0.52222s</span></dd>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_2" class="passed">设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，5: 服务完成，8：服务取消</dt>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
-intranet.kalading.com/auto_maintain_pack/531f1ed0098e71b3f80001fb
+intranet.kalading.com/users/sign_in
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
-  "parts": [
-    {
-      "brand": "汉格斯特 Hengst",
-      "number": "5280cb8e098e71d85e0000d0"
-    },
-    {
-      "brand": "曼牌 Mann",
-      "number": "5246c7e5098e7109280001cd"
-    }
-  ],
-  "info": {
-    "address": "客户地址信息",
-    "name": "客户姓名",
-    "phone_num": "13888888888",
-    "car_location": "京",
-    "car_num": "N333M3",
-    "serve_datetime": "2014-06-09 15:44",
-    "pay_type": 1,
-    "reciept_type": 1,
-    "reciept_title": "发票抬头",
-    "client_comment": "客户的特殊要求"
+  "phone_num": "38910721074",
+  "password": "12345678",
+  "format": "json"
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok",
+  "authentication_token": "RdV5DbodnXRQm7cFUcUt",
+  "name": "app"
+}
+</pre></p>
+<h5>METHOD:&nbsp&nbspPUT</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/orders/54ae4f4ab9972d6f7e00000f
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "order": {
+    "state": 8,
+    "cancel_reason": "客户联系不上"
   }
 }
 </pre></p>
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
-  "result": "succeeded",
-  "seq": 14792
+  "result": "ok"
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('60.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">设置订单状态为服务取消，并说明原因为：客户联系不上</span><span class='duration'>0.32933s</span></dd>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/users/sign_in
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "phone_num": "38910721074",
+  "password": "12345678",
+  "format": "json"
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok",
+  "authentication_token": "eFF-Yw1_WgW_J5TtBavB",
+  "name": "app"
+}
+</pre></p>
+<h5>METHOD:&nbsp&nbspPUT</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/orders/54ae4f4ab9972d6f7e000014
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "order": {
+    "state": 4,
+    "serve_datetime": "2014-05-08 14:00"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok"
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('80.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">设置订单状态为已预约，并修改服务时间</span><span class='duration'>0.25854s</span></dd>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/users/sign_in
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "phone_num": "38910721074",
+  "password": "12345678",
+  "format": "json"
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok",
+  "authentication_token": "54zFVx6LgDkFNPM7seyx",
+  "name": "app"
+}
+</pre></p>
+<h5>METHOD:&nbsp&nbspPUT</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/orders/54ae4f4bb9972d6f7e000019
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "order": {
+    "state": 5,
+    "serve_datetime": "2014-05-08 14:00",
+    "serve_end_datetime": "2014-05-08 16:00"
+  }
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok"
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">新建保养订单成功</span><span class='duration'>0.39052s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">完成订单</span><span class='duration'>0.24035s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>1.67700 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "3 examples, 0 failures";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>2.27333 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "5 examples, 0 failures";</script>
 </div>
 </div>
 </body>

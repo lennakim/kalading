@@ -3,14 +3,11 @@ require 'rails_helper'
 
 # :need_user表示测试之前执行user_context.rb创建用户
 # :need_maintain_order表示测试之前执行order_context.rb创建订单
-describe '订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 id用于订单的修改', :need_maintain_order => true, :api_doc => :api_doc, :type => :request do
+describe '订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 asm_pics为车型图文列表，url为图片url，bytes为图片大小字节数，desc为图片的描述', :type => :request do
+  include_context "order"
+  include_context "api doc"
+  
   it "列举第1页订单，每页2个" do
-    #response_json = get_json "http://localhost:3000/orders?auth_token=#{@token}&page=1&per=2"
-    ## 确认调用成功
-    #expect(response_json.code).to be(200)
-    #orders = JSON.parse(response_json)
-    ## 确认返回值正确
-    #expect(orders.size).to be > 0
     get "/orders", {:page => 1, :per => 2}
     expect(response).to have_http_status(200)
     orders = JSON.parse(response.body)

@@ -1,5 +1,5 @@
 #encoding: UTF-8
-shared_context "create better api doc", :api_doc => :api_doc do
+shared_context "api doc", :api_doc => :api_doc do
   def puts_req(s)
     puts '<h5>输入参数（HTTP request body）:</h5><p><pre>'
     puts s

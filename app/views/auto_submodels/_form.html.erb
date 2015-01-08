@@ -45,7 +45,8 @@
             <td>
               <%= sf.input :p, label: t(:picture) %>
             </td>
-            <td><%= image_tag sf.object.p.url(:small) %></td>
+            <td><%= sf.input :desc, label: t(:comment) %></td>
+            <td><%= image_tag sf.object.p.url if sf.object.p.url %></td>
             <td>
               <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
             </td>

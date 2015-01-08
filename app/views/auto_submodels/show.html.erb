@@ -11,11 +11,13 @@
 </dl>
   <%= render 'parts', parts: @auto_submodel.parts_by_type_ignore_quantity %>
 
-  <table class="table">
+  <h5><%= t :knowledge_base_imgs %></h5>
+  <table id="pictures" class="table table-hover table-small">
   <% @auto_submodel.pictures.each do |p| %>
     <tr>
+      <td><%= p.desc %></td>
       <td><%= image_tag( p.p.url) %></td>
-      <td><%= p.p_file_name %></td>
+      <td><%= p.p_file_size %></td>
       <td><%= link_to t('destroy'),
               auto_submodel_picture_path(@auto_submodel, p),
               :method => 'delete',

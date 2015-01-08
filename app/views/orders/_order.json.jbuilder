@@ -42,3 +42,12 @@ else
   json.reciept_address o.reciept_address
 end
 json.evaluation o.evaluation_time ? 1 : 0
+json.set! 'asm_pics' do
+  if o.auto_submodel
+    json.array! o.auto_submodel.pictures do |p|
+      json.url p.p.url
+      json.bytes p.p.size
+      json.desc p.desc
+    end
+  end
+end
