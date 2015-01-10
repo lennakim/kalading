@@ -1,7 +1,10 @@
 #encoding: UTF-8
 require 'rails_helper'
 
-describe '用户登录，返回authentication_token用于其它API调用', :need_maintain_order => true, :api_doc => :api_doc, :type => :request do
+describe '用户登录，返回authentication_token用于其它API调用',  :type => :request do
+  include_context "order"
+  include_context "api doc"
+
   it "登录成功，返回authentication_token" do
     post "/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password, :format => 'json'}
     expect(response).to have_http_status(201)
@@ -10,14 +13,20 @@ describe '用户登录，返回authentication_token用于其它API调用', :need
   end
 end
 
-describe '查询某个车型的保养默认套餐和适用配件信息。auth_token为登录返回的token。applicable_parts为所有适用配件的信息，包括品牌，ID，价格。', :need_maintain_order => true, :api_doc => :api_doc, :type => :request do
+describe '查询某个车型的保养默认套餐和适用配件信息。auth_token为登录返回的token。applicable_parts为所有适用配件的信息，包括品牌，ID，价格。',  :type => :request do
+  include_context "order"
+  include_context "api doc"
+
   it "查询车型531f1ed0098e71b3f80001fb的保养套餐" do
     get "/auto_maintain_order/531f1ed0098e71b3f80001fb"
     expect(response).to have_http_status(200)
   end
 end
 
-describe '新建百车宝保养订单，需指定车型ID。parts为用户选择的配件,配件的brand和number从查询套餐的接口获得。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。', :need_maintain_order => true, :api_doc => :api_doc, :type => :request do
+describe '新建百车宝保养订单，需指定车型ID。parts为用户选择的配件,配件的brand和number从查询套餐的接口获得。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。',  :type => :request do
+  include_context "order"
+  include_context "api doc"
+
   it "新建保养订单成功" do
     o = {
       parts: [
