@@ -38,7 +38,10 @@ class SessionsController < Devise::SessionsController
       # support returning empty response on GET request
       respond_to do |format|
         format.all { head :no_content }
-        format.json { render json: { result: 'ok' } }
+        format.json {
+            #self.resource.reset_authentication_token!
+            render json: { result: 'ok', rn: sign_in_params }
+        }
         format.any(*navigational_formats) { redirect_to redirect_path }
       end
     end

@@ -733,7 +733,7 @@ zh-CN:
   order_capacity_placeholder: '1-9999'
   order_capacity_required: '请输入每日可服务订单数'
   new_city: '新建城市'
-  choose_city: '所在城市'
+  choose_city: ''
   serving_orders_today: '今天待服务订单数'
   cities_title: '卡拉丁 - 中国'
   city_required: '请选择城市'

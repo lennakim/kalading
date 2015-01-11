@@ -2,4 +2,6 @@
 <div class="page-header">
   <h4><%= t(:order_seq, seq: @order.seq) + ' - ' + t(Order::STATE_OPERATIONS[@order.state]) %></h4>
 </div>
+<%= render 'popup_map' %>
+<%= render 'serve_areas_map' %>
 <%= render :partial => 'form' %>

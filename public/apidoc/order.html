@@ -281,7 +281,7 @@ a {
 <div class="results">
 <div id="div_group_1" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_1" class="passed">订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 asm_pics为车型图文列表，url为图片url，bytes为图片大小字节数，desc为图片的描述</dt>
+  <dt id="example_group_1" class="passed">用户登录，返回authentication_token用于其它API调用</dt>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 intranet.kalading.com/users/sign_in
@@ -296,7 +296,76 @@ intranet.kalading.com/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "3KDuLfkscmBSxsuZf_jh",
+  "authentication_token": "GWFN4RVsExLbERq7snNs",
+  "name": "app"
+}
+</pre></p>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/users/sign_in
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "phone_num": "38910721074",
+  "password": "12345678",
+  "format": "json"
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok",
+  "authentication_token": "GWFN4RVsExLbERq7snNs",
+  "name": "app"
+}
+</pre></p>
+    <script type="text/javascript">moveProgressBar('14.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">登录成功，返回authentication_token</span><span class='duration'>0.65872s</span></dd>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_2" class="passed">用户注销</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/users/sign_in
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "phone_num": "38910721074",
+  "password": "12345678",
+  "format": "json"
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok",
+  "authentication_token": "TTtL6qFh6KXwEDtxT45t",
+  "name": "app"
+}
+</pre></p>
+{"result"=>"ok", "rn"=>{}}
+    <script type="text/javascript">moveProgressBar('28.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">注销成功，返回{&#x27;result&#x27; : &#x27;ok&#x27;}</span><span class='duration'>0.55304s</span></dd>
+  </dl>
+</div>
+<div id="div_group_3" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_3" class="passed">订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 asm_pics为车型图文列表，url为图片url，bytes为图片大小字节数，desc为图片的描述</dt>
+<h5>METHOD:&nbsp&nbspPOST</h5>
+<h4><strong>URL:&nbsp&nbsp
+intranet.kalading.com/users/sign_in
+<br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
+<h5>输入参数（HTTP request body）:</h5><p><pre>
+{
+  "phone_num": "38910721074",
+  "password": "12345678",
+  "format": "json"
+}
+</pre></p>
+<h5>返回值（HTTP response body）:</h5><p><pre>
+{
+  "result": "ok",
+  "authentication_token": "svyHCKUdHqUs9sFV_Khv",
   "name": "app"
 }
 </pre></p>
@@ -307,8 +376,8 @@ intranet.kalading.com/orders
 <h5>返回值（HTTP response body）:</h5><p><pre>
 [
   {
-    "id": "54ae4f49b9972d6f7e000005",
-    "seq": 19658,
+    "id": "54b1ef8cb9972d077000000f",
+    "seq": 20219,
     "name": "Name of client",
     "address": "Some address",
     "phone_num": "13888888888",
@@ -336,7 +405,7 @@ intranet.kalading.com/orders
     "reciept_type": "个人",
     "reciept_title": "卡拉丁汽车技术",
     "reciept_address": "",
-    "evaluation": 0,
+    "evaluated": 0,
     "asm_pics": [
       {
         "url": "http://kalading.qiniudn.com/pictures/ps/54ae42d1b9972d5485000001/SaturnRings.png",
@@ -348,11 +417,14 @@ intranet.kalading.com/orders
         "bytes": 58033,
         "desc": "空滤照片"
       }
+    ],
+    "served_engineers": [
+
     ]
   },
   {
-    "id": "54ae4f49b9972d6f7e000004",
-    "seq": 19657,
+    "id": "54b1ef8cb9972d077000000e",
+    "seq": 20218,
     "name": "Name of client",
     "address": "Some address",
     "phone_num": "13666666666",
@@ -380,15 +452,21 @@ intranet.kalading.com/orders
     "reciept_type": "个人",
     "reciept_title": "卡拉丁汽车技术",
     "reciept_address": "",
-    "evaluation": 0,
+    "evaluated": 0,
     "asm_pics": [
 
+    ],
+    "served_engineers": [
+      {
+        "name": "app",
+        "phone_num": "38910721074"
+      }
     ]
   }
 ]
 </pre></p>
-    <script type="text/javascript">moveProgressBar('20.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">列举第1页订单，每页2个</span><span class='duration'>0.84719s</span></dd>
+    <script type="text/javascript">moveProgressBar('42.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第1页订单，每页2个</span><span class='duration'>0.72049s</span></dd>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 intranet.kalading.com/users/sign_in
@@ -403,7 +481,7 @@ intranet.kalading.com/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "Rr96dhGT3A_srfMxCoup",
+  "authentication_token": "ifsKGs-pN8WDzzyjyFBJ",
   "name": "app"
 }
 </pre></p>
@@ -416,13 +494,13 @@ intranet.kalading.com/orders
 
 ]
 </pre></p>
-    <script type="text/javascript">moveProgressBar('40.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">列举第3页订单，到达最后一页</span><span class='duration'>0.52222s</span></dd>
+    <script type="text/javascript">moveProgressBar('57.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">列举第3页订单，到达最后一页</span><span class='duration'>0.31737s</span></dd>
   </dl>
 </div>
-<div id="div_group_2" class="example_group passed">
+<div id="div_group_4" class="example_group passed">
   <dl style="margin-left: 0px;">
-  <dt id="example_group_2" class="passed">设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，5: 服务完成，8：服务取消</dt>
+  <dt id="example_group_4" class="passed">设置订单属性，包括状态，取消原因，服务时间等。状态取值：3: 未预约，4： 已预约，5: 服务完成，8：服务取消</dt>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 intranet.kalading.com/users/sign_in
@@ -437,13 +515,13 @@ intranet.kalading.com/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "RdV5DbodnXRQm7cFUcUt",
+  "authentication_token": "kNA8Czi2H12axbTJWeNr",
   "name": "app"
 }
 </pre></p>
 <h5>METHOD:&nbsp&nbspPUT</h5>
 <h4><strong>URL:&nbsp&nbsp
-intranet.kalading.com/orders/54ae4f4ab9972d6f7e00000f
+intranet.kalading.com/orders/54b1ef8db9972d0770000019
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
@@ -458,8 +536,8 @@ intranet.kalading.com/orders/54ae4f4ab9972d6f7e00000f
   "result": "ok"
 }
 </pre></p>
-    <script type="text/javascript">moveProgressBar('60.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">设置订单状态为服务取消，并说明原因为：客户联系不上</span><span class='duration'>0.32933s</span></dd>
+    <script type="text/javascript">moveProgressBar('71.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">设置订单状态为服务取消，并说明原因为：客户联系不上</span><span class='duration'>0.45286s</span></dd>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 intranet.kalading.com/users/sign_in
@@ -474,13 +552,13 @@ intranet.kalading.com/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "eFF-Yw1_WgW_J5TtBavB",
+  "authentication_token": "Bs6xGBeDsAmB5a1ihnEL",
   "name": "app"
 }
 </pre></p>
 <h5>METHOD:&nbsp&nbspPUT</h5>
 <h4><strong>URL:&nbsp&nbsp
-intranet.kalading.com/orders/54ae4f4ab9972d6f7e000014
+intranet.kalading.com/orders/54b1ef8db9972d077000001e
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
@@ -495,8 +573,8 @@ intranet.kalading.com/orders/54ae4f4ab9972d6f7e000014
   "result": "ok"
 }
 </pre></p>
-    <script type="text/javascript">moveProgressBar('80.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">设置订单状态为已预约，并修改服务时间</span><span class='duration'>0.25854s</span></dd>
+    <script type="text/javascript">moveProgressBar('85.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">设置订单状态为已预约，并修改服务时间</span><span class='duration'>0.41266s</span></dd>
 <h5>METHOD:&nbsp&nbspPOST</h5>
 <h4><strong>URL:&nbsp&nbsp
 intranet.kalading.com/users/sign_in
@@ -511,13 +589,13 @@ intranet.kalading.com/users/sign_in
 <h5>返回值（HTTP response body）:</h5><p><pre>
 {
   "result": "ok",
-  "authentication_token": "54zFVx6LgDkFNPM7seyx",
+  "authentication_token": "c8duRsf1zNADQ-wjbd4y",
   "name": "app"
 }
 </pre></p>
 <h5>METHOD:&nbsp&nbspPUT</h5>
 <h4><strong>URL:&nbsp&nbsp
-intranet.kalading.com/orders/54ae4f4bb9972d6f7e000019
+intranet.kalading.com/orders/54b1ef8eb9972d0770000023
 <br/>HTTP Headers:</strong></h4><p><pre>Content-Type: application/json</pre></p><p><pre>Accept: application/json</pre></p>
 <h5>输入参数（HTTP request body）:</h5><p><pre>
 {
@@ -534,11 +612,11 @@ intranet.kalading.com/orders/54ae4f4bb9972d6f7e000019
 }
 </pre></p>
     <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="example passed"><span class="passed_spec_name">完成订单</span><span class='duration'>0.24035s</span></dd>
+    <dd class="example passed"><span class="passed_spec_name">完成订单</span><span class='duration'>0.36174s</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>2.27333 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "5 examples, 0 failures";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>3.47950 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "7 examples, 0 failures";</script>
 </div>
 </div>
 </body>

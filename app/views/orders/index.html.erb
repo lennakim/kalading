@@ -214,18 +214,8 @@
   <% end %>
 </div>
 
-<div class="navbar navbar-fixed-bottom">
-  <a href="#" class="btn btn-success" data-target="#modal-map" data-toggle="modal"><i class="icon-map-marker"></i><%= t(:view_map) %></a>
-</div>
-<div id="modal-map" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true" style="position: fixed; top: 0%; left: 0%; width: 100%; height: 100%; padding: 0; margin: 0 !important;">
-  <div>
-    <button type="button" class="btn btn-info pull-right" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
-    <button type="button" class="btn btn-info pull-left" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
-    <select id="engineer-select" class="pull-left"></select>
-    <button type="button" class="btn btn-success pull-left" id="locate-engineer-btn"><%= t(:locate_engineer) %></button>
-  </div>
-  <div id="map" style="width: 100%; height: 100%;"></div>
-</div>
+<%= render 'popup_map' %>
+<%= render 'serve_areas_map' %>
 <div id="order-list">
   <%= t(:total, count: @orders.size) %><br/>
   <%= render 'orders' %>

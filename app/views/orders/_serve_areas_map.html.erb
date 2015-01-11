@@ -1,0 +1,111 @@
+<script type="text/javascript">
+$(function() {
+  var areas = [
+    [
+      new BMap.Point(103.950083,30.757418), //犀浦镇立交桥
+      new BMap.Point(104.056245,30.79023),  //大丰镇立交桥 
+      new BMap.Point(104.082763,30.790238), //北新立交桥
+      new BMap.Point(104.135961,30.782319),  //三河场立交桥
+      new BMap.Point(104.175944,30.762166),  //白鹤林立交桥
+      new BMap.Point(104.212424,30.678044), //螺丝坝立交（内侧
+      new BMap.Point(104.212725,30.621628),  //狮子桥立交（内侧
+      new BMap.Point(104.172302,30.58233), //成龙立交桥
+      new BMap.Point(104.078734,30.571755),  //濯锦立交桥（内侧
+      new BMap.Point(104.035346,30.580819),  //白家场立交桥
+      new BMap.Point(103.95775,30.613893),  //接待寺立交桥
+      new BMap.Point(103.948704,30.641387), //成新蒲快速路
+      new BMap.Point(103.938419,30.698075), //文家场立交桥
+    ],
+    [
+      new BMap.Point(113.229462,23.170028), //广东省广州市白云区增槎路507号
+      new BMap.Point(113.203878,23.120847), //广东省佛山市南海区岐阳二路76号
+      new BMap.Point(113.223712,23.058081), //广东省广州市荔湾区赤岗西约66号 
+      new BMap.Point(113.261944,23.059943), //广东省广州市荔湾区东沙大道
+      new BMap.Point(113.3111,23.067126), //广东省广州市海珠区s81
+      new BMap.Point(113.381814,23.086542), //广东省广州市海珠区科韵路
+      new BMap.Point(113.412572,23.137597), //广东省广州市天河区s81
+      new BMap.Point(113.405673,23.158332), //广东省广州市天河区沐陂大街17号 
+      new BMap.Point(113.371178,23.168965), //广东省广州市天河区g15
+      new BMap.Point(113.286953,23.166307), //广东省广州市白云区广园中路
+    ],
+    // 上海
+    [
+      new BMap.Point(121.259945,31.324953),
+      new BMap.Point(121.365729,31.337291),
+      new BMap.Point(121.440125,31.361386),
+      new BMap.Point(121.508252,31.381858),
+      new BMap.Point(121.650257,31.318207),
+      new BMap.Point(121.654281,31.161608),
+      new BMap.Point(121.671816,31.095828),
+      new BMap.Point(121.59104,31.087911),
+      new BMap.Point(121.546772,31.064157),
+      new BMap.Point(121.431214,31.048071),
+      new BMap.Point(121.348713,31.019356),
+      new BMap.Point(121.31738,30.99187),
+      new BMap.Point(121.300708,30.987907),
+      new BMap.Point(121.312781,31.01069),
+      new BMap.Point(121.313643,31.049061),
+      new BMap.Point(121.30502,31.106959),
+      new BMap.Point(121.311056,31.141582),
+      new BMap.Point(121.246979,31.243238),
+      new BMap.Point(121.261352,31.324216),
+     ],
+    // 天津市区
+    [
+      new BMap.Point(117.126506,39.248777),
+      new BMap.Point(117.119679,39.245201),
+      new BMap.Point(117.109187,39.223683),
+      new BMap.Point(117.108971,39.223291),
+      new BMap.Point(117.110121,39.204171),
+      new BMap.Point(117.106887,39.187618),
+      new BMap.Point(117.106816,39.178445),
+      new BMap.Point(117.104947,39.159424),
+      new BMap.Point(117.068584,39.156123),
+      new BMap.Point(117.070811,39.094546),
+      new BMap.Point(117.123416,39.095162),
+      new BMap.Point(117.130962,39.088778),
+      new BMap.Point(117.146628,39.080376),
+      new BMap.Point(117.169194,39.06441),
+      new BMap.Point(117.17523,39.055109),
+      new BMap.Point(117.195496,39.045078),
+      new BMap.Point(117.224242,39.04037),
+      new BMap.Point(117.216912,39.002584),
+      new BMap.Point(117.326146,38.962646),
+      new BMap.Point(117.424888,38.984806),
+      new BMap.Point(117.442566,38.998266),
+      new BMap.Point(117.466066,39.054044),
+      new BMap.Point(117.467934,39.081664),
+      new BMap.Point(117.358053,39.242462),
+      new BMap.Point(117.293663,39.227036),
+      new BMap.Point(117.271385,39.210601),
+      new BMap.Point(117.258018,39.187338),
+      new BMap.Point(117.22726,39.218987),
+      new BMap.Point(117.195352,39.246821),
+      new BMap.Point(117.175805,39.261572),
+      new BMap.Point(117.16057,39.263137),
+      new BMap.Point(117.152521,39.260343),
+    ],
+    //天津滨海服务圈
+    [
+      new BMap.Point(117.558986,38.987386),
+      new BMap.Point(117.644074,39.118735),
+      new BMap.Point(117.763081,39.104178),
+      new BMap.Point(117.72025,38.983347),
+    ],
+    // 深圳
+    [
+      new BMap.Point(113.918906,22.555998), //月亮湾大道
+      new BMap.Point(114.065948,22.566432), //梅林关
+      new BMap.Point(114.167067,22.610865), //丹平快速路
+      new BMap.Point(114.17623,22.567787), //莲塘
+      new BMap.Point(114.075183,22.521953), //福田口岸
+      new BMap.Point(113.921205,22.49003),  //海上世界
+    ],
+  ];
+  areas.forEach(function(pts, i) {
+    var polygon = new BMap.Polygon(pts,
+      {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.6, fillColor: "blue", fillOpacity: 0.05, enableMassClear: false });
+    window.map.addOverlay(polygon);
+  });
+});
+</script>

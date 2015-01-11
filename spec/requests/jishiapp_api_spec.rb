@@ -1,8 +1,31 @@
 #encoding: UTF-8
 require 'rails_helper'
 
-# :need_user表示测试之前执行user_context.rb创建用户
-# :need_maintain_order表示测试之前执行order_context.rb创建订单
+describe '用户登录，返回authentication_token用于其它API调用',  :type => :request do
+  include_context "order"
+  include_context "api doc"
+
+  it "登录成功，返回authentication_token" do
+    post "/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password, :format => 'json'}
+    expect(response).to have_http_status(201)
+    token = JSON.parse(response.body)["authentication_token"]
+    expect(token).not_to be(nil)
+  end
+end
+
+describe '用户注销',  :type => :request do
+  include_context "order"
+  include_context "api doc"
+
+  it "注销成功，返回{'result' : 'ok'}" do
+    delete "/users/sign_out?auth_token=#{@user.authentication_token}", {:format => 'json'}
+    expect(response).to have_http_status(200)
+    h = JSON.parse(response.body)
+    puts h
+    expect(h['result']).to eq('ok')
+  end
+end
+
 describe '订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 asm_pics为车型图文列表，url为图片url，bytes为图片大小字节数，desc为图片的描述', :type => :request do
   include_context "order"
   include_context "api doc"

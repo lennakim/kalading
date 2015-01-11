@@ -238,9 +238,9 @@ $ ->
             c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a))
             Math.round(Rmeters * c)
 
-        # 将未分配订单按照最近的点部（10公里内）分组
+        # 将未分配订单按照最近的点部（100公里内）分组
         make_order_tr_close_to_dianbu = (tr) ->
-            max_dis = 10 * 1000.0
+            max_dis = 100 * 1000.0
             dianbu_tr = null
             for li in $('.dianbu-li') when $(li).data('lng') and tr.data('city') == $(li).data('city') 
                 dis = haversine_distance [ tr.data('marker').getPosition().lng, tr.data('marker').getPosition().lat], [parseFloat($(li).data('lng')), parseFloat($(li).data('lat'))]
@@ -308,3 +308,54 @@ $ ->
             city: $(tr).data('city')
             id: tr.id
         add_order_marker_points points
+    
+    $('#order_address').typeahead
+        source: (query, process) ->
+            return if $("option:selected", $('#order_city_id')).text().length <= 0
+            options = 
+                onSearchComplete: (results) ->
+                    return if address_search.getStatus() != BMAP_STATUS_SUCCESS
+                    a = []
+                    for i in [0..(results.getCurrentNumPois() - 1)]
+                        a.push $("option:selected", $('#order_city_id')).text() + results.getPoi(i).title
+                    process a
+            address_search = new BMap.LocalSearch $("option:selected", $('#order_city_id')).text(), options
+            address_search.search query
+        matcher: (item) ->
+            return true
+        highlighter: (item) ->
+            return '<strong>' + item + '</strong>'
+        updater: (item) ->
+            return item
+        items: 16
+        minLength: 3
+
+    $('#modal-map').on 'show', ->
+        map = window.map
+        map.clearOverlays()
+        t = $('#order_address').val()
+        return if !t || t.length < 4
+        options = 
+            onSearchComplete: (results) ->
+                return if address_search1.getStatus() != BMAP_STATUS_SUCCESS
+                for i in [0..(results.getCurrentNumPois() - 1)]
+                    p = results.getPoi(i).point
+                    circle1 = new BMap.Circle p, 100, {fillColor: "red", fillOpacity: 1.0}
+                    map.addOverlay(circle1)
+                    label = new BMap.Label t, {position: p, offset: new BMap.Size(-15,10)}
+                    label.setStyle(
+                      color : 'white',
+                      backgroundColor: 'black'
+                      fontSize : "10px",
+                      height : "12px",
+                      lineHeight : "12px"
+                    )
+                    map.addOverlay(label)
+                    marker = new BMap.Marker p
+                    map.addOverlay marker
+                    marker.setAnimation BMAP_ANIMATION_BOUNCE
+                    map.centerAndZoom p, 12
+                    break
+        address_search1 = new BMap.LocalSearch $("option:selected", $('#order_city_id')).text(), options
+        address_search1.search t
+        
