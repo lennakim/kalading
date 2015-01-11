@@ -221,6 +221,7 @@
   <%= render 'orders' %>
 </div>
 <%= render 'dianbu_map' %>
+<% if can? :get_realtime_info, User %>
 <script type="text/javascript">
 $(function() {
     window.engineer_markers = [];
@@ -252,3 +253,4 @@ $(function() {
     });
 });
 </script>
+<% end %>

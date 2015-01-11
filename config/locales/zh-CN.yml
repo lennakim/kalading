@@ -214,6 +214,10 @@ zh-CN:
             phone_num:
               too_short: '电话号码过短'
               blank: '请输入电话号码'
+        storehouse:
+          attributes:
+            city_id:
+              blank: '请选择城市'
   devise:
     failure:
       user:

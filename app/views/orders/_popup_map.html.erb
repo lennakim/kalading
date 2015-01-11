@@ -5,8 +5,10 @@
   <div>
     <button type="button" class="btn btn-info pull-right" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
     <button type="button" class="btn btn-info pull-left" data-dismiss="modal" aria-hidden="true"><%= t(:close) %></button>
-    <select id="engineer-select" class="pull-left"></select>
-    <button type="button" class="btn btn-success pull-left" id="locate-engineer-btn"><%= t(:locate_engineer) %></button>
+    <% if can? :get_realtime_info, User %>
+      <select id="engineer-select" class="pull-left"></select>
+      <button type="button" class="btn btn-success pull-left" id="locate-engineer-btn"><%= t(:locate_engineer) %></button>
+    <% end %>
   </div>
   <div id="map" style="width: 100%; height: 100%;"></div>
 </div>

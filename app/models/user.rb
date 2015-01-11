@@ -64,6 +64,7 @@ class User
   belongs_to :city
   
   validates_uniqueness_of :phone_num, :allow_blank => true
+  validates :city_id, presence: true
 
   ROLES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   ROLE_STRINGS = %w[customer role_admin manager storehouse_admin data_admin engineer dispatcher video_inspector finance national_storehouse_admin]

@@ -15,6 +15,11 @@ class Storehouse
   accepts_nested_attributes_for :partbatches, :allow_destroy => true
   belongs_to :city
   
+  validates :city_id, presence: true
+  validates :name, length: { in: 2..32 }, presence: true
+  validates :address, length: { in: 2..13 }, presence: true
+  validates :phone_num, length: { in: 7..32 }, presence: true
+  
   def to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << [I18n.t(:part_brand), I18n.t(:part_number), I18n.t(:part_type), I18n.t(:in_quantity), I18n.t(:remained_quantity), I18n.t(:batch_price), I18n.t(:sell_price_history), I18n.t(:remark)]
