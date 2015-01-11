@@ -649,7 +649,7 @@ class OrdersController < ApplicationController
     st = ServiceType.find '52c186d4098e7133cd000005'
     return render json: t(:auto_test_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
-    check_discount(params[:info][:discount]) if params[:info][:discount].present?
+    check_discount(params[:info][:discount]) if params[:info].present? && params[:info][:discount].present?
     render :action => 'auto_test_order'
   end
 
@@ -662,7 +662,7 @@ class OrdersController < ApplicationController
     st = ServiceType.find '52cb67839a94e4fd190001eb'
     return render json: t(:auto_verify_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
-    check_discount(params[:info][:discount]) if params[:info][:discount].present?
+    check_discount(params[:info][:discount]) if params[:info].present? && params[:info][:discount].present?
     render :action => 'auto_verify_order'
   end
 
@@ -788,7 +788,7 @@ private
       @order.service_types << maintain_service
     end
 
-    check_discount(params[:info][:discount]) if params[:info][:discount].present?
+    check_discount(params[:info][:discount]) if params[:info].present? && params[:info][:discount].present?
     #8:00-20:00 online dispatchers are available, 20:00-tomorrow 8:00 online and offline dispatchers are available
     if (8..19).include? DateTime.now.hour
       dispatcher_states = [0]

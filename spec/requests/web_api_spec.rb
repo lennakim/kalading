@@ -98,6 +98,23 @@ describe '查询换空调滤+PM2.5滤芯价格，client_id为用户标识（open
   end
 end
 
+describe '查询换空调滤+PM2.5滤芯价格，client_id为用户标识（openid）。', :type => :request do
+  include_context "api doc"
+  it "查询换空调滤+PM2.5滤芯价格" do
+    o = {
+      parts: [
+              {
+                brand: "曼牌 Mann",
+                number: "528af433098e7180590042ca"
+              }
+      ]
+    }
+    post "/auto_maintain_price/531f1ed0098e71b3f80001fb.json", o
+    expect(response).to have_http_status(200)
+    h = JSON.parse(response.body)
+  end
+end
+
 describe '查询多个手机号的订单列表，phone_nums为手机号列表。支持分页，page为页数（从1开始），per为每页返回的订单个数。返回空表示到达最后一页。', :type => :request do
   include_context "order"
   include_context "api doc"
