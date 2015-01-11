@@ -827,7 +827,7 @@ private
   def _auto_send_sms_notify(o, state)
     if state == 2
       servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}"
-      url = CGI.escape('http://kalading.com/desktop/login?phone=' + o.phone_num)
+      url = CGI.escape('http://kalading.com')
       send_sms o.phone_num, '647221', "#autoname#=#{o.auto_submodel.full_name}&#servicetypes#=#{o.service_types.first.name}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
     end
     if state == 3
