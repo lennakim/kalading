@@ -242,6 +242,11 @@ class Order
     Auto.find_or_create_by(car_location: o.car_location, car_num: o.car_num, auto_submodel_id: o.auto_submodel.id ) if o.auto_submodel
   end
   
+  before_create do |o|
+    #临时的：去掉方括号之间的文字
+    o.address.gsub!(/\[.*\]/, '') if o.address.present?
+  end
+  
   instance_eval do
     # 待出库
     def to_be_delivered

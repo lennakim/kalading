@@ -24,7 +24,13 @@
     </div>
   
     <%= f.association :city, collection: City.asc(:name), prompt: t('choose_city'), label: t('cities'), include_blank: false, input_html: { "data-msg-required" => t(:city_required) } %>
-    <%= f.input :address, label: t(:address), input_html: { minlength: "4", maxlength: "512", "data-msg-required" => t(:address_required), "data-msg-minlength" => t(:address_minlength), "data-msg-maxlength" => t(:address_maxlength),  :autocomplete => "off"} %>
+    <div class="control-group required">
+      <label for="order_address" class="control-label"><%= t(:address) %></label>
+      <div class="controls form-inline">
+        <%= f.input_field :address, minlength: "4", maxlength: "512", "data-msg-required" => t(:address_required), "data-msg-minlength" => t(:address_minlength), "data-msg-maxlength" => t(:address_maxlength), :autocomplete => "off", :class => 'address_input' %>
+        <a href="#" class="btn btn-success" data-target="#modal-map" data-toggle="modal"><i class="icon-map-marker"></i><%= t(:view_map) %></a>
+      </div>
+    </div>
     <%= f.input :name, label: t(:client_name) %>
     <%= f.input :auto_owner_name, label: t(:auto_owner_name) %>
     <%= f.association :user_type, collection: UserType.all, prompt: t('choose_user_type'), label: t('user_type'), include_blank: false %>
