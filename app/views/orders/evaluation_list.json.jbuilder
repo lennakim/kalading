@@ -1,8 +1,5 @@
 json.array! @orders do |o|
-  json.client_id o.client_id
-  json.login_phone_num o.login_phone_num
-  json.evaluation o.evaluation
-  json.evaluation_score o.evaluation_score
+  json.phone_num o.phone_num
   json.evaluation_tags o.evaluation_tags
   json.evaluation_time o.evaluation_time.strftime('%Y-%m-%d %H:%M') if o.evaluation_time
 end

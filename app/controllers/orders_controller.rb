@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:index, :order_begin, :choose_service]
   @except_actions = [
-    :index, :update, :create, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order, :tag_stats, :evaluation_list, :create_auto_special_order
+    :index, :show, :update, :create, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order, :tag_stats, :evaluation_list, :create_auto_special_order
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
@@ -711,8 +711,7 @@ class OrdersController < ApplicationController
   end
   
   def evaluation_list
-    auto_submodel_id = params[:auto_submodel_id]
-    @orders = AutoSubmodel.find(auto_submodel_id).orders.where(:evaluation_time.ne => nil).desc(:evaluation_time).page(params[:page]).per(params[:per])
+    @orders = Order.any_in(state: [5,6,7]).where(:evaluation_tags.ne => []).desc(:evaluation_time).page(params[:page]).per(params[:per])
   end
 
   def daily_orders

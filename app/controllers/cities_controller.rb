@@ -89,23 +89,37 @@ class CitiesController < ApplicationController
     d1 = Date.parse params[:start_date] if params[:start_date]
     d1 ||= Date.tomorrow
     d2 = Date.parse params[:end_date] if params[:end_date]
-    d2 ||= Date.tomorrow.since(1.month).to_date
+    d2 ||= Date.today.since(2.weeks).to_date
     if d1 < Date.today
       d1 = Date.today
     end
-    if d2 > d1 + 31 || d2 < d1
-      d2 = d1.since(1.month).to_date
+    if d2 > d1 + 14 || d2 < d1
+      d2 = d1.since(2.weeks).to_date
     end
     h = {}
     (d1..d2).each do |d|
-      h[d] = @city.order_capacity
+      h[d] = [@city.order_capacity / 3 , @city.order_capacity / 3, @city.order_capacity / 3]
       if d == Date.tomorrow && DateTime.now.hour >= 17
-        h[d] = 0
+        h[d] = []
       end
     end
-    Order.within_datetime_range(0, 4, d1.beginning_of_day, d2.end_of_day, @city).group_by {|o| o.serve_datetime.to_date}.each do |k, v|
-      h[k] = [@city.order_capacity - v.count, 0].max if h[k] != 0
+    
+    Order.within_datetime_range([0,2,3,4], d1.beginning_of_day, d2.end_of_day, @city).group_by {|o| o.serve_datetime.to_date}.each do |k, v|
+      if !h[k].empty?
+        v.group_by {|o| _time_stage(o.serve_datetime.hour)}.each do |s, y|
+          h[k][s] = [@city.order_capacity / 3 - y.count, 0].max
+        end
+      end
     end
     render json: h
+  end
+private
+  def _time_stage (hour)
+    hour_hash = {0..11 => 0, 12..16 => 1, 17..23 => 1}
+    stage = 0
+    hour_hash.each do |k, v|
+      stage = v if k.include? hour
+    end
+    stage
   end
 end

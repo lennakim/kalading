@@ -26,7 +26,7 @@ class MaintainsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @maintain }
+      format.json 
     end
   end
 
@@ -174,6 +174,12 @@ class MaintainsController < ApplicationController
       end
       if !params[:car_id].blank?
 	orders = orders.where(auto_submodel: AutoSubmodel.find(params[:car_id]))
+      end
+      if !params[:car_num].blank?
+	orders = orders.where(car_num: params[:car_num])
+      end
+      if !params[:datetime].blank?
+	orders = orders.where(serve_datetime: params[:datetime])
       end
       orders.where(:state.gte => 5,:state.lte => 7).desc(:seq).each do |o|
 	@maintains += o.maintains.desc(:created_at)

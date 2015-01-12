@@ -1,7 +1,7 @@
 class AutoSubmodelsController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => [:show]
   before_filter :set_default_operator
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:show]
   
   # GET /auto_submodels
   # GET /auto_submodels.json
