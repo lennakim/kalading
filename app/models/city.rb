@@ -3,6 +3,7 @@ class City
   field :name, type: String
   field :order_capacity, type: Integer, default: 9999
   field :area_code, type: String, default: ''
+  field :opened, type: Boolean, default: false
   
   validates :order_capacity, inclusion: { in: 1..9999 }, presence: true
   validates :name, presence: true
@@ -16,6 +17,6 @@ class City
   has_and_belongs_to_many :auto_submodels
   
   def as_json(opts = nil)
-    super except: [:order_capacity]
+    super except: [:order_capacity, :area_code, :opened, :auto_submodel_ids]
   end
 end

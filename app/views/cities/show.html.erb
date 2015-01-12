@@ -8,6 +8,8 @@
   <dd><%= @city.name %></dd>
   <dt><strong><%= t(:area_code) %>:</strong></dt>
   <dd><%= @city.area_code %></dd>
+  <dt><strong><%= t(:opened) %>:</strong></dt>
+  <dd><%= @city.opened ? t(:shi) : t(:fou) %></dd>
   <dt><strong><%= t(:order_capacity) %>:</strong></dt>
   <dd><%= @city.order_capacity %></dd>
 </dl>
