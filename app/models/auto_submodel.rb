@@ -217,6 +217,8 @@ class AutoSubmodel
     h = super options.merge(opts) do |k, old_value, new_value|
       old_value + new_value
     end
+    h[:brand] = self.auto_model.auto_brand.name
+    h[:model] = self.auto_model.name
     h[:name] = self.name + ' '+ self.engine_displacement + ' ' + self.year_range
     h[:pictures] = self.pictures.map do |p|
       { url: p.p.url, size: p.p.size }
@@ -249,4 +251,11 @@ class AutoSubmodel
     ]
   end
   
+  def served_engineers
+    h = {}
+    self.orders.any_in(:state => [5,6,7]).select {|o| !o.engineer.nil? }.group_by {|o| o.engineer }.each do |k, v|
+      h[k] = v.count
+    end
+    h.sort_by {|a,b| b}.reverse.take(3).map {|e| {:name => e[0].name, :phone_num => e[0].phone_num}}
+  end
 end

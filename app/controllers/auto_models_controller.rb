@@ -39,6 +39,9 @@ class AutoModelsController < ApplicationController
       format.json {
         # Only show maintainable asms on web site
         sms = @auto_model.auto_submodels.where(data_source: 2, service_level: 1).asc(:name)
+        if params[:car_id].present?
+          sms = sms.select {|asm| asm.cities.find(params[:city_id]).exists? }
+        end
         if params[:pm25].blank?
           render json: sms
         else

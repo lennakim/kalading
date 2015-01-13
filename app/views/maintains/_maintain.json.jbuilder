@@ -1,6 +1,8 @@
 o = Order.find(m.order_id)
 json.id m.id
 json.car_num o.car_location + o.car_num
+json.car_name o.auto_submodel.full_name
+json.car_id o.auto_submodel.id
 json.serve_datetime o.serve_datetime.strftime('%Y-%m-%d %H:%M') if o.serve_datetime
 json.curr_km m.curr_km
 json.next_maintain_km (m.curr_km.to_i + m.next_maintain_km_by_oil).to_s + t(:km) if m.next_maintain_km_by_oil != 0

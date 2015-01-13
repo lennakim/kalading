@@ -51,3 +51,4 @@ json.set! 'asm_pics' do
     end
   end
 end
+json.served_engineers o.auto_submodel.served_engineers if o.auto_submodel
