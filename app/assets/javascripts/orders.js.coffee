@@ -309,53 +309,61 @@ $ ->
             id: tr.id
         add_order_marker_points points
     
-    $('#order_address').typeahead
-        source: (query, process) ->
-            return if $("option:selected", $('#order_city_id')).text().length <= 0
-            options = 
-                onSearchComplete: (results) ->
-                    return if address_search.getStatus() != BMAP_STATUS_SUCCESS
-                    a = []
-                    for i in [0..(results.getCurrentNumPois() - 1)]
-                        a.push $("option:selected", $('#order_city_id')).text() + results.getPoi(i).title
-                    process a
-            address_search = new BMap.LocalSearch $("option:selected", $('#order_city_id')).text(), options
-            address_search.search query
-        matcher: (item) ->
-            return true
-        highlighter: (item) ->
-            return '<strong>' + item + '</strong>'
-        updater: (item) ->
-            return item
-        items: 16
-        minLength: 3
-
-    $('#modal-map').on 'show', ->
-        map = window.map
-        map.clearOverlays()
-        t = $('#order_address').val()
-        return if !t || t.length < 4
-        options = 
-            onSearchComplete: (results) ->
-                return if address_search1.getStatus() != BMAP_STATUS_SUCCESS
-                for i in [0..(results.getCurrentNumPois() - 1)]
-                    p = results.getPoi(i).point
-                    circle1 = new BMap.Circle p, 100, {fillColor: "red", fillOpacity: 1.0}
-                    map.addOverlay(circle1)
-                    label = new BMap.Label t, {position: p, offset: new BMap.Size(-15,10)}
-                    label.setStyle(
-                      color : 'white',
-                      backgroundColor: 'black'
-                      fontSize : "10px",
-                      height : "12px",
-                      lineHeight : "12px"
-                    )
-                    map.addOverlay(label)
-                    marker = new BMap.Marker p
-                    map.addOverlay marker
-                    marker.setAnimation BMAP_ANIMATION_BOUNCE
-                    map.centerAndZoom p, 12
-                    break
-        address_search1 = new BMap.LocalSearch $("option:selected", $('#order_city_id')).text(), options
-        address_search1.search t
+        if $('#order_address').length > 0
+            locate_order_address = ->
+                t = $('#order_address').val()
+                return if !t || t.length < 4
+                map = window.map
+                map.clearOverlays()
+                options = 
+                    onSearchComplete: (results) ->
+                        return if address_search1.getStatus() != BMAP_STATUS_SUCCESS
+                        for i in [0..(results.getCurrentNumPois() - 1)]
+                            p = results.getPoi(i).point
+                            circle1 = new BMap.Circle p, 100, {fillColor: "red", fillOpacity: 1.0}
+                            map.addOverlay(circle1)
+                            label = new BMap.Label t, {position: p, offset: new BMap.Size(-15,10)}
+                            label.setStyle(
+                              color : 'white',
+                              backgroundColor: 'black'
+                              fontSize : "10px",
+                              height : "12px",
+                              lineHeight : "12px"
+                            )
+                            map.addOverlay(label)
+                            marker = new BMap.Marker p
+                            map.addOverlay marker
+                            marker.setAnimation BMAP_ANIMATION_BOUNCE
+                            map.centerAndZoom p, 12
+        
+                            new BMap.Geocoder().getLocation p, (rs) ->
+                                $("#district-select option").filter ->
+                                    return $(this).text() == rs.addressComponents.district
+                                .prop 'selected', true
+                            break
+                address_search1 = new BMap.LocalSearch $("option:selected", $('#order_city_id')).text(), options
+                address_search1.search t
+    
+            $('#modal-map').on 'show', ->
+                locate_order_address()
+            locate_order_address()
+            $("#district-select").change ->
+                $('#order_address').val $("option:selected", $('#order_city_id')).text() + $("option:selected", $(this)).text()
+            $("#order_city_id").change ->
+                $.getScript "/cities/" + $(this).val()
+        
+            old_value = $('#order_address').val()
+            ac_address = new BMap.Autocomplete(
+                "input" : "order_address"
+                "location" : window.map
+            )
+            ac_address.setInputValue old_value
+            $(ac_address).on "onconfirm", (e) ->
+                $("#order_city_id option").filter ->
+                    return $(this).text() == e.originalEvent.item.value.city
+                .prop 'selected', true
+                $("#district-select option").filter ->
+                    return $(this).text() == e.originalEvent.item.value.district
+                .prop 'selected', true
+        
         
