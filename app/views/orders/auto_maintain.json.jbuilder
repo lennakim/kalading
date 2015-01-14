@@ -27,11 +27,11 @@ parts_to_user_friendly = Proc.new do |parts|
       if p.part_type.name == I18n.t(:engine_oil)
         b[{brand: p.part_brand.name, number: p.spec}] ||= { brand: p.part_brand.name, number: p.spec, price: 0, quantity: 0}
         b[{brand: p.part_brand.name, number: p.spec}][:price] += p.ref_price.to_f * @order.auto_submodel.cals_part_count(p)
-        b[{brand: p.part_brand.name, number: p.spec}][:quantity] += p.partbatches.select {|pb| !storehouses.find(pb.storehouse_id).nil? }.sum(&:remained_quantity)
+        b[{brand: p.part_brand.name, number: p.spec}][:quantity] += p.partbatches.any_in(storehouse_id: storehouses.map(&:id)).sum(&:remained_quantity)
       elsif p.part_type.name == I18n.t(:cabin_filter)
-        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, spec: p.spec, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.select {|pb| !storehouses.find(pb.storehouse_id).nil? }.sum(&:remained_quantity) }
+        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, spec: p.spec, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.any_in(storehouse_id: storehouses.map(&:id)).sum(&:remained_quantity) }
       else
-        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.select {|pb| !storehouses.find(pb.storehouse_id).nil? }.sum(&:remained_quantity) }
+        b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.any_in(storehouse_id: storehouses.map(&:id)).sum(&:remained_quantity) }
       end
   end
   b.values

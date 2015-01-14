@@ -29,7 +29,7 @@ class Ability
       can [:view, :read], Video
     end
 
-    if user.roles.include? ROLE_ID('storehouse_admin')
+    if (user.roles.include? ROLE_ID('storehouse_admin')) || (user.roles.include? ROLE_ID('national_storehouse_admin'))
       can :read, :all
       can [:inout, :print_dispatch_card], Storehouse
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]

@@ -134,6 +134,7 @@ zh-CN:
   engineer: '技师'
   role_admin: '管理员'
   storehouse_admin: '仓库管理员'
+  national_storehouse_admin: '全国仓库管理员'
   data_admin: '数据管理员'
   finance: '财务'
   role: '角色'
