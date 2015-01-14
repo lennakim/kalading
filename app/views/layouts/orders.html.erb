@@ -18,10 +18,11 @@
                   <li>
                 <% end %>
                   <% if can? :edit_all, Order %>
+                    <% orders = current_user.roles.include?('3') ? Order.where(city: current_user.city) : Order.all %>
                     <% if Order::STATE_STRINGS[s] == 'serve_done' %>
-                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
                      <% else %>
-                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s).count.to_s + ')', orders_path(state: s) %>
                     <% end %>
                     <% if Order::STATE_STRINGS[s] == 'unverified' %>
                       <ul class="nav nav-list">
@@ -30,14 +31,14 @@
                         <% else %>
                         <li>
                         <% end %>
-                          <%= link_to t(:normal_order) + ' (' + Order.where(state: s, :name.ne => '').count.to_s + ')', orders_path(state: s, normal: true) %>
+                          <%= link_to t(:normal_order) + ' (' + orders.where(state: s, :name.ne => '').count.to_s + ')', orders_path(state: s, normal: true) %>
                         </li>
                         <% if params[:normal].present? && params[:normal] == 'false' %>
                         <li class="active">
                         <% else %>
                         <li>
                         <% end %>
-                          <%= link_to t(:activities_order) + ' (' + Order.where(state: s, :name => '').count.to_s + ')', orders_path(state: s, normal: false) %>
+                          <%= link_to t(:activities_order) + ' (' + orders.where(state: s, :name => '').count.to_s + ')', orders_path(state: s, normal: false) %>
                         </li>
                       </ul>
                     <% end %>
@@ -49,16 +50,16 @@
                           <% else %>
                           <li>
                           <% end %>
-                            <%= link_to t(Order::CANCEL_TYPE_STRINGS[t]) + ' (' + Order.where(state: s, cancel_type: t).count.to_s + ')', orders_path(state: s, cancel_type: t) %>
+                            <%= link_to t(Order::CANCEL_TYPE_STRINGS[t]) + ' (' + orders.where(state: s, cancel_type: t).count.to_s + ')', orders_path(state: s, cancel_type: t) %>
                           </li>
                         <% end %>
                       </ul>
                     <% end %>
                   <% else %>
                     <% if Order::STATE_STRINGS[s] == 'serve_done' %>
-                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).where(engineer: current_user).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
                     <% else %>
-                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).where(engineer: current_user).count.to_s + ')', orders_path(state: s) %>
+                      <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
                     <% end %>
                   <% end %>
                   </li>
@@ -68,11 +69,7 @@
               <% else %>
                 <li class="active">
               <% end %>
-                  <% if can? :edit_all, Order %>
-                    <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
-                  <% else %>
-                    <%= link_to t(:all) + ' (' + Order.where(engineer: current_user).count.to_s + ')', orders_path %>
-                  <% end %>
+                  <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
                 </li>
             </ul>
           </div><!--/.well -->

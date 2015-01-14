@@ -6,7 +6,11 @@ class StorehousesController < ApplicationController
   # GET /storehouses
   # GET /storehouses.json
   def index
-    @storehouses = Storehouse.all
+    if current_user && current_user.roles.include?('3')
+      @storehouses = Storehouse.where(city: current_user.city)
+    else
+      @storehouses = Storehouse.all
+    end
 
     respond_to do |format|
       format.html # index.html.erb

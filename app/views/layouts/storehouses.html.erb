@@ -15,8 +15,9 @@
               <li>
               <% end %>
                 <%= link_to t('storehouses'), storehouses_path %>
+                <% storehouses = current_user.roles.include?('3') ? Storehouse.where(city: current_user.city) : Storehouse.all%>
                 <ul class="nav nav-list">
-                  <% Storehouse.all.each do |sh| %>
+                  <% storehouses.all.each do |sh| %>
                     <% if @storehouse == sh %>
                     <li class="active">
                     <% else %>
@@ -30,12 +31,13 @@
               <li><%= link_to t('part_types'), part_types_path %></li>
               <li><%= link_to t('part_brands'), part_brands_path %></li>
               <li><%= link_to t('supplier'), suppliers_path %></li>
+              <% orders = current_user.roles.include?('3') ? Order.where(city: current_user.city) : Order.all%>
               <% if @orders && params[:part_deliver_state].to_i == 0 %>
                 <li class="active">
               <% else %>
                 <li>
               <% end %>
-                  <%= link_to t('to_be_delivered_orders', n: Order.to_be_delivered.count), orders_path(Order.to_be_delivered_hash) %>
+                  <%= link_to t('to_be_delivered_orders', n: orders.to_be_delivered.count), orders_path(Order.to_be_delivered_hash) %>
                 </li>
 
               <% if @orders && params[:part_deliver_state].to_i == 1 %>
@@ -43,7 +45,7 @@
               <% else %>
                 <li>
               <% end %>
-                  <%= link_to t('to_be_backed_orders', n: Order.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
+                  <%= link_to t('to_be_backed_orders', n: orders.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
                 </li>
             </ul>
           </div><!--/.well -->

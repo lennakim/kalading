@@ -16,6 +16,9 @@ class OrdersController < ApplicationController
         authorize! :read, Order
       elsif current_user.roles.include? '5'
         @orders = Order.where(:engineer => current_user)
+      elsif current_user.roles.include? '3'
+        @orders = Order.where(:city => current_user.city)
+        params[:city] = current_user.city.id
       else
         @orders = Order.all
       end
@@ -721,7 +724,7 @@ class OrdersController < ApplicationController
     @city_unassigned_orders = @unassigned_orders.group_by(&:city)
     City.each {|c| @city_unassigned_orders[c] ||= []}
     @engineer_order_hash = Order.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime).group_by(&:engineer)
-    @storehouse_engineers = User.where(roles: ['5']).asc(:storehouse).group_by(&:storehouse)
+    @storehouse_engineers = User.where(state: 0, roles: ['5']).asc(:storehouse).group_by(&:storehouse)
     @dianbu_postions = {}
     Storehouse.asc(:city).each do |sh|
       @dianbu_postions[sh] = get_latitude_longitude(sh.city.name, sh.address)

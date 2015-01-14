@@ -15,6 +15,9 @@ class UsersController < ApplicationController
     if !params[:belong].blank?
       @users = @users.where(storehouse: Storehouse.find(params[:belong]))
     end
+    if !params[:city].blank?
+      @users = @users.where(city: City.find(params[:city]))
+    end
     if !params[:role].blank?
       @users = @users.select { |u| u.roles.include? params[:role] }
     end

@@ -15,7 +15,7 @@
     <%= ' - ' + AutoSubmodel.find(params[:auto_submodel]).full_name %>
   <% end %>
   <div class="pull-right">
-    <%= link_to t('tomorrow_orders_assign'), daily_orders_path(date: Date.tomorrow), :class => 'btn btn-success' if can? :create, Order %>
+    <%= link_to t('tomorrow_orders_assign'), daily_orders_path(date: Date.tomorrow), :class => 'btn btn-success' if can? :edit_all, Order %>
     <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary' if can? :create, Order %>
   </div>
   </h4>

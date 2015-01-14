@@ -37,6 +37,25 @@
       </div>
     </div>
     <div class="control-group select">
+      <%= label_tag :city, t('cities'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="city" id="city">
+          <% if params[:city].nil? || params[:city] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% City.each do |c| %>
+            <% if params[:city] == c.id.to_s %>
+              <option value="<%= c.id %>" selected><%= c.name %></option>
+            <% else %>
+              <option value="<%= c.id %>"><%= c.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    <div class="control-group select">
       <%= label_tag :belong, t('belong'), class: 'control-label' %>
       <div class="controls form-inline">
         <select name="belong" id="belong">
