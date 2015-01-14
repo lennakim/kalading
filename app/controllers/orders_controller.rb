@@ -704,10 +704,10 @@ class OrdersController < ApplicationController
   
   def tag_stats
     result = {}
-    orders = AutoSubmodel.find(params[:auto_submodel_id]).orders
-    Order::EVALUATION_TAG.each do |tag|
-      result[tag] = orders.select {|order| order.evaluation_tags.include? tag}.count
-    end
+    #orders = AutoSubmodel.find(params[:auto_submodel_id]).orders
+    #Order::EVALUATION_TAG.each do |tag|
+    #  result[tag] = orders.select {|order| order.evaluation_tags.include? tag}.count
+    #end
     respond_to do |format|
       format.json { render json: result}
     end
