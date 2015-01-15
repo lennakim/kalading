@@ -598,7 +598,7 @@ class OrdersController < ApplicationController
     st = ServiceType.find '52cb67839a94e4fd190001eb'
     return render json: t(:auto_verify_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
-    check_discount
+    check_discount(params[:info][:discount]) if params[:info][:discount].present?
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
@@ -616,7 +616,7 @@ class OrdersController < ApplicationController
     st = ServiceType.find '52c186d4098e7133cd000005'
     return render json: t(:auto_test_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
-    check_discount
+    check_discount(params[:info][:discount]) if params[:info][:discount].present?
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
@@ -637,7 +637,7 @@ class OrdersController < ApplicationController
     end
     @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).any_in(state: dispatcher_states).sample
     @order.city = City.find_by name: I18n.t(:beijing)
-    check_discount
+    check_discount(params[:info][:discount]) if params[:info][:discount].present?
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
@@ -649,7 +649,7 @@ class OrdersController < ApplicationController
     st = ServiceType.find '52c186d4098e7133cd000005'
     return render json: t(:auto_test_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
-    check_discount
+    check_discount(params[:info][:discount]) if params[:info][:discount].present?
     render :action => 'auto_test_order'
   end
 
@@ -662,7 +662,7 @@ class OrdersController < ApplicationController
     st = ServiceType.find '52cb67839a94e4fd190001eb'
     return render json: t(:auto_verify_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
-    check_discount
+    check_discount(params[:info][:discount]) if params[:info][:discount].present?
     render :action => 'auto_verify_order'
   end
 
@@ -788,7 +788,7 @@ private
       @order.service_types << maintain_service
     end
 
-    check_discount
+    check_discount(params[:info][:discount]) if params[:info][:discount].present?
     #8:00-20:00 online dispatchers are available, 20:00-tomorrow 8:00 online and offline dispatchers are available
     if (8..19).include? DateTime.now.hour
       dispatcher_states = [0]
@@ -798,20 +798,18 @@ private
     @order.dispatcher = User.where(:roles => [User::ROLE_STRINGS.index('dispatcher').to_s]).any_in(state: dispatcher_states).sample
   end
 
-  def check_discount
-    if params[:discount].present?
-      discount = Discount.find_by token: params[:discount]
-      if discount
-        if discount.expire_date < Date.today
-          @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
-        elsif discount.orders.count >= discount.times
-          @discount_error = I18n.t(:discount_no_capacity)
-        else
-          @order.discounts << discount
-        end
+  def check_discount discount
+    discount = Discount.find_by token: discount
+    if discount
+      if discount.expire_date < Date.today
+        @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
+      elsif discount.orders.count >= discount.times
+        @discount_error = I18n.t(:discount_no_capacity)
       else
-        @discount_error = I18n.t(:discount_not_exist)
+        @order.discounts << discount
       end
+    else
+      @discount_error = I18n.t(:discount_not_exist)
     end
   end
 
