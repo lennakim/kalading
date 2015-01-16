@@ -788,7 +788,11 @@ private
       @order.service_types << maintain_service
     end
 
-    check_discount(params[:info][:discount]) if params[:info].present? && params[:info][:discount].present?
+    if params[:info].present? && params[:info][:discount].present?
+      check_discount(params[:info][:discount])
+    elsif params[:discount].present?
+      check_discount(params[:discount])
+    end
     #8:00-20:00 online dispatchers are available, 20:00-tomorrow 8:00 online and offline dispatchers are available
     if (8..19).include? DateTime.now.hour
       dispatcher_states = [0]
