@@ -9,7 +9,7 @@ class CitiesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @cities }
+      format.json { render json: @cities.where(opened: true) }
     end
   end
 
