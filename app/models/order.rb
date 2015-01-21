@@ -181,8 +181,9 @@ class Order
     price += self.calc_service_price
     price += self.calc_parts_price
     self.discounts.each do |d|
-      next if d.expire_date < Date.today || d.orders.count >= d.times
-      if d.discount != 0
+      if d.final_price != 0
+        price = d.final_price
+      elsif d.discount != 0
         price -= d.discount
       elsif d.percent != 0
         price = price - price * d.percent / 100

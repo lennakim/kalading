@@ -58,6 +58,15 @@ class DiscountsController < ApplicationController
   def create
     discounts = []
     (1..params[:discount_number].to_i).each do |i|
+      if params[:discount_six_length].to_i == 1
+        token = ''
+        begin
+          token = ('A'..'Z').to_a.concat((0..1).to_a).sample(6).join
+        end until !Discount.find_by(token: token)
+        params[:discount][:token] = token
+      else
+        params[:discount][:token] = SecureRandom.uuid.delete '-'
+      end
       @discount = Discount.new(params[:discount])
       @discount.save
       discounts << @discount

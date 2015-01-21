@@ -264,7 +264,7 @@ class OrdersController < ApplicationController
     end
     @order.car_num.upcase!
     d = Discount.find_by token: @order.discount_num
-    if d && d.expire_date >= Date.today && d.orders.count < d.times
+    if d && d.expire_date >= Date.today && d.orders.count < d.times && (d.service_types.blank? || d.service_type_ids.sort == @order.service_type_ids.sort)
       @order.discounts << d
     end
     if params[:inquire]
@@ -789,7 +789,7 @@ private
       return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
       @order.service_types << maintain_service
     end
-
+    
     if params[:info].present? && params[:info][:discount].present?
       check_discount(params[:info][:discount])
     elsif params[:discount].present?
@@ -811,6 +811,8 @@ private
         @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
       elsif discount.orders.count >= discount.times
         @discount_error = I18n.t(:discount_no_capacity)
+      elsif discount.service_types.present? && discount.service_type_ids != @order.service_type_ids
+        @discount_error = I18n.t(:discount_service_types_error, s: discount.service_types.map{|s| s.name}.join(',') )
       else
         @order.discounts << discount
       end

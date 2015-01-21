@@ -33,6 +33,7 @@
     <tr>
       <th><%= t(:discount_num) %></th>
       <th><%= t(:discount_name) %></th>
+      <th><%= t(:final_price) %></th>
       <th><%= t(:discount) %></th>
       <th><%= t(:discount_percent) %></th>
       <th><%= t(:expire_date) %></th>
@@ -46,6 +47,7 @@
       <tr>
         <td><%= link_to discount.token, discount_path(discount) %></td>
         <td><%= link_to discount.name, discount_path(discount) %></td>
+        <td><%= humanized_money_with_symbol discount.final_price %></td>
         <td><%= humanized_money_with_symbol discount.discount %></td>
         <td><%= discount.percent %>%</td>
         <% if discount.expire_date < Date.today %>

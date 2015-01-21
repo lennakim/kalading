@@ -9,6 +9,7 @@ class ServiceType
   belongs_to :auto_model
   belongs_to :auto_brand
   has_and_belongs_to_many :orders
+  has_and_belongs_to_many :discounts
   
   attr_accessible :name, :auto_model_id, :specific_auto_model, :price, :order_ids, :auto_brand_id
 

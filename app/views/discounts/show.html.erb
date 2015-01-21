@@ -8,6 +8,8 @@
   <dd><%= @discount.token %></dd>
   <dt><strong><%= t(:discount_name) %>:</strong></dt>
   <dd><%= @discount.name %></dd>
+  <dt><strong><%= t(:final_price) %>:</strong></dt>
+  <dd><%= @discount.final_price %></dd>
   <dt><strong><%= t(:discount) %>:</strong></dt>
   <dd><%= @discount.discount %></dd>
   <dt><strong><%= t(:discount_percent) %>:</strong></dt>
@@ -20,6 +22,15 @@
       <%= l @discount.expire_date %>
     <% end %>
   </dd>
+  <dt><strong><%= t(:service_types) %>:</strong></dt>
+  <dd>
+    <% if @discount.service_types.blank? %>
+      <span ><%= t(:all) %></span>
+    <% else %>
+      <%= @discount.service_types.map{|s| s.name}.join(',') %>
+    <% end %>
+  </dd>
+  
 </dl>
 
 <% if @discount.orders.exists? %>

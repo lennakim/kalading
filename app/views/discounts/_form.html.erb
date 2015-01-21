@@ -1,5 +1,6 @@
 <%= simple_form_for @discount, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :name, label: t(:discount_name), input_html: { maxlength: "128", required: '', "data-msg-required" => t(:discount_name_required) } %>
+  <%= f.input :final_price, label: t(:final_price) %>
   <%= f.input :discount, label: t(:discount) %>
   <%= f.input :percent, label: t(:discount_percent), :as => :numeric, input_html: {min: "0", max: "100", required: '', "data-msg-required" => t(:discount_percent_required) }, placeholder: t(:discount_percent_placeholder) %>
   <%= f.input :expire_date, label: t(:expire_date), :as => :date_picker, readonly: true %>
@@ -11,7 +12,14 @@
         <input class="numeric numeric required valid" data-msg-required="" id="discount_number" max="9999" min="1" name="discount_number" placeholder="1-9999之间" required="required" step="any" type="number" value="1">
       </div>
     </div>
+    <div class="control-group discount_length">
+      <label class="control-label" for="discount_length"><%= t(:discount_six_length) %></label>
+      <div class="controls">
+        <input class="boolean optional" id="discount_length" name="discount_six_length" type="checkbox" value="1">
+      </div>
+    </div>
   <% end %>
+  <%= f.association :service_types, collection: ServiceType.asc(:name), label: t('service_types'), include_blank: true, multiple: true, size: 3 %>
   <div class="form-actions">
     <%= f.button :submit, t(:save), :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
