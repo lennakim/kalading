@@ -213,6 +213,8 @@ class OrdersController < ApplicationController
     end
     if params[:customerAreaCode].present?
       @order.city = City.find_by area_code: params[:customerAreaCode]
+    else
+      @order.city = City.find_by name: I18n.t(:beijing)
     end
     respond_to do |format|
       format.html # new.html.erb
