@@ -811,7 +811,7 @@ private
         @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
       elsif discount.orders.count >= discount.times
         @discount_error = I18n.t(:discount_no_capacity)
-      elsif discount.service_types.present? && discount.service_type_ids != @order.service_type_ids
+      elsif discount.service_types.present? && discount.service_type_ids.sort != @order.service_type_ids.sort
         @discount_error = I18n.t(:discount_service_types_error, s: discount.service_types.map{|s| s.name}.join(',') )
       else
         @order.discounts << discount

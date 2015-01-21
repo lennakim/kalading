@@ -33,7 +33,6 @@ parts_to_user_friendly = Proc.new do |parts|
         if params[:pm25].blank? || p.part_brand_id.to_s == '539d4d019a94e4de84000567'
           b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, spec: p.spec, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.any_in(storehouse_id: storehouses.map(&:id)).sum(&:remained_quantity) }
           b[{brand: p.part_brand.name, number: p.id, spec: p.spec}][:total_quantity] = p.partbatches.sum(&:remained_quantity)
-          b[{brand: p.part_brand.name, number: p.id, spec: p.spec}][:xxx] = p.part_brand_id
         end
       else
         b[{brand: p.part_brand.name, number: p.id, spec: p.spec}] = { brand: p.part_brand.name, number: p.id, price: p.ref_price.to_f * @order.auto_submodel.cals_part_count(p), quantity: p.partbatches.any_in(storehouse_id: storehouses.map(&:id)).sum(&:remained_quantity) }
