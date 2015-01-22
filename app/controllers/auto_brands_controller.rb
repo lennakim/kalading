@@ -1,11 +1,11 @@
 # encoding : utf-8
 class AutoBrandsController < ApplicationController
-  before_filter :authenticate_user!, :except => [:index, :show]
+  before_filter :authenticate_user!, :except => [:index, :show, :auto_sms_with_pm25]
   before_filter :set_default_operator
   # API test for Jason
   load_and_authorize_resource :except => [:index, :show, :auto_sms, :auto_sms_with_pm25]
   caches_action :index, :if => Proc.new { request.format.json? && params[:all] }
-  caches_action :auto_sms, :auto_sms_wiht_pm25
+  caches_action :auto_sms, :auto_sms_with_pm25
   
   # GET /auto_brands
   # GET /auto_brands.json

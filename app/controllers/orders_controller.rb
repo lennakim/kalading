@@ -446,6 +446,16 @@ class OrdersController < ApplicationController
           @order.parts << p
           @order.part_counts[p.id.to_s] = asm.cals_part_count(p)
         end
+      elsif t.name == I18n.t(:cabin_filter)
+        part = parts.first
+        parts.each do |p|
+          if p.part_brand_id.to_s == '539d4d019a94e4de84000567'
+            part = p
+            break
+          end
+        end
+        @order.parts << part
+        @order.part_counts[part.id.to_s] = asm.cals_part_count(part)
       else
         @order.parts << parts.first
         @order.part_counts[parts.first.id.to_s] = asm.cals_part_count(parts.first)
