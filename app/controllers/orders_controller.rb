@@ -134,14 +134,6 @@ class OrdersController < ApplicationController
     if params[:cancel_type].present?
       @orders = @orders.where cancel_type: params[:cancel_type]
     end
-    
-    if params[:normal].present?
-      if params[:normal] == 'true'
-        @orders = @orders.where :name.ne => ''
-      else
-        @orders = @orders.where :name => ''
-      end
-    end
 
     if !params[:storehouse].blank?
       @orders = @orders.where(storehouse: Storehouse.find(params[:storehouse]))
@@ -378,7 +370,7 @@ class OrdersController < ApplicationController
         if params[:order][:discount_num]
           @order.discounts = nil
           d = Discount.find_by token: params[:order][:discount_num]
-          if d && d.expire_date >= Date.today && d.orders.count < d.times
+          if d && d.expire_date >= Date.today && d.orders.count < d.times && (d.service_types.blank? || d.service_type_ids.sort == @order.service_type_ids.sort)
             @order.discounts << d
           end
         end
@@ -447,13 +439,7 @@ class OrdersController < ApplicationController
           @order.part_counts[p.id.to_s] = asm.cals_part_count(p)
         end
       elsif t.name == I18n.t(:cabin_filter)
-        part = parts.first
-        parts.each do |p|
-          if p.part_brand_id.to_s == '539d4d019a94e4de84000567'
-            part = p
-            break
-          end
-        end
+        part = parts.find {|p| p.part_brand_id.to_s == '539d4d019a94e4de84000567'} || parts.first
         @order.parts << part
         @order.part_counts[part.id.to_s] = asm.cals_part_count(part)
       else

@@ -999,8 +999,6 @@ zh-CN:
   locate_engineer: '定位技师'
   incoming_call_num: '来电号码'
   old_customer_call_prompt: '%{num} - 共有%{count}条记录'
-  normal_order: '正常未审核'
-  activities_order: '活动未审核'
   area_code: '区号'
   send_sms: '短信'
   send_sms_successful: '订单%{seq} - 短信发送成功'

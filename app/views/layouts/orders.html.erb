@@ -24,24 +24,6 @@
                      <% else %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s).count.to_s + ')', orders_path(state: s) %>
                     <% end %>
-                    <% if Order::STATE_STRINGS[s] == 'unverified' %>
-                      <ul class="nav nav-list">
-                        <% if params[:normal].present? && params[:normal] == 'true' %>
-                        <li class="active">
-                        <% else %>
-                        <li>
-                        <% end %>
-                          <%= link_to t(:normal_order) + ' (' + orders.where(state: s, :name.ne => '').count.to_s + ')', orders_path(state: s, normal: true) %>
-                        </li>
-                        <% if params[:normal].present? && params[:normal] == 'false' %>
-                        <li class="active">
-                        <% else %>
-                        <li>
-                        <% end %>
-                          <%= link_to t(:activities_order) + ' (' + orders.where(state: s, :name => '').count.to_s + ')', orders_path(state: s, normal: false) %>
-                        </li>
-                      </ul>
-                    <% end %>
                     <% if Order::STATE_STRINGS[s] == 'cancel_pending' %>
                       <ul class="nav nav-list">
                         <% Order::CANCEL_TYPES.reverse_each do |t| %>

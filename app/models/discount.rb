@@ -18,4 +18,15 @@ class Discount
   attr_accessible :name, :discount, :percent, :order_ids, :expire_date, :times, :final_price, :service_type_ids, :token
   
   paginates_per 10
+  
+  def generate_token six_length
+    if six_length == 1
+      begin
+        self.token = (('A'..'Z').to_a + (0..1).to_a).sample(6).join
+      end until !Discount.find_by(token: self.token)
+    else
+      self.token = SecureRandom.uuid.delete '-'
+    end
+  end
+  
 end

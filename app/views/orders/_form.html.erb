@@ -105,7 +105,7 @@
     <div class="control-group">
       <label for="div-discount" class="control-label"><%= t(:discount_num) %></label>
       <div class="controls form-inline" id="div-discount">
-        <%= f.input_field :discount_num %>
+        <%= f.input_field :discount_num, :autocomplete => "off", :value => (@order.discounts.exists? ? @order.discounts.first.token : '') %>
         <%= link_to t(:verify_discount_num), discount_query_path, class: 'btn', id: 'verify-discount-num-btn' %>
         <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
       </div>

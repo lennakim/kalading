@@ -106,7 +106,7 @@ class Order
   index({ car_location: 1, car_num: 1})
 
   validates :phone_num, length: { in: 8..13 }, presence: true
-  #validates :address, length: { in: 4..512 }, presence: true
+  validates :address, length: { in: 4..512 }, presence: true
   validates :city, presence: true
   
   # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询, 10: 取消待审核
