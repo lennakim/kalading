@@ -89,6 +89,10 @@ $ ->
     $('.engineer-tr, .unassigned-orders, .daily-order-tr').on 'dragover', (evt) ->
         evt.preventDefault()
 
+    update_tr_badge_number = (tr, add) ->
+        b = tr.find('.badge')
+        b.text(parseInt(b.text()) + add).fadeOut().fadeIn() if b?
+        
     assign_order_to_engineer = (order_tr, engineer_tr, old_engineer_tr) ->
         # console.log order_tr.data('seq') + '  ' + old_engineer_tr.find('strong').text() + ' -> ' + engineer_tr.find('strong').text()
         return if old_engineer_tr? and old_engineer_tr.is(engineer_tr)
@@ -99,16 +103,21 @@ $ ->
             data: JSON.stringify({state: 3, engineer_id: engineer_tr.attr('id')})
             dataType: 'json'
             success: ->
+                if old_engineer_tr.get(0)?
+                    update_tr_badge_number $(old_engineer_tr), -1
+                    update_tr_badge_number $($(old_engineer_tr).prevAll('.assigned-dianbu-tr')[0]), -1
+                else
+                    update_tr_badge_number order_tr.prev('.dianbu-tr'), -1
+                update_tr_badge_number $(engineer_tr), 1
+                update_tr_badge_number $($(engineer_tr).prevAll('.assigned-dianbu-tr')[0]), 1
                 # 保证订单按照服务时间排序，找到合适的位置，插入订单
                 tr = engineer_tr.next('tr')
-                while tr.hasClass('daily-order-tr') and tr.children('td.order-time').text() < order_tr.children('td.order-time').text()
-                    tr = tr.next('tr')
-                if old_engineer_tr.get(0)?
-                    b = $(old_engineer_tr.find('.badge'))
-                    b.text(parseInt(b.text()) - 1).fadeOut().fadeIn() if b?
-                order_tr.insertBefore(tr)
-                b = engineer_tr.find('.badge')
-                b.text(parseInt(b.text()) + 1).fadeOut().fadeIn() if b?
+                if tr.length > 0
+                    while tr.hasClass('daily-order-tr') and tr.children('td.order-time').text() < order_tr.children('td.order-time').text()
+                        tr = tr.next('tr')
+                    order_tr.insertBefore(tr)
+                else
+                    order_tr.insertAfter engineer_tr
                 order_tr.data('label').setStyle({color: 'grey', opacity: 0.5, borderStyle: 'dotted' })
                 order_tr.data('label').setZIndex 9
             error: ->
@@ -148,8 +157,8 @@ $ ->
             success: =>
                 old_engineer_tr = $($(order_tr).prevAll('tr.engineer-tr')[0])
                 if old_engineer_tr.get(0)?
-                    b = old_engineer_tr.find('.badge')
-                    b.text(parseInt(b.text()) - 1).fadeOut().fadeIn() if b?
+                    update_tr_badge_number old_engineer_tr, -1
+                    update_tr_badge_number $(old_engineer_tr.prevAll('.assigned-dianbu-tr')[0]), -1
                 if !make_order_tr_close_to_dianbu $(order_tr)
                     $(order_tr).insertAfter($('tr.city-tr[data-name=\'' + $(order_tr).data('city') + '\']')[0])
                 $(order_tr).data('label').setStyle({color: 'red', opacity: 1.0, borderStyle: 'solid' })
@@ -250,6 +259,7 @@ $ ->
                     dianbu_tr = $('tr.dianbu-tr[data-id=\'' + li.id + '\']')[0]
             if dianbu_tr
                 tr.insertAfter dianbu_tr
+                update_tr_badge_number $(dianbu_tr), 1
         add_order_marker_points = (points) ->
             for v in points
                 # closure to prevent v from being shared

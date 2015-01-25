@@ -17,8 +17,8 @@
             <tbody>
               <% @storehouse_engineers.each do |k, es| %>
                 <% if k %>
-                  <tr class="warning" data-id="<%= k.id %>">
-                    <td colspan="3"><a class="dianbu-a" href="#"><strong><%= k.name %></strong></a></td>
+                  <tr class="warning assigned-dianbu-tr" data-id="<%= k.id %>">
+                    <td colspan="3"><a class="dianbu-a" href="#"><strong><%= k.name %></strong></a>&nbsp<span class="badge badge-info"><%= es.sum {|e| (@engineer_order_hash[e] || []).size} %></span></td>
                   </tr>
                 <% else %>
                   <tr class="warning" id="dianbu-none">
@@ -49,7 +49,7 @@
             <tbody>
               <% Storehouse.asc(:city).each do |s| %>
                 <tr class="dianbu-tr warning" data-id="<%= s.id %>">
-                  <td colspan="3"><a class="dianbu-a" href="#"><strong><%= s.name %></strong></a></td>
+                  <td colspan="3"><a class="dianbu-a" href="#"><strong><%= s.name %></strong></a>&nbsp<span class="badge badge-info">0</span></td>
                 </tr>
               <% end %>
               <% @city_unassigned_orders.each do |k, v| %>
