@@ -286,6 +286,7 @@ class OrdersController < ApplicationController
     
     params[:order][:car_num].upcase! if params[:order][:car_num]
     @order = Order.find(params[:id])
+    sms_state = 0
     if params[:verify_failed]
       params[:order][:state] = 1
       notice = I18n.t(:order_verify_failed, seq: @order.seq)
@@ -311,10 +312,12 @@ class OrdersController < ApplicationController
       when 0..1
         params[:order][:state] = 2
         notice = I18n.t(:order_verified_notify, seq: @order.seq)
+        sms_state = 2
       when 2
         u = User.find(params[:order][:engineer_id])
         params[:order][:state] = 3
         notice = I18n.t(:order_assigned_notify, seq: @order.seq, name: u.name)
+        sms_state = 3
       when 3
         if params[:order][:part_deliver_state] == '1'
           params[:order][:state] = 3
@@ -366,7 +369,7 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       if @order.update_attributes(params[:order])
-        _auto_send_sms_notify @order, params[:order][:state]
+        _auto_send_sms_notify @order, sms_state
         if params[:order][:discount_num]
           @order.discounts = nil
           d = Discount.find_by token: params[:order][:discount_num]
