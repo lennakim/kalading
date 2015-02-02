@@ -1,0 +1,6 @@
+$(".td-complaint-form").hide();
+$("#td-<%= @complaint.id.to_s %>").html("<%= escape_javascript(render("form")) %>").fadeIn();
+$(".cancel-edit-btn").click(function() {
+    $(".td-complaint-form").fadeOut();
+    return false;
+});

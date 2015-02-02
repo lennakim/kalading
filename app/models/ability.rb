@@ -35,6 +35,10 @@ class Ability
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can [:update, :edit_all, :calcprice, :print, :daily_orders], Order
       can :order_prompt, Order
+      can :read, Complaint
+      can :update, Complaint do |c|
+        c.handler == user
+      end
     end
 
     if user.roles.include? ROLE_ID('data_admin')
@@ -47,6 +51,10 @@ class Ability
 
     if user.roles.include? ROLE_ID('engineer')
       can [:read, :order_prompt], Order
+      can :read, Complaint
+      can :update, Complaint do |c|
+        c.handler == user
+      end
       can :update, Order do |o|
         o.engineer == user
       end
@@ -58,6 +66,7 @@ class Ability
     if user.roles.include? ROLE_ID('dispatcher')
       can :read, :all
       can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print, :send_sms_notify, :daily_orders], Order
+      can [:create, :update, :edit_all, :send_sms_notify], Complaint
     end
     
     if user.roles.include? ROLE_ID('finance')

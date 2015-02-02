@@ -17,6 +17,7 @@
   <div class="pull-right">
     <%= link_to t('tomorrow_orders_assign'), daily_orders_path(date: Date.tomorrow), :class => 'btn btn-success' if can? :edit_all, Order %>
     <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary' if can? :create, Order %>
+    <%= link_to t('new_complaint'), new_complaint_path, :class => 'btn btn-primary' if can? :create, Complaint %>
   </div>
   </h4>
   <% if mobile_device? %>

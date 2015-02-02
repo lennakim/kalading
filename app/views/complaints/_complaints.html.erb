@@ -1,0 +1,70 @@
+<% if @complaints.exists? %>
+  <%= paginate @complaints %>
+
+  <table class="table table-striped" id="order-table">
+    <thead>
+      <tr>
+        <th><%= t(:complaint_id) %></th>
+        <th><%= t(:state) %></th>
+        <th><%= t(:severity_level) %></th>
+        <th><%= t(:customer_name) %></th>
+        <th><%= t(:customer_phone) %></th>
+        <th><%= t(:complained) %></th>
+        <th><%= t(:handler) %></th>
+        <th><%= t(:complaint_tag) %></th>
+        <th><%= t(:created_at) %></th>
+        <th><%= t(:comment) %></th>
+        <th><%= t 'actions' %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% colors = %w[success error info warning] %>
+      <% @complaints.each_with_index do |complaint, i| %>
+        <tr class="<%= colors[ i % colors.length] %>" id="<%= complaint.id %>">
+          <td><%= link_to complaint.seq, complaint %></td> 
+          <td><%= t(Complaint::STATE_STRINGS[complaint.state]) %></td>        
+          <td><%= t(Complaint::SEVERITY_LEVEL_STRINGS[complaint.severity_level]) %></td>
+          <td><%= complaint.customer_name %></td>
+          <td><%= complaint.customer_phone_num %></td>
+          <td><%= complaint.complained.name if complaint.complained %></td>
+          <td><%= complaint.handler.name if complaint.handler %></td>
+          <td><%= complaint.tag.name if complaint.tag %></td>
+          <td><%= l complaint.created_at %></td>
+          <td>
+            <% if complaint.comments.empty? %>
+              <%= t(:nothing) %>
+            <% else %>
+              <a class="btn btn-link" data-toggle="collapse" data-target="#<%= complaint.id %>_comments"><%= t(:view) %></a>
+              <div id="<%= complaint.id %>_comments" class="collapse">
+              <% complaint.comments.desc(:created_at).each do |c| %>
+              <p><%= c.text %></p>
+              <% end %>
+              </div>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to t(:detail), complaint, { :class => 'btn btn-info btn-mini' } %>
+            <% if can? :update, Complaint %>
+              <%= link_to t(:handle), edit_complaint_path(complaint, handle: 1), :class => 'btn btn-mini', :remote => true if Complaint::STATE_STRINGS[complaint.state] == 'not_handled'%>
+              <%= link_to t(:edit), edit_complaint_path(complaint, edit_all: 1), :class => 'btn btn-mini' if Complaint::STATE_STRINGS[complaint.state] == 'not_handled'%>
+              <%= link_to t(:comment), edit_complaint_path(complaint, add_comment: 1), :class => 'btn btn-mini', :remote => true %>
+              <%= link_to t(:send_sms), complaint_send_sms_notify_path(complaint),
+                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          :class => 'btn btn-mini' if Complaint::STATE_STRINGS[complaint.state] == 'not_handled' %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-complaint-form" colspan="14" style="display: none;" id="td-<%= complaint.id.to_s %>"></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= paginate @complaints %>
+<% else %>
+  <div class="alert alert-error">
+    <a class="close" data-dismiss="alert">&#215;</a>
+    <strong><%= t(:no_complaints_found) %></strong>
+  </div>
+<% end %>
+<div id="modal-window" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true"></div>

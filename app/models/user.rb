@@ -59,6 +59,9 @@ class User
   has_many :serve_orders, class_name: "Order", inverse_of: :engineer
   has_many :serve_orders2, class_name: "Order", inverse_of: :engineer2
   has_many :serve_orders3, class_name: "Order", inverse_of: :dispatcher
+  has_many :complaints_created, class_name: "Complaint", inverse_of: :creater
+  has_many :complaints_complained, class_name: "Complaint", inverse_of: :complained
+  has_many :complaints_handled, class_name: "Complaint", inverse_of: :handler
   has_many :partbatches
   belongs_to :storehouse
   belongs_to :city
@@ -88,5 +91,15 @@ class User
 
   def self.storehouse_admins
     User.all.select {|u| u.ability.can? :create, Partbatch}
+  end
+  
+  def leader
+    if self.roles.include?(User::ROLE_STRINGS.index('engineer').to_s)
+      User.find_by(storehouse_id: self.storehouse_id, title: /.*#{I18n.t(:dianbu_leader)}.*/i)
+    elsif self.roles.include?(User::ROLE_STRINGS.index('dispatcher').to_s)
+      User.find_by(title: /.*#{I18n.t(:dispatcher_manager)}.*/i)
+    else
+      self
+    end
   end
 end

@@ -33,6 +33,14 @@
           <% end %>
           <%= link_to t('order_menu'), orders_path if can? :read, Order %>
           </li>
+          
+          <% if ['complaints'].include? params[:controller] %>
+          <li class="active">
+          <% else %>
+          <li>
+          <% end %>
+          <%= link_to t('complaint_menu'), complaints_path if can? :read, Complaint %>
+          </li>
 
           <% if ['cities'].include? params[:controller] %>
           <li class="active">

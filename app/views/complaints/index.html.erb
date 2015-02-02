@@ -1,0 +1,103 @@
+<%- model_class = Complaint -%>
+<div class="page-header">
+  <h4>
+  <%= t(:complaints) %>
+  <% if params[:state].present? %>
+    <%= ' - ' + t(Complaint::STATE_STRINGS[params[:state].to_i])  %>
+  <% end %>
+  <div class="pull-right">
+    <%= link_to t('new_complaint'), new_complaint_path, :class => 'btn btn-primary' if can? :create, Complaint %>
+  </div>
+</div>
+
+<a class="btn btn-link" data-target="#complaint-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
+<% if mobile_device? %>
+<div id="complaint-search-form" class="collapse">
+<% else %>  
+<div id="complaint-search-form" class="collapse in">
+<% end %>
+  <%= form_tag complaints_path, :method => 'get', :id => "complaints_search", :class => 'form-horizontal' do %>
+    <input name="state" type="hidden" value="<%= params[:state] %>" />
+    <div class="control-group">
+      <%= label_tag :phone_num, t('phone_num'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :phone_num, params[:customer_phone_num], class: 'control', placeholder: t(:phone_num_hint) %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :customer_name, t('customer_name'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :customer_name, params[:customer_name], class: 'control' %>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :severity_level, t('severity_level'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="severity_level" id="severity_level">
+          <% if params[:severity_level].nil? || params[:severity_level] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% Complaint::SEVERITY_LEVELS.each do |l| %>
+            <% if params[:city] == l.to_s %>
+              <option value="<%= l %>" selected><%= t(Complaint::SEVERITY_LEVEL_STRINGS[l]) %></option>
+            <% else %>
+              <option value="<%= l %>"><%= t(Complaint::SEVERITY_LEVEL_STRINGS[l]) %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :complained, t('complained'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="complained" id="complained">
+          <% if params[:complained].nil? || params[:complained] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% User.asc(:name).each do |t| %>
+            <% if params[:complained] == t.id.to_s %>
+              <option value="<%= t.id %>" selected><%= t.name %></option>
+            <% else %>
+              <option value="<%= t.id %>"><%= t.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+    
+    <div class="control-group select">
+      <%= label_tag :handler, t('handler'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <select name="handler" id="handler">
+          <% if params[:handler].nil? || params[:handler] == '' %>
+            <option value="" selected><%= t :all %></option>
+          <% else %>
+            <option value=""><%= t :all %></option>
+          <% end %>
+          <% User.asc(:name).each do |t| %>
+            <% if params[:handler] == t.id.to_s %>
+              <option value="<%= t.id %>" selected><%= t.name %></option>
+            <% else %>
+              <option value="<%= t.id %>"><%= t.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= submit_tag t(:search), class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>
+
+<div id="complaint-list">
+  <%= t(:total, count: @complaints.size) %><br/>
+  <%= render :partial => 'complaints' %>
+</div>

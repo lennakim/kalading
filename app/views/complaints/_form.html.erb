@@ -1,0 +1,35 @@
+<%= simple_nested_form_for @complaint, :html => { class: "form-horizontal" } do |f| %>
+  <% if !params[:add_comment] && !params[:handle] || params[:edit_all] %>
+    <div class="control-group required">
+      <label for="order_seq" class="control-label"><%= t(:order_id) %></label>
+      <div class="controls form-inline" >
+        <%= f.input_field :order_seq, :autocomplete => "off", :value => (@complaint.order ? @complaint.order.seq : '') %>
+      </div>
+    </div>
+    <%= f.input :customer_name, label: t(:client_name) %>
+    <%= f.input :customer_phone_num, label: t(:phone_num) %>
+    <%= f.association :tag, collection: Tag.where(:type => 1), label: t('complaint_tag'), input_html: { "data-msg-required" => t(:city_required) } %>
+    <%= f.association :creater, collection: User.asc(:pinyin), label: t('creater'), input_html: { "data-msg-required" => t(:city_required) }, readonly: true %>
+    <%= f.association :complained, collection: User.asc(:pinyin), label: t('complained'), input_html: { "data-msg-required" => t(:city_required) } %>
+    <%= f.association :handler, collection: User.asc(:pinyin), label: t('handler'), input_html: { "data-msg-required" => t(:city_required) } if @complaint.handler%>
+    <%= f.input :severity_level, label: t(:severity_level), collection: Complaint::SEVERITY_LEVELS, label_method: lambda {|s| t(Complaint::SEVERITY_LEVEL_STRINGS[s])}, include_blank: false %>
+    <%= f.input :source, label: t(:source), collection: t(:complaint_source).split, include_blank: false %>
+    <%= render 'orders/comments', :f => f %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+      <%= link_to t('cancel'), complaints_path, :class => 'btn' %>
+    </div>
+  <% elsif params[:add_comment] %>
+    <%= render 'orders/comments', :f => f %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% elsif params[:handle] %>
+    <%= render 'orders/comments', :f => f %>
+    <div class="form-actions">
+      <%= f.button :submit, t(:handle), :class => 'btn-primary', name: "handle" %>
+      <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
+    </div>
+  <% end %>
+<% end %>

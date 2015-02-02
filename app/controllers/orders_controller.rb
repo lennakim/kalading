@@ -194,7 +194,7 @@ class OrdersController < ApplicationController
   # GET /orders/new
   # GET /orders/new.json
   def new
-    @order = Order.new
+    @i
     @order.serve_datetime = DateTime.now.since(1.days)
     if current_user && current_user.roles.include?('6')
       @order.dispatcher = current_user
@@ -748,7 +748,7 @@ class OrdersController < ApplicationController
       end
     end
     send_sms @order.phone_num, '647223', "#reason#=#{reason}"
-    @order.comments << Comment.new(text: I18n.t(:sms_comment, dispatcher: @order.dispatcher.name, time: Time.now.strftime('%m-%d %H:%M')))
+    @order.comments << Comment.new(text: I18n.t(:fail_call_sms_comment, dispatcher: @order.dispatcher.name, time: Time.now.strftime('%m-%d %H:%M')))
     redirect_to session.delete(:return_to), notice: I18n.t(:send_sms_successful, seq: @order.seq)
   end
 

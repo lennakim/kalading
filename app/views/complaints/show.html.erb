@@ -1,0 +1,60 @@
+<%- model_class = Complaint -%>
+<h5 id="basic_infos"><%= t(:basic_infos) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:state) %></td>
+      <td><%= t(Complaint::STATE_STRINGS[@complaint.state]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:severity_level) %></td>
+      <td><%= t(Complaint::SEVERITY_LEVEL_STRINGS[@complaint.severity_level]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:customer_name) %></td>
+      <td><%= @complaint.customer_name %></td>
+    </tr>
+    <tr>
+      <td><%= t(:customer_phone) %></td>
+      <td><%= @complaint.customer_phone_num %></td>
+    </tr>
+    <tr>
+      <td><%= t(:order_id) %></td>
+      <td><%= @complaint.order.seq if @complaint.order %></td>
+    </tr>
+    <tr>
+      <td><%= t(:creater) %></td>
+      <td><%= @complaint.creater.name if @complaint.creater %></td>
+    </tr>
+    <tr>
+      <td><%= t(:complained) %></td>
+      <td><%= @complaint.complained.name if @complaint.complained %></td>
+    </tr>
+    <tr>
+      <td><%= t(:handler) %></td>
+      <td><%= @complaint.handler.name if @complaint.handler %></td>
+    </tr>
+    <tr>
+      <td><%= t(:complaint_tag) %></td>
+      <td><%= @complaint.tag.name if @complaint.tag %></td>
+    </tr>
+    <tr>
+      <td><%= t(:created_at) %></td>
+      <td><%= l @complaint.created_at %></td>
+    </tr>
+    <tr>
+      <td><%= t(:handled_datetime) %></td>
+      <td><%= l @complaint.handled_datetime if @complaint.handled_datetime %></td>
+    </tr>
+  </tbody>
+</table>
+<h5 id="comments"><%= t(:comment) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <% @complaint.comments.each do |c|%>
+      <tr>
+        <td colspan="2"><%= text_area_tag 'comment', c.text, {:size => '80x3', :disabled => true} %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
