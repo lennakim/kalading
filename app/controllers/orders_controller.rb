@@ -283,10 +283,9 @@ class OrdersController < ApplicationController
   # PUT /orders/1.json
   def update
     params[:edit_all] = true if request.format.json?
-    
     params[:order][:car_num].upcase! if params[:order][:car_num]
     @order = Order.find(params[:id])
-    sms_state = 0
+    old_state = @order.state
     if params[:verify_failed]
       params[:order][:state] = 1
       notice = I18n.t(:order_verify_failed, seq: @order.seq)
@@ -304,7 +303,6 @@ class OrdersController < ApplicationController
       notice = I18n.t(:order_cancel_pending, seq: @order.seq)
     elsif params[:cancel_confirm]
       params[:order][:state] = 8
-      notify_order_state_change @order, params[:order][:state]
       notice = I18n.t(:order_cancelled, seq: @order.seq)
     else
       params[:order][:state] = 1
@@ -312,19 +310,16 @@ class OrdersController < ApplicationController
       when 0..1
         params[:order][:state] = 2
         notice = I18n.t(:order_verified_notify, seq: @order.seq)
-        sms_state = 2
       when 2
         u = User.find(params[:order][:engineer_id])
         params[:order][:state] = 3
         notice = I18n.t(:order_assigned_notify, seq: @order.seq, name: u.name)
-        sms_state = 3
       when 3
         if params[:order][:part_deliver_state] == '1'
           params[:order][:state] = 3
           notice = I18n.t(:order_delivered_notify, seq: @order.seq)
         else
           params[:order][:state] = 4
-          notify_order_state_change @order, params[:order][:state]
           notice = I18n.t(:order_scheduled_notify, seq: @order.seq)
         end
       when 4
@@ -336,7 +331,6 @@ class OrdersController < ApplicationController
             return render json: {error: t(:order_create_failed)}, status: :bad_request
           end
           params[:order][:state] = 5
-          notify_order_state_change @order, params[:order][:state]
           notice = I18n.t(:order_served_notify, seq: @order.seq)
         end
       when 5
@@ -369,7 +363,8 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       if @order.update_attributes(params[:order])
-        _auto_send_sms_notify @order, sms_state
+        # 状态改变时，通知微车，发短信
+        _notify_order_state_change @order, params[:order][:state] if (params[:order][:state] && old_state != params[:order][:state])
         if params[:order][:discount_num]
           @order.discounts = nil
           d = Discount.find_by token: params[:order][:discount_num]
@@ -820,24 +815,23 @@ private
     end
   end
 
-  def notify_order_state_change( o, state)
-    ut = UserType.find_by name: I18n.t(:weiche)
-    if ut && o.user_type == ut
-      require 'net/http'
-      s = Digest::MD5.hexdigest "channel=kalading&order_id=#{o.seq}&order_status=#{state}&withkey=oMi5guNg6Py4l8YOKeL_NEq2uLI8"
-      r = Net::HTTP.post_form URI.parse('http://wx.wcar.net.cn/script/weiche_order_feedback.php'),
-        { channel: 'kalading', order_id: o.seq, order_status: state, sign: s }
-      logger.info "Notify weiche order: #{r.body}"
+  def _notify_order_state_change( o, state)
+    if [3,4,5,8].include? state
+      ut = UserType.find_by name: I18n.t(:weiche)
+      if ut && o.user_type == ut
+        require 'net/http'
+        s = Digest::MD5.hexdigest "channel=kalading&order_id=#{o.seq}&order_status=#{state}&withkey=oMi5guNg6Py4l8YOKeL_NEq2uLI8"
+        r = Net::HTTP.post_form URI.parse('http://wx.wcar.net.cn/script/weiche_order_feedback.php'),
+          { channel: 'kalading', order_id: o.seq, order_status: state, sign: s }
+        logger.info "Notify weiche order: #{r.body}"
+      end
     end
-  end
 
-  def _auto_send_sms_notify(o, state)
     if state == 2
       servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}"
       url = CGI.escape('http://kalading.com')
       send_sms o.phone_num, '647221', "#autoname#=#{o.auto_submodel.full_name if o.auto_submodel}&#servicetypes#=#{o.service_types.first.name if o.service_types.exists?}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
-    end
-    if state == 3
+    elsif state == 3
       send_sms o.phone_num, '647217', "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
     end
   end
