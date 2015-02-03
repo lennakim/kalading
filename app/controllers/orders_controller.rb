@@ -194,7 +194,6 @@ class OrdersController < ApplicationController
   # GET /orders/new
   # GET /orders/new.json
   def new
-    @i
     @order.serve_datetime = DateTime.now.since(1.days)
     if current_user && current_user.roles.include?('6')
       @order.dispatcher = current_user
@@ -491,17 +490,13 @@ class OrdersController < ApplicationController
     asm = AutoSubmodel.find(params[:asm_id])
     return render json: t(:auto_submodel_required), status: :bad_request if asm.nil?
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
-    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
-    return render json: {result: t(:city_needed)}, status: :bad_request if params[:info][:city_id].nil? || params[:info][:city_id].empty?
-    city = City.find(params[:info][:city_id])
-    return render json: t(:city_invalid), status: :bad_request if city.nil?
-    
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].blank?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].blank?
+    return render json: {result: t(:city_needed)}, status: :bad_request if params[:info][:city_id].blank?
     _create_auto_maintain_order
-
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
@@ -511,15 +506,12 @@ class OrdersController < ApplicationController
   # no auto submodel, no parts
   def create_auto_maintain_order2
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
-    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].blank?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].blank?
     return render json: {result: t(:city_needed)}, status: :bad_request if params[:info][:city_id].nil? || params[:info][:city_id].empty?
-    city = City.find(params[:info][:city_id])
-    return render json: t(:city_invalid), status: :bad_request if city.nil?
-    
     _create_auto_maintain_order
     if @order.parts.empty?
       @order.buymyself = true
@@ -532,14 +524,13 @@ class OrdersController < ApplicationController
 
   def create_auto_maintain_order3
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
-    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].blank?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].blank?
     _create_auto_maintain_order
     return render json: {result: t(:parts_needed)}, status: :bad_request if @order.parts.empty?
-    @order.city = City.find_by name: I18n.t(:beijing)
     @order.user_type = UserType.find_or_create_by name: I18n.t(:baichebao)
     @order.update_attributes params[:info]
     @order.car_num.upcase!
@@ -549,13 +540,12 @@ class OrdersController < ApplicationController
 
   def create_auto_maintain_order4
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
-    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].blank?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].blank?
     _create_auto_maintain_order
-    @order.city = City.find_by name: I18n.t(:beijing)
     @order.user_type = UserType.find_or_create_by name: I18n.t(:weiche)
     @order.update_attributes params[:info]
     @order.car_num.upcase!
@@ -565,12 +555,10 @@ class OrdersController < ApplicationController
   
   def create_auto_maintain_order5
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
-    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
     _create_auto_maintain_order
-    @order.city = City.find_by name: I18n.t(:beijing)
     if !params[:free].blank?
       @order.user_type = UserType.find_or_create_by name: I18n.t(:renbaodianxiao)
     else
@@ -585,11 +573,11 @@ class OrdersController < ApplicationController
 
   def create_auto_verify_order
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
-    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].blank?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].blank?
     @order = Order.new
     st = ServiceType.find '52cb67839a94e4fd190001eb'
     return render json: t(:auto_verify_service_type_not_found), status: :bad_request if st.nil?
@@ -603,11 +591,11 @@ class OrdersController < ApplicationController
 
   def create_auto_test_order
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].nil? || params[:info][:address].empty?
-    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].nil? || params[:info][:name].empty?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].nil? || params[:info][:car_location].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    return render json: {result: t(:car_location_needed)}, status: :bad_request if params[:info][:car_location].blank?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].blank?
     @order = Order.new
     st = ServiceType.find '52c186d4098e7133cd000005'
     return render json: t(:auto_test_service_type_not_found), status: :bad_request if st.nil?
@@ -622,8 +610,8 @@ class OrdersController < ApplicationController
   # only phone_num and car_num, default city is beijing
   def create_auto_special_order
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
-    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].nil? || params[:info][:phone_num].empty?
-    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].nil? || params[:info][:car_num].empty?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    return render json: {result: t(:car_num_needed)}, status: :bad_request if params[:info][:car_num].blank?
     @order = Order.new
     @order.service_types << ServiceType.find('527781867ef560ccbc000007')
     if (8..19).include? DateTime.now.hour
@@ -750,6 +738,11 @@ class OrdersController < ApplicationController
 private
   def _create_auto_maintain_order
     @order = Order.new
+    if params[:info].nil? || params[:info][:city_id].blank?
+      @order.city = City.find_by name: I18n.t(:beijing)
+    else
+      @order.city = City.find params[:info][:city_id]
+    end
     if params[:asm_id].present?
       asm = AutoSubmodel.find(params[:asm_id])
       @order.auto_submodel = asm

@@ -23,7 +23,7 @@ describe '查询某个车型的保养默认套餐和适用配件信息。auth_to
   end
 end
 
-describe '新建百车宝保养订单，需指定车型ID。parts为用户选择的配件,配件的brand和number从查询套餐的接口获得。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。',  :type => :request do
+describe '新建百车宝保养订单，城市北京，需指定车型ID。parts为用户选择的配件,配件的brand和number从查询套餐的接口获得。返回值seq为订单唯一标识，用于订单状态通知。输入参数：serve_datetime为期望的上门服务时间。pay_type为支付方式，0为现金，1为刷卡；reciept_type为发票类型，0为个人，1为公司。',  :type => :request do
   include_context "order"
   include_context "api doc"
 
@@ -50,6 +50,7 @@ describe '新建百车宝保养订单，需指定车型ID。parts为用户选择
               reciept_type: 1,
               reciept_title: "发票抬头",
               client_comment: "客户的特殊要求",
+              city_id: City.find_by(name: I18n.t(:beijing)).id,
       }
     }
     post "/auto_maintain_pack/531f1ed0098e71b3f80001fb", o

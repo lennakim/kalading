@@ -5,6 +5,7 @@ FactoryGirl.define do
     email "test_engineer_rspec@kalading.com"
     name "app"
     password  "12345678"
+    city_id City.find_by(name: I18n.t(:beijing)).id
     roles ["5"]
   end
 
@@ -13,6 +14,7 @@ FactoryGirl.define do
     email "baichebao_test@kalading.com"
     name "baichebao"
     password  "12345678"
+    city_id City.find_by(name: I18n.t(:beijing)).id
     roles []
   end
 
@@ -21,6 +23,7 @@ FactoryGirl.define do
     email "weiche_test@kalading.com"
     name "微车下单专用"
     password  "12345678"
+    city_id City.find_by(name: I18n.t(:beijing)).id
     roles []
   end
 
@@ -29,6 +32,7 @@ FactoryGirl.define do
     email "test_admin@kalading.com"
     name "admin"
     password  "12345678"
+    city_id City.find_by(name: I18n.t(:beijing)).id
     roles ["1"]
   end
 end
