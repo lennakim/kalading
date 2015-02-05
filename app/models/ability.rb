@@ -16,7 +16,7 @@ class Ability
       can :manage, :all
       can :access, :rails_admin   # grant access to rails_admin
       can :dashboard              # grant access to the dashboard
-      can :edit_all, Order
+      can [:edit_all, :statistics], Order
       can :view, Video
     end
 
@@ -43,7 +43,7 @@ class Ability
 
     if user.roles.include? ROLE_ID('data_admin')
       can :read, :all
-      can [:create, :update, :destroy], [Auto, AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier, Storehouse, Discount]
+      can [:create, :update, :destroy], [AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier, Storehouse, Discount]
       can :inout, Storehouse
       can [:match, :part_select, :update_part_select, :parts_by_brand_and_type, :delete_match, :edit_part_automodel, :add_auto_submodel, :delete_auto_submodel], Part
       can :order_seq_check, Order

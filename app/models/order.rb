@@ -108,9 +108,12 @@ class Order
   validates :phone_num, length: { in: 8..13 }, presence: true
   #validates :address, length: { in: 4..512 }, presence: true
   validates :city, presence: true
+  validates_format_of :car_num, with: /^[a-zA-Z\d]*$/
   
   # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询, 10: 取消待审核
   STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  # 有效订单，用于统计
+  VALID_STATES = [0, 2, 3, 4, 5, 6, 7]
   STATE_STRINGS = %w[unverified verify_error unassigned unscheduled scheduled serve_done handovered revisited service_cancelled inquiry cancel_pending]
   STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit edit cancel_confirm]
   STATE_CHANGED_STRS = %w[reverify verify_failed verify_ok assign_ok schedule_ok serve_ok handover_ok revisit_ok]
@@ -239,8 +242,6 @@ class Order
         end
       end
     end
-    # 保存订单车辆信息
-    Auto.find_or_create_by(car_location: o.car_location, car_num: o.car_num, auto_submodel_id: o.auto_submodel.id ) if o.auto_submodel
   end
   
   before_create do |o|
@@ -266,5 +267,12 @@ class Order
     def to_be_backed_hash
       {states: [5, 8, 10], part_deliver_state: 1}
     end
+    
+    def valid_by_car_hash(car_location, car_num)
+      { states: VALID_STATES, :car_location => car_location, :car_num => car_num }
+    end
   end
+  
+  scope :valid, where(:state.in => VALID_STATES)
+  scope :by_car, ->(car_location, car_num) { where(:car_location => car_location, :car_num => car_num) }
 end

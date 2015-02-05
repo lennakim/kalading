@@ -558,4 +558,11 @@ namespace :rename_asm do
     puts "#{two_or_more} models has 2 or more cabin filters, has #{two_or_more_order_count} orders"
     puts "#{asms_groups.size - two_or_more} models has 1 cabin filter, has #{order_count} orders"
   end
+
+  task :gsub_invalid_car_num => :environment do
+    Order.where(car_num: /^[^a-zA-Z\d]/).each do |o|
+      o.car_num.gsub!(/^[^a-zA-Z\d]/, '')
+      o.save!
+    end
+  end
 end

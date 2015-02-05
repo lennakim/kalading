@@ -60,7 +60,11 @@
               <%= order.engineer2.name %>
             <% end %>
           </td>
-          <td><%= order.car_location + order.car_num %></td>
+          <td><%= order.car_location + order.car_num %>
+            <% if order.car_location.present? && order.car_num.present? && can?(:statistics, Order) %>
+              &nbsp<a href="<%= orders_path(Order.valid_by_car_hash(order.car_location, order.car_num)) %>"><span class="badge badge-info"><%= Order.valid.by_car(order.car_location, order.car_num).count %></span></a>
+            <% end %>
+          </td>
           <td><%= order.auto_submodel.full_name if order.auto_submodel %></td>
           <td class="order-address"><%= order.address %></td>
           <td><%= order.phone_num %></td>

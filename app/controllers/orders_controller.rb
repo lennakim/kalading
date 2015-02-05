@@ -53,6 +53,10 @@ class OrdersController < ApplicationController
       @orders = @orders.where dispatcher: e
     end
 
+    if !params[:car_location].blank?
+      @orders = @orders.where(car_location: params[:car_location])
+    end
+
     if !params[:car_num].blank?
       @orders = @orders.where(car_num: /.*#{params[:car_num]}.*/i)
     end
@@ -144,7 +148,7 @@ class OrdersController < ApplicationController
         params[:per] ||= 20
         params[:per] = @orders.count if (params[:state].to_i == 2 && params[:serve_datetime_start].present? && params[:serve_datetime_start] == params[:serve_datetime_end])
         @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
-        if params[:states]
+        if params[:part_deliver_state].present?
           render layout: 'storehouses'
         end
       }
@@ -821,7 +825,7 @@ private
     end
 
     if state == 2
-      servedate = o.serve_datetime.strftime "%m#{I18n.t(:month)}%d#{I18n.t(:day)}"
+      servedate = o.serve_datetime && o.serve_datetime.strftime("%m#{I18n.t(:month)}%d#{I18n.t(:day)}")
       url = CGI.escape('http://kalading.com')
       send_sms o.phone_num, '647221', "#autoname#=#{o.auto_submodel.full_name if o.auto_submodel}&#servicetypes#=#{o.service_types.first.name if o.service_types.exists?}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
     elsif state == 3

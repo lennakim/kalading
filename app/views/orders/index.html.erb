@@ -89,6 +89,7 @@
     <div class="control-group">
       <%= label_tag :car_num, t('car_num'), class: 'control-label' %>
       <div class="controls form-inline">
+        <%= collection_select(nil, nil, t(:locations).split, :to_s, :to_s, {:include_blank => true, :selected => params[:car_location].to_s}, {:class=>'input-small control', :id => 'select-car-location', :name => 'car_location'}) %>
         <%= text_field_tag :car_num, params[:car_num], class: 'control', placeholder: t(:car_num_hint) %>
       </div>
     </div>
