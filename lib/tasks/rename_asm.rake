@@ -560,9 +560,8 @@ namespace :rename_asm do
   end
 
   task :gsub_invalid_car_num => :environment do
-    Order.where(car_num: /^[^a-zA-Z\d]/).each do |o|
-      o.car_num.gsub!(/^[^a-zA-Z\d]/, '')
-      o.save!
+    Order.where(car_num: /[^a-zA-Z\d]/).each do |o|
+      o.update_attribute :car_num, o.car_num.gsub(/[^a-zA-Z\d]/, '')
     end
   end
 end
