@@ -8,7 +8,7 @@ $("#part-number-search").val("<%= @part.number %>");
   if($('input[name="sunhao"]').val() == "1")
     $("#quantity").prop("max", $("#remained_quantity").val());
   else
-    $("#quantity").prop("max", $("#remained_quantity").val());
+    $("#quantity").prop("max", "999");
   $("#quantity").val("");
   <% if q <= 0 %>
     $("#part-transfer-btn").prop('disabled', true).prop("class", "btn btn-disabled");
