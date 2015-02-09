@@ -39,3 +39,8 @@ $ ->
             $("#part_part_brand_id").find("option:selected").text() + " " +
             $("#part_id").find("option:selected").text() + "\n" +
             $("label[for='quantity'").text() + ": " + $("#quantity").val()
+    $("#storehouse_part_yingyusunhao").submit ->
+        return false if !window.confirm $("#storehouse_name").text() + "\n" +
+            $("#part_part_brand_id").find("option:selected").text() + " " +
+            $("#part_id").find("option:selected").text() + "\n" +
+            $("label[for='quantity'").text() + ": " + $("#quantity").val()

@@ -1,0 +1,16 @@
+<% q = @storehouse.partbatches.where(part: @part).sum(:remained_quantity) %>
+$("#remained_quantity").val("<%= q %>");
+  if($('input[name="sunhao"]').val() == "1")
+    $("#quantity").prop("max", $("#remained_quantity").val());
+  else
+    $("#quantity").prop("max", "999");
+$("#quantity").val("");
+<% if params[:sunhao].to_i == 1 && q <= 0 %>
+  $("#part-transfer-btn").prop('disabled', true).prop("class", "btn btn-disabled");
+<% end %>
+window.alert("<%= (params[:sunhao].to_i == 1 ? t(:sunhao) : t(:yingyu)) + t(:succeed) %>" + "\n" +
+            $("#part_part_brand_id").find("option:selected").text() + " " +
+            $("#part_id").find("option:selected").text() + "\n" +
+            $("#storehouse_name").text() + " " + "<%= t(:remained_quantity) %>" + ": " + $("#remained_quantity").val()
+            );
+

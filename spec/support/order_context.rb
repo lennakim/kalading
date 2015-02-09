@@ -12,18 +12,18 @@ shared_context "order", :need_maintain_order => true do
     # 测试之前，创建订单
     @order = create(:unscheduled_order)
     asm = AutoSubmodel.first
-    @order.update_attributes engineer_id: @user.id, auto_submodel_id: asm.id
+    @order.update_attributes auto_submodel_id: asm.id
     @order.parts << asm.parts.first
     @order.parts << asm.parts.last
     
     @order2 = create(:serve_done_order)
-    @order2.update_attributes engineer_id: @user.id, auto_submodel_id: AutoSubmodel.last.id
+    @order2.update_attributes auto_submodel_id: AutoSubmodel.last.id
 
     @order3 = create(:revisited_order)
-    @order3.update_attributes engineer_id: @user.id, auto_submodel_id: AutoSubmodel.last.id
+    @order3.update_attributes auto_submodel_id: AutoSubmodel.last.id
 
     @order1 = create(:scheduled_order)
-    @order1.update_attributes engineer_id: @user.id, auto_submodel_id: AutoSubmodel.find('549e31c0255188a28a00169f').id
+    @order1.update_attributes auto_submodel_id: AutoSubmodel.find('549e31c0255188a28a00169f').id
   }
   
   after {

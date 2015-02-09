@@ -12,7 +12,6 @@ class OrdersController < ApplicationController
   def index
     if current_user
       if current_user.roles.empty?
-        logger.info "Current user name: #{current_user.name}"
         authorize! :read, Order
       elsif current_user.roles.include? '5'
         @orders = Order.where(:engineer => current_user)
@@ -156,21 +155,6 @@ class OrdersController < ApplicationController
         params[:page] ||= 1
         params[:per] ||= 5
         @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
-      }
-      format.csv {
-        csv = CSV.generate({}) do |csv|
-          csv << ['ID', I18n.t(:name), I18n.t(:auto_owner_name), I18n.t(:address), I18n.t(:car_number), I18n.t(:auto_submodel), I18n.t(:auto_reg_date), I18n.t(:auto_km), I18n.t(:serve_datetime) ]
-          @orders.where(:state.gte => 5, :state.lte => 7, :auto_submodel.ne => nil).each do |o|
-            if o.registration_date
-              d = I18n.l(o.registration_date)
-            else
-              d = ''
-            end
-            csv << [o.seq, o.name, o.auto_owner_name, o.address, o.car_location + o.car_num, o.auto_submodel.full_name, d, o.auto_km, I18n.l(o.serve_datetime) ]
-          end
-        end
-        headers['Last-Modified'] = Time.now.httpdate
-        send_data csv, :filename => 'orders_' + I18n.l(DateTime.now) + '.csv'
       }
     end
   end

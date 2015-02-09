@@ -5,7 +5,10 @@ $("#part-number-search").val("<%= @part.number %>");
 <% if params[:sh_id].present? %>
   <% q = Storehouse.find(params[:sh_id]).partbatches.where(part: @part).sum(:remained_quantity) %>
   $("#remained_quantity").val("<%= q %>");
-  $("#quantity").prop("max", $("#remained_quantity").val());
+  if($('input[name="sunhao"]').val() == "1")
+    $("#quantity").prop("max", $("#remained_quantity").val());
+  else
+    $("#quantity").prop("max", $("#remained_quantity").val());
   $("#quantity").val("");
   <% if q <= 0 %>
     $("#part-transfer-btn").prop('disabled', true).prop("class", "btn btn-disabled");

@@ -69,7 +69,7 @@ development:
 test:
   sessions:
     default:
-      database: kalading_development
+      database: kalading_test
       hosts:
         - localhost:27017
       options:

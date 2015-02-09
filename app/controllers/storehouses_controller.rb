@@ -288,7 +288,7 @@ class StorehousesController < ApplicationController
       need_q -= c
       break if need_q <= 0
     end
-    supplier = Supplier.find_or_create_by name: I18n.t(:fake_supplier_for_transfer)
+    supplier = Supplier.find_or_create_by name: I18n.t(:fake_supplier_for_transfer), type: 1
     @target_storehouse.partbatches.create! part_id: @part.id,
       supplier_id: supplier.id,
       price: @part.ref_price,
@@ -304,6 +304,47 @@ class StorehousesController < ApplicationController
   def print_dispatch_card
     @storehouse = Storehouse.find(params[:id])
     render layout: false
+  end
+
+  def part_yingyusunhao
+    @storehouse = Storehouse.find(params[:id])
+    @part = PartBrand.desc(:name).first.parts.first
+    @remained_quantity = @storehouse.partbatches.where(part: @part).sum(:remained_quantity)
+    respond_to do |format|
+      format.html
+      format.js # show.js.erb
+    end
+  end
+
+  def do_part_yingyusunhao
+    @storehouse = Storehouse.find params[:id]
+    @part = Part.find params[:part][:id]
+    @quantity = params[:quantity].to_i
+    if params[:sunhao].to_i == 1
+      need_q = @quantity
+      @partbatches = @storehouse.partbatches.where(part: @part).asc(:created_at)
+      @partbatches.each do |pb|
+        c = [need_q, pb.remained_quantity].min
+        pb.update_attribute :remained_quantity, pb.remained_quantity - c
+        pb.part.auto_submodels.each do |asm|
+          asm.on_part_inout pb.part, -c
+        end
+        need_q -= c
+        break if need_q <= 0
+      end
+    else
+      supplier = Supplier.find_or_create_by name: I18n.t(:fake_supplier_for_yingyu), type: 2
+      @storehouse.partbatches.create! part_id: @part.id,
+        supplier_id: supplier.id,
+        price: @part.ref_price,
+        quantity: @quantity,
+        remained_quantity: @quantity,
+        user_id: current_user.id
+    end
+    respond_to do |format|
+      format.html
+      format.js # show.js.erb
+    end
   end
 
 end

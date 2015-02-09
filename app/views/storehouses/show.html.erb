@@ -11,6 +11,12 @@
         <%= link_to storehouse_part_transfer_path(@storehouse), :class => 'btn btn-success', :target => '_blank' do %>
           <i class="icon-arrow-right"></i>&nbsp<%= t('part_transfer') %>
         <% end %>
+        <%= link_to storehouse_part_yingyusunhao_path(@storehouse, sunhao: 0), :class => 'btn btn-success', :target => '_blank' do %>
+          <i class="icon-plus-sign"></i>&nbsp<%= t('yingyu') %>
+        <% end %>
+        <%= link_to storehouse_part_yingyusunhao_path(@storehouse, sunhao: 1), :class => 'btn btn-success', :target => '_blank' do %>
+          <i class="icon-minus-sign"></i>&nbsp<%= t('sunhao') %>
+        <% end %>
         <%= link_to t(:export), storehouse_path(@storehouse, format: :csv), :class => 'btn btn-info' %>
       <% end %>
     </div>

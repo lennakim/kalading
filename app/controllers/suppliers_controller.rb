@@ -6,7 +6,7 @@ class SuppliersController < ApplicationController
   # GET /suppliers
   # GET /suppliers.json
   def index
-    @suppliers = Supplier.all
+    @suppliers = Supplier.where(:state.in => [0, nil])
 
     respond_to do |format|
       format.html # index.html.erb

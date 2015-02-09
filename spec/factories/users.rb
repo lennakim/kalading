@@ -5,8 +5,9 @@ FactoryGirl.define do
     email "test_engineer_rspec@kalading.com"
     name "app"
     password  "12345678"
-    city_id City.find_by(name: I18n.t(:beijing)).id
+    association :city, factory: :beijing
     roles ["5"]
+    initialize_with { User.find_or_create_by(name: name)}
   end
 
   factory :baichebao_user, class: User do
@@ -14,7 +15,7 @@ FactoryGirl.define do
     email "baichebao_test@kalading.com"
     name "baichebao"
     password  "12345678"
-    city_id City.find_by(name: I18n.t(:beijing)).id
+    association :city, factory: :beijing
     roles []
   end
 
@@ -23,7 +24,7 @@ FactoryGirl.define do
     email "weiche_test@kalading.com"
     name "微车下单专用"
     password  "12345678"
-    city_id City.find_by(name: I18n.t(:beijing)).id
+    association :city, factory: :beijing
     roles []
   end
 
@@ -32,7 +33,7 @@ FactoryGirl.define do
     email "test_admin@kalading.com"
     name "admin"
     password  "12345678"
-    city_id City.find_by(name: I18n.t(:beijing)).id
+    association :city, factory: :beijing
     roles ["1"]
   end
 end

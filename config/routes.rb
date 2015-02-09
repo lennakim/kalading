@@ -98,6 +98,8 @@ Kalading::Application.routes.draw do
   delete 'part_urlinfo/:id' => 'parts#destroy_urlinfo', :as => :delete_part_urlinfo
   get 'storehouses/:id/part_transfer' => 'storehouses#part_transfer', :as => :storehouse_part_transfer
   post 'storehouses/:id/part_transfer_to' => 'storehouses#part_transfer_to', :as => :storehouse_part_transfer_to
+  get 'storehouses/:id/part_yingyusunhao' => 'storehouses#part_yingyusunhao', :as => :storehouse_part_yingyusunhao
+  post 'storehouses/:id/do_part_yingyusunhao' => 'storehouses#do_part_yingyusunhao', :as => :storehouse_do_part_yingyusunhao
   get 'storehouse/:id/print_dispatch_card' => 'storehouses#print_dispatch_card', :as=> :print_dispatch_card
 
   get 'latest_orders' => 'orders#latest_orders', :as => :latest_orders

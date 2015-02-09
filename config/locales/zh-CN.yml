@@ -1050,4 +1050,7 @@ zh-CN:
   complaint_created_notify: '投诉单%{seq} 创建成功'
   complaint_updated_notify: '投诉单%{seq} 更新成功'
   edit_complaint: '投诉单%{seq} 编辑'
-  
+  fake_supplier_for_yingyu: '盘库盈余'
+  yingyu: '盘库盈余'
+  sunhao: '盘库损耗'
+  succeed: '录入成功'
