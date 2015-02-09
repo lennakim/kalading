@@ -41,7 +41,7 @@ class AutoBrand
   end
   
   def as_json(options = nil)
-    super :except => [:updated_at, :created_at, :version, :modifier_id, :name_mann, :name_pinyin, :data_source, :service_level]
+    super :except => [:updated_at, :created_at, :version, :modifier_id, :name_mann, :data_source, :service_level]
   end
 
 end

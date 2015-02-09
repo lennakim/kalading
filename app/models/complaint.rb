@@ -14,6 +14,8 @@ class Complaint
   field :customer_name, type: String, default: ''
   field :customer_phone_num, type: String, default: ''
   field :source, type: String
+  field :detail, type: String
+  field :handled_result, type: String
   field :handled_datetime, type: DateTime
   field :severity_level, type: Integer, default: 0
 
@@ -37,7 +39,7 @@ class Complaint
   
   accepts_nested_attributes_for :comments, :allow_destroy => true
 
-  attr_accessible :seq, :state, :customer_name, :customer_phone_num, :severity_level, :source, :order_id, :creater_id, :complained_id, :handler_id, :tag_id, :comments_attributes
+  attr_accessible :seq, :state, :customer_name, :customer_phone_num, :severity_level, :source, :order_id, :creater_id, :complained_id, :handler_id, :tag_id, :comments_attributes, :detail, :handled_result
   
   before_create do |c|
     c.handler = c.complained.leader if c.complained

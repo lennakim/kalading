@@ -1,5 +1,6 @@
 json.array! @auto_brands do |ab|
     json.name ab.name
+    json.pinyin ab.name_pinyin
     json.set! 'ams' do
         json.array! ab.auto_models.where(service_level: 1).asc(:name_pinyin).select { |am| am.auto_submodels.where(data_source: 2, service_level: 1).exists? } do |am|
             json.name am.name

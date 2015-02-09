@@ -93,11 +93,13 @@
           <tbody>
             <tr>
               <td><%= t :due_charge %></td>
-              <td><%= humanized_money_with_symbol @order.calc_price %></td>
-              <td colspan="4"><%= t :discount_card %></td>
+              <td><%= humanized_money_with_symbol @order.price_without_discount %></td>
+              <td colspan="2"><%= t :discount_card %></td>
+              <td colspan="2"><%= @order.discounts.first.name if @order.discounts.present?%></td>
             </tr>
             <tr>
-              <td colspan="2"><%= t :real_charge %></td>
+              <td><%= t :real_charge %></td>
+              <td><%= humanized_money_with_symbol @order.calc_price %></td>
               <td colspan="2"><%= t :discount_charge %></td>
               <td colspan="2"><%= t :free_charge %></td>
             </tr>
