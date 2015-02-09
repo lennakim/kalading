@@ -1054,3 +1054,8 @@ zh-CN:
   yingyu: '盘库盈余'
   sunhao: '盘库损耗'
   succeed: '录入成功'
+  required_quantity: '配件需求'
+  part_requirement: '配件需求和补货'
+  needed: '需补货'
+  show_part_requirements: '查询配件需求'
+  export_buhuo_list: '导出补货清单'

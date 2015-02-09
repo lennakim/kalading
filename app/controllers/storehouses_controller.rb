@@ -346,5 +346,33 @@ class StorehousesController < ApplicationController
       format.js # show.js.erb
     end
   end
-
+  
+  def city_part_requirements
+    @city = City.find params[:city]
+    storehouse_ids = @city.storehouses.map(&:id)
+    @start_date = Date.parse params[:start_date]
+    @end_date = Date.parse params[:end_date]
+    @parts = {}
+    Order.where(:serve_datetime.gte => DateTime.now, :serve_datetime.lte => @end_date.beginning_of_day, city: @city).each do |o|
+      o.parts.each do |p|
+        @parts[p] ||= {required: 0, remained: p.partbatches.where(:storehouse_id.in => storehouse_ids).sum(&:remained_quantity) }
+        @parts[p][:required] += o.part_counts[p.id.to_s].to_i
+      end
+    end
+    @parts = @parts.sort_by {|k, v| k.part_brand}
+    if params[:export].present?
+      csv_data = CSV.generate do |csv|
+        a = [I18n.t(:brand), I18n.t(:manuf_number), I18n.t(:part_type), I18n.t(:needed)]
+        csv << a
+        # CSV lines
+        @parts.each do |p, i|
+          next if i[:required] <= i[:remained]
+          a = [p.part_brand.name, p.number, p.part_type.name, i[:required] - i[:remained]]
+          csv << a
+        end
+      end
+      headers['Last-Modified'] = Time.now.httpdate
+      send_data csv_data, :filename => @city.name + I18n.t(:needed)+ I18n.l(DateTime.now.to_date) + '.csv'
+    end
+  end
 end

@@ -1,0 +1,63 @@
+<h2><%= t(:part_requirement) + ' - ' + @city.name %></h2>
+
+<div>
+  <%= form_tag city_part_requirements_path, :method => 'get', :id => "city_part_requirements", :class => 'form-horizontal' do %>
+    <% if can? :manage_all, Storehouse %>
+    <div class="control-group select">
+      <%= label_tag :city, t('cities'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= collection_select(nil, nil, City.asc(:name), :id, :name, {:include_blank => false, :selected => params[:city]}, {:class=>'input-small control', :id => 'select-city', :name => 'city'}) %>
+      </div>
+    </div>
+    <% end %>
+    
+    <div class="control-group">
+      <%= label_tag :start_date, t(:serve_datetime_segment), class: 'control-label' %>
+      <div class="controls form-inline" id="start_date">
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="start_date" id="start_date" value="<%= params[:start_date] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
+        <%= t :to %>
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="end_date" id="end_date" value="<%= params[:end_date] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <%= submit_tag t(:show_part_requirements), class: 'btn btn-primary' %>
+      <%= submit_tag t(:export_buhuo_list), class: 'btn btn-success', name: 'export' %>
+    </div>
+  <% end %>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= t 'brand' %></th>
+      <th><%= t 'manuf_number' %></th>
+      <th><%= t 'part_type' %></th>
+      <th><%= t 'required_quantity' %></th>
+      <th><%= t 'remained_quantity' %></th>
+      <th><%= t :needed %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @parts.each do |p, i| %>
+      <tr class="<%= 'text-error' if i[:required] > i[:remained] %>">
+        <td><%= p.part_brand.name %></td>
+        <td><%= link_to p.number, part_path(p) %></td>
+        <td><%= p.part_type.name %></td>
+        <td><%= i[:required] %></td>
+        <td><%= i[:remained] %></td>
+        <td><%= [0, i[:required] - i[:remained]].max %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

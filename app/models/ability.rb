@@ -41,6 +41,10 @@ class Ability
       end
     end
 
+    if user.roles.include? ROLE_ID('national_storehouse_admin')
+      can :manage_all, Storehouse
+    end
+    
     if user.roles.include? ROLE_ID('data_admin')
       can :read, :all
       can [:create, :update, :destroy], [AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier, Storehouse, Discount]

@@ -9,7 +9,14 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header"></li>
-              <% unless ( @storehouse || @orders ) %>
+              <% if @city %>
+              <li class="active">
+              <% else %>
+              <li>
+              <% end %>
+                <%= link_to t(:part_requirement), city_part_requirements_path(city: current_user.city, start_date: Date.today, end_date: Date.today.since(7.days).to_date) %>
+              </li>
+              <% unless ( @storehouse || @orders || @city) %>
               <li class="active">
               <% else %>
               <li>
@@ -33,20 +40,20 @@
               <li><%= link_to t('supplier'), suppliers_path if !current_user.roles.include?('3') %></li>
               <% orders = current_user.roles.include?('3') ? Order.where(city: current_user.city) : Order.all%>
               <% if @orders && params[:part_deliver_state].to_i == 0 %>
-                <li class="active">
+              <li class="active">
               <% else %>
-                <li>
+              <li>
               <% end %>
-                  <%= link_to t('to_be_delivered_orders', n: orders.to_be_delivered.count), orders_path(Order.to_be_delivered_hash) %>
-                </li>
+                <%= link_to t('to_be_delivered_orders', n: orders.to_be_delivered.count), orders_path(Order.to_be_delivered_hash) %>
+              </li>
 
               <% if @orders && params[:part_deliver_state].to_i == 1 %>
-                <li class="active">
+              <li class="active">
               <% else %>
-                <li>
+              <li>
               <% end %>
-                  <%= link_to t('to_be_backed_orders', n: orders.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
-                </li>
+                <%= link_to t('to_be_backed_orders', n: orders.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
+              </li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
