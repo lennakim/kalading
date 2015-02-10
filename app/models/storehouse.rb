@@ -17,7 +17,7 @@ class Storehouse
   
   validates :city_id, presence: true
   validates :name, length: { in: 2..32 }, presence: true
-  validates :address, length: { in: 2..128 }, presence: true
+  validates :address, length: { in: 2..13 }, presence: true
   validates :phone_num, length: { in: 7..32 }, presence: true
   
   def to_csv(options = {})
