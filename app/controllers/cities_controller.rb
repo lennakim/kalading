@@ -5,8 +5,11 @@ class CitiesController < ApplicationController
   # GET /cities
   # GET /cities.json
   def index
-    @cities = City.where(opened: true)
-
+    if request.format.json?
+      @cities = City.where(opened: true)
+    else
+      @cities = City.all
+      
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @cities }
