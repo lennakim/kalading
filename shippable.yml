@@ -6,7 +6,7 @@ env:
 before_script:
   - mkdir -p shippable/testresults
 script:
-  - rspec -f JUnit -o shippable/testresults/results.xml
+  - rspec -o shippable/testresults/results.xml
 notifications:
      email:
          recipients:
@@ -14,3 +14,5 @@ notifications:
              - 646228839@11.com
          on_success: change
          on_failure: always
+services:
+ - mongodb
