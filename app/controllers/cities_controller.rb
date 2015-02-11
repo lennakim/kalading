@@ -9,7 +9,8 @@ class CitiesController < ApplicationController
       @cities = City.where(opened: true)
     else
       @cities = City.all
-      
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @cities }
