@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+  - 2.0.0
+env:
+  - CI_REPORTS=shippable/testresults COVERAGE_REPORTS=shippable/codecoverage
+before_script:
+  - mkdir -p shippable/testresults
+script:
+  - rspec -f JUnit -o shippable/testresults/results.xml
+notifications:
+     email:
+         recipients:
+             - wangzhe.nanami@gmail.com
+             - 646228839@11.com
+         on_success: change
+         on_failure: always
