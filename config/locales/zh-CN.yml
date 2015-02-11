@@ -649,8 +649,9 @@ zh-CN:
             other: Bytes
           mb: MB
   auto_submodel_required: '车型ID无效'
-  auto_maintain_service_type_name: '换机油机滤空气滤'
+  auto_maintain_service_type_name: '换机油机滤'
   auto_maintain_service_type_not_found: '服务信息错误'
+  cabin_filter_service_type: '单换PM2.5空调滤'
   address_needed: '地址不能为空'
   name_needed: '姓名不能为空'
   phone_num_needed: '手机号不能为空'

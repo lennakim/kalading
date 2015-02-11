@@ -6,5 +6,8 @@ FactoryGirl.define do
     area_code '010'
     opened true
     initialize_with { City.find_or_create_by(name: name)}
+    after(:create) do |c|
+      c.districts.create name: '海淀区'
+    end
   end
 end

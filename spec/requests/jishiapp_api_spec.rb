@@ -6,7 +6,7 @@ describe '用户登录，返回authentication_token用于其它API调用',  :typ
   include_context "api doc"
 
   it "登录成功，返回authentication_token" do
-    post "/users/sign_in", {:phone_num => @user.phone_num, :password => @user.password, :format => 'json'}
+    post "/users/sign_in", {:phone_num => user.phone_num, :password => user.password, :format => 'json'}
     expect(response).to have_http_status(201)
     token = JSON.parse(response.body)["authentication_token"]
     expect(token).not_to be(nil)
@@ -18,10 +18,9 @@ describe '用户注销',  :type => :request do
   include_context "api doc"
 
   it "注销成功，返回{'result' : 'ok'}" do
-    delete "/users/sign_out?auth_token=#{@user.authentication_token}", {:format => 'json'}
+    delete "/users/sign_out?auth_token=#{user.authentication_token}", {:format => 'json'}
     expect(response).to have_http_status(200)
     h = JSON.parse(response.body)
-    puts h
     expect(h['result']).to eq('ok')
   end
 end
@@ -29,16 +28,15 @@ end
 describe '订单列表,支持分页，page为页数（从1开始），per为每页返回的订单个数，auth_token为登录时返回的token。返回空表示到达最后一页。 asm_pics为车型图文列表，url为图片url，bytes为图片大小字节数，desc为图片的描述', :type => :request do
   include_context "order"
   include_context "api doc"
-  
   it "列举第1页订单，每页2个" do
-    get "/orders", {:page => 1, :per => 2}
+    get "/orders", {:page => 1, :per => 2, :format => 'json', :auth_token => @token}
     expect(response).to have_http_status(200)
     orders = JSON.parse(response.body)
     expect(orders.size).to be > 0
   end
 
   it "列举第3页订单，到达最后一页" do
-    get "/orders", {:page => 3, :per => 2, :format => 'json'}
+    get "/orders", {:page => 3, :per => 2, :format => 'json', :auth_token => @token}
     expect(response).to have_http_status(200)
     orders = JSON.parse(response.body)
     expect(orders.size).to be(0)
@@ -51,7 +49,7 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
 
   it "设置订单状态为服务取消，并说明原因为：客户联系不上" do
     # false表示本次请求不产生API文档
-    get_without_better_doc "/orders", {:page => 1, :per => 2, :format => 'json'}
+    get_without_better_doc "/orders", {:page => 1, :per => 2, :format => 'json', :auth_token => @token}
     expect(response).to have_http_status(200)
     orders = JSON.parse(response.body)
     expect(orders.size).to be > 0
@@ -63,7 +61,7 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
         cancel_reason: '客户联系不上'
       }
     }
-    put "/orders/#{orders[0]['id']}", r
+    put "/orders/#{orders[0]['id']}?auth_token=#{@token}", r
     expect(response).to have_http_status(200)
 
     get_without_better_doc "/orders/#{orders[0]['id']}", {:format => 'json'}
@@ -74,7 +72,7 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
   end
 
   it "设置订单状态为已预约，并修改服务时间" do
-    get_without_better_doc "/orders", {:page => 1, :per => 2, :format => 'json'}
+    get_without_better_doc "/orders", {:page => 1, :per => 2, :format => 'json', :auth_token => @token}
     expect(response).to have_http_status(200)
     orders = JSON.parse(response.body)
     expect(orders.size).to be > 0
@@ -86,10 +84,10 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
         serve_datetime: '2014-05-08 14:00'
       }
     }
-    put "/orders/#{orders[0]['id']}", r
+    put "/orders/#{orders[0]['id']}?auth_token=#{@token}", r
     expect(response).to have_http_status(200)
 
-    get_without_better_doc "/orders/#{orders[0]['id']}", {:format => 'json'}
+    get_without_better_doc "/orders/#{orders[0]['id']}", {:format => 'json', :auth_token => @token}
     expect(response).to have_http_status(200)
     order = JSON.parse(response.body)
     expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[4]))
@@ -97,7 +95,7 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
   end
 
   it "完成订单" do
-    get_without_better_doc "/orders", {:page => 1, :per => 2, :format => 'json'}
+    get_without_better_doc "/orders", {:page => 1, :per => 2, :format => 'json', :auth_token => @token}
     expect(response).to have_http_status(200)
     orders = JSON.parse(response.body)
     expect(orders.size).to be > 0
@@ -110,10 +108,10 @@ describe '设置订单属性，包括状态，取消原因，服务时间等。�
         serve_end_datetime: '2014-05-08 16:00'
       }
     }
-    put "/orders/#{orders[0]['id']}", r
+    put "/orders/#{orders[0]['id']}?auth_token=#{@token}", r
     expect(response).to have_http_status(200)
 
-    get_without_better_doc "/orders/#{orders[0]['id']}", {:format => 'json'}
+    get_without_better_doc "/orders/#{orders[0]['id']}", {:format => 'json', :auth_token => @token}
     expect(response).to have_http_status(200)
     order = JSON.parse(response.body)
     expect(order['state']).to eq(I18n.t(Order::STATE_STRINGS[5]))

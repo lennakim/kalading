@@ -60,6 +60,7 @@ class AutoSubmodel
     :year_mann, :part_rules_attributes, :motoroil_group_id
 
   validates :auto_model_id, presence: true
+  validates_numericality_of :motoroil_cap, :greater_than_or_equal_to => 0.5, :less_than_or_equal_to => 100.0
 
   def self.search(k, v)
     if k && v && v.size > 0

@@ -414,7 +414,7 @@ class OrdersController < ApplicationController
     return render json: { result: t(:auto_submodel_required)}, status: :bad_request if asm.nil?
     @order = Order.new
     @order.auto_submodel = asm
-    maintain_service = ServiceType.find '527781377ef560ccbc000003'
+    maintain_service = ServiceType.find_by name: I18n.t(:auto_maintain_service_type_name)
     return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
     @order.service_types << maintain_service
     asm.parts_by_type_ignore_quantity.each do |t, parts|
@@ -424,7 +424,7 @@ class OrdersController < ApplicationController
           @order.part_counts[p.id.to_s] = asm.cals_part_count(p)
         end
       elsif t.name == I18n.t(:cabin_filter)
-        part = parts.find {|p| p.part_brand_id.to_s == '539d4d019a94e4de84000567'} || parts.first
+        part = parts.find {|p| p.part_brand.name == I18n.t(:Kalading) } || parts.first
         @order.parts << part
         @order.part_counts[part.id.to_s] = asm.cals_part_count(part)
       else
@@ -756,11 +756,11 @@ private
     end
 
     if @order.parts.exists? && cabin_filter_only
-      cabin_filter_service = ServiceType.find '527781867ef560ccbc000007'
+      cabin_filter_service = ServiceType.find_by name: I18n.t(:cabin_filter_service_type)
       return render json: t(:cabin_filter_service_type_not_found), status: :bad_request if cabin_filter_service.nil?
       @order.service_types << cabin_filter_service
     else
-      maintain_service = ServiceType.find '527781377ef560ccbc000003'
+      maintain_service = ServiceType.find_by name: I18n.t(:auto_maintain_service_type_name)
       return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
       @order.service_types << maintain_service
     end

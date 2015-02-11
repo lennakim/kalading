@@ -8,8 +8,10 @@ FactoryGirl.define do
     client_comment "请按时到场"
     association :city, factory: :beijing
     association :engineer, factory: :user
+    association :auto_submodel, factory: :audi_a3_20_2012
     before(:create) do |o|
       o.service_types << create(:auto_maintain)
+      o.parts << o.auto_submodel.parts.first
     end
   end
   
