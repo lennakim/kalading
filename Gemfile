@@ -37,6 +37,9 @@ group :test do
   gem 'database_cleaner'
   gem 'rest-client'
   gem "factory_girl_rails", "~> 4.0"
+  gem 'simplecov', :require => false
+  gem 'simplecov-csv', :require => false
+  gem 'rspec_junit_formatter'
 end
 
 gem "twitter-bootstrap-rails"

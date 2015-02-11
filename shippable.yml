@@ -5,8 +5,9 @@ env:
   - CI_REPORTS=shippable/testresults COVERAGE_REPORTS=shippable/codecoverage
 before_script:
   - mkdir -p shippable/testresults
+  - mkdir -p shippable/codecoverage
 script:
-  - rspec -o shippable/testresults/results.xml
+  - rspec --format RspecJunitFormatter --out shippable/testresults/results.xml
 notifications:
      email:
          recipients:

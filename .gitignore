@@ -22,3 +22,4 @@
 *.csv
 config/mongoid.yml 
 README.rdoc
+/coverage
