@@ -168,3 +168,20 @@ describe '城市', :type => :request do
     end
   end
 end
+
+describe '保养记录', :type => :request do
+  include_context "order"
+  include_context "api doc"
+  let(:maintain) {create(:maintain)}
+  it "查询13666666666的保养记录" do
+    expect(maintain).to be
+    get "/auto_inspection_report.json", {:format => 'json', :login_phone_num => '13666666666'}
+    expect(response).to have_http_status(200)
+    a = JSON.parse(response.body)
+    expect(a.size).to be > 0
+    a.each do |m|
+      expect(m['serve_datetime'].size).not_to eq(0)
+      expect(m['car_id']).to eq('')
+    end
+  end
+end

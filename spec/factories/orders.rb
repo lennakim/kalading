@@ -15,6 +15,19 @@ FactoryGirl.define do
     end
   end
   
+  trait :no_asm_maintain_order_traits do
+    client_id '0a0b7D0C1MNP'
+    pay_type 1
+    reciept_type 1
+    reciept_title "卡拉丁汽车技术"
+    client_comment "请按时到场"
+    association :city, factory: :beijing
+    association :engineer, factory: :user
+    before(:create) do |o|
+      o.service_types << create(:auto_maintain)
+    end
+  end
+
   factory :unscheduled_order, class: Order, traits: [:maintain_order_traits] do
     address '订单地址'
     name 'Sheldon'
@@ -53,7 +66,7 @@ FactoryGirl.define do
     state 5
   end
 
-  factory :revisited_order, class: Order, traits: [:maintain_order_traits] do
+  factory :revisited_order, class: Order, traits: [:no_asm_maintain_order_traits] do
     address 'Some address'
     name 'Name of client'
     phone_num "13666666666"

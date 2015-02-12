@@ -1,6 +1,5 @@
 class Wheel
   include Mongoid::Document
-  include Mongoid::Timestamps
 
   field :name, type: String, default: ""
   field :brand, type: String, default: ""
@@ -120,7 +119,6 @@ end
 class Maintain
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::History::Trackable
 
   field :outlook_desc, type: String, default: ""
   field :buy_date, type: Date

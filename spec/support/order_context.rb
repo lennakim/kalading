@@ -15,7 +15,7 @@ shared_context "order", :need_maintain_order => true do
     # 测试之前，创建订单
     @order = create(:unscheduled_order)
     @order2 = create(:serve_done_order)
-    @order3 = create(:revisited_order)
+    @revisited_order = create(:revisited_order)
     @order1 = create(:scheduled_order)
   }
   
