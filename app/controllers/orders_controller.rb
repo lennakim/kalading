@@ -723,6 +723,15 @@ class OrdersController < ApplicationController
     redirect_to session.delete(:return_to), notice: I18n.t(:send_sms_successful, seq: @order.seq)
   end
 
+  def order_stats
+    @cities = City.where(opened: true).asc(:created_at)
+    params[:start_time] ||= Time.now.ago(14.days).strftime('%Y-%m-%d')
+    params[:end_time] ||= Time.now.strftime('%Y-%m-%d')
+    respond_to do |format|
+      format.html
+    end
+  end
+
 private
   def _create_auto_maintain_order
     @order = Order.new

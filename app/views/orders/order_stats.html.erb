@@ -1,0 +1,72 @@
+<h4><%=t 'cities_finished_order_stats' %></h4>
+<div>
+  <%= form_tag order_stats_path, :method => 'get', :id => "order_stats", :class => 'form-horizontal' do %>
+    <div class="control-group">
+      <%= label_tag :start_time, t(:serve_datetime_segment), class: 'control-label' %>
+      <div class="controls form-inline" id="start_time">
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="start_time" id="start_time" value="<%= params[:start_time] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
+        <%= t :to %>
+        <div class="form-inline input-append form_datetime">
+          <input data-format="yyyy-MM-dd" type="text" name="end_time" id="end_time" value="<%= params[:end_time] %>"></input>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+            </i>
+          </span>
+        </div>
+        <%= submit_tag t(:ok), class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<%= javascript_include_tag "highcharts", "chartkick" %>
+<script>
+  Highcharts.setOptions({
+    lang: {
+      months: <%= raw t(:months).split %>,
+      weekdays: <%= raw t(:weekdays).split %>,
+      shortMonths: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+      }
+    }
+  );
+</script>
+<%= line_chart @cities.where(opened: true).map {|city| { name: city.name, data: Order.group_by_of_city(city, 'serve_datetime', Time.parse(params[:start_time]), Time.parse(params[:end_time])) }},
+  height: 640,
+  library: {
+     xAxis: {
+      type: 'datetime',
+      dateTimeLabelFormats: { day: t(:datetime_format) }
+    },
+    yAxis: {
+        title: {
+          text: t(:finished_orders)
+        },
+        plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+        }]
+    },
+    tooltip: {
+        valueSuffix: t(:order_unit)
+    },
+    legend: {
+        title: {
+            text: t(:city_click_to_hide),
+            style: {
+                fontStyle: 'italic'
+            }
+        },
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'top',
+        x: -10,
+        y: 100
+    },
+  }
+%>

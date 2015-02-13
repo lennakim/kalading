@@ -275,4 +275,28 @@ class Order
   
   scope :valid, where(:state.in => VALID_STATES)
   scope :by_car, ->(car_location, car_num) { where(:car_location => car_location, :car_num => car_num) }
+  
+  def self.group_by_of_city city, field, start_time, end_time
+    key_op = [['year', '$year'], ['month', '$month'], ['day', '$dayOfMonth']]
+    project_date_fields = Hash[*key_op.collect { |key, op| [key, {op => "$#{field}"}] }.flatten]
+    group_id_fields = Hash[*key_op.collect { |key, op| [key, "$#{key}"] }.flatten]
+    pipeline = [
+      {
+        "$match" => {
+          "city_id" => city.id,
+          "state"=>{"$in"=>[5, 6, 7]},
+          field => {"$gte" => start_time.utc, "$lte" => end_time.utc}
+        }
+      },
+      {"$project" => project_date_fields},
+      {"$group" => {"_id" => group_id_fields, "count" => {"$sum" => 1} } },
+      {"$sort" => {field => -1}}
+    ]
+    {}.tap do |h|
+      #[{"_id"=>{"year"=>2015, "month"=>2, "day"=>5}, "count"=>2}
+      collection.aggregate(pipeline).each do |v|
+        h[DateTime.new(v['_id']['year'], v['_id']['month'], v['_id']['day'])] = v['count']
+      end
+    end
+  end
 end

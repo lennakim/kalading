@@ -21,7 +21,7 @@ class Ability
     end
 
     if user.roles.include? ROLE_ID('manager')
-      can :read, :all 
+      can :read, :all
       can :view, Video
     end
     
@@ -50,7 +50,7 @@ class Ability
       can [:create, :update, :destroy], [AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier, Storehouse, Discount]
       can :inout, Storehouse
       can [:match, :part_select, :update_part_select, :parts_by_brand_and_type, :delete_match, :edit_part_automodel, :add_auto_submodel, :delete_auto_submodel], Part
-      can :order_seq_check, Order
+      can [:order_seq_check, :statistics], Order
     end
 
     if user.roles.include? ROLE_ID('engineer')

@@ -124,6 +124,8 @@ Kalading::Application.routes.draw do
   get 'order_evaluation_list' => 'orders#evaluation_list', :as => :order_evaluation_list
   get 'orders/:id/send_sms_notify' => 'orders#send_sms_notify', :as => :order_send_sms_notify
   get 'daily_orders' => 'orders#daily_orders', :as => :daily_orders
+  get 'order_stats' => 'orders#order_stats', :as => :order_stats
+  
   get 'complaint/:id/send_sms_notify' => 'complaints#send_sms_notify', :as => :complaint_send_sms_notify
     
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains

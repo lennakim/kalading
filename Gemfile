@@ -71,3 +71,4 @@ gem 'mongoid_auto_increment', :git => 'git://github.com/teriyakisan/mongoid_auto
 gem 'capistrano', '~> 3.0.1'
 gem 'pry-rails'
 gem 'rqrcode-with-patches'
+gem 'chartkick'
