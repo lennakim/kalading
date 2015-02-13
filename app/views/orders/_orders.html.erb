@@ -61,7 +61,7 @@
             <% end %>
           </td>
           <td><%= order.car_location + order.car_num %>
-            <% if order.car_location.present? && order.car_num.present? && can?(:statistics, Order) %>
+            <% if order.car_location.present? && order.car_num.present? && can?(:order_stats, Order) %>
               &nbsp<a href="<%= orders_path(Order.valid_by_car_hash(order.car_location, order.car_num)) %>"><span class="badge badge-info"><%= Order.valid.by_car(order.car_location, order.car_num).count %></span></a>
             <% end %>
           </td>
