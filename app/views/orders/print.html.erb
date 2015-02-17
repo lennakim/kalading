@@ -11,6 +11,7 @@
   </head>
   <body style="padding-top: 10px;">
     <a class="btn btn-primary pull-right" id="print-btn" onclick="$('#print-btn').hide(); window.print(); $('#print-btn').show();"><%= t(:print) %></a>
+    <h3 class="text-left"><%= t :order_id %>:&nbsp&nbsp<%= @order.seq %></h3>
     <h3 class="text-center"><%= t :shigongdan %></h3>
     <div class="row">
       <div class="span12"><%= t :order_sheet_description_1 %></div>
@@ -22,16 +23,19 @@
       <table class="table table-bordered table-condensed">
         <tbody>
             <tr>
-              <td><b><%= t :order_id %>:</b>&nbsp&nbsp<%= @order.seq %></td><td><b><%= t :serve_datetime %>:</b>&nbsp&nbsp<%= l @order.serve_datetime %></td><td><b><%= t :engineer_name %>:</b>&nbsp&nbsp<%= @order.engineer.name if @order.engineer %>&nbsp<%= @order.engineer.phone_num if @order.engineer %></td>
+              <td><b><%= t :serve_datetime %>:</b>&nbsp&nbsp<%= l @order.serve_datetime %></td><td><b><%= t :engineer_name %>:</b>&nbsp&nbsp<%= @order.engineer.name if @order.engineer %>&nbsp<%= @order.engineer.phone_num if @order.engineer %></td><td><b><%= t :user_type %>:</b>&nbsp&nbsp<%= @order.user_type.name if @order.user_type %></td>
             </tr>
             <tr>
-              <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= @order.name %></td><td><b><%= t :user_type %>:</b>&nbsp&nbsp<%= @order.user_type.name if @order.user_type %></td><td><b><%= t :customer_phone %>:</b>&nbsp&nbsp<%= @order.phone_num %></td>
+              <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= @order.name %></td><td><b><%= t :customer_phone %>:</b>&nbsp&nbsp<%= @order.phone_num %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= @order.car_location + @order.car_num %></td>
             </tr>
             <tr>
-              <td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= @order.auto_submodel.full_name if @order.auto_submodel %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= @order.car_location + @order.car_num %></td><td><%= t(:motoroil_cap, n: @order.auto_submodel.motoroil_cap) if @order.auto_submodel %></td>
+              <td colspan="3"><b><%= t :address %>:</b>&nbsp&nbsp<%= @order.address %></td>
             </tr>
             <tr>
-              <td colspan="3"><b><%= t :comment %>:</b>&nbsp&nbsp<%= @order.client_comment %>&nbsp&nbsp<%= t(:reciept) + ": " + t(Order::RECIEPT_TYPE_STRINGS[@order.reciept_type]) + " " + @order.reciept_title if @order.reciept_type != 0 %></td>
+              <td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= @order.auto_submodel.full_name if @order.auto_submodel %></td><td colspan="2"><%= t(:motoroil_cap, n: @order.auto_submodel.motoroil_cap) if @order.auto_submodel %></td>
+            </tr>
+            <tr>
+              <td colspan="3" style="font-size: 20px; font-weight: bold"><%= t :comment %>:&nbsp&nbsp<%= @order.client_comment %>&nbsp&nbsp<%= t(:reciept) + ": " + t(Order::RECIEPT_TYPE_STRINGS[@order.reciept_type]) + " " + @order.reciept_title if @order.reciept_type != 0 %></td>
             </tr>
         </tbody>
       </table>
@@ -98,10 +102,14 @@
               <td colspan="2"><%= @order.discounts.first.name if @order.discounts.present?%></td>
             </tr>
             <tr>
+              <td><%= t :free_charge %></td>
+              <td><%= humanized_money_with_symbol(@order.calc_price - @order.price_without_discount)%></td>
+              <td colspan="4"></td>
+            </tr>
+            <tr>
               <td><%= t :real_charge %></td>
               <td><%= humanized_money_with_symbol @order.calc_price %></td>
-              <td colspan="2"><%= t :discount_charge %></td>
-              <td colspan="2"><%= t :free_charge %></td>
+              <td colspan="4"></td>
             </tr>
             <tr>
               <td colspan="6"><%= t :client_signature %></td>
