@@ -32,7 +32,7 @@
           <li>
           <% end %>
             <div class="btn-group">
-              <button class="btn btn-inverse" href="<%= orders_path %>"><%= t('order_menu') %></button>
+              <button class="btn btn-inverse" ><%= link_to t('order_menu'), orders_path %></button>
               <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>
               </button>
