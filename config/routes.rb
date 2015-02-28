@@ -144,6 +144,10 @@ Kalading::Application.routes.draw do
   post 'auto_maintain_order_weiche/:asm_id' => 'orders#create_auto_maintain_order4', :as => :create_auto_maintain_order_weiche
   # For renbao
   post 'auto_maintain_order_renbao/:asm_id' => 'orders#create_auto_maintain_order5', :as => :create_auto_maintain_order_renbao
+  # For jd
+  post 'auto_maintain_order_jd/:asm_id' => 'orders#create_auto_maintain_order_jd', :as => :create_auto_maintain_order_jd
+  # For wei_dian_dao_jia
+  post 'auto_maintain_order_weidiandaojia/:asm_id' => 'orders#create_auto_maintain_order_weidiandaojia', :as => :create_auto_maintain_order_weidiandaojia
 
   get 'auto_submodels_oil_cap_edit' => 'auto_submodels#oil_cap_edit', :as => :auto_submodels_oil_cap_edit
   post 'auto_submodels_oil_cap_modify' => 'auto_submodels#oil_cap_modify', :as => :auto_submodels_oil_cap_modify

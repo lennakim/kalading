@@ -559,6 +559,34 @@ class OrdersController < ApplicationController
     render json: {result: 'succeeded', seq: @order.seq }
   end
 
+  def create_auto_maintain_order_jd
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    _create_auto_maintain_order
+    @order.user_type = UserType.find_or_create_by name: I18n.t(:jd)
+
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+
+  def create_auto_maintain_order_weidiandaojia
+    return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
+    return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
+    return render json: {result: t(:name_needed)}, status: :bad_request if params[:info][:name].blank?
+    return render json: {result: t(:phone_num_needed)}, status: :bad_request if params[:info][:phone_num].blank?
+    _create_auto_maintain_order
+    @order.user_type = UserType.find_or_create_by name: I18n.t(:weidiandaojia)
+
+    @order.update_attributes params[:info]
+    @order.car_num.upcase!
+    @order.save!
+    render json: {result: 'succeeded', seq: @order.seq }
+  end
+
   def create_auto_verify_order
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
     return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
