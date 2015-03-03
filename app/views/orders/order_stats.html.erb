@@ -1,6 +1,7 @@
 <h4><%=t 'cities_finished_order_stats' %></h4>
 <div>
   <%= form_tag order_stats_path, :method => 'get', :id => "order_stats", :class => 'form-horizontal' do %>
+  <input name="disable_sidebar" type="hidden" value="1" />
     <div class="control-group">
       <%= label_tag :start_time, t(:serve_datetime_segment), class: 'control-label' %>
       <div class="controls form-inline" id="start_time">
@@ -22,6 +23,16 @@
         <%= submit_tag t(:ok), class: 'btn btn-primary' %>
       </div>
     </div>
+    <div class="control-group">
+      <label class="control-label" for="maintain_only"><%= t(:maintain_only) %></label>
+      <div class="controls">
+        <% if params[:maintain_only].to_i == 1 %>
+          <input class="boolean optional" id="maintain_only" name="maintain_only" type="checkbox" value="1" checked="checked"/>
+        <% else %>
+          <input class="boolean optional" id="maintain_only" name="maintain_only" type="checkbox" value="1"/>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 </div>
 <%= javascript_include_tag "highcharts", "chartkick" %>
@@ -35,7 +46,7 @@
     }
   );
 </script>
-<%= line_chart @cities.where(opened: true).map {|city| { name: city.name, data: Order.group_by_of_city(city, 'serve_datetime', Time.parse(params[:start_time]), Time.parse(params[:end_time])) }},
+<%= line_chart Order.sum_by_city(@cities, 'serve_datetime', Time.parse(params[:start_time] + ' 00:00:00'), Time.parse(params[:end_time] + ' 23:59:59'), (params[:maintain_only].to_i == 0 ? {} :{ service_type_ids: { "$all" => [ ServiceType.find_by(name: t(:auto_maintain_service_type_name)).id ] } } ) ),
   height: 640,
   library: {
      xAxis: {

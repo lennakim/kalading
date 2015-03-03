@@ -5,7 +5,7 @@
     <%= render '/layouts/menu' %>
     <div class="container-fluid">
       <div class="row-fluid">
-        <% if mobile_device? %>
+        <% if mobile_device? || params[:disable_sidebar] %>
         <% else %>
         <div class="span2">
           <div class="well sidebar-nav">

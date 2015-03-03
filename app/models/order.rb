@@ -276,27 +276,40 @@ class Order
   scope :valid, where(:state.in => VALID_STATES)
   scope :by_car, ->(car_location, car_num) { where(:car_location => car_location, :car_num => car_num) }
   
-  def self.group_by_of_city city, field, start_time, end_time
-    key_op = [['year', '$year'], ['month', '$month'], ['day', '$dayOfMonth']]
-    project_date_fields = Hash[*key_op.collect { |key, op| [key, {op => "$#{field}"}] }.flatten]
-    group_id_fields = Hash[*key_op.collect { |key, op| [key, "$#{key}"] }.flatten]
-    pipeline = [
-      {
-        "$match" => {
-          "city_id" => city.id,
-          "state"=>{"$in"=>[5, 6, 7]},
-          field => {"$gte" => start_time.utc, "$lte" => end_time.utc}
-        }
-      },
-      {"$project" => project_date_fields},
-      {"$group" => {"_id" => group_id_fields, "count" => {"$sum" => 1} } },
-      {"$sort" => {field => -1}}
-    ]
-    {}.tap do |h|
-      #[{"_id"=>{"year"=>2015, "month"=>2, "day"=>5}, "count"=>2}
-      collection.aggregate(pipeline).each do |v|
-        h[DateTime.new(v['_id']['year'], v['_id']['month'], v['_id']['day'])] = v['count']
+  def self.sum_by_city cities, start_date, end_date
+    #service_type_ids: { "$all" => [ ServiceType.find_by(name: t(:auto_maintain_service_type_name)).id ] }
+    cities.where(opened: true).map do |city|
+      a = []
+      (start_date..end_date).map do |date|
+        orders = Order.where(:city => city, :state.in =>[5, 6, 7], :serve_datetime.gte => date.beginning_of_day, :serve_datetime.lt => date.since(1.days).end_of_day)
+        {date => orders.count}
       end
+      {name: city.name, data: a}
+    end
+  end
+  
+  def self.sum_by_city cities, field, start_time, end_time, conditions = {}
+    cities.where(opened: true).map do |city|
+      key_op = [['year', '$year'], ['month', '$month'], ['day', '$dayOfMonth']]
+      project_date_fields = Hash[*key_op.collect { |key, op| [key, {op => {'$add' => ["$#{field}", Time.zone.utc_offset*1000]}}] }.flatten]
+      group_id_fields = Hash[*key_op.collect { |key, op| [key, "$#{key}"] }.flatten]
+      pipeline = [
+        {
+          "$match" => {
+            "city_id" => city.id,
+            "state"=>{"$in"=>[5, 6, 7]},
+            field => {"$gte" => start_time.utc, "$lte" => end_time.utc}
+          }.merge(conditions)
+        },
+        {"$project" => project_date_fields },
+        {"$group" => {"_id" => group_id_fields, "count" => {"$sum" => 1} } },
+        {"$sort" => {field => -1}}
+      ]
+      #aggregate result: [{"_id"=>{"year"=>2015, "month"=>2, "day"=>5}, "count"=>2}
+      {
+        name: city.name,
+        data: Hash[collection.aggregate(pipeline).map {|v| [ DateTime.new(v['_id']['year'], v['_id']['month'], v['_id']['day']), v['count']]}]
+      }
     end
   end
 end
