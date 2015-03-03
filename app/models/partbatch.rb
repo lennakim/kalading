@@ -49,4 +49,36 @@ class Partbatch
   end
 
   paginates_per 5
+  
+  # 统计剩余库存
+  def self.stats
+    map = %Q{
+      function() {
+          o = { quantity: this.quantity, remained_quantity: this.remained_quantity, storehouse_remained: {}, pb_ids: [this._id.str] };
+          o.storehouse_remained[this.storehouse_id.str] = this.remained_quantity;
+          emit(this.part_id, o);
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        var result = { quantity: 0, remained_quantity: 0, storehouse_remained: {}, pb_ids: [] };
+        values.forEach(function(value) {
+          result.quantity += value.quantity;
+          result.remained_quantity += value.remained_quantity;
+          result.pb_ids = result.pb_ids.concat(value.pb_ids);
+          for (var sh_id in value.storehouse_remained) {
+            if (value.storehouse_remained.hasOwnProperty(sh_id)) {
+              if (result.storehouse_remained[sh_id] == undefined)
+                result.storehouse_remained[sh_id] = 0;
+              result.storehouse_remained[sh_id] += value.storehouse_remained[sh_id];
+            }
+          }
+        });
+        return result;
+      }
+    }
+    map_reduce(map, reduce).out(inline: 1).each do |data|
+      yield data
+    end
+  end
 end

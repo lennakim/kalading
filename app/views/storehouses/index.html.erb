@@ -1,6 +1,10 @@
 <%- model_class = Storehouse -%>
 <div class="pull-right">
-  <%= link_to t(:export_part_statistics), part_statistics_path(format: :csv), :class => 'btn btn-info' if can? :create, Partbatch %>
+  <% if can? :create, Partbatch %>
+    <%= simple_form_for @storehouses, :method => :get, :as => 'part_statistics', :url => part_statistics_path(format: :csv), :html => { :class => 'form-horizontal' } do |f| %>
+      <%= f.button :submit, t(:export_part_statistics), :class => 'btn-info' %>
+    <% end %>
+  <% end %>
 </div>
 <table class="table table-striped">
   <thead>

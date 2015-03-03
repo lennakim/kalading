@@ -204,48 +204,38 @@ class StorehousesController < ApplicationController
       format.csv {
         csv_data = CSV.generate do |csv|
           # CSV Header
+          a = [I18n.t(:part_brand), I18n.t(:part_number), I18n.t(:part_type)]
+          a += [I18n.t(:in_quantity), I18n.t(:remained_quantity)]
+          storehouse_ids_of_cities = []
+          City.where(opened: true).asc(:created_at).each do |city|
+            a << "#{city.name + I18n.t(:remained_quantity)}"
+            storehouse_ids_of_cities << Hash[city.storehouses.map {|sh| [sh.id.to_s, 1]}]
+          end
+          a += [I18n.t(:batch_price), I18n.t(:sell_price_history)]
           d1 = Date.today.ago(1.year).beginning_of_month
           first_ht_dt = HistoryTracker.asc(:created_at).first.created_at
           d1 = first_ht_dt.beginning_of_month if d1 < first_ht_dt
           d2 = Date.today.ago(1.month).end_of_month
-          a = [I18n.t(:part_brand), I18n.t(:part_number), I18n.t(:part_type)]
-          a += [I18n.t(:in_quantity), I18n.t(:remained_quantity), I18n.t(:batch_price), I18n.t(:sell_price_history)]
+          monthly_part_delivered = []
           d = d1
           while d < d2
             a << I18n.t(:month_delivered, y: d.year, m: d.month)
+            # 统计每个月每个partbatch的出库量
+            monthly_part_delivered << HistoryTracker.pb_to_part_delivered(d, 1.month.since(d))
             d = 1.month.since(d)
           end
           a += [I18n.t(:total_delivered), I18n.t(:needed_this_week), I18n.t(:store_warning), I18n.t(:max_delivered), I18n.t(:remark)]
           csv << a
-          # CSV lines
-          map = %Q{
-            function() {
-                emit(this.part_id, { quantity: this.quantity, remained_quantity: this.remained_quantity });
-              }
-          }
-          reduce = %Q{
-            function(key, values) {
-              var result = { quantity: 0, remained_quantity: 0 };
-              values.forEach(function(value) {
-                result.quantity += value.quantity;
-                result.remained_quantity += value.remained_quantity;
-              });
-              return result;
-            }
-          }
-          Partbatch.map_reduce(map, reduce).out(inline: 1).each do |data|
+          Partbatch.stats do |data|
             p = Part.find data['_id']
             a = [p.part_brand.name, p.number, p.part_type.name]
-            a += [data['value']['quantity'], data['value']['remained_quantity'], p.partbatches.last.price.to_f, p.ref_price.to_f ]
-            d = d1
-            while d < d2
-              delivered = p.partbatches.sum do |pb|
-                HistoryTracker.where(association_chain: [{"name"=>"Partbatch", "id" => pb.id}], :created_at.gte => d, :created_at.lt => 1.month.since(d) ).sum do |x|
-                  x.original["remained_quantity"].to_i - x.modified["remained_quantity"].to_i
-                end
-              end
-              a << delivered
-              d = 1.month.since(d)
+            a += [data['value']['quantity'], data['value']['remained_quantity']]
+            a += storehouse_ids_of_cities.map do |sh_ids|
+              data['value']['storehouse_remained'].inject(0) { |sum, (k,v)| sum + (sh_ids.has_key?(k) ? v : 0) }
+            end
+            a += [ p.partbatches.last.price.to_f, p.ref_price.to_f ]
+            monthly_part_delivered.each do |mpd|
+              a << data['value']['pb_ids'].inject(0) { |sum, pb_id| sum + mpd[pb_id].to_i }
             end
             a << data['value']['quantity'] - data['value']['remained_quantity']
             last_month_delivered = a[-2].to_f
