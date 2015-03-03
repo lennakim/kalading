@@ -289,6 +289,8 @@ class Order
   end
   
   def self.sum_by_city cities, field, start_time, end_time, conditions = {}
+    total_sum = 0
+    total_data = {}
     cities.where(opened: true).map do |city|
       key_op = [['year', '$year'], ['month', '$month'], ['day', '$dayOfMonth']]
       project_date_fields = Hash[*key_op.collect { |key, op| [key, {op => {'$add' => ["$#{field}", Time.zone.utc_offset*1000]}}] }.flatten]
@@ -306,10 +308,21 @@ class Order
         {"$sort" => {field => -1}}
       ]
       #aggregate result: [{"_id"=>{"year"=>2015, "month"=>2, "day"=>5}, "count"=>2}
+      a = collection.aggregate(pipeline)
+      sum = a.sum {|v| v['count']}
+      total_sum += sum
       {
-        name: city.name,
-        data: Hash[collection.aggregate(pipeline).map {|v| [ DateTime.new(v['_id']['year'], v['_id']['month'], v['_id']['day']), v['count']]}]
+        name: "#{city.name} (#{sum})",
+        data:
+          Hash[
+            a.map do |v|
+              d = DateTime.new(v['_id']['year'], v['_id']['month'], v['_id']['day'])
+              total_data[d] ||= 0
+              total_data[d] += v['count']
+              [d, v['count']]
+            end
+          ]
       }
-    end
+    end << {name: "#{I18n.t(:national)} (#{total_sum})", data: total_data}
   end
 end
