@@ -211,7 +211,6 @@ class StorehousesController < ApplicationController
             a << "#{city.name + I18n.t(:remained_quantity)}"
             storehouse_ids_of_cities << Hash[city.storehouses.map {|sh| [sh.id.to_s, 1]}]
           end
-          a += [I18n.t(:batch_price), I18n.t(:sell_price_history)]
           d1 = Date.today.ago(1.year).beginning_of_month
           first_ht_dt = HistoryTracker.asc(:created_at).first.created_at
           d1 = first_ht_dt.beginning_of_month if d1 < first_ht_dt
@@ -233,7 +232,6 @@ class StorehousesController < ApplicationController
             a += storehouse_ids_of_cities.map do |sh_ids|
               data['value']['storehouse_remained'].inject(0) { |sum, (k,v)| sum + (sh_ids.has_key?(k) ? v : 0) }
             end
-            a += [ p.partbatches.last.price.to_f, p.ref_price.to_f ]
             monthly_part_delivered.each do |mpd|
               a << data['value']['pb_ids'].inject(0) { |sum, pb_id| sum + mpd[pb_id].to_i }
             end
