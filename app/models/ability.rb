@@ -42,7 +42,7 @@ class Ability
     end
 
     if user.roles.include? ROLE_ID('national_storehouse_admin')
-      can :manage_all, Storehouse
+      can [:manage_all, :part_transfer, :part_transfer_to], Storehouse
     end
     
     if user.roles.include? ROLE_ID('data_admin')
