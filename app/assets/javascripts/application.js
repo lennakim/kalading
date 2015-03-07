@@ -15,7 +15,6 @@
 //= require jquery.validate
 //= require jquery.validate.additional-methods
 //= require twitter/bootstrap
-//= require bootstrap-tooltip
 //= require jquery_nested_form
 //= require bootstrap-datetimepicker
 //= require jquery.ba-throttle-debounce.min
