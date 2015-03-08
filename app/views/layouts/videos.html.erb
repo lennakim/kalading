@@ -9,7 +9,16 @@
       <%= render '/layouts/menu' %>
       <div class="container-fluid">
         <div class="row-fluid">
-          <div class="offset1 span10">
+          <div class="span3">
+            <div class="well sidebar-nav">
+              <ul class="nav nav-list">
+                <li class="nav-header"></li>
+                <li class="active"><%= link_to t('videos'), videos_path %></li>
+                <li><%= link_to t('notifications'), notifications_path %></li>
+              </ul>
+            </div><!--/.well -->
+          </div><!--/span-->
+          <div class="span9">
             <%= bootstrap_flash %>
             <%= yield %>
           </div>

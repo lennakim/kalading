@@ -1,0 +1,32 @@
+<%- model_class = Notification -%>
+<h4 id="basic_infos"><%= t(:basic_infos) %></h5>
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <td><%= t(:seq) %></td>
+      <td><%= @notification.seq %></td>
+    </tr>
+    <tr>
+      <td><%= t(:state) %></td>
+      <td><%= t(Notification::STATE_STRINGS[@notification.state]) %></td>
+    </tr>
+    <tr>
+      <td><%= t(:title) %></td>
+      <td><%= @notification.title %></td>
+    </tr>
+    <tr>
+      <td><%= t(:content) %></td>
+      <td><%= @notification.content %></td>
+    </tr>
+    <tr>
+      <td><%= t(:created_at) %></td>
+      <td><%= l @notification.created_at %></td>
+    </tr>
+  </tbody>
+</table>
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              notifications_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_notification_path(@notification), :class => 'btn' if @notification.state != 1 %>
+</div>

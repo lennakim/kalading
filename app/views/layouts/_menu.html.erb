@@ -80,12 +80,12 @@
           <% end %>
           <%= link_to t('discount_card'), discounts_path if can? :read, Discount %>
           </li>
-          <% if ['videos'].include? params[:controller] %>
+          <% if ['videos', 'notifications'].include? params[:controller] %>
           <li class="active">
           <% else %>
           <li>
           <% end %>
-          <%= link_to t('videos'), videos_path if can? :view, Video %>
+          <%= link_to t('engineer_menu'), videos_path if can? :view, Video %>
           </li>
           <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>
         </ul>

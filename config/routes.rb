@@ -8,6 +8,9 @@ Kalading::Application.routes.draw do
   resources :complaints
 
 
+  resources :notifications
+
+
   resources :image_texts
 
 

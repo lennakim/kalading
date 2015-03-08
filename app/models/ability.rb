@@ -76,5 +76,15 @@ class Ability
     if user.roles.include? ROLE_ID('finance')
       can [:read, :update], Order
     end
+    
+    if user.roles.include? ROLE_ID('engineer_manager')
+      can [:read, :calcprice, :print, :daily_orders], Order
+      can :read, Complaint
+      can :update, Complaint do |c|
+        c.handler == user
+      end
+      can [:view, :read], Video
+      can [:read, :create, :update, :destroy], Notification
+    end
   end
 end
