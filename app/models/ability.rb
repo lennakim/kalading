@@ -34,6 +34,7 @@ class Ability
       can [:inout, :print_dispatch_card, :city_part_requirements], Storehouse
       can [:update, :edit_all, :calcprice, :print, :daily_orders], Order
       can :order_prompt, Order
+      can :update, Partbatch
       can :read, Complaint
       can :update, Complaint do |c|
         c.handler == user
