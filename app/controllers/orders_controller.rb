@@ -14,7 +14,12 @@ class OrdersController < ApplicationController
       if current_user.roles.empty?
         authorize! :read, Order
       elsif current_user.roles.include? '5'
-        @orders = Order.where(:engineer => current_user, :serve_datetime.gte => Date.tomorrow.beginning_of_day, :serve_datetime.lte => Date.tomorrow.end_of_day)
+        @orders = Order.where(:engineer => current_user)
+        if Time.now.hour < 18
+          @orders = Order.where(:serve_datetime.gte => Date.tomorrow.beginning_of_day, :serve_datetime.lte => Date.tomorrow.end_of_day)
+        else
+          @orders = Order.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.today.end_of_day)
+        end     
       elsif current_user.roles.include? '3'
         @orders = Order.where(:city => current_user.city)
         params[:city] = current_user.city.id
@@ -755,8 +760,20 @@ class OrdersController < ApplicationController
 
   def order_stats
     @cities = City.where(opened: true).asc(:created_at)
-    params[:start_time] ||= Time.now.ago(14.days).strftime('%Y-%m-%d')
-    params[:end_time] ||= Time.now.strftime('%Y-%m-%d')
+    @conditions = {}
+    if params[:all].to_i == 1
+      @conditions["state"] = {"$in"=>Order::VALID_STATES}
+      params[:start_time] ||= Time.now.since(1.days).strftime('%Y-%m-%d')
+      params[:end_time] ||= Time.now.since(7.days).strftime('%Y-%m-%d')
+    else
+      @conditions["state"] = {"$in"=>[5, 6, 7]}
+      params[:start_time] ||= Time.now.ago(14.days).strftime('%Y-%m-%d')
+      params[:end_time] ||= Time.now.strftime('%Y-%m-%d')
+    end
+
+    if params[:maintain_only].to_i == 1
+      @conditions["service_type_ids"] = { "$all" => [ ServiceType.find_by(name: t(:auto_maintain_service_type_name)).id ] }
+    end
     respond_to do |format|
       format.html
     end

@@ -287,7 +287,6 @@ class Order
         {
           "$match" => {
             "city_id" => city.id,
-            "state"=>{"$in"=>[5, 6, 7]},
             field => {"$gte" => start_time.utc, "$lte" => end_time.utc}
           }.merge(conditions)
         },

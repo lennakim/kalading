@@ -38,6 +38,7 @@
               </button>
               <ul class="dropdown-menu">
                 <li><%= link_to t('order_stats'), order_stats_path(:disable_sidebar => 1) if can? :order_stats, Order %></li>
+                <li><%= link_to t('valid_order_stats'), order_stats_path(:disable_sidebar => 1, :all => 1) if can? :order_stats, Order %></li>
               </ul>
           </div>
           </li>
