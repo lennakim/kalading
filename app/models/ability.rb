@@ -31,7 +31,7 @@ class Ability
 
     if (user.roles.include? ROLE_ID('storehouse_admin')) || (user.roles.include? ROLE_ID('national_storehouse_admin'))
       can :read, :all
-      can [:inout, :print_dispatch_card, :part_yingyusunhao, :do_part_yingyusunhao, :city_part_requirements], Storehouse
+      can [:inout, :print_dispatch_card, :city_part_requirements], Storehouse
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can [:update, :edit_all, :calcprice, :print, :daily_orders], Order
       can :order_prompt, Order
@@ -42,7 +42,7 @@ class Ability
     end
 
     if user.roles.include? ROLE_ID('national_storehouse_admin')
-      can [:manage_all, :part_transfer, :part_transfer_to], Storehouse
+      can [:manage_all, :part_transfer, :part_transfer_to, :part_yingyusunhao, :do_part_yingyusunhao], Storehouse
     end
     
     if user.roles.include? ROLE_ID('data_admin')

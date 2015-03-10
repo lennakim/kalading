@@ -276,18 +276,6 @@ class Order
   scope :valid, where(:state.in => VALID_STATES)
   scope :by_car, ->(car_location, car_num) { where(:car_location => car_location, :car_num => car_num) }
   
-  def self.sum_by_city cities, start_date, end_date
-    #service_type_ids: { "$all" => [ ServiceType.find_by(name: t(:auto_maintain_service_type_name)).id ] }
-    cities.where(opened: true).map do |city|
-      a = []
-      (start_date..end_date).map do |date|
-        orders = Order.where(:city => city, :state.in =>[5, 6, 7], :serve_datetime.gte => date.beginning_of_day, :serve_datetime.lt => date.since(1.days).end_of_day)
-        {date => orders.count}
-      end
-      {name: city.name, data: a}
-    end
-  end
-  
   def self.sum_by_city cities, field, start_time, end_time, conditions = {}
     total_sum = 0
     total_data = {}

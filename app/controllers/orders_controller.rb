@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
       if current_user.roles.empty?
         authorize! :read, Order
       elsif current_user.roles.include? '5'
-        @orders = Order.where(:engineer => current_user)
+        @orders = Order.where(:engineer => current_user, :serve_datetime.gte => Date.tomorrow.beginning_of_day, :serve_datetime.lte => Date.tomorrow.end_of_day)
       elsif current_user.roles.include? '3'
         @orders = Order.where(:city => current_user.city)
         params[:city] = current_user.city.id

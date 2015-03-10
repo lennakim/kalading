@@ -36,7 +36,7 @@ FactoryGirl.define do
     car_num "N333M3"
     auto_km '20000'
     vin 'VIN of auto'
-    serve_datetime "2014-05-18 12:00"
+    serve_datetime Date.tomorrow.beginning_of_day
     state 3
   end
 
@@ -49,7 +49,7 @@ FactoryGirl.define do
     car_num "N000M3"
     auto_km '100'
     vin 'VIN of auto'
-    serve_datetime "2014-05-16 15:44"
+    serve_datetime Date.today.beginning_of_day
     state 4
   end
 
@@ -62,7 +62,7 @@ FactoryGirl.define do
     car_num "MM0588"
     auto_km '2000'
     vin 'VIN of auto'
-    serve_datetime "2014-05-13 19:44"
+    serve_datetime Date.today.beginning_of_day
     state 5
   end
 
@@ -75,7 +75,7 @@ FactoryGirl.define do
     car_num "MM0588"
     auto_km '2000'
     vin 'VIN of auto'
-    serve_datetime "2014-04-13 19:44"
+    serve_datetime  Date.today.beginning_of_day
     state 7
   end
 end
