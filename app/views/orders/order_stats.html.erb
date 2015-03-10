@@ -39,6 +39,16 @@
         <% end %>
       </div>
     </div>
+    <div class="control-group">
+      <label class="control-label" for="maintain_only"><%= t(:all_orders) %></label>
+      <div class="controls">
+        <% if params[:all].to_i == 1 %>
+          <input class="boolean optional" id="all" name="all" type="checkbox" value="1" checked="checked"/>
+        <% else %>
+          <input class="boolean optional" id="all" name="all" type="checkbox" value="1"/>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 </div>
 <%= javascript_include_tag "highcharts", "chartkick" %>
