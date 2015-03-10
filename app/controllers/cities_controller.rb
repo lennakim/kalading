@@ -116,9 +116,6 @@ class CitiesController < ApplicationController
         end
       end
     end
-    if ['5307033e098e719c45000043','530711a8098e719c45000059','54ac85bdfee734b8d1000073','54ac856dfee73483b5000066','5307100f098e719c45000052'].include?(params[:id])
-      h[Date.tomorrow] = [0, 0, 0]
-    end
     render json: h
   end
 private
