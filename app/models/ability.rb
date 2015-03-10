@@ -42,7 +42,8 @@ class Ability
     end
 
     if user.roles.include? ROLE_ID('national_storehouse_admin')
-      can [:manage_all, :part_transfer, :part_transfer_to, :part_yingyusunhao, :do_part_yingyusunhao], Storehouse
+      can [:manage_all, :part_transfer, :part_transfer_to, :part_yingyusunhao, :do_part_yingyusunhao, :statistics], Storehouse
+      can [:create], Partbatch
     end
     
     if user.roles.include? ROLE_ID('data_admin')
