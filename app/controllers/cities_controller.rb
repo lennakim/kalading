@@ -105,16 +105,19 @@ class CitiesController < ApplicationController
     (d1..d2).each do |d|
       h[d] = [@city.order_capacity / 3 , @city.order_capacity / 3, @city.order_capacity / 3]
       if d == Date.tomorrow && DateTime.now.hour >= 17
-        h[d] = []
+        h[d] = [0,0,0]
       end
     end
     
     Order.within_datetime_range([0,2,3,4], d1.beginning_of_day, d2.end_of_day, @city).group_by {|o| o.serve_datetime.to_date}.each do |k, v|
-      if !h[k].empty?
+      if h[k] != [0,0,0]
         v.group_by {|o| _time_stage(o.serve_datetime.hour)}.each do |s, y|
           h[k][s] = [@city.order_capacity / 3 - y.count, 0].max
         end
       end
+    end
+    if ['5307033e098e719c45000043','530711a8098e719c45000059','54ac85bdfee734b8d1000073','54ac856dfee73483b5000066','5307100f098e719c45000052'].include?(params[:id])
+      h[Date.tomorrow] = [0, 0, 0]
     end
     render json: h
   end
