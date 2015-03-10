@@ -128,8 +128,8 @@ class Maintain
   field :engine_num, type: String, default: ""
 
   field :oil_position, type: Integer, default: 1
-  field :oil_out, type: Integer, default: 0
-  field :oil_in, type: Integer, default: 0
+  field :oil_out, type: Float, default: 0
+  field :oil_in, type: Float, default: 0
   field :oil_desc, type: Integer, default: 0
   field :oil_sample_collected, type: Boolean, default: false
   field :oil_sample_number, type: Integer, default: 0
