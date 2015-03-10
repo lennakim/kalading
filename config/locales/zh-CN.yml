@@ -1088,3 +1088,4 @@ zh-CN:
   edit_notification: '编辑通知'
   notification_created_notify: '通知%{seq} 已创建'
   notification_sent_notify: '通知%{seq} 已发送'
+  battery: '电瓶'

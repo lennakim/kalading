@@ -70,7 +70,7 @@ class AutoSubmodel
     end
   end
   
-  PART_SORT_ORDER = { I18n.t(:engine_oil) => 0, I18n.t(:oil_filter) => 1, I18n.t(:air_filter) => 2, I18n.t(:cabin_filter) => 3, I18n.t(:pm25_filter) => 4 }
+  PART_SORT_ORDER = { I18n.t(:engine_oil) => 0, I18n.t(:oil_filter) => 1, I18n.t(:air_filter) => 2, I18n.t(:cabin_filter) => 3, I18n.t(:pm25_filter) => 4, I18n.t(:battery) => 5 }
 
   def parts_includes_motoroil
     a = self.parts.asc(:number).sort_by {|x| x.part_brand.sort_factor.to_i }.select {|part| PART_SORT_ORDER.keys[1..-1].include?(part.part_type.name) && part.total_remained_quantity > 0 }
