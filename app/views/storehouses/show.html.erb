@@ -16,8 +16,8 @@
             <i class="icon-minus-sign"></i>&nbsp<%= t('sunhao') %>
           <% end %>
         <% end %>
-        <%= link_to t(:export), storehouse_path(@storehouse, format: :csv), :class => 'btn btn-info' %>
       <% end %>
+      <%= link_to t(:export), storehouse_path(@storehouse, format: :csv), :class => 'btn btn-info' if can? :update, Storehouse %>
       <% if can? :part_transfer, Storehouse %>
         <%= link_to storehouse_part_transfer_path(@storehouse), :class => 'btn btn-success', :target => '_blank' do %>
           <i class="icon-arrow-right"></i>&nbsp<%= t('part_transfer') %>
