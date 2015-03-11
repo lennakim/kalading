@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
         if Time.now.hour < 18
           @orders = @orders.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.today.end_of_day)
         else
-          @orders = @orders.where(:serve_datetime.gte => Date.tomorrow.beginning_of_day, :serve_datetime.lte => Date.tomorrow.end_of_day)
+          @orders = @orders.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.tomorrow.end_of_day)
         end     
       elsif current_user.roles.include? '3'
         @orders = Order.where(:city => current_user.city)
