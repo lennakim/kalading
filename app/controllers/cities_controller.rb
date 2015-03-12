@@ -110,6 +110,7 @@ class CitiesController < ApplicationController
     end
     
     Order.within_datetime_range([0,2,3,4], d1.beginning_of_day, d2.end_of_day, @city).group_by {|o| o.serve_datetime.to_date}.each do |k, v|
+      h[k] = [0,0,0] if v.count >= @city.order_capacity
       if h[k] != [0,0,0]
         v.group_by {|o| _time_stage(o.serve_datetime.hour)}.each do |s, y|
           h[k][s] = [@city.order_capacity / 3 - y.count, 0].max
