@@ -161,6 +161,11 @@ class OrdersController < ApplicationController
         params[:per] ||= 5
         @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
       }
+      format.js {
+        params[:page] ||= 1
+        params[:per] ||= 5
+        @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
+      }
     end
   end
 

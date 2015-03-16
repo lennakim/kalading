@@ -35,7 +35,7 @@
               <%= t(:nothing) %>
             <% else %>
               <a class="btn btn-link" data-toggle="collapse" data-target="#<%= complaint.id %>_comments"><%= t(:view) %></a>
-              <div id="<%= complaint.id %>_comments" class="collapse">
+              <div id="<%= complaint.id %>_comments" class="collapse" style='width: 150px'>
               <% complaint.comments.desc(:created_at).each do |c| %>
               <p><%= c.text %></p>
               <% end %>

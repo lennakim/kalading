@@ -27,6 +27,10 @@
       <td><%= @complaint.creater.name if @complaint.creater %></td>
     </tr>
     <tr>
+      <td><%= t(:created_at) %></td>
+      <td><%= l @complaint.created_at %></td>
+    </tr>
+    <tr>
       <td><%= t(:complained) %></td>
       <td><%= @complaint.complained.name if @complaint.complained %></td>
     </tr>
@@ -39,12 +43,16 @@
       <td><%= @complaint.tag.name if @complaint.tag %></td>
     </tr>
     <tr>
-      <td><%= t(:created_at) %></td>
-      <td><%= l @complaint.created_at %></td>
+      <td><%= t(:complaint_detail) %></td>
+      <td><%= @complaint.detail %></td>
     </tr>
     <tr>
       <td><%= t(:handled_datetime) %></td>
       <td><%= l @complaint.handled_datetime if @complaint.handled_datetime %></td>
+    </tr>
+    <tr>
+      <td><%= t(:handled_result) %></td>
+      <td><%= @complaint.handled_result %></td>
     </tr>
   </tbody>
 </table>

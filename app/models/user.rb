@@ -38,7 +38,7 @@ class User
   # field :locked_at,       :type => Time
 
   field :name,    :type => String
-  field :name_pinyin,    :type => String
+  field :name_pinyin,    :type => String, :default => ''
   field :phone_num,    :type => String
   field :phone_num2,    :type => String
   field :remark,    :type => String
@@ -82,7 +82,10 @@ class User
   def name_and_order_num
     self.name + I18n.t(:order_num, n: self.serve_orders.where(:state.lt => 6).count )
   end
-  
+  def initial_and_name
+    self.name_pinyin.upcase.chr + ' ' + self.name
+  end
+
   paginates_per 10
   
   def ability
@@ -95,11 +98,15 @@ class User
   
   def leader
     if self.roles.include?(User::ROLE_STRINGS.index('engineer').to_s)
-      User.find_by(storehouse_id: self.storehouse_id, title: /.*#{I18n.t(:dianbu_leader)}.*/i)
+      User.find_by(city_id: self.city_id, title: /.*#{I18n.t(:engineer_manager)}.*/i)
     elsif self.roles.include?(User::ROLE_STRINGS.index('dispatcher').to_s)
       User.find_by(title: /.*#{I18n.t(:dispatcher_manager)}.*/i)
     else
       self
     end
+  end
+  
+  before_create do |u|
+    u.name_pinyin = PinYin.of_string(u.name.gsub(/\s+/, "")).join
   end
 end

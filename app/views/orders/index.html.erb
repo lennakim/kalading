@@ -179,11 +179,11 @@
           <% else %>
             <option value=""><%= t :all %></option>
           <% end %>
-          <% User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }.each do |t| %>
+          <% User.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }.each do |t| %>
             <% if params[:engineer] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.name %></option>
+              <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
             <% else %>
-              <option value="<%= t.id %>"><%= t.name %></option>
+              <option value="<%= t.id %>"><%= t.initial_and_name %></option>
             <% end %>
           <% end %>
         </select>
@@ -199,11 +199,11 @@
           <% else %>
             <option value=""><%= t :all %></option>
           <% end %>
-          <% User.asc(:name).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }.each do |t| %>
+          <% User.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }.each do |t| %>
             <% if params[:dispatcher] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.name %></option>
+              <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
             <% else %>
-              <option value="<%= t.id %>"><%= t.name %></option>
+              <option value="<%= t.id %>"><%= t.initial_and_name %></option>
             <% end %>
           <% end %>
         </select>

@@ -24,6 +24,7 @@ class Complaint
   belongs_to :creater, class_name: "User", inverse_of: :complaints_created
   belongs_to :complained, class_name: "User", inverse_of: :complaints_complained
   belongs_to :handler, class_name: "User", inverse_of: :complaints_handled
+  belongs_to :city
   embeds_many :comments, :cascade_callbacks => true
 
   STATES = [0, 1]
@@ -39,7 +40,7 @@ class Complaint
   
   accepts_nested_attributes_for :comments, :allow_destroy => true
 
-  attr_accessible :seq, :state, :customer_name, :customer_phone_num, :severity_level, :source, :order_id, :creater_id, :complained_id, :handler_id, :tag_id, :comments_attributes, :detail, :handled_result
+  attr_accessible :seq, :state, :customer_name, :customer_phone_num, :severity_level, :source, :order_id, :creater_id, :complained_id, :handler_id, :tag_id, :comments_attributes, :detail, :handled_result, :city_id
   
   before_create do |c|
     c.handler = c.complained.leader if c.complained

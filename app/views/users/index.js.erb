@@ -1,1 +1,5 @@
 $("#order_engineer_id").html("<%= escape_javascript(options_for_select(@users.map {|u| [u.name_and_order_num, u.id]})) %>")
+
+$("#complaint_complained").html("<%= escape_javascript(options_for_select(@users.map {|u| [u.initial_and_name, u.id]})) %>")
+
+

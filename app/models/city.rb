@@ -14,10 +14,11 @@ class City
   has_many :orders
   has_many :storehouses
   has_many :users
+  has_many :complaints
   has_and_belongs_to_many :auto_submodels
   has_and_belongs_to_many :notifications
   
   def as_json(opts = nil)
-    super except: [:order_capacity, :area_code, :opened, :auto_submodel_ids, :notification_ids]
+    super except: [:order_capacity, :area_code, :opened, :auto_submodel_ids, :notification_ids, :complaint_ids]
   end
 end

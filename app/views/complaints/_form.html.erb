@@ -1,19 +1,43 @@
 <%= simple_nested_form_for @complaint, :html => { class: "form-horizontal" } do |f| %>
   <% if !params[:add_comment] && !params[:handle] || params[:edit_all] %>
     <div class="control-group required">
+      <label for="complaint_phone_num" class="control-label"><%= t(:phone_num) %></label>
+      <div class="controls form-inline">
+        <%= f.input_field :customer_phone_num, :class => 'numeric', :numeric => '', minlength: "8", maxlength: "13", "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) %>
+        <%= link_to t(:search_order_history), orders_path, :class => 'btn', :id => 'search-by-phone-num' %>
+        <%= image_tag "ajax-loader-small.gif", :class => "loading-indicator", :style => "display: none;"%>
+      </div>
+    </div>
+    <div id="order-list-by-phone-num" class="order-list"></div>
+
+    <div class="control-group required">
       <label for="order_seq" class="control-label"><%= t(:order_id) %></label>
       <div class="controls form-inline" >
         <%= f.input_field :order_seq, :autocomplete => "off", :value => (@complaint.order ? @complaint.order.seq : '') %>
       </div>
     </div>
-    <%= f.input :customer_name, label: t(:client_name) %>
-    <%= f.input :customer_phone_num, label: t(:phone_num) %>
+    <%= f.input :customer_name, label: t(:customer_name) %>
+    <%= f.association :city, collection: City.asc(:name), prompt: t('choose_city'), label: t('cities'), include_blank: false, input_html: { "data-msg-required" => t(:city_required) } %>
+    <div class="control-group required">
+      <label for="complaint_role" class="control-label"><%= t(:role) %></label>
+      <div class="controls form-inline" >
+        <select class="select required" name="complaint[role]" id="complainted_role">
+        <%= options_for_select(%w[storehouse_admin engineer dispatcher].map { |s| [t(s), User::ROLE_STRINGS.index(s)] } ) %>
+        </select>
+      </div>
+    </div>
+    <div class="control-group required">
+      <label for="order_seq" class="control-label"><%= t(:complained) %></label>
+      <div class="controls form-inline" >
+        <%= f.input_field :complained, collection: User.asc(:name_pinyin), label_method: :initial_and_name, input_html: { "data-msg-required" => t(:city_required)} %>
+      </div>
+    </div>
     <%= f.association :tag, collection: Tag.where(:type => 1), label: t('complaint_tag'), input_html: { "data-msg-required" => t(:city_required) } %>
-    <%= f.association :creater, collection: User.asc(:pinyin), label: t('creater'), input_html: { "data-msg-required" => t(:city_required) }, readonly: true %>
-    <%= f.association :complained, collection: User.asc(:pinyin), label: t('complained'), input_html: { "data-msg-required" => t(:city_required) } %>
-    <%= f.association :handler, collection: User.asc(:pinyin), label: t('handler'), input_html: { "data-msg-required" => t(:city_required) } if @complaint.handler%>
+    <%= f.association :creater, collection: User.asc(:name_pinyin), label: t('creater'), label_method: :initial_and_name, input_html: { "data-msg-required" => t(:city_required) }, readonly: true  if !["new"].include? params[:action] %>
+    <%= f.association :handler, collection: User.asc(:name_pinyin), label: t('handler'), input_html: { "data-msg-required" => t(:city_required) } if @complaint.handler%>
     <%= f.input :severity_level, label: t(:severity_level), collection: Complaint::SEVERITY_LEVELS, label_method: lambda {|s| t(Complaint::SEVERITY_LEVEL_STRINGS[s])}, include_blank: false %>
     <%= f.input :source, label: t(:source), collection: t(:complaint_source).split, include_blank: false %>
+    <%= f.input :detail, label: t(:complaint_detail), as: :text, :input_html => { :cols => 50, :rows => 4, :placeholder => t(:complaint_detail) } %>
     <%= render 'orders/comments', :f => f %>
     <div class="form-actions">
       <%= f.button :submit, t(:save), :class => 'btn-primary' %>
@@ -26,7 +50,7 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif params[:handle] %>
-    <%= render 'orders/comments', :f => f %>
+    <%= f.input :handled_result, label: t(:handled_result), as: :text, :input_html => { :cols => 50 , :rows => 3, :placeholder => t(:handled_result) } %>
     <div class="form-actions">
       <%= f.button :submit, t(:handle), :class => 'btn-primary', name: "handle" %>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>

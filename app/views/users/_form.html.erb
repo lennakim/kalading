@@ -3,7 +3,7 @@
   <%= f.input :state, label: t('state'), collection: User::STATES, label_method: lambda { |s| t(User::STATE_STRINGS[s])}, :include_blank => false %>
   <%= f.association :city, label: t('choose_city'), collection: City.asc(:name), :include_blank => false %>
   <%= f.input :name, label: t('user_name') %>
-  <%= f.input :name_pinyin, label: t('pinyin') %>
+  <%= f.input :name_pinyin, label: t('pinyin') if params[:action] != 'new' %>
   <%= f.input :title, label: t('title') %>
   <%= f.input :phone_num, label: t('phone_num') %>
   <%= f.input :email, :required => true, :autofocus => true %>
