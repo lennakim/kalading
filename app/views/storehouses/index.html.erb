@@ -29,6 +29,7 @@
           <%= link_to t('edit'),
                       edit_storehouse_path(storehouse), :class => 'btn btn-mini' if can? :update, storehouse %>
           <%= link_to t('dispatch_card'), print_dispatch_card_path(storehouse), :class => 'btn btn-info btn-mini', :target => '_blank' if can? :print_dispatch_card, storehouse %>            
+          <%= link_to t('orders_card'), print_orders_card_path(storehouse), :class => 'btn btn-info btn-mini', :target => '_blank' if can? :print_orders_card, storehouse %>            
         </td>
       </tr>
     <% end %>

@@ -1035,6 +1035,8 @@ zh-CN:
   complaint_id: '投诉号'
   evaluation: '评价'
   complaint_tag: '投诉问题'
+  complaint_detail: '投诉详情'
+  handled_result: '处理结果'
   complained: '被投诉者'
   handler: '处理者'
   creater: '创建者'
@@ -1092,3 +1094,4 @@ zh-CN:
   cities_all_order_stats: '各城市有效订单统计'
   valid_order_stats: '有效订单统计'
   all_orders: '含未完成订单'
+  orders_card: '施工单'

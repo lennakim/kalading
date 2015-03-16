@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "Kalading" %></title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+  </head>
+  <body style="padding-top: 10px;">
+    <a class="btn btn-primary pull-right" id="print-btn" onclick="$('#print-btn').hide(); window.print(); $('#print-btn').show();"><%= t(:print) %></a>
+    <% @storehouse.users.each do |u|%>
+    <% u.serve_orders.any_in(:state => [3,4]).where(:part_deliver_state => 1).each do |o|%>
+    <h3 class="text-left"><%= t :order_id %>:&nbsp&nbsp<%= o.seq %></h3>
+    <h3 class="text-center"><%= t :shigongdan %></h3>
+    <div class="row">
+      <div class="span12"><%= t :order_sheet_description_1 %></div>
+      <div class="span12"><%= t :order_sheet_description_2 %></div>
+      <div class="span12"><%= t :order_sheet_description_3 %></div>
+    </div>
+    <div class="row">
+      <div class="span12">
+      <table class="table table-bordered table-condensed">
+        <tbody>
+            <tr>
+              <td><b><%= t :serve_datetime %>:</b>&nbsp&nbsp<%= l o.serve_datetime %></td><td><b><%= t :engineer_name %>:</b>&nbsp&nbsp<%= o.engineer.name if o.engineer %>&nbsp<%= o.engineer.phone_num if o.engineer %></td><td><b><%= t :user_type %>:</b>&nbsp&nbsp<%= o.user_type.name if o.user_type %></td>
+            </tr>
+            <tr>
+              <td><b><%= t :customer_name %>:</b>&nbsp&nbsp<%= o.name %></td><td><b><%= t :customer_phone %>:</b>&nbsp&nbsp<%= o.phone_num %></td><td><b><%= t :car_num %>:</b>&nbsp&nbsp<%= o.car_location + o.car_num %></td>
+            </tr>
+            <tr>
+              <td colspan="3"><b><%= t :address %>:</b>&nbsp&nbsp<%= o.address %></td>
+            </tr>
+            <tr>
+              <td><b><%= t :auto_submodel %>:</b>&nbsp&nbsp<%= o.auto_submodel.full_name if o.auto_submodel %></td><td colspan="2"><%= t(:motoroil_cap, n: o.auto_submodel.motoroil_cap) if o.auto_submodel %></td>
+            </tr>
+            <tr>
+              <td colspan="3" style="font-size: 20px; font-weight: bold"><%= t :comment %>:&nbsp&nbsp<%= o.client_comment %>&nbsp&nbsp<%= t(:reciept) + ": " + t(Order::RECIEPT_TYPE_STRINGS[o.reciept_type]) + " " + o.reciept_title if o.reciept_type != 0 %></td>
+            </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="span12">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr><th><%= t :service_types %></th><th><%= t :service_fee %></th></tr>
+          </thead>
+          <tbody>
+            <% o.service_types.each do |st| %>
+            <tr>
+              <td><%= st.name %></td><td><%= humanized_money_with_symbol st.price %></td>
+            </tr>
+            <% end %>
+            <tr><td><b><%= t :total_2 %></b></td><td><b><%= humanized_money_with_symbol o.calc_service_price%></b></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <%= label_tag "checkbox-buymyself", t(:customer_buy_parts), {class: "checkbox inline"} %>
+      <%= check_box_tag "buymyself", "1", o.buymyself, {:id => "checkbox-buymyself", readonly: true} %>
+      <%= label_tag "checkbox-needparts", t(:need_parts), {class: "checkbox inline"} %>
+      <%= check_box_tag "buymyself", "1", !o.buymyself, {:id => "checkbox-needparts", readonly: true} %>
+    </div>
+    <div class="row">
+      <div class="span12">
+        <table class="table table-bordered table-condensed">
+          <thead>
+            <tr><th><%= t :part_types %></th><th><%= t :brand_and_number %></th><th><%= t :quantity %></th><th><%= t :price %></th><th><%= t :summary %></th></tr>
+          </thead>
+          <tbody>
+            <% o.parts.group_by {|part| part.part_type}.sort_by { |k, v| AutoSubmodel::PART_SORT_ORDER[k.name] }.each do |t, parts| %>
+            <% parts.each do |p| %>
+            <tr>
+              <td><%= p.part_type.name %></td>
+              <td><%= p.brand_and_number %></td>
+              <td><%= o.part_counts[p.id.to_s] %></td>
+              <td><%= humanized_money_with_symbol p.ref_price %></td>
+              <td><%= humanized_money_with_symbol(p.ref_price * o.part_counts[p.id.to_s].to_i ) %></td>
+            </tr>
+            <% end %>
+            <% end %>
+            <tr>
+              <td colspan="4"><b><%= t :total_2 %></b></td>
+              <td><b><%= humanized_money_with_symbol o.calc_parts_price %></b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row" style="page-break-after:always;">
+      <div class="span12">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><%= t :due_charge %></td>
+              <td><%= humanized_money_with_symbol o.price_without_discount %></td>
+              <td colspan="2"><%= t :discount_card %></td>
+              <td colspan="2"><%= o.discounts.first.name if o.discounts.present?%></td>
+            </tr>
+            <tr>
+              <td><%= t :free_charge %></td>
+              <td><%= humanized_money_with_symbol(o.calc_price - o.price_without_discount)%></td>
+              <td colspan="4"></td>
+            </tr>
+            <tr>
+              <td><%= t :real_charge %></td>
+              <td><%= humanized_money_with_symbol o.calc_price %></td>
+              <td colspan="4"></td>
+            </tr>
+            <tr>
+              <td colspan="6"><%= t :client_signature %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <% end %>
+    <% end %>
+  </body>
+</html>

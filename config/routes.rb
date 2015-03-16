@@ -105,6 +105,7 @@ Kalading::Application.routes.draw do
   post 'storehouses/:id/do_part_yingyusunhao' => 'storehouses#do_part_yingyusunhao', :as => :storehouse_do_part_yingyusunhao
   get 'city_part_requirements' => 'storehouses#city_part_requirements', :as => :city_part_requirements
   get 'storehouse/:id/print_dispatch_card' => 'storehouses#print_dispatch_card', :as=> :print_dispatch_card
+  get 'storehouse/:id/print_orders_card' => 'storehouses#print_orders_card', :as=> :print_orders_card
 
   get 'latest_orders' => 'orders#latest_orders', :as => :latest_orders
   get 'orders/:id/duplicate' => 'orders#duplicate', :as => :duplicate_order

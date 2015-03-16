@@ -293,6 +293,11 @@ class StorehousesController < ApplicationController
     @storehouse = Storehouse.find(params[:id])
     render layout: false
   end
+  
+  def print_orders_card
+    @storehouse = Storehouse.find(params[:id])
+    render layout: false
+  end
 
   def part_yingyusunhao
     @storehouse = Storehouse.find(params[:id])
