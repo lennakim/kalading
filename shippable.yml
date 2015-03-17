@@ -12,7 +12,10 @@ notifications:
      email:
          recipients:
              - wangzhe.nanami@gmail.com
-             - 646228839@11.com
+             - 646228839@qq.com
+             - linjian@kalading.com
+             - congteng45@gmail.com
+             - liuning@kalading.com
          on_success: change
          on_failure: always
 services:
