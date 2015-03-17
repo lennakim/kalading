@@ -15,12 +15,6 @@ gem 'jquery-rails'
 # To use Jbuilder templates for JSON
 gem 'jbuilder'
 
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# To use debugger
-# gem 'debugger'
-
 group :test, :development do
   gem 'rspec-rails', '~> 3.0'
   gem 'spreadsheet'
@@ -66,3 +60,11 @@ gem 'capistrano', '~> 3.0.1'
 gem 'pry-rails'
 gem 'rqrcode-with-patches'
 gem 'chartkick'
+gem  'puma'
+
+# Use unicorn as the app server
+# gem 'unicorn'
+
+# To use debugger
+# gem 'debugger'
+
