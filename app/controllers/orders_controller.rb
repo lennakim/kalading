@@ -751,6 +751,7 @@ class OrdersController < ApplicationController
       reason = I18n.t(:sms_reason_unverified)
     end
     if @order.state == 10
+      reason == I18n.t(:sms_reason_cancel)
       if @order.cancel_type == 2
         reason == I18n.t(:sms_reason_client_reschedule)
       end
@@ -872,7 +873,7 @@ private
     if state == 2
       servedate = o.serve_datetime && o.serve_datetime.strftime("%m#{I18n.t(:month)}%d#{I18n.t(:day)}")
       url = CGI.escape('http://kalading.com')
-      send_sms o.phone_num, '647221', "#autoname#=#{o.auto_submodel.full_name if o.auto_submodel}&#servicetypes#=#{o.service_types.first.name if o.service_types.exists?}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
+      send_sms o.phone_num, '713345', "#servicetypes#=#{o.service_types.first.name if o.service_types.exists?}&#order#=#{o.seq}&#servedate#=#{servedate}&#url#=#{url}"
     elsif state == 3
       send_sms o.phone_num, '647217', "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
     end

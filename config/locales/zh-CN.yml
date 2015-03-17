@@ -1007,6 +1007,7 @@ zh-CN:
   area_code: '区号'
   send_sms: '短信'
   send_sms_successful: '订单%{seq} - 短信发送成功'
+  sms_reason_cancel: '小卡客服来电与您核实订单取消'
   sms_reason_unverified: '小卡客服来电与您核实车辆信息'
   sms_reason_part_error: '由于配件匹配错误，服务未完成，非常抱歉，现在配件已正确匹配，来电与您再次预约服务时间'
   sms_reason_client_reschedule: '小卡技师反馈您需要改约服务时间，客服来电与您预约时间'
