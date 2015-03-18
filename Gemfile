@@ -56,15 +56,15 @@ gem 'jquery-validation-rails'
 gem 'ruby-pinyin'
 gem 'mongoid_auto_increment', :git => 'git://github.com/teriyakisan/mongoid_auto_increment.git'
 
-gem 'capistrano', '~> 3.0.1'
 gem 'pry-rails'
 gem 'rqrcode-with-patches'
 gem 'chartkick'
-gem  'puma'
+gem 'puma'
 
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# To use debugger
-# gem 'debugger'
-
+group :development do
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano3-puma'
+end
