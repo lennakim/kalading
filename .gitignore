@@ -20,6 +20,7 @@
 *.tar.gz
 *.json
 *.csv
-config/mongoid.yml 
+config/mongoid.yml
 README.rdoc
 /coverage
+/public/assets

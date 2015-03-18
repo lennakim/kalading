@@ -283,7 +283,7 @@ GEM
     ruby-pinyin (0.4.5)
       rmmseg-cpp (~> 0.2)
     safe_yaml (0.9.7)
-    sass (3.4.9)
+    sass (3.4.13)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -375,7 +375,7 @@ DEPENDENCIES
   rspec-rails (~> 3.0)
   rspec_junit_formatter
   ruby-pinyin
-  sass-rails (~> 3.2.3)
+  sass-rails (~> 3.2.5)
   simple_form
   simplecov
   simplecov-csv
