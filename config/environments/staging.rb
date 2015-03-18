@@ -64,4 +64,7 @@ Kalading::Application.configure do
 
   config.log_level = :info
 
+  # http://stackoverflow.com/questions/13953454/why-cant-nginx-find-my-assets
+  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
+
 end
