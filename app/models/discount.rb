@@ -1,13 +1,20 @@
+# 优惠券
 class Discount
   include Mongoid::Document
   include Mongoid::Timestamps
 
   field :name, type: String
+  # 折扣金额
   field :discount, type: Money, default: 0
+  # 一口价
   field :final_price, type: Money, default: 0
+  # 打折百分比
   field :percent, type: Integer, default: 0
+  # 过期时间
   field :expire_date, type: Date, default: Date.today.since(1.years)
+  # 可使用次数。每个订单消耗一次
   field :times, type: Integer, default: 1
+  # 优惠码
   field :token, type: String
 
   validates :times, inclusion: { in: 1..999999 }, presence: true

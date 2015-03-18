@@ -1,18 +1,24 @@
+# 仓库，点部
 class Storehouse
   include Mongoid::Document
   include Mongoid::Timestamps
   
   field :name, type: String
+  # 地址
   field :address, type: String
+  # 联系人电话
   field :phone_num, type: String
+  # 备注
   field :comment, type: String
   
   attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes, :city_id, :comment
   
-
+  # 仓库有很多配件批次
   has_many :partbatches, dependent: :destroy
+  # 点部有很多技师
   has_many :users
   accepts_nested_attributes_for :partbatches, :allow_destroy => true
+  # 所在城市
   belongs_to :city
   
   validates :city_id, presence: true

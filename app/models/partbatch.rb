@@ -1,11 +1,16 @@
+# 配件批次，进货，调货，盘库盈余都会创建一个配件批次。每个批次可以有不同的进价
 class Partbatch
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
   
+  # 总数量
   field :quantity, type: Integer, default: 0
+  # 进价
   field :price, type: Money
+  # 剩余数量
   field :remained_quantity, type: Integer, default: ->{ quantity }
+  # 备注
   field :comment, type: String, default: ''
   
   attr_accessible :price, :part_id, :quantity, :storehouse_id, :supplier_id, :remained_quantity, :modifier, :user_id, :comment
@@ -22,9 +27,13 @@ class Partbatch
       :greater_than_or_equal_to => 0.0,
       :less_than_or_equal_to => 1000000
     }
+  # 对应的配件
   belongs_to :part
+  # 仓库
   belongs_to :storehouse
+  # 供应商
   belongs_to :supplier
+  # 库管
   belongs_to :user
   
   track_history :track_create   =>  false,    # track document creation, default is false
@@ -34,6 +43,7 @@ class Partbatch
   after_create :on_create
   before_destroy :on_destroy
   
+  # 更新车型的三滤数量
   def on_create
     return if self.part.part_type.name == I18n.t(:engine_oil)
     self.part.auto_submodels.each do |asm|
@@ -41,6 +51,7 @@ class Partbatch
     end
   end
 
+  # 更新车型的三滤数量
   def on_destroy
     return if self.part.part_type.name == I18n.t(:engine_oil)
     self.part.auto_submodels.each do |asm|

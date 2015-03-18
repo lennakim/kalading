@@ -1,3 +1,4 @@
+# 图文信息
 class ImageText
   include Mongoid::Document
   include Mongoid::Timestamps

@@ -1,3 +1,4 @@
+# 员工
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -43,12 +44,17 @@ class User
   field :phone_num2,    :type => String
   field :remark,    :type => String
   field :weixin_num,    :type => String
+  # 角色
   field :roles,    :type => Array, :default => [0]
   field :title, :default => ''
   # Location: [longititude, latitude]
+  # 当前地理位置
   field :location, type: Array, :default => [0.0, 0.0]
+  # 手机电池电量
   field :battery_level,    :type => Float, :default => 100.0
+  # 上次App发更新信息的时间
   field :update_datetime, :type => DateTime
+  # 状态
   field :state, :type => Integer, :default => 0
   
   index({"location" => "2d"})
@@ -73,6 +79,7 @@ class User
   ROLE_STRINGS = %w[customer role_admin manager storehouse_admin data_admin engineer dispatcher video_inspector finance national_storehouse_admin engineer_manager]
   
   STATES = [0, 1, 2, 3]
+  # 在线，离线，休假，离职
   STATE_STRINGS = %w[online offline on_vacation dimission]
   
   def role_str

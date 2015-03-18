@@ -1,7 +1,9 @@
+# 配件类型
 class PartType
   include Mongoid::Document
   
   field :name, type: String
+  # 单位
   field :unit, type: String, default: I18n.t('default_unit')
 
   attr_accessible :name, :unit

@@ -1,26 +1,36 @@
+# 配件
 class Part
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
-
-  #track_history :track_create   =>  true,    # track document creation, default is false
-  #              :track_update   =>  true,     # track document updates, default is true
-  #              :track_destroy  =>  true     # track document destruction, default is false
   
+  # 型号 
   field :number, type: String
+  # 容量（机油）
   field :capacity, type: Integer, default: 1
+  # 规格（升，个）
   field :spec, type: String
+  # 价格
   field :price, type: Money, default: 0.0
+  # 机油类型
   field :motoroil_type, type: Integer
+  # 备注
   field :remark, type: String
-  
+  # 配件品牌
   belongs_to :part_brand
+  # 配件类型
   belongs_to :part_type
+  # 机油所属机油档次
   has_and_belongs_to_many :motoroil_group
+  # 适用的车型年款
   has_and_belongs_to_many :auto_submodels
+  # 网站价格信息
   has_many :urlinfos
+  # 进货批次列表
   has_many :partbatches, dependent: :delete
+  # 属于订单
   has_and_belongs_to_many :orders
+  # 图文信息
   has_many :image_texts
 
   attr_accessible :capacity, :number, :match_rule, :spec, :motoroil_type, :remark,

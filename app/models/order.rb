@@ -1,3 +1,4 @@
+# 备注
 class Comment
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -6,39 +7,60 @@ class Comment
   embedded_in :order
 end
 
+# 订单
 class Order
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  #订单状态
   field :state, type: Integer, default: 0
+  # 地址
   field :address, type: String, default: ''
+  # 电话号码
   field :phone_num, type: String, default: ''
+  # 客户姓名
   field :name, type: String, default: ''
+  # 是否自购配件
   field :buymyself, type: Boolean, default: false
+  # 上门服务时间
   field :serve_datetime, type: DateTime
+  # 上门服务结束时间
   field :serve_end_datetime, type: DateTime
+  # 车辆注册日期
   field :registration_date, type: Date
+  # 车牌号第一位
   field :car_location, type: String, default: I18n.t(:jing)
+  # 车牌号后6位
   field :car_num, type: String, default: ''
+  # VIN号
   field :vin, type: String, default: ''
+  # 优惠券号码
   field :discount_num, type: String, default: ''
+  # 支付类型
   field :pay_type, type: Integer, default: 0
+  # 发票类型
   field :reciept_type, type: Integer, default: 0
+  # 发票抬头
   field :reciept_title, type: String, default: ''
+  # 发票是否已经开了
   field :reciept_state, type: Integer, default: 0
+  # 客户意见
   field :client_comment, type: String, default: ''
+  # 取消原因
   field :cancel_reason, type: String, default: ''
+  # 发票地址
   field :reciept_address, type: String, default: ''
+  # 评分？
   field :evaluation_score, type: Integer, default: 0
   field :evaluation_tags, type: Array, default: []
   field :evaluation_time, type: DateTime
 
+  # 已废弃
   field :oil_filter_changed, type: Boolean, default: false
   field :air_filter_changed, type: Boolean, default: false
   field :cabin_filter_changed, type: Boolean, default: false
   field :charged, type: Boolean, default: false
   field :oil_gathered, type: Boolean, default: false
-
   field :auto_km, type: String, default: ''
   field :oil_out, type: String, default: ''
   field :oil_in, type: String, default: ''
@@ -46,30 +68,45 @@ class Order
   field :back_wheels, type: String, default: ''
   field :auto_km_next, type: String, default: ''
   field :serve_datetime_next, type: DateTime
+  # 已废弃end
+
+  # 机动车所有人名字
   field :auto_owner_name, type: String, default: ->{ name }
   field :engine_num, type: String, default: ''
   field :client_id, type: String, default: ''
+  # 网站登录使用的手机号
   field :login_phone_num, type: String, default: ''
+  # 朋友的手机号
   field :friend_phone_num, type: String, default: ''
+  # 接入号码
   field :incoming_call_num, type: String, default: ''
   # 使用账户余额付的款
   field :balance_pay, type: Money, default: 0.0
-  # 仅用于统计
+  # 价格，仅用于统计
   field :price, type: Money, default: 0.0
-
+  # 属于技师
   belongs_to :engineer, class_name: "User", inverse_of: :serve_orders
+  # 属于助理技师
   belongs_to :engineer2, class_name: "User", inverse_of: :serve_orders2
+  # 属于调度
   belongs_to :dispatcher, class_name: "User", inverse_of: :serve_orders3
   belongs_to :friend, class_name: "Client", inverse_of: :friend_orders
-
+  # 属于车辆
   belongs_to :auto
+  # 属于一个车型年款
   belongs_to :auto_submodel
+  # 服务项目列表
   has_and_belongs_to_many :service_types
+  # 多个优惠券
   has_and_belongs_to_many :discounts
   embeds_many :pictures, :cascade_callbacks => true
+  # 使用的配件列表辆
   has_and_belongs_to_many :parts
+  # 多个备注，用于客服之间交流
   embeds_many :comments, :cascade_callbacks => true
+  # 客户分类
   belongs_to :user_type
+  # 所在城市
   belongs_to :city
   
   has_many :maintains

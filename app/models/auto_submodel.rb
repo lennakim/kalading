@@ -1,3 +1,4 @@
+# 针对某个年款的配件规则
 class PartRule
   include Mongoid::Document
 
@@ -6,6 +7,7 @@ class PartRule
   embedded_in :auto_submodel
 end
 
+# 车型的第三级：年款
 class AutoSubmodel
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -13,15 +15,25 @@ class AutoSubmodel
   paginates_per 5
 
   field :name, type: String
+  # 机油容量
   field :motoroil_cap, type: Float, default: 5
+  # 引擎排量
   field :engine_displacement, type: String, default: ''
+  # 备注
   field :remark, type: String
+  # 发动机型号
   field :engine_model, type: String
+  # 服务等级
   field :service_level, type: Integer, default: 1
+  # 特殊的规则
   field :match_rule, type: String
+  # 生产年代范围
   field :year_range, type: String, default: '2013-2014'
+  # 曼牌数据
   field :name_mann, type: String
+  # 曼牌数据
   field :year_mann, type: String
+  # 全名拼音： 品牌+系列+年款。为了方便查找
   field :full_name_pinyin, type: String, default: ''
   field :full_name, type: String, default: ''
   field :oil_filter_oe, type: String
@@ -41,14 +53,20 @@ class AutoSubmodel
 
   SERV_LEVEL = [0, 1, 2]
   SERV_LEVEL_STRINGS = %w[cantmaintain maintain needconfirm]
-
+  # 年款属于一个系列
   belongs_to :auto_model
+  # 年款有很多适用的配件
   has_and_belongs_to_many :parts, after_add: :check_sanlv_add,  before_remove: :check_sanlv_removal
+  # 年款可以属于某个城市
   has_and_belongs_to_many :cities
   has_many :autos
+  # 年款有很多订单
   has_many :orders
+  # 年款有很多知识库图片
   embeds_many :pictures, :cascade_callbacks => true
+  # 年款有很多配件规则
   embeds_many :part_rules, :cascade_callbacks => true
+  # 年款属于某个机油档次
   belongs_to :motoroil_group
 
   accepts_nested_attributes_for :pictures, :allow_destroy => true

@@ -1,7 +1,9 @@
+# 出库，入库，盈余，损耗，调货的历史记录
 class HistoryTracker
   include Mongoid::History::Tracker
   paginates_per 20
   
+  # 统计出库历史
   def self.pb_to_part_delivered d1, d2
     map = %Q{
       function() {

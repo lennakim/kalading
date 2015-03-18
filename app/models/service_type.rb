@@ -1,14 +1,19 @@
+# 服务项目
 class ServiceType
   include Mongoid::Document
   include Mongoid::Timestamps
 
   field :name, type: String
+  # 是否只针对一个车型系列
   field :specific_auto_model, type: Boolean, default: false
+  # 价格
   field :price, type: Money
   
   belongs_to :auto_model
   belongs_to :auto_brand
+  # 订单需要有服务项目
   has_and_belongs_to_many :orders
+  # 优惠券可以针对特定的服务项目
   has_and_belongs_to_many :discounts
   
   attr_accessible :name, :auto_model_id, :specific_auto_model, :price, :order_ids, :auto_brand_id

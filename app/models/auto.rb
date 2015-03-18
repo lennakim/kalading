@@ -1,3 +1,4 @@
+# 用户的车辆，已经废弃
 class Auto
   include Mongoid::Document
   include Mongoid::Timestamps

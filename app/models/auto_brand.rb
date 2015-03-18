@@ -1,3 +1,4 @@
+# 车型的第一级：品牌
 class AutoBrand
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -23,7 +24,7 @@ class AutoBrand
   attr_accessible :name, :name_pinyin, :name_mann, :data_source, :service_level
   
   index({ name: 1 })
-        
+  # 品牌有很多系列
   has_many :auto_models, dependent: :destroy
   
   def self.search(k, v)

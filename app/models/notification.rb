@@ -1,3 +1,4 @@
+# 通知消息
 class Notification
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -17,6 +18,7 @@ class Notification
   
   attr_accessible :seq, :state, :title, :content, :city_ids
   
+  #发送到腾讯信鸽
   def push
     require 'net/http'
     access_id = 2100088677

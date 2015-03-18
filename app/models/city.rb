@@ -1,21 +1,31 @@
+# 城市信息
 class City
   include Mongoid::Document
   field :name, type: String
+  # 每日可以接单的数量
   field :order_capacity, type: Integer, default: 9999
+  # 区号
   field :area_code, type: String, default: ''
+  # 是否开放了上门业务
   field :opened, type: Boolean, default: false
   
   validates :order_capacity, inclusion: { in: 1..9999 }, presence: true
   validates :name, presence: true
   validates :area_code, uniqueness: true, presence: true
-  
+  # 城市有很多行政区
   embeds_many :districts
   accepts_nested_attributes_for :districts, :allow_destroy => true
+  # 城市有很多订单
   has_many :orders
+  # 城市有很多仓库，点部
   has_many :storehouses
+  # 城市有很多员工
   has_many :users
+  # 城市有很多投诉单
   has_many :complaints
+  # 城市可以属于一个车型年款
   has_and_belongs_to_many :auto_submodels
+  # 城市有很多通知消息
   has_and_belongs_to_many :notifications
   
   def as_json(opts = nil)

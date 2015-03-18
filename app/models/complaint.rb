@@ -1,3 +1,4 @@
+# 这个model和order.rb里面的Comment重复了，应该删除
 class Comment
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -6,6 +7,7 @@ class Comment
   embedded_in :complaint
 end
 
+# 投诉单
 class Complaint
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -18,13 +20,19 @@ class Complaint
   field :handled_result, type: String
   field :handled_datetime, type: DateTime
   field :severity_level, type: Integer, default: 0
-
+  # 投诉针对一个订单
   belongs_to :order
+  # 投诉使用tag进行分类
   belongs_to :tag
+  # 投诉单创建者
   belongs_to :creater, class_name: "User", inverse_of: :complaints_created
+  # 被投诉的对象
   belongs_to :complained, class_name: "User", inverse_of: :complaints_complained
+  # 投诉的处理者
   belongs_to :handler, class_name: "User", inverse_of: :complaints_handled
+  # 投诉所在城市.因为订单不是必选的
   belongs_to :city
+  # 备注信息
   embeds_many :comments, :cascade_callbacks => true
 
   STATES = [0, 1]

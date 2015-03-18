@@ -1,3 +1,4 @@
+# 图片
 class Picture
   include Mongoid::Document
   include Mongoid::Timestamps

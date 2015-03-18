@@ -1,3 +1,4 @@
+# 保养记录的轮胎信息
 class Wheel
   include Mongoid::Document
 
@@ -88,6 +89,7 @@ class Wheel
   end
 end
 
+# 保养记录的灯光信息
 class Light
   include Mongoid::Document
   
@@ -116,68 +118,105 @@ class Light
 
 end
 
+# 保养记录
 class Maintain
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  # 外观描述
   field :outlook_desc, type: String, default: ""
+  # 购买日期
   field :buy_date, type: Date
+  # VIN号
   field :VIN, type: String, default: ""
+  # 保险日期
   field :insurance_date, type: String, default: ""
+  # 颜色
   field :auto_color, type: String, default: ""
+  # 发动机号
   field :engine_num, type: String, default: ""
-
+  # 机油尺位置
   field :oil_position, type: Integer, default: 1
+  # 放出机油量
   field :oil_out, type: Float, default: 0
+  # 注入机油量
   field :oil_in, type: Float, default: 0
+  # 机油描述
   field :oil_desc, type: Integer, default: 0
+  # 是否采集了机油小样
   field :oil_sample_collected, type: Boolean, default: false
+  # 机油小样毫升
   field :oil_sample_number, type: Integer, default: 0
+  # 是否换了机滤
   field :oil_filter_changed, type: Boolean, default: false
+  # 为啥没换机滤
   field :oil_filter_not_changed_reason, type: String, default: ""
-
+  # 空气滤描述
   field :air_filter_desc, type: Integer, default: 0
+  # 是否换了空气滤
   field :air_filter_changed, type: Boolean, default: false
+  # 为啥没换空气滤
   field :air_filter_not_changed_reason, type: String, default: ""
-
+  # 空调滤描述
   field :cabin_filter_desc, type: Integer, default: 0
+  # 是否换了空调滤
   field :cabin_filter_changed, type: Boolean, default: false
+  # 为啥没换空调滤
   field :cabin_filter_not_changed_reason, type: String, default: ""
-
+  # 刹车油描述
   field :brake_oil_desc, type: Integer , default: 0
+  # 刹车油沸点
   field :brake_oil_boiling_point, type: Integer, default: 0
+  # 刹车油尺位置
   field :brake_oil_position, type: Integer , default: 0
+  # 防冻液描述
   field :antifreeze_desc, type: Integer, default: 0
+  # 防冻液冰点
   field :antifreeze_freezing_point, type: Integer, default: 0
+  # 防冻液位置
   field :antifreeze_position, type: Integer, default: 0
+  # 防冻液颜色
   field :antifreeze_color, type: String, default: ""
+  # 转向油描述
   field :steering_oil_desc, type: Integer, default: 0
+  # 转向油位置
   field :steering_oil_position, type: Integer, default: 0
+  # 变速箱油描述
   field :gearbox_oil_desc, type: Integer, default: 0
+  # 变速箱油位置
   field :gearbox_oil_position, type: Integer, default: 0
+  # 玻璃水描述
   field :glass_water_desc, type: Integer, default: 0
+  # 玻璃水是否添加
   field :glass_water_add, type: Boolean, default: false
+  # 玻璃水添加数量
   field :glass_water_amount, type: Integer, default: 0
+  # 电瓶...
   field :battery_desc, type: Integer, default: 0
   field :battery_charge, type: String, default: ""
   field :battery_health, type: String, default: ""
   field :battery_light_color, type: String, default: ""
   field :battery_head_desc, type: Integer, default: 0
   field :engine_hose_and_line_desc, type: Integer, default: 0
-
+  # 雨刷
   field :front_wiper_desc, type: Integer, default: 0
   field :back_wiper_desc, type: Integer, default: 0
   field :extinguisher_desc, type: Integer, default: 0
   field :warning_board_desc, type: Integer, default: 0
   field :spare_tire_desc, type: Integer, default: 0
-
+  # 是否保养归零
   field :km_be_zero, type: Boolean, default: false
+  # 上次里程
   field :last_km, type: String, default: ""
+  #当前里程
   field :curr_km, type: String, default: ""
+  #下次保养里程
   field :next_maintain_km, type: String, default: ""
+  # 备注
   field :comment, type: String, default: ""
+  # 保养花费时间，由app计算
   field :total_time, type: Integer, default: 0
-
+  # 属于订单
   belongs_to :order
   
   POSITION_STRINGS = %w[high middle low undetectable]
@@ -251,6 +290,7 @@ class Maintain
     :km_be_zero, :curr_km, :last_km, :next_maintain_km, :comment, :total_time, :engine_hose_and_line_desc,
     :wheel_ids, :wheels_attributes, :light_ids, :lights_attributes,:order_id
 
+  # 保养评分
   def calc_score(type)
     score = 0.0
     if type == "wheels_brake"

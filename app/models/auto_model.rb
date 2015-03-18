@@ -1,3 +1,4 @@
+# 车型的第二级：系列
 class AutoModel
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -6,6 +7,7 @@ class AutoModel
 
   field :name, type: String
   field :name_pinyin, type: String, default: ''
+  # 曼牌的原始数据
   field :name_mann, type: String
   # 0 for mann database
   # 1 for longfeng database
@@ -20,9 +22,11 @@ class AutoModel
 
   attr_accessible :name, :auto_brand, :auto_brand_id, :auto_submodels_attributes, :name_pinyin, :name_mann, :data_source, :service_level
   
+  # 系列属于一个品牌
   belongs_to :auto_brand
+  # 系列有很多年款
   has_many :auto_submodels, dependent: :destroy
-
+  # 系列可以有专属的服务项目
   has_many :service_types
   
   validates :name, presence: true
