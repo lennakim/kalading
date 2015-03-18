@@ -42,6 +42,7 @@ Kalading::Application.configure do
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
 
+    config.assets.js_compressor = :uglifier
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
 
@@ -60,5 +61,7 @@ Kalading::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  config.log_level = :info
 
 end
