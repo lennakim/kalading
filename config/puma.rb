@@ -4,8 +4,8 @@ environment "production"
 basedir = "/home/deployer/backend/kalading"
 
 bind  "unix:///tmp/kalading-backend.sock"
-pidfile  "/home/deployer/backend/shared/pids/kalading-backend-puma.pid"
-state_path "/home/deployer/backend/shared/pids/kalading-backend-puma.state"
+pidfile  "#{basedir}shared/tmp/pids/kalading-backend-puma.pid"
+state_path "#{basedir}shared/tmp/pids/kalading-backend-puma.state"
 
 workers 2
 threads 2, 4
