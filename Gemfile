@@ -1,17 +1,11 @@
-#source 'https://rubygems.org'
+# source 'https://rubygems.org'
 source 'http://ruby.taobao.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.21'
+gem 'i18n',  '0.6.11'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
-
-
-# Gems used only for assets and not required
-# in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
+  gem 'sass-rails',   '~> 3.2.5'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
 end
@@ -20,12 +14,6 @@ gem 'jquery-rails'
 
 # To use Jbuilder templates for JSON
 gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# To use debugger
-# gem 'debugger'
 
 group :test, :development do
   gem 'rspec-rails', '~> 3.0'
@@ -68,8 +56,16 @@ gem 'jquery-validation-rails'
 gem 'ruby-pinyin'
 gem 'mongoid_auto_increment', :git => 'git://github.com/teriyakisan/mongoid_auto_increment.git'
 
-gem 'capistrano', '~> 3.0.1'
 gem 'pry-rails'
 gem 'rqrcode-with-patches'
 gem 'chartkick'
 gem 'newrelic_rpm'
+gem 'puma'
+
+group :development do
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano3-puma'
+end
