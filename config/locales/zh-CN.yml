@@ -303,6 +303,7 @@ zh-CN:
   series: '系列'
   auto_model: '请选择型号'
   service_types: '服务项目'
+  service_types_and_discount_card: '服务/代金券' # 临时合并顶部菜单用的
   sell_price: '价格'
   created_at: '创建时间'
   service_item: '服务项目'
@@ -312,7 +313,6 @@ zh-CN:
   service_info: '服务'
   all: '所有'
   auto_model_should_be_choosed: '请选择车型'
-  discount_card: '优惠劵'
   final_price: '定价'
   discount: '减现金'
   discount_percent: '减百分比'
