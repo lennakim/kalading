@@ -25,40 +25,8 @@ set :stage, :staging
 set :branch, 'shooter'
 set :deploy_to, "/home/#{fetch(:deploy_user)}/backend"
 set :rails_env, :staging
-# set :unicorn_worker_count, 1
-# config file
+# set :puma_bind, "unix:///tmp/kalading-backend.sock"
+
 set :enable_ssl, false
 
-after 'deploy:publishing', 'deploy:restart'
-
-# namespace :puma do
-#   desc 'Restart Puma'
-#   task :restart do
-#     # Reload unicorn with capistrano3-unicorn hook
-#     # needs to be before "on roles()"
-#     invoke 'unicorn:reload'
-#     on roles(:app), in: :sequence, wait: 5 do
-#       # Your restart mechanism here, for example:
-#     end
-#   end
-
-#   after :finishing, 'deploy:cleanup'
-#   before :finishing, 'deploy:restart'
-#   after 'deploy:rollback', 'puma:restart'
-# end
-
-# Custom SSH Options
-# ==================
-# You may pass any option but keep in mind that net/ssh understands a
-# limited set of options, consult[net/ssh documentation](http://net-ssh.github.io/net-ssh/classes/Net/SSH.html#method-c-start).
-#
-# Global options
-# --------------
-#  set :ssh_options, {
-#    keys: %w(/home/rlisowski/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
-#
-# And/or per server (overrides global)
-# ------------------------------------
+after 'deploy:publishing', 'puma:restart'
