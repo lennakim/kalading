@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
   end
 
   def send_sms(phone_num, tpl_id, params)
-    return if Rails.env.development? || Rails.env.test?
+    return if !Rails.env.production?
     require 'net/http'
     r = Net::HTTP.post_form URI.parse('http://yunpian.com/v1/sms/tpl_send.json'),
       {
