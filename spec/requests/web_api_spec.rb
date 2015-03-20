@@ -25,7 +25,7 @@ describe '查询车型保养套餐', :type => :request do
   end
 end
 
-describe '新建保养订单。city_id为城市的ID，client_id为用户标识（openid）。', :type => :request do
+describe '新建保养订单。city_id为城市的ID。', :type => :request do
   include_context "api doc"
   let(:city) {create(:beijing)}
   let(:asm) {create(:audi_a3_20_2012)}
@@ -65,6 +65,48 @@ describe '新建保养订单。city_id为城市的ID，client_id为用户标识�
   end
 end
 
+describe '新建保养订单，服务项目为保养。city_id为城市的ID。', :type => :request do
+  include_context "api doc"
+  let(:city) {create(:beijing)}
+  let(:asm) {create(:audi_a3_20_2012)}
+  let(:mann_part) { create(:mann_part) }
+  let(:auto_maintain) { create(:auto_maintain) }
+  it "新建保养订单" do
+    auto_maintain
+    o = {
+      service_type: 1,
+      parts: [
+              {
+                brand: mann_part.part_brand.name,
+                number: mann_part.id
+              }
+      ],
+      info: {
+              address: "北京朝阳区光华路888号",
+              name: "王一迅",
+              phone_num: "13888888888",
+              client_id: "040471abcd",
+              car_location: "京",
+              car_num: "N333M3",
+              serve_datetime: "2014-06-09 15:44",
+              pay_type: 1,
+              reciept_type: 1,
+              reciept_title: "卡拉丁汽车技术",
+              client_comment: "请按时到场",
+              city_id: city.id
+      }
+    }
+    post "/auto_maintain_order/#{asm.id}.json", o
+    expect(response).to have_http_status(200)
+    h = JSON.parse(response.body)
+    expect(h['result']).to eq('succeeded')
+    expect(h['seq']).to be
+    o = Order.find_by(seq: h['seq'])
+    expect(o.service_types.first).to eq(auto_maintain)
+    o.destroy
+  end
+end
+
 describe '查询价格。', :type => :request do
   include_context "api doc"
   let(:city) {create(:beijing)}
@@ -99,6 +141,38 @@ describe '查询价格。', :type => :request do
     expect(response).to have_http_status(200)
     h = JSON.parse(response.body)
     h
+  end
+end
+
+describe '查询价格，服务项目为保养。', :type => :request do
+  include_context "api doc"
+  let(:city) {create(:beijing)}
+  let(:asm) {create(:audi_a3_20_2012)}
+  let(:mann_part) { create(:mann_part) }
+  let(:auto_maintain) { create(:auto_maintain) }
+  it "查询换空调滤+PM2.5滤芯价格" do
+    auto_maintain
+    o = {
+      service_type: 1,
+      info: {
+              address: "北京朝阳区光华路888号",
+              name: "王一迅",
+              phone_num: "13888888888",
+              client_id: "040471abcd",
+              car_location: "京",
+              car_num: "N333M3",
+              serve_datetime: "2014-06-09 15:44",
+              pay_type: 1,
+              reciept_type: 1,
+              reciept_title: "卡拉丁汽车技术",
+              client_comment: "请按时到场",
+              city_id: city.id
+      }
+    }
+    post "/auto_maintain_price/#{asm.id}.json", o
+    expect(response).to have_http_status(200)
+    h = JSON.parse(response.body)
+    expect(h['price']).to eq(auto_maintain.price)
   end
 end
 

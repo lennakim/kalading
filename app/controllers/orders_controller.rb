@@ -816,16 +816,21 @@ private
         end
       end
     end
-
-    if @order.parts.exists? && cabin_filter_only
-      cabin_filter_service = ServiceType.find_by name: I18n.t(:cabin_filter_service_type)
-      return render json: t(:cabin_filter_service_type_not_found), status: :bad_request if cabin_filter_service.nil?
-      @order.service_types << cabin_filter_service
+    service_type_names = [
+      I18n.t(:cabin_filter_service_type),
+      I18n.t(:auto_maintain_service_type_name)
+    ]
+    st_index = 0
+    if params[:service_type].present?
+      st_index = params[:service_type].to_i
+    elsif @order.parts.exists? && cabin_filter_only
+      st_index = 0
     else
-      maintain_service = ServiceType.find_by name: I18n.t(:auto_maintain_service_type_name)
-      return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if maintain_service.nil?
-      @order.service_types << maintain_service
+      st_index = 1
     end
+    st = ServiceType.find_by name: service_type_names[st_index]
+    return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if st.nil?
+    @order.service_types << st
     
     if params[:info].present? && params[:info][:discount].present?
       check_discount(params[:info][:discount])
