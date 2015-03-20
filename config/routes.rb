@@ -21,9 +21,6 @@ Kalading::Application.routes.draw do
   resources :tool_records
 
 
-  resources :tool_types
-
-
   resources :maintains
 
 
