@@ -1,6 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'simplecov'
 require 'simplecov-csv'
+require 'devise'
+
 SimpleCov.formatter = SimpleCov::Formatter::CSVFormatter
 SimpleCov.coverage_dir(ENV["COVERAGE_REPORTS"]) if ENV["COVERAGE_REPORTS"]
 SimpleCov.start
@@ -13,8 +15,10 @@ require 'rspec/rails'
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
+  config.infer_spec_type_from_file_location!
   config.include FactoryGirl::Syntax::Methods
-  
+  config.include Devise::TestHelpers, :type => :controller
+  config.extend ControllerMacros, :type => :controller
   config.use_transactional_fixtures = false
   
   config.before(:suite) do

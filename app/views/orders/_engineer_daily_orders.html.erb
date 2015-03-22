@@ -4,14 +4,14 @@
   <% else %>
   <% a = '' %>
   <% end %>
-  <tr class="daily-order-tr tooltip-parent<%= a %>" id="<%= o.id %>" data-seq="<%= o.seq %>" data-city="<%= o.city.name %>" data-state="<%= t(Order::STATE_STRINGS[o.state]) %>">
+  <tr class="daily-order-tr tooltip-parent<%= a %>" id="<%= o.id %>" data-seq="<%= o.seq %>" data-city="<%= @city_names[o.city_id] %>" data-state="<%= t(Order::STATE_STRINGS[o.state]) %>" data-lng="<%= o.location[0] %>" data-lat="<%= o.location[1] %>">
     <td>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
       <i class="icon-question-sign" id="mqm-<%= o.seq %>"></i>
       <i class="icon-map-marker" id="mm-<%= o.seq %>" style="display: none;"></i>
       <a class="order-a" href="#" draggable="true"><%= o.seq %></a>
     </td>
     <td class="order-time"><i class="icon-time">&nbsp</i><%= o.serve_datetime.strftime('%H:%M') %>
-      <span data-toggle="tooltip" data-placement="right" title="<%= o.service_types.first.name if o.service_types.exists? %>">&nbsp<i class="icon-info-sign"></i></span>
+      <span data-toggle="tooltip" data-placement="right" title="<%= @service_type_names[o.service_type_ids[0]] %>">&nbsp<i class="icon-info-sign"></i></span>
     </td>
     <td><%= o.address %></td>
   </tr>

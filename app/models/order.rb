@@ -54,6 +54,7 @@ class Order
   field :evaluation_score, type: Integer, default: 0
   field :evaluation_tags, type: Array, default: []
   field :evaluation_time, type: DateTime
+  field :location, type: Array, :default => [0.0, 0.0]
 
   # 已废弃
   field :oil_filter_changed, type: Boolean, default: false
@@ -244,11 +245,7 @@ class Order
   paginates_per 20
   
   def as_json(options = nil)
-    h = super :except => [:_id, :air_filter_changed, :auto_id, :auto_km, :auto_km_next, :back_wheels,:cabin_filter_changed, :client_comment, :created_at ,:customer_id, :discount_ids,
-      :discount_num,:engineer_id, :front_wheels, :modifier_id, :oil_filter_changed, :oil_gathered, :oil_in, :oil_out,
-      :phone_num  ,:serve_datetime ,:serve_datetime_next ,:updated_at, :version, :vin, :charged, :state, 
-      :part_counts, :address, :buymyself, :car_location, :car_num, :name, :pay_type, :reciept_title, :reciept_type, :seq, :part_ids, :service_type_ids,
-      :auto_submodel_id, :comments, :evaluation_score, :evaluation_tags, :evaluation_time, :balance_pay ]
+    super :only => [:_id, :seq ]
   end
   
   instance_eval do
@@ -284,6 +281,14 @@ class Order
   before_create do |o|
     #临时的：去掉方括号之间的文字
     o.address.gsub!(/\[.*\]/, '') if o.address.present?
+  end
+  
+  before_save :update_location
+  
+  def update_location
+    if self.address.present?
+      self.location = Map.get_latitude_longitude self.city.name, self.address
+    end
   end
   
   instance_eval do

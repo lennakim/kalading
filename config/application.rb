@@ -70,5 +70,6 @@ module Kalading
     config.assets.version = '1.0'
     
     config.time_zone = 'Beijing'
+    config.autoload_paths += %W(#{config.root}/lib/apis)
   end
 end
