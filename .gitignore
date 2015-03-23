@@ -24,3 +24,5 @@ config/mongoid.yml
 README.rdoc
 /coverage
 /public/assets
+*.swo
+*.swp
