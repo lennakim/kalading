@@ -77,5 +77,11 @@ module Kalading
     config.middleware.use(Rack::Config) do |env|
       env['api.tilt.root'] = Rails.root.join 'app', 'api'
     end
+
+    config.generators do |g|
+      g.test_framework  :rspec, fixture: false
+      g.view_specs      false
+      g.helper_specs    false
+    end
   end
 end
