@@ -2,6 +2,9 @@ require 'grape-swagger'
 
 module V2
   class API < Grape::API
+    helpers SharedParams
+    helpers V2::Helpers
+
     version 'v2'
     format :json
     content_type :json, "application/json;charset=UTF-8"
