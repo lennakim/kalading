@@ -1,9 +1,8 @@
 /*
+ *= require_self
  *= require bootstrap-datetimepicker
  *= require jquery.splitter
- *= require swagger-ui
  *= require_directory .
- *= require_self
  */
 
 body {
