@@ -12,6 +12,6 @@ module V2
       header['Access-Control-Request-Method'] = '*'
     end
 
-    add_swagger_documentation base_path: "/api", api_version: 'v2', mount_path: 'v2.json'
+    add_swagger_documentation base_path: "/api", api_version: 'v2', mount_path: 'doc.json'
   end
 end
