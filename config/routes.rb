@@ -71,7 +71,7 @@ Kalading::Application.routes.draw do
 
 
   resources :auto_brands
-  
+
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
@@ -80,7 +80,7 @@ Kalading::Application.routes.draw do
     get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
     put 'users_update/:id' => 'devise/registrations#update', :as => 'user_registration'
   end
-    
+
   get 'users' => 'users#index', :as => :users
   get 'users/:id/edit' => 'users#edit', :as => :edit_user
   get 'users/:id' => 'users#show', :as => :user
@@ -90,7 +90,7 @@ Kalading::Application.routes.draw do
   delete 'users/:id' => 'users#destroy', :as => :user
   put 'user_realtime_info' => 'users#update_realtime_info', :as => :update_user_realtime_info
   get 'user_realtime_info' => 'users#get_realtime_info', :as => :get_user_realtime_info
-  
+
   get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
   post 'storehouses_inout/:id' => 'storehouses#inout', :as => :inout_storehouse
   get 'parts/:id/edit_part_automodel' => 'parts#edit_part_automodel', :as => :edit_part_automodel
@@ -129,9 +129,9 @@ Kalading::Application.routes.draw do
   get 'orders/:id/send_sms_notify' => 'orders#send_sms_notify', :as => :order_send_sms_notify
   get 'daily_orders' => 'orders#daily_orders', :as => :daily_orders
   get 'order_stats' => 'orders#order_stats', :as => :order_stats
-  
+
   get 'complaint/:id/send_sms_notify' => 'complaints#send_sms_notify', :as => :complaint_send_sms_notify
-    
+
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains
   get 'last_maintain/:id' => 'maintains#last_maintain', :as => :last_maintain
   get 'auto_inspection_report' => 'maintains#auto_inspection_report', :as => :auto_inspection_report
@@ -171,66 +171,11 @@ Kalading::Application.routes.draw do
 
   get 'city_capacity/:id' => 'cities#capacity', :as => :city_capacity
   get 'orders/:id/print' => 'orders#print', :as => :print_order
-  
+
   get 'client_query' => 'clients#find', :as => :client_query
-  
+
   resources :auto_brands
   root :to => 'orders#index'
 
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
-
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
-
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
-
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
-
-  # See how all your routes lay out with "rake routes"
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
+  mount Base => '/api' #api
 end
