@@ -4,9 +4,8 @@ module V2
 
     resources :cities do
       get "/" do
-        @cities = City.all
-        # wrapper(@apps)
-        @cities
+        cities = City.all
+        present cities, with: V2::Entities::City
       end
     end
   end
