@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Kalading</title>
+    <%= stylesheet_link_tag "api", media: "all" %>
+    <%= javascript_include_tag "api" %>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <body>
+    <header>
+    </header>
+    <div class="container">
+      <%= yield %>
+    </div>
+  </body>
+</html>
