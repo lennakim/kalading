@@ -437,8 +437,6 @@ class OrdersController < ApplicationController
         part = parts.find {|p| p.part_brand.name == I18n.t(:Kalading) } || parts.first
         @order.parts << part
         @order.part_counts[part.id.to_s] = asm.cals_part_count(part)
-      elsif t.name == I18n.t(:battery)
-        # 不支持电瓶
       else
         @order.parts << parts.first
         @order.part_counts[parts.first.id.to_s] = asm.cals_part_count(parts.first)
