@@ -1,9 +1,9 @@
 module V2
   module Entities
-    class City < Base
+    class AutoBrand < Base
       expose :id
       expose :name
-      expose :districts, using: District
+      expose :name_pinyin
     end
   end
 end

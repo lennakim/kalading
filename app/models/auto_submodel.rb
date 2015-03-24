@@ -71,7 +71,7 @@ class AutoSubmodel
 
   accepts_nested_attributes_for :pictures, :allow_destroy => true
   accepts_nested_attributes_for :part_rules, :allow_destroy => true
-  
+
   attr_accessible :name, :auto_model, :auto_model_id, :part_ids, :city_ids, :auto_ids, :motoroil_cap, :engine_displacement,
     :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes,
     :year_range, :name_mann, :full_name_pinyin, :full_name, :data_source, :oil_filter_oe, :fuel_filter_oe, :air_filter_oe,
@@ -87,7 +87,7 @@ class AutoSubmodel
       all
     end
   end
-  
+
   PART_SORT_ORDER = { I18n.t(:engine_oil) => 0, I18n.t(:oil_filter) => 1, I18n.t(:air_filter) => 2, I18n.t(:cabin_filter) => 3, I18n.t(:pm25_filter) => 4, I18n.t(:battery) => 5 }
 
   def parts_includes_motoroil
@@ -105,7 +105,7 @@ class AutoSubmodel
     end
     a
   end
-  
+
   def parts_by_type
     parts_includes_motoroil.group_by {|part| part.part_type}.sort_by { |k, v| PART_SORT_ORDER[k.name] }
   end
@@ -124,13 +124,13 @@ class AutoSubmodel
       total = self.motoroil_cap.floor
     end
     part_to_count = {}
-    
+
     while mc < total
       p = nil
       parts.each do |pp|
         if pp.capacity.to_f <= (total - mc)
           p = pp
-          mc += pp.capacity.to_f 
+          mc += pp.capacity.to_f
           break
         end
       end
@@ -141,11 +141,10 @@ class AutoSubmodel
       part_to_count[p] ||= 0
       part_to_count[p] += 1
     end
-    
-    
+
     part_to_count[part]? part_to_count[part] : 0
   end
-  
+
   def applicable_service_types
     sts = []
     ServiceType.all.each do |st|
@@ -157,7 +156,7 @@ class AutoSubmodel
     end
     sts
   end
-  
+
   def hengst_filters(filter_type)
     hengst_brand = PartBrand.find_or_create_by name: I18n.t(:hengst)
     filter_type = PartType.find_or_create_by name: I18n.t(filter_type)
@@ -194,7 +193,7 @@ class AutoSubmodel
       self.update_attributes cabin_filter_count: self.cabin_filter_count - p.total_remained_quantity
     end
   end
-  
+
   def on_part_inout(p, c)
     if p.part_type.name == I18n.t(:oil_filter)
       self.update_attributes oil_filter_count: self.oil_filter_count + c
@@ -204,7 +203,7 @@ class AutoSubmodel
       self.update_attributes cabin_filter_count: self.cabin_filter_count + c
     end
   end
-  
+
   def sum_sanlv_store
     oil_filter_count = air_filter_count = cabin_filter_count = 0
     self.parts.each do |p|
@@ -269,12 +268,22 @@ class AutoSubmodel
       end)
     ]
   end
-  
+
   def served_engineers
     h = {}
     self.orders.any_in(:state => [5,6,7]).select {|o| !o.engineer.nil? }.group_by {|o| o.engineer }.each do |k, v|
       h[k] = v.count
     end
     h.sort_by {|a,b| b}.reverse.take(3).map {|e| {:name => e[0].name, :phone_num => e[0].phone_num}}
+  end
+
+  # api
+
+  def model
+    self.auto_model.name
+  end
+
+  def brand
+    self.auto_model.auto_brand.name
   end
 end

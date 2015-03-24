@@ -1,9 +1,8 @@
 module V2
   module Entities
-    class City < Base
+    class AutoModel < Base
       expose :id
       expose :name
-      expose :districts, using: District
     end
   end
 end

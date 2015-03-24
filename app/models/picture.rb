@@ -22,4 +22,14 @@ class Picture
   field :desc, type: String, default: ''
   has_mongoid_attached_file :p, :path => ":class/:attachment/:id/:basename.:extension"
   validates_attachment_content_type :p, :content_type => %w(image/jpeg image/jpg image/png)
+
+  # api
+
+  def url
+    p.url
+  end
+
+  def size
+    p.size
+  end
 end
