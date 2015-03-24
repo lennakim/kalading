@@ -14,4 +14,8 @@ RSpec.describe Engineer, :type => :model do
     user.should be_engineer
   end
 
+  it "should be accessed by right role" do
+    #TODO "技师管理界面的访问权限"
+  end
+
 end
