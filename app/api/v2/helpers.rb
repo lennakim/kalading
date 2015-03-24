@@ -1,8 +1,8 @@
 module V2
   module Helpers
 
-    def json_wrapper(mes = '', code = 0, data)
-      { message: mes, code: code, data: data }
+    def json_wrapper(msg = '', code = 0, data)
+      { msg: msg, code: code, data: data }
     end
 
     alias_method :wrapper, :json_wrapper
@@ -20,7 +20,7 @@ module V2
       @text    = opts[:text]   || ''
       @status  = opts[:status] || ''
 
-      @message = {message: @text, code: @code}
+      @message = {msg: @text, code: @code}
     end
   end
 
