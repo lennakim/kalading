@@ -80,7 +80,7 @@ class User
   ROLE_STRINGS.each do |role|
     define_method "#{role.to_sym}?" do
       index = ROLE_STRINGS.index(role)
-      self.roles.include?(index)
+      self.roles.include?(index.to_s)
     end
   end
 

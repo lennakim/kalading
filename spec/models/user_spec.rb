@@ -8,12 +8,12 @@ describe User do
 
   it "should have roles methods" do
     user = build(:user)
-    user.roles = [0]
+    user.roles = ["0"]
 
     user.should be_customer
     user.should_not be_role_admin
 
-    user.roles = [1]
+    user.roles = ["1"]
     user.should_not be_customer
     user.should be_role_admin
   end
