@@ -1,0 +1,25 @@
+<div class="container">
+  <table class='table'>
+
+    <thead>
+      <td>姓名</td>
+      <td>角色</td>
+      <td>头衔</td>
+      <td>手机</td>
+      <td>点部</td>
+    </thead>
+
+    <tbody>
+      <% collection.each do |engineer| %>
+        <tr>
+          <td><%= engineer.name %></td>
+          <td><%= engineer.role_str %></td>
+          <td><%= engineer.title %></td>
+          <td><%= engineer.phone_num %></td>
+          <td><%= engineer.storehouse.try :name %></td>
+        </tr>
+      <% end %>
+    </tbody>
+
+  </table>
+</div>
