@@ -15,7 +15,7 @@ RSpec.describe Engineer, :type => :model do
   end
 
   it "should be accessed by right role" do
-    pending "技师管理界面的访问权限"
+    #TODO "技师管理界面的访问权限"
   end
 
 end
