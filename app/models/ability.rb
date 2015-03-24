@@ -1,10 +1,6 @@
 class Ability
   include CanCan::Ability
 
-  def ROLE_ID(r)
-    User::ROLE_STRINGS.index(r).to_s
-  end
-
   def initialize(user)
     user ||= User.new
 
