@@ -1,0 +1,9 @@
+<tr>
+  <td><%= tool_type.name %></td>
+  <td><%= tool_type.category_humanize %></td>
+  <td><%= tool_type.unit %></td>
+  <td>
+    <%= link_to t('edit'), edit_tool_type_path(tool_type), class: 'btn btn-primary' %>
+    <%= link_to t('destroy'), tool_type_path(tool_type), method: 'delete', confirm: t('destroy_confirm'), class: 'btn btn-danger' %>
+  </td>
+</tr>

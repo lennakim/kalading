@@ -50,6 +50,7 @@ class Ability
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can :order_stats,  Order
       can [:set_state], User
+      can :manage, ToolType
     end
 
     # 数据管理员

@@ -104,12 +104,12 @@
               </div>
             </li>
 
-            <% if %w[].include? params[:controller] -%>
+            <% if %w[tool_types].include? params[:controller] -%>
             <li class="active">
             <% else -%>
             <li>
             <% end -%>
-            <%= link_to t('views.navbar.tool_management'), '#' %>
+            <%= link_to t('views.navbar.tool_management'), tool_types_path if can? :read, ToolType %>
             </li>
 
             <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>

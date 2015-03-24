@@ -225,6 +225,21 @@ zh-CN:
           attributes:
             city_id:
               blank: '请选择城市'
+        tool_type:
+          attributes:
+            category:
+              inclusion: '请选择正确的工具类别'
+    models:
+      tool_type: '工具类型'
+    attributes:
+      tool_type:
+        name: '名称'
+        category: '类别'
+        unit: '单位'
+        categories:
+          with_engineer: '随人工具'
+          with_vehicle: '随车工具'
+
   devise:
     failure:
       user:
@@ -232,9 +247,13 @@ zh-CN:
     registrations:
       user:
         signed_up: '登录成功'
+
   errors:
+    format: ! '%{attribute}%{message}'
     messages:
       not_saved: '未保存'
+      blank: '不能为空'
+
   helpers:
     links:
       cancel: '取消'
@@ -377,8 +396,10 @@ zh-CN:
   back_quantity: '回库数量'
   search_by_partbatch: '按批次号搜索'
   actions: '操作'
+  new: '新建'
   edit: '编辑'
   destroy: '删除'
+  destroy_confirm: '确定要删除吗？'
   edit_part_automodel: '编辑车型'
   edit_applicable_automodel: '匹配车型列表'
   new_part: '新建配件'

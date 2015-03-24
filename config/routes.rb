@@ -70,6 +70,7 @@ Kalading::Application.routes.draw do
 
   resources :auto_brands
 
+  resources :tool_types, only: [:index, :new, :create, :edit, :update, :destroy]
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
