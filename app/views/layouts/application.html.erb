@@ -4,15 +4,16 @@
   <body>
     <%= render '/layouts/menu' %>
 
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span4 offset4 well"><%= yield %></div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <%= bootstrap_flash %>
+        <%= yield %>
+      </div>
     </div>
-  </div>
 
-  <footer>
-    <p>&copy; Kalading 2013-2015</p>
-  </footer>
+    <footer>
+      <p>&copy; Kalading 2013-2015</p>
+    </footer>
 
   </body>
 </html>

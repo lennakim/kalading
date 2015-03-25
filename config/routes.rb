@@ -1,6 +1,8 @@
 Kalading::Application.routes.draw do
   get "doc/v2"
 
+  resources :engineers
+
   resources :tags
 
 

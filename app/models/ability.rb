@@ -1,19 +1,15 @@
 class Ability
   include CanCan::Ability
 
-  def ROLE_ID(r)
-    User::ROLE_STRINGS.index(r).to_s
-  end
-
   def initialize(user)
     user ||= User.new
-    
+
     can :update, User do |u|
       u == user
     end
 
     # 管理员
-    if user.roles.include? ROLE_ID('role_admin')
+    if user.role_admin?
       can :manage, :all
       can :access, :rails_admin   # grant access to rails_admin
       can :dashboard              # grant access to the dashboard
@@ -22,18 +18,18 @@ class Ability
     end
 
     # 总裁
-    if user.roles.include? ROLE_ID('manager')
+    if user.manager?
       can :read, :all
       can :view, Video
     end
-    
+
     # 视频审查员
-    if user.roles.include? ROLE_ID('video_inspector')
+    if user.video_inspector?
       can [:view, :read], Video
     end
 
     # 地方库管和全国库管
-    if (user.roles.include? ROLE_ID('storehouse_admin')) || (user.roles.include? ROLE_ID('national_storehouse_admin'))
+    if user.storehouse_admin? or user.national_storehouse_admin?
       can :read, :all
       can [:inout, :print_dispatch_card, :print_orders_card, :city_part_requirements], Storehouse
       can [:update, :edit_all, :calcprice, :print, :daily_orders], Order
@@ -46,14 +42,14 @@ class Ability
     end
 
     # 全国库管
-    if user.roles.include? ROLE_ID('national_storehouse_admin')
+    if user.national_storehouse_admin?
       can [:manage_all, :part_transfer, :part_transfer_to, :part_yingyusunhao, :do_part_yingyusunhao, :statistics], Storehouse
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can :order_stats,  Order
     end
-    
+
     # 数据管理员
-    if user.roles.include? ROLE_ID('data_admin')
+    if user.data_admin?
       can :read, :all
       can [:create, :update, :destroy], [AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier, Storehouse, Discount]
       can :inout, Storehouse
@@ -62,7 +58,7 @@ class Ability
     end
 
     # 技师
-    if user.roles.include? ROLE_ID('engineer')
+    if user.engineer?
       can [:read, :order_prompt], Order
       can :read, Complaint
       can :update, Complaint do |c|
@@ -75,21 +71,21 @@ class Ability
         u == user
       end
     end
-    
+
     # 调度，客服
-    if user.roles.include? ROLE_ID('dispatcher')
+    if user.dispatcher?
       can :read, :all
       can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print, :send_sms_notify, :daily_orders], Order
       can [:create, :update, :edit_all, :send_sms_notify], Complaint
     end
-    
+
     # 财务
-    if user.roles.include? ROLE_ID('finance')
+    if user.finance?
       can [:read, :update], Order
     end
-    
+
     # 技师主管
-    if user.roles.include? ROLE_ID('engineer_manager')
+    if user.engineer_manager?
       can [:read, :calcprice, :print, :daily_orders], Order
       can :read, Complaint
       can :update, Complaint do |c|

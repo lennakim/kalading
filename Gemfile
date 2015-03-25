@@ -62,12 +62,17 @@ gem 'chartkick'
 gem 'newrelic_rpm'
 gem 'puma'
 
+# clean code
+gem 'inherited_resources'
+
 group :development do
   gem 'capistrano'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
   gem 'capistrano3-puma'
+  # highlight mongoid output for optimizing
+  gem 'mongoid_colored_logger'
 end
 
 # api

@@ -1,5 +1,22 @@
 <%- model_class = Order -%>
 <div class="page-header">
+  <%  if can? :edit_all, Order %>
+    <div>
+      <%= form_tag daily_orders_path, :method => 'get', :id => "daily_orders_form", :class => 'form-inline' do %>
+        <div class="control-group select">
+          <div class="form-inline input-append form_datetime">
+            <input data-format="yyyy-MM-dd" type="text" name="date" id="date" value="<%= Time.now.since(1.days).strftime('%Y-%m-%d') %>"></input>
+            <span class="add-on">
+              <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+              </i>
+            </span>
+            <%= collection_select(nil, nil, City.asc(:name), :id, :name, {:include_blank => t(:national)}, {:class=>'input-small control', :id => 'select-city', :name => 'city'}) %>
+          </div>
+          <%= submit_tag t(:orders_assign), class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
   <h4>
   <%= t(:orders) %>
   <% if params[:state].present? || params[:states].present? %>
@@ -15,7 +32,6 @@
     <%= ' - ' + AutoSubmodel.find(params[:auto_submodel]).full_name %>
   <% end %>
   <div class="pull-right">
-    <%= link_to t('tomorrow_orders_assign'), daily_orders_path(date: Date.tomorrow), :class => 'btn btn-success' if can? :edit_all, Order %>
     <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary' if can? :create, Order %>
     <%= link_to t('new_complaint'), new_complaint_path, :class => 'btn btn-primary' if can? :create, Complaint %>
   </div>

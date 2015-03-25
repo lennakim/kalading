@@ -1,5 +1,5 @@
 <ul style="display: none;">
-  <% Storehouse.asc(:city).each do |s| %>
+  <% @storehouses.asc(:city).each do |s| %>
     <% if @dianbu_postions %>
     <li class="dianbu-li" data-city="<%= s.city.name %>" data-name="<%= s.name %>" id="<%= s.id %>" data-lng="<%= @dianbu_postions[s][0] %>" data-lat="<%= @dianbu_postions[s][1] %>">
     <% else %>
