@@ -2,4 +2,5 @@
 //= require jquery_ujs
 
 //= require swagger-ui
-//= require doc
+//= require doc/doc
+//= require_self

@@ -12,8 +12,6 @@ module V2
       end
     end
 
-    # resources :autos do
-    # end
       get "/auto_brands" do
         auto_brands = AutoBrand.all
 

@@ -1,5 +1,8 @@
 # 图片
 class Picture
+
+  delegate :url, :size, to: :p # api
+
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
@@ -23,13 +26,4 @@ class Picture
   has_mongoid_attached_file :p, :path => ":class/:attachment/:id/:basename.:extension"
   validates_attachment_content_type :p, :content_type => %w(image/jpeg image/jpg image/png)
 
-  # api
-
-  def url
-    p.url
-  end
-
-  def size
-    p.size
-  end
 end

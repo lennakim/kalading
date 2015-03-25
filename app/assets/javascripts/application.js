@@ -8,4 +8,3 @@
 //= require jquery.ba-throttle-debounce.min
 //= require jquery.splitter-0.14.0
 //= require_directory .
-

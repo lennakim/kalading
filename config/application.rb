@@ -78,7 +78,7 @@ module Kalading
       env['api.tilt.root'] = Rails.root.join 'app', 'api'
     end
 
-    config.assets.precompile += %w(api.css api.js)
+    config.assets.precompile += %w(doc/api.css doc/api.js)
 
     config.generators do |g|
       g.test_framework  :rspec, fixture: false
