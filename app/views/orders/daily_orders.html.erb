@@ -47,17 +47,17 @@
               </tr>
             </thead>
             <tbody>
-              <% Storehouse.asc(:city).each do |s| %>
+              <% @storehouses.asc(:city).each do |s| %>
                 <tr class="dianbu-tr warning" data-id="<%= s.id %>">
                   <td colspan="3"><a class="dianbu-a" href="#"><strong><%= s.name %></strong></a>&nbsp<span class="badge badge-info">0</span></td>
                 </tr>
               <% end %>
-              <% @city_unassigned_orders.each do |k, v| %>
-                <tr class="city-tr" id="city-<%= k.id %>" data-name="<%= k.name %>">
-                  <td colspan="3"><strong><%= k.name %></strong></td>
+              <% @city_names.each do |k, v| %>
+                <tr class="city-tr" id="city-<%= k %>" data-name="<%= v %>">
+                  <td colspan="3"><strong><%= v %></strong></td>
                 </tr>
-                <%= render 'engineer_daily_orders', orders: v %>
               <% end %>
+              <%= render 'engineer_daily_orders', orders: @unassigned_orders %>
             </tbody>
           </table>
         </div>

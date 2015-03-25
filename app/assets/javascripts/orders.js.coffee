@@ -91,7 +91,7 @@ $ ->
 
     update_tr_badge_number = (tr, add) ->
         b = tr.find('.badge')
-        b.text(parseInt(b.text()) + add).fadeOut().fadeIn() if b?
+        b.text(parseInt(b.text()) + add) if b?
         
     assign_order_to_engineer = (order_tr, engineer_tr, old_engineer_tr) ->
         # console.log order_tr.data('seq') + '  ' + old_engineer_tr.find('strong').text() + ' -> ' + engineer_tr.find('strong').text()
@@ -182,12 +182,12 @@ $ ->
         map = new BMap.Map("map")
         map.enableScrollWheelZoom()
         map.enableContinuousZoom()
-        map.centerAndZoom (new BMap.Point(116.393773, 39.989387)), 12
+        map.centerAndZoom (new BMap.Point(116.393773, 39.989387)), 13
         window.map = map
         $('.order-a').on 'click', ->
             m = $(this).closest('tr').data('marker')
             if m?
-                map.centerAndZoom m.getPosition(), 13
+                map.panTo m.getPosition()
                 m.setAnimation(BMAP_ANIMATION_BOUNCE)
                 window.animate_mark.setAnimation(null) if window.animate_mark?
                 window.animate_mark = m
@@ -196,9 +196,9 @@ $ ->
             d = $('#' + $(this).closest('tr').data('id'))
             if d?
                 point = new BMap.Point parseFloat(d.data('lng')), parseFloat(d.data('lat'))
-                map.centerAndZoom point, 13
+                map.panTo point
 
-        add_dianbu_mark = (point, name, id, city) ->
+        add_dianbu_mark = (point, name, id) ->
             circle1 = new BMap.Circle point, 300, {fillColor: "blue", fillOpacity: 1.0}
             map.addOverlay(circle1)
             circle2 = new BMap.Circle point, 5000, {fillColor: "red", fillOpacity: 0.1, strokeColor:"blue", strokeWeight:1, strokeOpacity:0.1}
@@ -220,13 +220,13 @@ $ ->
                 if $(li).data('lng')
                     # 从后端获得经纬度
                     point = new BMap.Point parseFloat($(li).data('lng')), parseFloat($(li).data('lat'))
-                    add_dianbu_mark point, $(li).data('name'), li.id, $(li).data('city')
+                    add_dianbu_mark point, $(li).data('name'), li.id
                 else
                     options = 
                         onSearchComplete: (results) ->
                             return if local_search.getStatus() != BMAP_STATUS_SUCCESS
                             for r in results when r.getCurrentNumPois() > 0
-                                add_dianbu_mark r.getPoi(0).point, $(li).data('name'), li.id, $(li).data('city')
+                                add_dianbu_mark r.getPoi(0).point, $(li).data('name'), li.id
                                 $(li).data('lng', r.getPoi(0).point.lng).data('lat', r.getPoi(0).point.lat)
                                 break
                     local_search = new BMap.LocalSearch($(li).data('city'), options)
@@ -260,56 +260,66 @@ $ ->
             if dianbu_tr
                 tr.insertAfter dianbu_tr
                 update_tr_badge_number $(dianbu_tr), 1
+        
+        add_marker = (v, point)->
+            $('#mqm-' + v.seq).fadeOut()
+            $('#mm-' + v.seq).fadeIn()
+            label = new BMap.Label v.seq, {position: point, offset:new BMap.Size(1,-7)}
+            label.setStyle(
+              color : 'red',
+              fontSize : "10px",
+              height : "15px",
+              lineHeight : "14px"
+            )
+            label.setZIndex 10
+            label.addEventListener "click", (type, target) ->
+              document.getElementById(v.id)?.scrollIntoView()
+              $('#modal-map').modal('hide')
+            label.addEventListener "mouseover", (type, target) ->
+              this.setContent v.seq + ' ' + v.state + ': ' + v.address
+            label.addEventListener "mouseout", (type, target) ->
+              this.setContent(v.seq)
+            map.addOverlay(label)
+            marker = new BMap.Marker(point)
+            marker.addEventListener "click", (type, target) ->
+              document.getElementById(v.id)?.scrollIntoView()
+            map.addOverlay(marker)
+            $('#' + v.id).data 'marker', marker
+            $('#' + v.id).data 'label', label
+            if $('#' + v.id).closest('table').hasClass('unassigned-orders')
+                make_order_tr_close_to_dianbu $('#' + v.id)
+            else
+                # 已分配的置灰
+                if $('#' + v.id).hasClass('daily-order-tr')
+                    label.setStyle({color: 'grey', opacity: 0.5, borderStyle: 'dotted' })
+                    label.setZIndex 9
+            
         add_order_marker_points = (points) ->
             for v in points
                 # closure to prevent v from being shared
                 do (v) ->
-                    options = 
-                        onSearchComplete: (results) ->
-                            return if local_search.getStatus() != BMAP_STATUS_SUCCESS
-                            for r in results when r.getCurrentNumPois() > 0
-                                $('#mqm-' + v.seq).fadeOut()
-                                $('#mm-' + v.seq).fadeIn()
-                                label = new BMap.Label v.seq, {position: r.getPoi(0).point, offset:new BMap.Size(1,-7)}
-                                label.setStyle(
-                                  color : 'red',
-                                  fontSize : "10px",
-                                  height : "15px",
-                                  lineHeight : "14px"
-                                )
-                                label.setZIndex 10
-                                label.addEventListener "click", (type, target) ->
-                                  document.getElementById(v.id)?.scrollIntoView()
-                                  $('#modal-map').modal('hide')
-                                label.addEventListener "mouseover", (type, target) ->
-                                  this.setContent v.seq + ' ' + v.state + ': ' + v.address
-                                label.addEventListener "mouseout", (type, target) ->
-                                  this.setContent(v.seq)
-                                map.addOverlay(label)
-                                marker = new BMap.Marker(r.getPoi(0).point)
-                                marker.addEventListener "click", (type, target) ->
-                                  document.getElementById(v.id)?.scrollIntoView()
-                                map.addOverlay(marker)
-                                $('#' + v.id).data 'marker', marker
-                                $('#' + v.id).data 'label', label
-                                if $('#' + v.id).closest('table').hasClass('unassigned-orders')
-                                    make_order_tr_close_to_dianbu $('#' + v.id)
-                                else
-                                    # 已分配的置灰
-                                    if $('#' + v.id).hasClass('daily-order-tr')
-                                        label.setStyle({color: 'grey', opacity: 0.5, borderStyle: 'dotted' })
-                                        label.setZIndex 9
-                                break
-                    a =  for i in [v.address.length..9] by -3
-                        v.address.substring 0, i
-                    local_search = new BMap.LocalSearch(v.city, options)
-                    local_search.search(a)
+                    if v.lng && v.lat
+                        point = new BMap.Point v.lng, v.lat
+                        add_marker v, point
+                    else
+                        options = 
+                            onSearchComplete: (results) ->
+                                return if local_search.getStatus() != BMAP_STATUS_SUCCESS
+                                for r in results when r.getCurrentNumPois() > 0
+                                    add_marker v, r.getPoi(0).point
+                                    break
+                        a =  for i in [v.address.length..9] by -3
+                            v.address.substring 0, i
+                        local_search = new BMap.LocalSearch(v.city, options)
+                        local_search.search(a)
         points = for tr in $('.daily-order-tr').get().reverse() when $(tr).find('td:last-child').text()
             seq: $(tr).data('seq')
             state: $(tr).data('state')
             address: $(tr).find('td:last-child').text()
             city: $(tr).data('city')
             id: tr.id
+            lng: $(tr).data('lng')
+            lat: $(tr).data('lat')
         add_order_marker_points points
         points = for tr in $('.order-tr') when $(tr).children('td.order-address').text() and $(tr).find('span.order-state').data('state') in [0, 2, 3, 4]
             seq: $(tr).children('td:first-child').text()
@@ -317,8 +327,9 @@ $ ->
             address: $(tr).children('td.order-address').text()
             city: $(tr).data('city')
             id: tr.id
+            lng: $(tr).data('lng')
+            lat: $(tr).data('lat')
         add_order_marker_points points
-    
         if $('#order_address').length > 0
             locate_order_address = ->
                 t = $('#order_address').val()

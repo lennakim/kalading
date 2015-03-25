@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:index, :order_begin, :choose_service]
   @except_actions = [
-    :index, :show, :update, :create, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order, :tag_stats, :evaluation_list, :create_auto_special_order
+    :index, :show, :update, :auto_maintain, :auto_maintain_price, :create_auto_maintain_order, :latest_orders, :create_auto_maintain_order2, :create_auto_verify_order, :create_auto_test_order, :auto_test_price, :auto_test_order, :auto_verify_price, :auto_verify_order, :tag_stats, :evaluation_list, :create_auto_special_order
   ]
   before_filter :authenticate_user!, :except => @except_actions
   before_filter :set_default_operator
@@ -149,6 +149,9 @@ class OrdersController < ApplicationController
     
     respond_to do |format|
       format.html {
+        @storehouses = Storehouse.all
+        @city_names = Hash[*City.all.collect {|c|[c.id, c.name]}.flatten]
+        @service_type_names = Hash[*ServiceType.all.collect {|c|[c.id, c.name]}.flatten]
         params[:per] ||= 20
         params[:per] = @orders.count if (params[:state].to_i == 2 && params[:serve_datetime_start].present? && params[:serve_datetime_start] == params[:serve_datetime_end])
         @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
@@ -252,9 +255,11 @@ class OrdersController < ApplicationController
       save_order_to_session
     end
     @order.car_num.upcase!
-    d = Discount.find_by token: @order.discount_num
-    if d && d.expire_date >= Date.today && d.orders.count < d.times && (d.service_types.blank? || d.service_type_ids.sort == @order.service_type_ids.sort)
-      @order.discounts << d
+    if params[:order][:discount_num].present?
+      d = Discount.find_by token: @order.discount_num
+      if d && d.expire_date >= Date.today && d.orders.count < d.times && (d.service_types.blank? || d.service_type_ids.sort == @order.service_type_ids.sort)
+        @order.discounts << d
+      end
     end
     if params[:inquire]
       @order.state = 9
@@ -730,15 +735,27 @@ class OrdersController < ApplicationController
   def daily_orders
     @d = Date.parse(params[:date]) if params[:date]
     @d ||= Date.tomorrow
-    @unassigned_orders = Order.where(state: 2,  :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:address)
-    @city_unassigned_orders = @unassigned_orders.group_by(&:city)
-    City.each {|c| @city_unassigned_orders[c] ||= []}
-    @engineer_order_hash = Order.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime).group_by(&:engineer)
-    @storehouse_engineers = User.where(state: 0, roles: ['5']).asc(:storehouse).group_by(&:storehouse)
-    @dianbu_postions = {}
-    Storehouse.asc(:city).each do |sh|
-      @dianbu_postions[sh] = get_latitude_longitude(sh.city.name, sh.address)
+    @city = City.find(params[:city]) if params[:city].present?
+    if @city
+      orders = Order.where(city: @city)
+      @cities = [@city]
+      users = User.where(city: @city)
+      @storehouses = Storehouse.where(city: @city)
+    else
+      orders = Order.all
+      @cities = City.all
+      users = User.all
+      @storehouses = Storehouse.all
     end
+    @unassigned_orders = orders.where(state: 2, :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:address)
+    @engineer_order_hash = orders.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime).group_by(&:engineer)
+    @storehouse_engineers = users.where(state: 0, roles: ['5']).asc(:storehouse).group_by(&:storehouse)
+    @dianbu_postions = {}
+    @storehouses.asc(:city).each do |sh|
+      @dianbu_postions[sh] = Map.get_latitude_longitude(sh.city.name, sh.address)
+    end
+    @city_names = Hash[*@cities.collect {|c|[c.id, c.name]}.flatten]
+    @service_type_names = Hash[*ServiceType.all.collect {|c|[c.id, c.name]}.flatten]
     render layout: false
   end
   

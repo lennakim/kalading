@@ -72,8 +72,8 @@
           <td>
             <a class="btn btn-link" data-toggle="collapse" data-target="#<%= order.id %>_sts"><%= t(:view) %></a>
             <div id="<%= order.id %>_sts" class="collapse">
-            <% order.service_types.each do |st| %>
-            <p><%= link_to st.name, service_type_path(st) %></p>
+            <% order.service_type_ids.each do |st| %>
+            <p><%= @service_type_names[st] %></p>
             <% end %>
             </div>
           </td>
