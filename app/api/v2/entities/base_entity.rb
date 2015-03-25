@@ -1,6 +1,6 @@
 module V2
   module Entities
-    class Base < Grape::Entity
+    class BaseEntity < Grape::Entity
     end
   end
 end

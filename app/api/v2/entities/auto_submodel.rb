@@ -1,6 +1,6 @@
 module V2
   module Entities
-    class AutoSubmodel < Base
+    class AutoSubmodel < BaseEntity
       expose :id
       expose :name
       expose :model

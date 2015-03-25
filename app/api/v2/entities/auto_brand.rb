@@ -1,6 +1,6 @@
 module V2
   module Entities
-    class AutoBrand < Base
+    class AutoBrand < BaseEntity
       expose :id
       expose :name
       expose :name_pinyin

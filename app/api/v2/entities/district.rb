@@ -1,6 +1,6 @@
 module V2
   module Entities
-    class District < Base
+    class District < BaseEntity
       expose :id
       expose :name
     end

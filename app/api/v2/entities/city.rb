@@ -1,6 +1,6 @@
 module V2
   module Entities
-    class City < Base
+    class City < BaseEntity
       expose :id
       expose :name
       expose :districts, using: District
