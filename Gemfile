@@ -74,3 +74,12 @@ group :development do
   # highlight mongoid output for optimizing
   gem 'mongoid_colored_logger'
 end
+
+# api
+
+gem 'grape'
+gem 'grape-entity'
+gem 'grape-jbuilder'
+gem 'swagger-ui_rails'
+gem 'grape-swagger-rails'
+gem 'rack-cors'
