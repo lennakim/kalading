@@ -51,6 +51,7 @@ class Ability
       can :order_stats,  Order
       can [:set_state], User
       can :manage, ToolType
+      can :manage, ServiceVehicle
     end
 
     # 数据管理员

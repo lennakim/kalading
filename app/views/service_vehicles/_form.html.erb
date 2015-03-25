@@ -1,0 +1,9 @@
+<%= simple_form_for @service_vehicle, html: { class: 'form-horizontal' } do |f| %>
+  <%= f.input :number %>
+  <%= f.association :city, collection: City.all, label_method: :name, prompt: nil %>
+
+  <div class="form-actions">
+    <%= f.button :submit, t('save'), :class => 'btn btn-primary' %>
+    <%= link_to t('cancel'), service_vehicles_path, :class => 'btn' %>
+  </div>
+<% end -%>

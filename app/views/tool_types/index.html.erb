@@ -1,9 +1,8 @@
 <div class="span9 offset2">
-  <div class="page-header">
-    <h1>
-      <%= t('mongoid.models.tool_type') %>
-      <%= link_to t('new'), new_tool_type_path, class: 'pull-right btn btn-success' %>
-    </h1>
+  <%= render 'tool_types/nav' %>
+
+  <div>
+    <%= link_to t('new'), new_tool_type_path, class: 'pull-right btn btn-success' %>
     <div class="clearfix"></div>
   </div>
 

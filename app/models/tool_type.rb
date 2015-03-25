@@ -9,6 +9,8 @@ class ToolType
   field :category, type: String
   field :unit, type: String
 
+  attr_accessible :name, :category, :unit
+
   validates :name, presence: true
   validates :category, inclusion: { in: CATEGORIES }
 
