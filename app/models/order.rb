@@ -242,6 +242,35 @@ class Order
     self.calc_service_price + self.calc_parts_price
   end
   
+  def parts_auto_deliver
+    storehouse = self.city.storehouses.where(type: 1).first
+    deliver_done = 1
+    self.parts.each do |p|
+      quantity = self.part_counts[p.id.to_s].to_i - self.part_delivered_counts[p.id.to_s].to_i
+      next if quantity <= 0
+      partbatches = p.partbatches.where(storehouse: storehouse).asc(:created_at)
+      if partbatches.sum(&:remained_quantity) < quantity
+        deliver_done = 0
+        next
+      end
+      
+      self.part_delivered_counts[p.id.to_s] ||= 0
+      need_q = quantity
+      partbatches.each do |pb|
+        c = [need_q, pb.remained_quantity].min
+        pb.update_attribute :remained_quantity, pb.remained_quantity - c
+        pb.part.auto_submodels.each do |asm|
+          asm.on_part_inout pb.part, -c
+        end
+        need_q -= c
+        break if need_q <= 0
+      end
+      self.part_delivered_counts[p.id.to_s] += quantity
+    end
+    self.part_deliver_state = 1 if deliver_done == 1
+    deliver_done
+  end
+  
   paginates_per 20
   
   def as_json(options = nil)

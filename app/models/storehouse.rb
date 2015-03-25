@@ -10,8 +10,10 @@ class Storehouse
   field :phone_num, type: String
   # 备注
   field :comment, type: String
+  # 类型，点部或仓库
+  field :type, type: Integer, default: 0
   
-  attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes, :city_id, :comment
+  attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes, :city_id, :comment, :type
   
   # 仓库有很多配件批次
   has_many :partbatches, dependent: :destroy
@@ -20,7 +22,8 @@ class Storehouse
   accepts_nested_attributes_for :partbatches, :allow_destroy => true
   # 所在城市
   belongs_to :city
-  
+  TYPES = [0, 1]
+  TYPE_STRINGS = %w[dianbu storehouse]
   validates :city_id, presence: true
   validates :name, length: { in: 2..32 }, presence: true
   validates :address, length: { in: 2..128 }, presence: true

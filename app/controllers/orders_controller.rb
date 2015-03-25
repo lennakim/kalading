@@ -799,6 +799,19 @@ class OrdersController < ApplicationController
       format.html
     end
   end
+  
+  def order_parts_auto_deliver
+    @order = Order.find(params[:id])
+    if @order.parts_auto_deliver == 1
+      notice = I18n.t(:order_delivered_notify, seq: @order.seq)
+    else
+      notice = I18n.t(:order_delivered_error_notify, seq: @order.seq)
+    end
+    @order.save!
+    respond_to do |format|
+      format.html { redirect_to session.delete(:return_to), notice: notice }
+    end
+  end
 
 private
   def _create_auto_maintain_order
@@ -833,7 +846,8 @@ private
     end
     service_type_names = [
       I18n.t(:cabin_filter_service_type),
-      I18n.t(:auto_maintain_service_type_name)
+      I18n.t(:auto_maintain_service_type_name),
+      I18n.t(:battery_service_type_name)
     ]
     st_index = 0
     if params[:service_type].present?
