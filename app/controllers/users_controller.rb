@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
-  
+
   # GET /users
   # GET /users.json
   def index
@@ -20,6 +20,9 @@ class UsersController < ApplicationController
     end
     if !params[:role].blank?
       @users = @users.select { |u| u.roles.include? params[:role] }
+    end
+    if !params[:state].blank?
+      @users = @users.where(state: params[:state])
     end
 
     respond_to do |format|
@@ -100,7 +103,7 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def update_realtime_info
     if params[:location]
       current_user.location = params[:location]
@@ -112,7 +115,7 @@ class UsersController < ApplicationController
     current_user.save!
     render json: {result: 'ok'}
   end
-  
+
   def get_realtime_info
     @engineers = User.where(roles: ['5'])
     respond_to do |format|

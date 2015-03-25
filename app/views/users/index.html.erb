@@ -74,6 +74,16 @@
         </select>
       </div>
     </div>
+    <div class="control-group select">
+      <%= label_tag :state, "状态", class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= select_tag(:state, options_for_select(
+          User::STATES.map do |state|
+            [t(User::STATE_STRINGS[state]), state]
+          end, params[:state]
+        )) %>
+      </div>
+    </div>
     <div class="form-actions">
       <%= submit_tag t(:search), class: 'btn btn-primary' %>
     </div>
