@@ -2,21 +2,25 @@
   <table class='table'>
 
     <thead>
+      <td>ID</td>
       <td>姓名</td>
       <td>角色</td>
       <td>头衔</td>
       <td>手机</td>
       <td>点部</td>
+      <!-- <td>订单</td> -->
     </thead>
 
     <tbody>
       <% collection.each do |engineer| %>
         <tr>
+          <td><%= engineer.id %></td>
           <td><%= engineer.name %></td>
           <td><%= engineer.role_str %></td>
           <td><%= engineer.title %></td>
           <td><%= engineer.phone_num %></td>
-          <td><%= engineer.storehouse.try :name %></td>
+          <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
+          <!-- <td><%= engineer.serve_orders.first.try :attributes %></td> -->
         </tr>
       <% end %>
     </tbody>

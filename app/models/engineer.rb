@@ -1,7 +1,13 @@
 class Engineer < User
   include Mongoid::Document
 
-  field :roles,    :type => Array, :default => [5]
+  field :roles, type: Array, default: ["5"]
+
+  # 主管 资深 实习？
+  field :level, type: Integer
+
+  # 休息 工作 请假 培训
+  field :status, type: Integer
 
   class << self
     # migrate所有角色为技师的User的type为Engineer, 用完可以删除
@@ -9,4 +15,5 @@ class Engineer < User
       User.where(roles: "5").update_all _type: 'Engineer'
     end
   end
+
 end
