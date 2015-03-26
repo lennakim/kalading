@@ -1,29 +1,40 @@
 <div class="container">
 
-  <%= link_to "new", new_engineer_path %>
+  <%= link_to "新建", new_engineer_path %>
 
-  <table class='table'>
+  <table class='table table-striped'>
 
     <thead>
-      <td>ID</td>
       <td>姓名</td>
-      <td>角色</td>
-      <td>头衔</td>
+      <td>工牌</td>
+      <td>级别</td>
       <td>手机</td>
+
+      <td>状态</td>
+
+      <td>城市</td>
       <td>点部</td>
-      <!-- <td>订单</td> -->
+      <td>保养单</td>
+      <td>滤芯单</td>
+      <td>检测单</td>
     </thead>
 
     <tbody>
       <% collection.each do |engineer| %>
         <tr>
-          <td><%= engineer.id %></td>
           <td><%= engineer.name %></td>
-          <td><%= engineer.role_str %></td>
-          <td><%= engineer.title %></td>
+          <td><%= engineer.work_tag_number %></td>
+          <td><%= engineer.level_str %></td>
           <td><%= engineer.phone_num %></td>
+
+          <td><%= engineer.status_str %></td>
+
+          <td><%= link_to engineer.city.name, engineer.city %></td>
           <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
-          <!-- <td><%= engineer.serve_orders.first.try :attributes %></td> -->
+
+          <td><%= engineer.maintain_orders.count %></td>
+          <td><%= engineer.pm25_orders.count %></td>
+          <td><%= engineer.detection_orders.count %></td>
         </tr>
       <% end %>
     </tbody>

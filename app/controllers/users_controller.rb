@@ -18,11 +18,13 @@ class UsersController < ApplicationController
     if !params[:city].blank?
       @users = @users.where(city: City.find(params[:city]))
     end
-    if !params[:role].blank?
-      @users = @users.select { |u| u.roles.include? params[:role] }
-    end
+
     if !params[:state].blank?
       @users = @users.where(state: params[:state])
+    end
+
+    if !params[:role].blank?
+      @users = @users.select { |u| u.roles.include? params[:role] }
     end
 
     respond_to do |format|
