@@ -162,6 +162,10 @@ zh-CN:
   mongoid:
     errors:
       models:
+        engineer:
+          attributes:
+            work_tag_number:
+              blank: "工牌号不能为空"
         discount:
           attributes:
             percent:

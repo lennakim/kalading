@@ -16,9 +16,9 @@
 
       <td>城市</td>
       <td>点部</td>
-      <td>保养单</td>
-      <td>滤芯单</td>
-      <td>检测单</td>
+      <td>本月保养单</td>
+      <td>本月滤芯单</td>
+      <td>本月检测单</td>
     </thead>
 
     <tbody>
@@ -34,9 +34,9 @@
           <td><%= link_to engineer.city.name, engineer.city %></td>
           <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
 
-          <td><%= engineer.maintain_orders.count %></td>
-          <td><%= engineer.pm25_orders.count %></td>
-          <td><%= engineer.detection_orders.count %></td>
+          <td><%= engineer.maintain_orders.from_this_month.count %></td>
+          <td><%= engineer.pm25_orders.from_this_month.count %></td>
+          <td><%= engineer.detection_orders.from_this_month.count %></td>
         </tr>
       <% end %>
     </tbody>

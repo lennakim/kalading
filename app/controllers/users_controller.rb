@@ -6,24 +6,24 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
     @users = User.all.asc(:name_pinyin)
-    if !params[:name].blank?
+    if params[:name].present?
       @users = @users.where(name: /.*#{params[:name]}.*/i)
     end
-    if !params[:phone_num].blank?
+    if params[:phone_num].present?
       @users = @users.where(phone_num: params[:phone_num])
     end
-    if !params[:belong].blank?
+    if params[:belong].present?
       @users = @users.where(storehouse: Storehouse.find(params[:belong]))
     end
-    if !params[:city].blank?
+    if params[:city].present?
       @users = @users.where(city: City.find(params[:city]))
     end
 
-    if !params[:state].blank?
+    if params[:state].present?
       @users = @users.where(state: params[:state])
     end
 
-    if !params[:role].blank?
+    if params[:role].present?
       @users = @users.select { |u| u.roles.include? params[:role] }
     end
 

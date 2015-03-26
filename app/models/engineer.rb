@@ -11,7 +11,7 @@ class Engineer < User
 
   # 工牌 TODO 7位
   field :work_tag_number, type: String
-  validates :work_tag_number, uniqueness: true, presence: true
+  validates :work_tag_number, uniqueness: true, presence: true, length: { minimum: 7, maximum: 7 }
 
   # 所配车辆 TODO
   #
@@ -33,7 +33,7 @@ class Engineer < User
   ["pm25", "maintain", "detection"].each do |order_type|
     define_method "#{order_type}_orders" do
       id = ServiceType.find_by(name: I18n.t("service_#{order_type}"))
-      serve_orders.where(service_type_ids: id).from_this_month
+      serve_orders.where(service_type_ids: id)
     end
   end
 
