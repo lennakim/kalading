@@ -208,6 +208,7 @@ class OrdersController < ApplicationController
     else
       @order.city = City.find_by name: I18n.t(:beijing)
     end
+    @service_type_names = Hash[*ServiceType.all.collect {|c|[c.id, c.name]}.flatten]
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @order }

@@ -22,6 +22,7 @@
       <label for="complaint_role" class="control-label"><%= t(:role) %></label>
       <div class="controls form-inline" >
         <select class="select required" name="complaint[role]" id="complainted_role">
+        <option></option>
         <%= options_for_select(%w[storehouse_admin engineer dispatcher].map { |s| [t(s), User::ROLE_STRINGS.index(s)] } ) %>
         </select>
       </div>
@@ -34,7 +35,7 @@
     </div>
     <%= f.association :tag, collection: Tag.where(:type => 1), label: t('complaint_tag'), input_html: { "data-msg-required" => t(:city_required) } %>
     <%= f.association :creater, collection: User.asc(:name_pinyin), label: t('creater'), label_method: :initial_and_name, input_html: { "data-msg-required" => t(:city_required) }, readonly: true  if !["new"].include? params[:action] %>
-    <%= f.association :handler, collection: User.asc(:name_pinyin), label: t('handler'), input_html: { "data-msg-required" => t(:city_required) } if @complaint.handler%>
+    <%= f.association :handler, collection: User.asc(:name_pinyin), label: t('handler'), input_html: { "data-msg-required" => t(:city_required) } %>
     <%= f.input :severity_level, label: t(:severity_level), collection: Complaint::SEVERITY_LEVELS, label_method: lambda {|s| t(Complaint::SEVERITY_LEVEL_STRINGS[s])}, include_blank: false %>
     <%= f.input :source, label: t(:source), collection: t(:complaint_source).split, include_blank: false %>
     <%= f.input :detail, label: t(:complaint_detail), as: :text, :input_html => { :cols => 50, :rows => 4, :placeholder => t(:complaint_detail) } %>
