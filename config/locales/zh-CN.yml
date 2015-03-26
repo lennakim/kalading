@@ -1097,3 +1097,5 @@ zh-CN:
   valid_order_stats: '有效订单统计'
   all_orders: '含未完成订单'
   orders_card: '施工单'
+
+  work_tag_number: "工牌号"

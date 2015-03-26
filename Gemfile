@@ -46,7 +46,6 @@ gem 'kaminari'
 # Fix rails console error on ubuntu
 gem 'rb-readline', '~> 0.5.0', require: 'readline'
 
-gem 'quiet_assets', :group => :development
 gem 'money-rails'
 gem 'nested_form'
 gem 'datetimepicker-rails', git: 'git://github.com/zpaulovics/datetimepicker-rails', tag: 'v1.0.0'
@@ -56,11 +55,25 @@ gem 'jquery-validation-rails'
 gem 'ruby-pinyin'
 gem 'mongoid_auto_increment', :git => 'git://github.com/teriyakisan/mongoid_auto_increment.git'
 
-gem 'pry-rails'
 gem 'rqrcode-with-patches'
 gem 'chartkick'
 gem 'newrelic_rpm'
 gem 'puma'
+
+group :development, :test do
+  gem 'http_logger' # log api request response
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'awesome_print' # pretty log
+
+  gem 'quiet_assets'
+
+  # debug
+  gem 'better_errors'
+  gem 'meta_request'
+  gem 'binding_of_caller'
+end
+
 
 # clean code
 gem 'inherited_resources'

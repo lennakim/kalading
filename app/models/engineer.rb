@@ -4,14 +4,21 @@ class Engineer < User
   field :roles, type: Array, default: ["5"]
 
   # 主管 资深 实习？
-  field :level, type: Integer
+  field :level, type: Integer, default: 0
 
   # 休息 工作 请假 培训
-  field :status, type: Integer
+  field :status, type: Integer, default: 0
 
   # 工牌
   field :work_tag_number, type: String
-  validates :work_tag_number, uniqueness: true
+  validates :work_tag_number, uniqueness: true, presence: true
+
+  # 所配车辆 TODO
+  #
+
+  # 培训技能
+
+  attr_accessible :work_tag_number
 
   class << self
     # migrate所有角色为技师的User的type为Engineer, 用完可以删除

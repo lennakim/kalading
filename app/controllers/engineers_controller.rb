@@ -15,4 +15,8 @@ class EngineersController < ApplicationController
     end
   end
 
+  def create
+    create!{ engineers_path }
+  end
+
 end
