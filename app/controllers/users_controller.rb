@@ -119,4 +119,12 @@ class UsersController < ApplicationController
       format.js
     end
   end
+  
+  def set_state
+    @user = current_user
+    @user.update_attribute :state, params[:state]
+    respond_to do |format|
+      format.js
+    end
+  end
 end

@@ -21,11 +21,13 @@ class Ability
     if user.manager?
       can :read, :all
       can :view, Video
+      can [:set_state], User
     end
 
     # 视频审查员
     if user.video_inspector?
       can [:view, :read], Video
+      can [:set_state], User
     end
 
     # 地方库管和全国库管
@@ -39,6 +41,7 @@ class Ability
       can :update, Complaint do |c|
         c.handler == user
       end
+      can [:set_state], User
     end
 
     # 全国库管
@@ -46,6 +49,7 @@ class Ability
       can [:manage_all, :part_transfer, :part_transfer_to, :part_yingyusunhao, :do_part_yingyusunhao, :statistics], Storehouse
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can :order_stats,  Order
+      can [:set_state], User
     end
 
     # 数据管理员
@@ -55,6 +59,7 @@ class Ability
       can :inout, Storehouse
       can [:match, :part_select, :update_part_select, :parts_by_brand_and_type, :delete_match, :edit_part_automodel, :add_auto_submodel, :delete_auto_submodel], Part
       can [:order_seq_check, :order_stats], Order
+      can [:set_state], User
     end
 
     # 技师
@@ -70,6 +75,7 @@ class Ability
       can :update_realtime_info, User do |u|
         u == user
       end
+      can [:set_state], User
     end
 
     # 调度，客服
@@ -77,11 +83,13 @@ class Ability
       can :read, :all
       can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print, :send_sms_notify, :daily_orders], Order
       can [:create, :update, :edit_all, :send_sms_notify], Complaint
+      can [:set_state], User
     end
 
     # 财务
     if user.finance?
       can [:read, :update], Order
+      can [:set_state], User
     end
 
     # 技师主管
@@ -93,6 +101,7 @@ class Ability
       end
       can [:view, :read], Video
       can [:read, :create, :update, :destroy], Notification
+      can [:set_state], User
     end
   end
 end

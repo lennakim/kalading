@@ -74,13 +74,13 @@
               <li>
               <% end %>
                 <div class="btn-group">
-                  <button class="btn btn-inverse" ><%= link_to t('service_types_and_discount_card'), '#' %></button>
+                  <button class="btn btn-inverse" ><%= link_to t('service_types_and_discount_card'), service_types_path %></button>
                   <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu">
                     <li><%= link_to t('service_types'), service_types_path if can? :read, ServiceType %></li>
-                    <li><%= link_to t('discount_card'), discounts_path if can? :read, Discount %></li>
+                    <li><%= link_to t('discount_card'), discounts_path if can? :update, Discount %></li>
                   </ul>
                 </div>
               </li>
@@ -106,9 +106,27 @@
 
             <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>
           </ul>
-          <%= link_to t('log_out'), destroy_user_session_path, :method => :delete, :class => 'btn btn-info btn-small pull-right' if current_user %>
-          <%= link_to t(:edit_account), edit_user_registration_path, :class => 'btn btn-info btn-small pull-right' if current_user %>
-          <%= link_to t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ), orders_path, :class => 'btn btn-inverse btn-link active btn-small pull-right' if current_user %>
+          <ul class="nav pull-right">
+            <li class="dropdown">
+              <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <%= t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ) %>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to t('log_out'), destroy_user_session_path, :method => :delete %></li>
+                <li><%= link_to t(:edit_account), edit_user_registration_path %></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <span id="user_state"><%= t(User::STATE_STRINGS[current_user.state]) %></span>
+              </a>
+              <ul class="dropdown-menu" id="user_state_id">
+                <% (0..2).each do |s|%>
+                  <li><%= link_to t(User::STATE_STRINGS[s]), "#", {:id => 'user_set_state_' + s.to_s }%></li>
+                <% end %>
+              </ul>
+            </li>
+          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>

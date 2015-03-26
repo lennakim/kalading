@@ -94,6 +94,7 @@ Kalading::Application.routes.draw do
   delete 'users/:id' => 'users#destroy', :as => :user
   put 'user_realtime_info' => 'users#update_realtime_info', :as => :update_user_realtime_info
   get 'user_realtime_info' => 'users#get_realtime_info', :as => :get_user_realtime_info
+  get 'curr_user_state' => 'users#set_state', :as => :set_user_state
 
   get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
   post 'storehouses_inout/:id' => 'storehouses#inout', :as => :inout_storehouse
