@@ -32,7 +32,7 @@ class Ability
     if user.storehouse_admin? or user.national_storehouse_admin?
       can :read, :all
       can [:inout, :print_dispatch_card, :print_orders_card, :city_part_requirements], Storehouse
-      can [:update, :edit_all, :calcprice, :print, :daily_orders], Order
+      can [:update, :edit_all, :calcprice, :print, :daily_orders, :order_parts_auto_deliver], Order
       can :order_prompt, Order
       can :update, [Storehouse, Partbatch]
       can :read, Complaint
