@@ -68,8 +68,24 @@ module Kalading
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-    
+
     config.time_zone = 'Beijing'
+
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+
+    config.middleware.use(Rack::Config) do |env|
+      env['api.tilt.root'] = Rails.root.join 'app', 'api'
+    end
+
+    config.assets.precompile += %w(doc/api.css doc/api.js)
+
+    config.generators do |g|
+      g.test_framework  :rspec, fixture: false
+      g.view_specs      false
+      g.helper_specs    false
+    end
+
     config.autoload_paths += %W(#{config.root}/lib/apis)
   end
 end

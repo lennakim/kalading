@@ -167,6 +167,7 @@
       </div>
       <div class="form-actions">
         <%= f.button :submit, t(:finish_parts_deliver), :class => 'btn-primary' %>
+        <%= link_to t(:auto_deliver), order_parts_auto_deliver_path(@order), :class => 'btn' %>
         <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
       </div>
   <% elsif params[:part_back] %>
