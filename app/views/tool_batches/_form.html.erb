@@ -1,0 +1,17 @@
+<%= simple_form_for @tool_batch, html: { class: 'form-horizontal' } do |f| %>
+  <%= f.association :tool_type, collection: tool_type_grouped_collection, as: :grouped_select, group_method: :last, prompt: :translate %>
+
+  <% if !current_user.storehouse_admin? -%>
+  <%= f.association :city, collection: City.all, label_method: :name, prompt: :translate %>
+  <% end -%>
+
+  <%= f.input :quantity %>
+  <%= f.input :price %>
+  <%= f.input :spec %>
+  <%= f.input :note, as: :text, input_html: { rows: 3 } %>
+
+  <div class="form-actions">
+    <%= f.button :submit, t('save'), :class => 'btn btn-primary' %>
+    <%= link_to t('cancel'), tool_batches_path, :class => 'btn' %>
+  </div>
+<% end -%>

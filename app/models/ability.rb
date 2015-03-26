@@ -42,6 +42,7 @@ class Ability
         c.handler == user
       end
       can [:set_state], User
+      can :create, ToolBatch
     end
 
     # 全国库管
@@ -50,8 +51,7 @@ class Ability
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can :order_stats,  Order
       can [:set_state], User
-      can :manage, ToolType
-      can :manage, ServiceVehicle
+      can [:create, :update, :destroy], [ToolType, ServiceVehicle]
     end
 
     # 数据管理员

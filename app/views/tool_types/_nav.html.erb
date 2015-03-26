@@ -1,4 +1,6 @@
 <ul class="nav nav-tabs">
-  <%= activatable_nav_link 'tool_type', tool_types_path %>
-  <%= activatable_nav_link 'service_vehicle', service_vehicles_path %>
+  <%= activatable_nav_link 'tool_type', tool_types_path if can? :read, ToolType %>
+  <%= activatable_nav_link 'service_vehicle', service_vehicles_path if can? :read, ServiceVehicle %>
+  <%= activatable_nav_link 'tool_batch', tool_batches_path if can? :read, ToolBatch %>
+  <%= activatable_nav_link 'tool_stock', tool_stocks_path if can? :read, ToolStock %>
 </ul>
