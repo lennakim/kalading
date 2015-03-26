@@ -1,0 +1,6 @@
+<% if can? :create, ToolBatch -%>
+  <%= link_to new_tool_batch_path, class: 'btn btn-success' do %>
+    <i class="icon-plus-sign"></i>
+    <%= t('views.modules.tool_management.tool_batch_in_btn') %>
+  <% end -%>
+<% end -%>

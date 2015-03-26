@@ -2,7 +2,7 @@
   <%= render 'tool_types/nav' %>
 
   <div class="pull-right">
-    <%= link_to t('new'), new_service_vehicle_path, class: 'btn btn-success' %>
+    <%= link_to t('new'), new_service_vehicle_path, class: 'btn btn-success' if can? :create, ServiceVehicle %>
   </div>
   <div class="clearfix"></div>
 

@@ -2,11 +2,8 @@
   <%= render 'tool_types/nav' %>
 
   <div class="pull-right">
-    <%= link_to new_tool_batch_path, class: 'btn btn-success' do %>
-      <i class="icon-plus-sign"></i>
-      <%= t('views.modules.tool_management.tool_batch_in_btn') %>
-    <% end -%>
-    <%= link_to t('new'), new_tool_type_path, class: 'btn btn-success' %>
+    <%= render 'tool_batches/new_btn' %>
+    <%= link_to t('new'), new_tool_type_path, class: 'btn btn-success' if can? :create, ToolType %>
   </div>
   <div class="clearfix"></div>
 
