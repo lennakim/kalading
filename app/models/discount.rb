@@ -3,6 +3,8 @@ class Discount
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  scope :recent, -> {order_by(created_at: :desc)}
+
   field :name, type: String
   # 折扣金额
   field :discount, type: Money, default: 0
@@ -23,17 +25,17 @@ class Discount
   has_and_belongs_to_many :orders
   has_and_belongs_to_many :service_types
   attr_accessible :name, :discount, :percent, :order_ids, :expire_date, :times, :final_price, :service_type_ids, :token
-  
+
   paginates_per 10
-  
+
   def generate_token six_length
     if six_length == 1
       begin
-        self.token = (('A'..'Z').to_a + (0..1).to_a).sample(6).join
+        self.token = [*"A".."Z", *"0".."1"].sample(6).join
       end until !Discount.find_by(token: self.token)
     else
       self.token = SecureRandom.uuid.delete '-'
     end
   end
-  
+
 end

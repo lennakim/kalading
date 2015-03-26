@@ -1,19 +1,22 @@
 class DiscountsController < ApplicationController
+
   before_filter :authenticate_user!
   before_filter :set_default_operator
   load_and_authorize_resource
-  
+
   # GET /discounts
   # GET /discounts.json
   def index
-    @discounts = Discount.desc(:created_at)
-    if params[:discount_token] && params[:discount_token] != ''
+    if params[:discount_token].present?
       @discounts = @discounts.where(token: /.*#{params[:discount_token]}.*/)
     end
-    if params[:name] && params[:name] != ''
+
+    if params[:name].present?
       @discounts = @discounts.where(name: /.*#{params[:name]}.*/)
     end
-    @discounts = @discounts.page params[:page]
+
+    @discounts = @discounts.recent.page(params[:page])
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @discounts }
@@ -57,12 +60,14 @@ class DiscountsController < ApplicationController
   # POST /discounts.json
   def create
     discounts = []
-    (1..params[:discount_number].to_i).each do |i|
+
+    params[:discount_number].to_i.times.each do |i|
       @discount = Discount.new(params[:discount])
       @discount.generate_token params[:discount_six_length].to_i
       @discount.save
       discounts << @discount
     end
+
     respond_to do |format|
       format.html { redirect_to discounts_url, notice: I18n.t(:discount_created, n: params[:discount][:name], c: params[:discount_number] ) }
       format.json { render json: discounts, status: :created, location: discounts }
