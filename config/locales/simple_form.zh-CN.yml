@@ -1,0 +1,7 @@
+zh-CN:
+  simple_form:
+    options:
+      tool_type:
+        category:
+          with_engineer: '随人工具'
+          with_vehicle: '随车工具'

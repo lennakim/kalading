@@ -13,20 +13,4 @@ class ToolType
 
   validates :name, presence: true
   validates :category, inclusion: { in: CATEGORIES }
-
-  class << self
-    def categories_collection
-      CATEGORIES.map do |category|
-        [category_humanize(category), category]
-      end
-    end
-
-    def category_humanize(category)
-      I18n.t("mongoid.attributes.tool_type.categories.#{category}")
-    end
-  end
-
-  def category_humanize
-    self.class.category_humanize(category)
-  end
 end

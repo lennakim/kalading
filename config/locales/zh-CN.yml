@@ -237,9 +237,6 @@ zh-CN:
         name: '名称'
         category: '类别'
         unit: '单位'
-        categories:
-          with_engineer: '随人工具'
-          with_vehicle: '随车工具'
       service_vehicle:
         number: '车牌号'
         city: '城市'
@@ -257,10 +254,18 @@ zh-CN:
     messages:
       not_saved: '未保存'
       blank: '不能为空'
+      greater_than: '必须大于%{count}'
+      greater_than_or_equal_to: '必须大于或等于%{count}'
+      less_than: '必须小于%{count}'
+      less_than_or_equal_to: '必须小于或等于%{count}'
+      not_a_number: '必须是数字'
+      not_an_integer: '必须是整数'
 
   helpers:
     links:
       cancel: '取消'
+    select:
+      prompt: '请选择'
   weixin_num: '微信号'
   engine_displacement: '排量（汽缸容积）'
   engine_model: '发动机型号'
@@ -399,11 +404,13 @@ zh-CN:
   in_quantity: '进货数量'
   back_quantity: '回库数量'
   search_by_partbatch: '按批次号搜索'
+
   actions: '操作'
   new: '新建'
   edit: '编辑'
   destroy: '删除'
   destroy_confirm: '确定要删除吗？'
+
   edit_part_automodel: '编辑车型'
   edit_applicable_automodel: '匹配车型列表'
   new_part: '新建配件'

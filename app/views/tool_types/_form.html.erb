@@ -1,6 +1,6 @@
 <%= simple_form_for @tool_type, html: { class: 'form-horizontal' } do |f| %>
   <%= f.input :name %>
-  <%= f.input :category, collection: ToolType.categories_collection, prompt: nil %>
+  <%= f.input :category, collection: ToolType::CATEGORIES.map(&:to_sym), prompt: :translate %>
   <%= f.input :unit %>
 
   <div class="form-actions">
