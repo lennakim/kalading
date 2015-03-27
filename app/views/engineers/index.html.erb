@@ -1,26 +1,42 @@
 <div class="container">
-  <table class='table'>
+
+  <div class="row">
+    <%= link_to "新建技师", new_engineer_path, class: 'btn btn-default pull-right' %>
+  </div>
+
+  <table class='table table-striped'>
 
     <thead>
-      <td>ID</td>
       <td>姓名</td>
-      <td>角色</td>
-      <td>头衔</td>
+      <td>工牌</td>
+      <td>级别</td>
       <td>手机</td>
+
+      <td>状态</td>
+
+      <td>城市</td>
       <td>点部</td>
-      <!-- <td>订单</td> -->
+      <td>本月保养单</td>
+      <td>本月滤芯单</td>
+      <td>本月检测单</td>
     </thead>
 
     <tbody>
       <% collection.each do |engineer| %>
         <tr>
-          <td><%= engineer.id %></td>
           <td><%= engineer.name %></td>
-          <td><%= engineer.role_str %></td>
-          <td><%= engineer.title %></td>
+          <td><%= engineer.work_tag_number %></td>
+          <td><%= engineer.level_str %></td>
           <td><%= engineer.phone_num %></td>
+
+          <td><%= engineer.status_str %></td>
+
+          <td><%= link_to engineer.city.name, engineer.city %></td>
           <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
-          <!-- <td><%= engineer.serve_orders.first.try :attributes %></td> -->
+
+          <td><%= engineer.maintain_orders.valid.from_this_month.count %></td>
+          <td><%= engineer.pm25_orders.valid.from_this_month.count %></td>
+          <td><%= engineer.detection_orders.valid.from_this_month.count %></td>
         </tr>
       <% end %>
     </tbody>

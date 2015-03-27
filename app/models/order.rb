@@ -109,13 +109,13 @@ class Order
   belongs_to :user_type
   # 所在城市
   belongs_to :city
-  
+
   has_many :maintains
 
   field :part_counts, type: Hash, default: {}
   field :part_delivered_counts, type: Hash, default: {}
   field :part_deliver_state, type: Integer, default: 0
-  
+
   # 固定的取消原因，cancel_reason放的是自定义原因
   field :cancel_type, type: Integer, default: 0
 
@@ -147,7 +147,7 @@ class Order
   #validates :address, length: { in: 4..512 }, presence: true
   validates :city, presence: true
   validates_format_of :car_num, with: /^[a-zA-Z\d]*$/
-  
+
   # 0: 未审核， 1：审核失败，2：未分配，3：未预约，4：已预约，5：服务完成，6：已交接，7：已回访，8：已取消，9：用户咨询, 10: 取消待审核
   STATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   # 有效订单，用于统计
@@ -172,6 +172,8 @@ class Order
   CANCEL_TYPES = [0, 1, 2, 3]
   CANCEL_TYPE_STRINGS = %w[custom_reason client_absent client_reschedule part_error]
 
+  scope :from_this_month, -> { between(serve_datetime: (Time.now.beginning_of_month .. Time.now.end_of_month)) }
+
   def calc_parts_price
     p = Money.new(0.0)
     self.parts.each do |pi|
@@ -184,7 +186,7 @@ class Order
     end
     p
   end
-  
+
   def parts_price_info
     s = ''
     self.parts_by_type.each do |k, v|
@@ -202,7 +204,7 @@ class Order
     s
   end
 
-  
+
   def calc_service_price
     p = Money.new(0.0)
     self.service_types.each {|st| p += st.price if st.price }
@@ -216,7 +218,7 @@ class Order
     end
     s
   end
-  
+
   def calc_price
     price = Money.new(0.0)
     price += self.calc_service_price
@@ -241,7 +243,7 @@ class Order
   def price_without_discount
     self.calc_service_price + self.calc_parts_price
   end
-  
+
   def parts_auto_deliver
     storehouse = self.city.storehouses.where(type: 1).first
     deliver_done = 1
@@ -253,7 +255,7 @@ class Order
         deliver_done = 0
         next
       end
-      
+
       self.part_delivered_counts[p.id.to_s] ||= 0
       need_q = quantity
       partbatches.each do |pb|
@@ -270,13 +272,13 @@ class Order
     self.part_deliver_state = 1 if deliver_done == 1
     deliver_done
   end
-  
+
   paginates_per 20
-  
+
   def as_json(options = nil)
     super :only => [:_id, :seq ]
   end
-  
+
   instance_eval do
     def within_datetime_range(states, d1, d2, city)
       any_in(:state => states).where(:serve_datetime.gte => d1, :serve_datetime.lte => d2, :city => city)
@@ -306,47 +308,47 @@ class Order
       end
     end
   end
-  
+
   before_create do |o|
     #临时的：去掉方括号之间的文字
     o.address.gsub!(/\[.*\]/, '') if o.address.present?
   end
-  
+
   before_save :update_location
-  
+
   def update_location
     if self.address.present?
       self.location = Map.get_latitude_longitude self.city.name, self.address
     end
   end
-  
+
   instance_eval do
     # 待出库
     def to_be_delivered
       any_of({ state: 3 }, { state: 4 }).where(part_deliver_state: 0)
     end
-    
+
     def to_be_delivered_hash
       {states: [3,4], part_deliver_state: 0}
     end
-  
+
     # 待回库
     def to_be_backed
       any_of({ state: 5 }, { state: 8 }, {state: 10}).where(part_deliver_state: 1)
     end
-    
+
     def to_be_backed_hash
       {states: [5, 8, 10], part_deliver_state: 1}
     end
-    
+
     def valid_by_car_hash(car_location, car_num)
       { states: VALID_STATES, :car_location => car_location, :car_num => car_num }
     end
   end
-  
+
   scope :valid, where(:state.in => VALID_STATES)
   scope :by_car, ->(car_location, car_num) { where(:car_location => car_location, :car_num => car_num) }
-  
+
   def self.sum_by_city cities, field, start_time, end_time, conditions = {}
     total_sum = 0
     total_data = {}

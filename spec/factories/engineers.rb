@@ -6,6 +6,7 @@ FactoryGirl.define do
     password  "12345678"
     association :city, factory: :beijing
     roles ["5"]
+    work_tag_number "1234567"
     # initialize_with { User.find_or_create_by(name: name)}
   end
 end
