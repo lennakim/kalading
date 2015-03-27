@@ -34,9 +34,9 @@
           <td><%= link_to engineer.city.name, engineer.city %></td>
           <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
 
-          <td><%= engineer.maintain_orders.from_this_month.count %></td>
-          <td><%= engineer.pm25_orders.from_this_month.count %></td>
-          <td><%= engineer.detection_orders.from_this_month.count %></td>
+          <td><%= engineer.maintain_orders.valid.from_this_month.count %></td>
+          <td><%= engineer.pm25_orders.valid.from_this_month.count %></td>
+          <td><%= engineer.detection_orders.valid.from_this_month.count %></td>
         </tr>
       <% end %>
     </tbody>
