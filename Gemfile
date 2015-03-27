@@ -83,3 +83,6 @@ gem 'grape-jbuilder'
 gem 'swagger-ui_rails'
 gem 'grape-swagger-rails'
 gem 'rack-cors'
+
+# state machine support mongodb
+gem 'aasm'

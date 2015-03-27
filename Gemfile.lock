@@ -24,6 +24,7 @@ GIT
 GEM
   remote: http://ruby.taobao.org/
   specs:
+    aasm (3.4.0)
     actionmailer (3.2.21)
       actionpack (= 3.2.21)
       mail (~> 2.5.4)
@@ -401,6 +402,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aasm
   cancan
   capistrano
   capistrano-bundler

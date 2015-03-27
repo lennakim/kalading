@@ -3,6 +3,8 @@ class Discount
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  include AASM
+
   scope :recent, -> {order_by(created_at: :desc)}
 
   field :name, type: String
