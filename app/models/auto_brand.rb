@@ -21,12 +21,14 @@ class AutoBrand
 
   validates :name, presence: true
   
-  attr_accessible :name, :name_pinyin, :name_mann, :data_source, :service_level
+  attr_accessible :name, :name_pinyin, :name_mann, :data_source, :service_level, :picture_attributes
   
   index({ name: 1 })
   # 品牌有很多系列
   has_many :auto_models, dependent: :destroy
-  
+  embeds_one :picture, :cascade_callbacks => true
+  accepts_nested_attributes_for :picture, :allow_destroy => true
+
   def self.search(k, v)
     if k && v && v.size > 0
       any_of({ k => /.*#{v}.*/i })
@@ -42,7 +44,13 @@ class AutoBrand
   end
   
   def as_json(options = nil)
-    super :except => [:updated_at, :created_at, :version, :modifier_id, :name_mann, :data_source, :service_level]
+    opts = {:except => [:updated_at, :created_at, :version, :modifier_id, :name_mann, :data_source, :service_level, :picture]}
+    h = super options.merge(opts) do |k, old_value, new_value|
+      old_value + new_value
+    end
+    h[:logo] = self.picture.p.url if self.picture
+    h[:initial] = self.name_pinyin.chr.upcase
+    h
   end
 
 end

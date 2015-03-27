@@ -1,7 +1,8 @@
 json.array! @auto_brands do |ab|
     json.name ab.name
     json._id ab.id
-    json.pinyin ab.name_pinyin
+    json.initial ab.name_pinyin.chr.upcase
+    json.logo ab.picture.p.url if ab.picture
     json.set! 'ams' do
         json.array! ab.auto_models.where(service_level: 1).asc(:name_pinyin).select { |am| am.auto_submodels.where(data_source: 2, service_level: 1).exists? } do |am|
             json.name am.name
