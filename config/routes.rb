@@ -135,7 +135,8 @@ Kalading::Application.routes.draw do
   get 'daily_orders' => 'orders#daily_orders', :as => :daily_orders
   get 'order_stats' => 'orders#order_stats', :as => :order_stats
   get 'orders/:id/parts_auto_deliver' => 'orders#order_parts_auto_deliver', :as => :order_parts_auto_deliver
-
+  get 'orders/:id/history' => 'orders#history', :as => :order_history
+  
   get 'complaints/:id/send_sms_notify' => 'complaints#send_sms_notify', :as => :complaint_send_sms_notify
 
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains

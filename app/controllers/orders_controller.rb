@@ -814,6 +814,14 @@ class OrdersController < ApplicationController
     end
   end
 
+  def history
+    @order = Order.find(params[:id])
+    @history_trackers = @order.history_tracks.desc(:created_at).page(params[:page]).per(5)
+    respond_to do |format|
+      format.js
+    end
+  end
+
 private
   def _create_auto_maintain_order
     @order = Order.new

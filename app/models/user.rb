@@ -2,6 +2,7 @@
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Userstamp::User
   Devise::Models::TokenAuthenticatable
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
