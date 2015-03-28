@@ -9,6 +9,7 @@ class Picture
 
   embedded_in :order, :inverse_of => :pictures
   embedded_in :auto_submodel, :inverse_of => :pictures
+  embedded_in :auto_brand, :inverse_of => :picture
   embedded_in :wheel, :inverse_of => :pictures
   embedded_in :tool_record, :inverse_of => :pictures
   embedded_in :maintain, :inverse_of => :outlook_pics
