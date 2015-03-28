@@ -3,4 +3,8 @@
   <%= activatable_nav_link 'service_vehicle', service_vehicles_path if can? :read, ServiceVehicle %>
   <%= activatable_nav_link 'tool_batch', tool_batches_path if can? :read, ToolBatch %>
   <%= activatable_nav_link 'tool_stock', tool_stocks_path if can? :read, ToolStock %>
+  <%= activatable_nav_link 'tool_assignee', tool_assignees_path,
+    link_text: t('mongoid.attributes.tool_assignment.assignment_group') if can? :read, ToolAssignment %>
+  <%= activatable_nav_link 'tool_assignment', tool_assignments_path(status: 'discarded'),
+    link_text: t('mongoid.attributes.tool_assignment.discarded') if can? :read, ToolAssignment %>
 </ul>

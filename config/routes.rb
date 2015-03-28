@@ -74,6 +74,13 @@ Kalading::Application.routes.draw do
   resources :service_vehicles, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :tool_batches, only: [:index, :new, :create]
   resources :tool_stocks, only: [:index]
+  resources :tool_assignments, only: [:index] do
+    collection do
+      get :check_batch_assignments, as: :check_batch
+      post :batch_assign, as: :batch
+    end
+  end
+  resources :tool_assignees, only: [:index]
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 

@@ -1,6 +1,7 @@
 class ServiceVehicle
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Concerns::ActsAsToolAssignee
 
   # 车牌号
   field :number, type: String
@@ -11,4 +12,6 @@ class ServiceVehicle
 
   validates :number, presence: true
   validates :city_id, presence: true
+
+  alias_method :name, :number
 end

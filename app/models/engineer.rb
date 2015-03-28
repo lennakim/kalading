@@ -1,5 +1,6 @@
 class Engineer < User
   include Mongoid::Document
+  include Concerns::ActsAsToolAssignee
 
   field :roles, type: Array, default: ["5"]
 

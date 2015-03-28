@@ -5,3 +5,8 @@ zh-CN:
         category:
           with_engineer: '随人工具'
           with_vehicle: '随车工具'
+      tool_assignment:
+        status:
+          normal: '使用中'
+          broken: '损坏'
+          lost: '丢失'

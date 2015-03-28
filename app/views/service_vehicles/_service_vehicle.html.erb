@@ -3,9 +3,9 @@
   <td><%= service_vehicle.city.name %></td>
   <td>
     <%= link_to t('edit'), edit_service_vehicle_path(service_vehicle),
-      class: 'btn btn-primary' if can? :update, ServiceVehicle %>
+      class: 'btn btn-small btn-primary' if can? :update, ServiceVehicle %>
     <%= link_to t('destroy'), service_vehicle_path(service_vehicle),
       method: 'delete', confirm: t('destroy_confirm'),
-      class: 'btn btn-danger' if can? :destroy, ServiceVehicle %>
+      class: 'btn btn-small btn-danger' if can? :destroy, ServiceVehicle %>
   </td>
 </tr>

@@ -1,0 +1,23 @@
+<tr>
+  <td><%= assignee.city.name %></td>
+  <td><%= assignee.name %></td>
+  <td><%= assignee.tool_assignments_count %></td>
+
+  <% if params[:type] == 'engineer' -%>
+    <% to_be_assigned_count = @engineer_tools_total - assignee.tool_assignments_count -%>
+  <% elsif params[:type] == 'vehicle' -%>
+    <% to_be_assigned_count = @vehicle_tools_total - assignee.tool_assignments_count -%>
+  <% else -%>
+    <% to_be_assigned_count = 0 -%>
+  <% end -%>
+  <td><%= to_be_assigned_count %></td>
+
+  <td><%= assignee.discarded_assignments_count %></td>
+  <td>
+    <% if (to_be_assigned_count > 0 || assignee.discarded_assignments_count > 0) && can?(:create, ToolAssignment) -%>
+      <%= link_to t('mongoid.attributes.tool_assignment.assign'),
+        check_batch_tool_assignments_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
+        class: 'btn btn-small btn-primary' %>
+    <% end -%>
+  </td>
+</tr>

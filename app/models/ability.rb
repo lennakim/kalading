@@ -43,6 +43,7 @@ class Ability
       end
       can [:set_state], User
       can :create, ToolBatch
+      can :create, ToolAssignment
     end
 
     # 全国库管

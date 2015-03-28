@@ -22,8 +22,7 @@ class ToolBatch
   before_create :increase_tool_stock
 
   def increase_tool_stock
-    conditions = { city_id: city.id, tool_type_id: tool_type.id }
-    tool_stock = ToolStock.where(conditions).first || ToolStock.create!(conditions)
+    tool_stock = ToolStock.where(city_id: city.id, tool_type_id: tool_type.id).first_or_create!
     tool_stock.inc(:remained_count, self.quantity)
     self.tool_stock = tool_stock
   end
