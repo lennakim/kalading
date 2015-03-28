@@ -279,7 +279,7 @@ class StorehousesController < ApplicationController
     supplier = Supplier.find_or_create_by name: I18n.t(:fake_supplier_for_transfer), type: 1
     @target_storehouse.partbatches.create! part_id: @part.id,
       supplier_id: supplier.id,
-      price: @part.ref_price,
+      price: @partbatches.last.price,
       quantity: @quantity,
       remained_quantity: @quantity,
       user_id: current_user.id
