@@ -28,8 +28,6 @@ class Part
   has_many :urlinfos
   # 进货批次列表
   has_many :partbatches, dependent: :delete
-  # 属于订单
-  has_and_belongs_to_many :orders
   # 图文信息
   has_many :image_texts
 
