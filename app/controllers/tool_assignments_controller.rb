@@ -73,7 +73,7 @@ class ToolAssignmentsController < ApplicationController
     end
 
     def check_for_discarding
-      if current_user.is_a?(Engineer) && @assignment.assignee_type == 'Engineer' &&
+      if current_user.engineer? && @assignment.assignee_type == 'Engineer' &&
         @assignment.assignee != current_user
         flash[:error] = '没有权限'
         redirect_to :back

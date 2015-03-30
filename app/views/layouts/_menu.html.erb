@@ -109,7 +109,11 @@
             <% else -%>
             <li>
             <% end -%>
-            <%= link_to t('views.navbar.tool_management'), tool_types_path if can? :read, ToolType %>
+            <% if current_user.engineer? -%>
+              <%= link_to t('views.navbar.tool_management'), my_tool_assignments_engineers_path %>
+            <% elsif can? :read, ToolType -%>
+              <%= link_to t('views.navbar.tool_management'), tool_types_path if can? :read, ToolType %>
+            <% end -%>
             </li>
 
             <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>

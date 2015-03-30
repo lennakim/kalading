@@ -267,6 +267,7 @@ zh-CN:
         discarded_type: '原因'
         assignment_group: '工具分配'
         discarded: '损坏/丢失'
+        my_tool_assignments: '我的工具'
         assign: '分配'
       tool_assignee:
         city: '城市'

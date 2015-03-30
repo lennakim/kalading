@@ -1,4 +1,5 @@
 class EngineersController < ApplicationController
+  before_filter :authenticate_user!
   inherit_resources
   load_resource only: [:tool_assignments]
 
@@ -22,7 +23,16 @@ class EngineersController < ApplicationController
 
   def tool_assignments
     authorize! :read, ToolAssignment
+
     @assignee = @engineer
+    @assignments = @assignee.tool_assignments.current
+    render 'tool_assignments/list_of_assignee'
+  end
+
+  def my_tool_assignments
+    authorize! :read, :my_tool_assignments
+
+    @assignee = current_user
     @assignments = @assignee.tool_assignments.current
     render 'tool_assignments/list_of_assignee'
   end

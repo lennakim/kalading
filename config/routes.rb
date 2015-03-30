@@ -5,6 +5,10 @@ Kalading::Application.routes.draw do
     member do
       get :tool_assignments
     end
+
+    collection do
+      get :my_tool_assignments
+    end
   end
 
   resources :tags

@@ -7,4 +7,6 @@
     link_text: t('mongoid.attributes.tool_assignment.assignment_group') if can? :read, ToolAssignment %>
   <%= activatable_nav_link 'tool_assignment', tool_assignments_path(status: 'discarded'),
     link_text: t('mongoid.attributes.tool_assignment.discarded') if can? :read, ToolAssignment %>
+  <%= activatable_nav_link 'engineer', my_tool_assignments_engineers_path,
+    link_text: t('mongoid.attributes.tool_assignment.my_tool_assignments') if current_user.engineer? %>
 </ul>

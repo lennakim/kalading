@@ -3,6 +3,6 @@
   <td><%= assignment.tool_type.name %></td>
   <td><%= translate_collection_options(assignment.tool_type, :category) %></td>
   <td><%= assignment.assignee.name %></td>
-  <td><%= assignment.applicant.name %></td>
+  <td><%= assignment.applicant.try(:name) %></td>
   <td><%= translate_collection_options(assignment, :status) %></td>
 </tr>

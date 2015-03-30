@@ -79,10 +79,10 @@ class Ability
         u == user
       end
       can [:set_state], User
-      can :read, ToolAssignment do |assign|
+      can :read, :my_tool_assignments
+      can [:break, :lose], ToolAssignment do |assign|
         assign.assignee == user
       end
-      can [:break, :lose], ToolAssignment
     end
 
     # 调度，客服
