@@ -6,6 +6,11 @@ class ToolAssignmentsController < ApplicationController
   load_and_authorize_resource except: [:check_batch_assignments, :batch_assign]
 
   def index
+    relation = ToolAssignment
+    if params[:status] == 'discarded'
+      relation = relation.where(discarded: true)
+    end
+    @assignments = relation.page(params[:page]).per(20)
   end
 
   def check_batch_assignments
