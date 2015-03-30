@@ -673,7 +673,7 @@ zh-CN:
   remove_district: '删除区域'
   city_name: '城市名称'
   cities: '城市'
-  district: '区域'
+  district: '可服务区域'
   district_name: '区域名称'
   auto_maintain: '上门保养'
   full_name: '全称'

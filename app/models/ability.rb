@@ -92,7 +92,7 @@ class Ability
       can [:set_state], User
     end
 
-    # 技师主管
+    # 技师主管,运营主管
     if user.engineer_manager?
       can [:read, :calcprice, :print, :daily_orders, :history], Order
       can :read, Complaint
@@ -102,6 +102,9 @@ class Ability
       can [:view, :read], Video
       can [:read, :create, :update, :destroy], Notification
       can [:set_state], User
+      can [:edit, :update], City do |c|
+        user.city == c
+      end
     end
   end
 end

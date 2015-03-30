@@ -16,8 +16,8 @@
   <p><%= f.link_to_add t('add_district'), :districts %></p>
   
   <div class="form-actions">
-    <%= f.button :submit, :class => 'btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+    <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+    <%= link_to t('cancel'),
                 cities_path, :class => 'btn' %>
   </div>
 <% end %>

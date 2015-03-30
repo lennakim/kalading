@@ -1,6 +1,6 @@
 <%- model_class = City -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%= @city.name %></h1>
 </div>
 
 <dl class="dl-horizontal">
@@ -12,16 +12,15 @@
   <dd><%= @city.opened ? t(:shi) : t(:fou) %></dd>
   <dt><strong><%= t(:order_capacity) %>:</strong></dt>
   <dd><%= @city.order_capacity %></dd>
+  <dt><strong><%= t(:district) %>:</strong></dt>
+  <% @city.districts.each do |d| %>
+  <dd><%=  d.name %></dd>
+  <% end %>
 </dl>
 
 <div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
+  <%= link_to t('back'),
               cities_path, :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+  <%= link_to t('edit'),
               edit_city_path(@city), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              city_path(@city),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
 </div>
