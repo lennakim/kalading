@@ -1,6 +1,8 @@
 class Engineer < User
   include Mongoid::Document
 
+  paginates_per 15
+
   field :roles, type: Array, default: ["5"]
 
   LEVEL_STR = %w-养护技师 高级养护技师 资深养护技师 首席养护技师-
@@ -32,7 +34,7 @@ class Engineer < User
   # detection_orders
   ["pm25", "maintain", "detection"].each do |order_type|
     define_method "#{order_type}_orders" do
-      id = ServiceType.find_by(name: I18n.t("service_#{order_type}"))
+      id = ServiceType.where(name: I18n.t("service_#{order_type}")).pluck(:id)
       serve_orders.where(service_type_ids: id)
     end
   end
