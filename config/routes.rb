@@ -1,7 +1,11 @@
 Kalading::Application.routes.draw do
   get "doc/v2"
 
-  resources :engineers
+  resources :engineers do
+    member do
+      get :tool_assignments
+    end
+  end
 
   resources :tags
 
@@ -71,10 +75,19 @@ Kalading::Application.routes.draw do
   resources :auto_brands
 
   resources :tool_types, only: [:index, :new, :create, :edit, :update, :destroy]
-  resources :service_vehicles, only: [:index, :new, :create, :edit, :update, :destroy]
+  resources :service_vehicles, only: [:index, :new, :create, :edit, :update, :destroy] do
+    member do
+      get :tool_assignments
+    end
+  end
   resources :tool_batches, only: [:index, :new, :create]
   resources :tool_stocks, only: [:index]
   resources :tool_assignments, only: [:index] do
+    member do
+      put :break
+      put :lose
+    end
+
     collection do
       get :check_batch_assignments, as: :check_batch
       post :batch_assign, as: :batch

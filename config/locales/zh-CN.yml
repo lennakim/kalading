@@ -261,6 +261,7 @@ zh-CN:
         city: '城市'
         tool_type: '工具'
         tool_type_category: '工具类别'
+        status: '状态'
         assignee: '拥有者'
         applicant: '更换申请人'
         discarded_type: '原因'
@@ -273,7 +274,7 @@ zh-CN:
         engineer: '技师'
         service_vehicle: '上门服务车辆'
         assigned_count: '已分配数'
-        to_be_assigned_count: '待分配数'
+        to_be_assigned_tools_count: '待分配数'
         discarded_count: '损坏/丢失数'
 
   devise:
@@ -1197,3 +1198,7 @@ zh-CN:
       tool_management:
         tool_batch_in: '工具进货'
         tool_batch_in_btn: '进货'
+        break: '标为损坏'
+        lose: '标为丢失'
+        break_confirmation: '确定要把工具标记为损坏吗？'
+        lose_confirmation: '确定要把工具标记为丢失吗？'

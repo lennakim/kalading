@@ -1,0 +1,33 @@
+<div class="span9 offset2">
+  <p>
+    <%= @assignee.city.name %>
+    <%= @assignee.model_name.human %>: <%= @assignee.name %>
+  </p>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th><%= t('mongoid.attributes.tool_assignment.tool_type') %></th>
+        <th><%= t('mongoid.attributes.tool_assignment.status') %></th>
+        <th><%= t('actions') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @assignments.each do |assign| -%>
+        <tr>
+          <td><%= assign.tool_type.name %></td>
+          <td><%= translate_collection_options(assign, :status) %></td>
+          <td>
+            <% if !assign.discarded? -%>
+              <%= link_to t('views.modules.tool_management.break'), break_tool_assignment_path(assign),
+                method: :put, class: "btn btn-small btn-danger",
+                confirm: t('views.modules.tool_management.break_confirmation') if can? :break, ToolAssignment %>
+              <%= link_to t('views.modules.tool_management.lose'), lose_tool_assignment_path(assign),
+                method: :put, class: "btn btn-small btn-danger",
+                confirm: t('views.modules.tool_management.lose_confirmation') if can? :lose, ToolAssignment %>
+            <% end -%>
+          </td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+</div>

@@ -1,6 +1,7 @@
 class ServiceVehiclesController < ApplicationController
   before_filter :authenticate_user!
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:tool_assignments]
+  load_resource only: [:tool_assignments]
 
   def index
     @service_vehicles = ServiceVehicle.page(params[:page]).per(20)
@@ -33,5 +34,12 @@ class ServiceVehiclesController < ApplicationController
   def destroy
     @service_vehicle.destroy
     redirect_to service_vehicles_path
+  end
+
+  def tool_assignments
+    authorize! :read, ToolAssignment
+    @assignee = @service_vehicle
+    @assignments = @assignee.tool_assignments.current
+    render 'tool_assignments/list_of_assignee'
   end
 end

@@ -1,5 +1,6 @@
 class EngineersController < ApplicationController
   inherit_resources
+  load_resource only: [:tool_assignments]
 
   def update
     @engineer = Engineer.find(params[:id])
@@ -19,4 +20,10 @@ class EngineersController < ApplicationController
     create!{ engineers_path }
   end
 
+  def tool_assignments
+    authorize! :read, ToolAssignment
+    @assignee = @engineer
+    @assignments = @assignee.tool_assignments.current
+    render 'tool_assignments/list_of_assignee'
+  end
 end
