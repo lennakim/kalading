@@ -40,6 +40,23 @@ class Engineer < User
     end
   end
 
+  def service_orders_count
+    map = %Q{
+      function() {
+        this.service_type_ids.forEach(function(service_type_id){
+          emit(service_type_id, 1);
+        });
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        return Array.sum(values);
+      }
+    }
+
+    serve_orders.valid.from_this_month.map_reduce(map, reduce).out(inline: true)
+  end
+
   def status_str
     STATUS_STR[status]
   end

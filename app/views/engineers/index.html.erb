@@ -16,9 +16,8 @@
 
       <td>城市</td>
       <td>点部</td>
-      <td>本月保养单</td>
-      <td>本月滤芯单</td>
-      <td>本月检测单</td>
+
+      <td>本月订单情况</td>
     </thead>
 
     <tbody>
@@ -34,9 +33,20 @@
           <td><%= link_to engineer.city.name, engineer.city %></td>
           <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
 
-          <td><%= engineer.maintain_orders.valid.from_this_month.count %></td>
-          <td><%= engineer.pm25_orders.valid.from_this_month.count %></td>
-          <td><%= engineer.detection_orders.valid.from_this_month.count %></td>
+          <td>
+            <table class="table">
+              <% engineer.service_orders_count.each do |mapping| %>
+                <tr>
+                  <td>
+                    <%= ServiceType.find(mapping["_id"]).name %>
+                  </td>
+                  <td>
+                    <%= mapping["value"] %>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </td>
         </tr>
       <% end %>
     </tbody>

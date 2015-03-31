@@ -23,7 +23,7 @@ class EngineersController < ApplicationController
 
   def collection
     page = params[:page] || 1
-    get_collection_ivar || set_collection_ivar(end_of_association_chain.page(page).per(15))
+    get_collection_ivar || set_collection_ivar(end_of_association_chain.page(page))
   end
 
 end
