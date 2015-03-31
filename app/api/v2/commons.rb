@@ -13,8 +13,8 @@ module V2
     end
 
       get "/autos" do
-        autos = AutoBrand.group_by_name_pinyin
-        wrapper(autos)
+        @result = AutoBrand.group_by_name_pinyin
+        present :data, @result, with: V2::Entities::Auto
       end
 
       get "/auto_brands" do
