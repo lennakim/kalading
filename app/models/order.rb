@@ -98,12 +98,12 @@ class Order
   # 属于一个车型年款
   belongs_to :auto_submodel
   # 服务项目列表
-  has_and_belongs_to_many :service_types
+  has_and_belongs_to_many :service_types, inverse_of: nil
   # 多个优惠券
   has_and_belongs_to_many :discounts
   embeds_many :pictures, :cascade_callbacks => true
   # 使用的配件列表辆
-  has_and_belongs_to_many :parts
+  has_and_belongs_to_many :parts, inverse_of: nil
   # 多个备注，用于客服之间交流
   embeds_many :comments, :cascade_callbacks => true
   # 客户分类
