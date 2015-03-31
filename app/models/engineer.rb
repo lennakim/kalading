@@ -13,7 +13,8 @@ class Engineer < User
 
   # 工牌 TODO 7位
   field :work_tag_number, type: String
-  validates :work_tag_number, uniqueness: true, presence: true, length: { minimum: 7, maximum: 7 }
+  # TODO：目前技师的工牌都是空，导致update_realtime_info 抛出validation error
+  #validates :work_tag_number, uniqueness: true, length: { minimum: 7, maximum: 7 }
 
   # 所配车辆 TODO
   #

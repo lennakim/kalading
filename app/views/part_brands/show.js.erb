@@ -8,7 +8,7 @@ $("#part-number-search").val("<%= @part_brand.parts.asc(:number).first.number %>
   else
     $("#quantity").prop("max", "999");
   $("#quantity").val("");
-  <% if q <= 0 %>
+  <% if params[:sunhao].to_i == 1 && q <= 0 %>
     $("#part-transfer-btn").prop('disabled', true).prop("class", "btn btn-disabled");
   <% else %>
     $("#part-transfer-btn").prop('disabled', false).prop("class", "btn btn-primary");

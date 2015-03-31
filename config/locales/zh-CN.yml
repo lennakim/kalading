@@ -369,7 +369,7 @@ zh-CN:
   partbatch_created: '进货完成'
   partbatch_create_time: '进货日期'
   please_select: '请选择'
-  op_history: '操作历史'
+  op_history: '跟踪'
   user_id_empty: '请选择操作人员'
   error: '错误'
   quantity_error: '数量必须是%{min}到%{max}之间'
@@ -1106,12 +1106,19 @@ zh-CN:
   valid_order_stats: '有效订单统计'
   all_orders: '含未完成订单'
   orders_card: '施工单'
-
   work_tag_number: "工牌号"
   new_engineer: "新建技师账号"
-
   service_pm25: "单换PM2.5空调滤"
   service_maintain: "换机油机滤"
   service_detection: "车辆安全检测服务"
-
-
+  changed_to: '变更为'
+  auto_submodel_id: '车型'
+  engineer_id: '技师'
+  engineer2_id: '助理技师'
+  registration_date: '车辆注册日期'
+  service_type_ids: '服务项目'
+  part_ids: '配件'
+  part_deliver_state: '出入库状态'
+  not_delivered_yet: '未出库'
+  delivered: '已出库'
+  backed_to_store: '已回库'

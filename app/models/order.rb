@@ -11,6 +11,7 @@ end
 class Order
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::History::Trackable
 
   #订单状态
   field :state, type: Integer, default: 0
@@ -97,12 +98,12 @@ class Order
   # 属于一个车型年款
   belongs_to :auto_submodel
   # 服务项目列表
-  has_and_belongs_to_many :service_types
+  has_and_belongs_to_many :service_types, inverse_of: nil
   # 多个优惠券
   has_and_belongs_to_many :discounts
   embeds_many :pictures, :cascade_callbacks => true
   # 使用的配件列表辆
-  has_and_belongs_to_many :parts
+  has_and_belongs_to_many :parts, inverse_of: nil
   # 多个备注，用于客服之间交流
   embeds_many :comments, :cascade_callbacks => true
   # 客户分类
@@ -385,4 +386,10 @@ class Order
       }
     end << {name: "#{I18n.t(:national)} (#{total_sum})", data: total_data}
   end
+
+  track_history :track_create   =>  false,
+                :track_update   =>  true,
+                :track_destroy  =>  false,
+                :on => [:state, :address, :phone_num, :name, :serve_datetime, :registration_date, :car_location, :car_num, :discount_num, :pay_type, :cancel_reason, :incoming_call_num, :engineer, :engineer2, :dispatcher,
+                        :auto_submodel, :service_type_ids, :part_ids, :engine_num, :vin, :part_deliver_state, :auto_owner_name]
 end

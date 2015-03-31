@@ -22,6 +22,9 @@
 
     <div class="form-actions">
       <%= submit_tag t(:search), class: 'btn btn-primary' %>
+      <% if params[:name].present? && @discounts.exists? %>
+        <%= link_to t(:export), discounts_path(format: :csv, name: params[:name]), :class => 'btn btn-info' if can? :create, Discount %>
+      <% end %> 
     </div>
   <% end %>
 </div>

@@ -7,16 +7,30 @@ class DiscountsController < ApplicationController
   # GET /discounts.json
   def index
     @discounts = Discount.desc(:created_at)
-    if params[:discount_token] && params[:discount_token] != ''
+    if params[:discount_token].present?
       @discounts = @discounts.where(token: /.*#{params[:discount_token]}.*/)
     end
-    if params[:name] && params[:name] != ''
+    if params[:name].present?
       @discounts = @discounts.where(name: /.*#{params[:name]}.*/)
     end
-    @discounts = @discounts.page params[:page]
+    if request.format.csv?
+      render json: {status: :bad_request} if !params[:name].present?
+    else
+      @discounts = @discounts.page(params[:page])
+    end
     respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @discounts }
+      format.html {
+      }
+      format.csv {
+        csv_data = CSV.generate({}) do |csv|
+          csv << [I18n.t(:discount_num), I18n.t(:name), I18n.t(:discount_percent), I18n.t(:expire_date), I18n.t(:service_types)]
+          @discounts.each do |d|
+            csv << [d.token, d.name, d.percent, d.expire_date, d.service_types.map{|s| s.name}.join(',') ]
+          end
+        end
+        headers['Last-Modified'] = Time.now.httpdate
+        send_data csv_data, :filename => (params[:name] || I18n.l(DateTime.now)) + '.csv'
+      }
     end
   end
 

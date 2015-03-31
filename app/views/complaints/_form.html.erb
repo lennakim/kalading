@@ -23,19 +23,20 @@
       <div class="controls form-inline" >
         <select class="select required" name="complaint[role]" id="complainted_role">
         <option></option>
-        <%= options_for_select(%w[storehouse_admin engineer dispatcher].map { |s| [t(s), User::ROLE_STRINGS.index(s)] } ) %>
+        <% %w[storehouse_admin engineer dispatcher].each do |s| %>
+          <% if @complaint.complained && @complaint.complained.roles.include?(User::ROLE_STRINGS.index(s).to_s) %>
+            <option value="<%= User::ROLE_STRINGS.index(s) %>" selected><%= t(s) %></option>
+          <% else %>
+            <option value="<%= User::ROLE_STRINGS.index(s) %>" ><%= t(s) %></option>
+          <% end %>
+        <% end %>
         </select>
       </div>
     </div>
-    <div class="control-group required">
-      <label for="order_seq" class="control-label"><%= t(:complained) %></label>
-      <div class="controls form-inline" >
-        <%= f.input_field :complained, collection: User.asc(:name_pinyin), label_method: :initial_and_name, input_html: { "data-msg-required" => t(:city_required)} %>
-      </div>
-    </div>
-    <%= f.association :tag, collection: Tag.where(:type => 1), label: t('complaint_tag'), input_html: { "data-msg-required" => t(:city_required) } %>
-    <%= f.association :creater, collection: User.asc(:name_pinyin), label: t('creater'), label_method: :initial_and_name, input_html: { "data-msg-required" => t(:city_required) }, readonly: true  if !["new"].include? params[:action] %>
-    <%= f.association :handler, collection: User.asc(:name_pinyin), label: t('handler'), input_html: { "data-msg-required" => t(:city_required) } %>
+    <%= f.association :complained, collection: User.asc(:name_pinyin), label: t('complained'), label_method: :initial_and_name %>
+    <%= f.association :tag, collection: Tag.where(:type => 1), label: t('complaint_tag') %>
+    <%= f.association :creater, collection: User.asc(:name_pinyin), label: t('creater'), label_method: :initial_and_name, readonly: true  if !["new"].include? params[:action] %>
+    <%= f.association :handler, collection: User.asc(:name_pinyin), label: t('handler'), label_method: :initial_and_name %>
     <%= f.input :severity_level, label: t(:severity_level), collection: Complaint::SEVERITY_LEVELS, label_method: lambda {|s| t(Complaint::SEVERITY_LEVEL_STRINGS[s])}, include_blank: false %>
     <%= f.input :source, label: t(:source), collection: t(:complaint_source).split, include_blank: false %>
     <%= f.input :detail, label: t(:complaint_detail), as: :text, :input_html => { :cols => 50, :rows => 4, :placeholder => t(:complaint_detail) } %>

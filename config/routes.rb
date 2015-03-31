@@ -94,6 +94,7 @@ Kalading::Application.routes.draw do
   delete 'users/:id' => 'users#destroy', :as => :user
   put 'user_realtime_info' => 'users#update_realtime_info', :as => :update_user_realtime_info
   get 'user_realtime_info' => 'users#get_realtime_info', :as => :get_user_realtime_info
+  get 'curr_user_state' => 'users#set_state', :as => :set_user_state
 
   get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
   post 'storehouses_inout/:id' => 'storehouses#inout', :as => :inout_storehouse
@@ -134,7 +135,8 @@ Kalading::Application.routes.draw do
   get 'daily_orders' => 'orders#daily_orders', :as => :daily_orders
   get 'order_stats' => 'orders#order_stats', :as => :order_stats
   get 'orders/:id/parts_auto_deliver' => 'orders#order_parts_auto_deliver', :as => :order_parts_auto_deliver
-
+  get 'orders/:id/history' => 'orders#history', :as => :order_history
+  
   get 'complaints/:id/send_sms_notify' => 'complaints#send_sms_notify', :as => :complaint_send_sms_notify
 
   post 'maintains/:id/uploadpic' => 'maintains#uploadpic', :as => :uploadpic_maintains

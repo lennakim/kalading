@@ -11,8 +11,6 @@ class ServiceType
   
   belongs_to :auto_model
   belongs_to :auto_brand
-  # 订单需要有服务项目
-  has_and_belongs_to_many :orders
   # 优惠券可以针对特定的服务项目
   has_and_belongs_to_many :discounts
   

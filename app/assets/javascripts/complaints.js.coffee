@@ -9,5 +9,5 @@ $ ->
         $.getScript("/users?role=" + $("#complainted_role").val() + "&city=" + $("#complaint_city_id").val()) if $("#complainted_role").val() != ""
         return false
     $("#complaint_city_id").change ->
-        $.getScript("/users?role=" + $("#complainted_role").val() + "&city=" + $("#complaint_city_id").val()) if $("#complaint_city_id").val() != ""
+        $.getScript("/users?complaint_handler=10&role=" + $("#complainted_role").val() + "&city=" + $("#complaint_city_id").val()) if $("#complaint_city_id").val() != ""
         return false

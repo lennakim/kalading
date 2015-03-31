@@ -175,6 +175,7 @@
               <%= link_to t(:send_sms), order_send_sms_notify_path(order),
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                           :class => 'btn btn-mini' if (%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) || (%w[client_reschedule part_error].include? Order::CANCEL_TYPE_STRINGS[order.cancel_type]) %>
+              <%= link_to t(:op_history), order_history_path(order, page: 1), {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window', :class => 'btn btn-info btn-mini' } %>
             <% end %>
           </td>
         </tr>
