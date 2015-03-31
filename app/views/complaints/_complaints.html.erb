@@ -13,6 +13,7 @@
         <th><%= t(:handler) %></th>
         <th><%= t(:complaint_tag) %></th>
         <th><%= t(:created_at) %></th>
+        <th><%= t(:handled_result) %></th>
         <th><%= t(:comment) %></th>
         <th><%= t 'actions' %></th>
       </tr>
@@ -31,11 +32,21 @@
           <td><%= complaint.tag.name if complaint.tag %></td>
           <td><%= l complaint.created_at %></td>
           <td>
+            <% if !complaint.handled_result || complaint.handled_result.empty? %>
+              <%= t(:nothing) %>
+            <% else %>
+              <a class="btn btn-link" data-toggle="collapse" data-target="#<%= complaint.id %>_result"><%= t(:view) %></a>
+              <div id="<%= complaint.id %>_result" class="collapse" style='width: 150px'>
+              <p><%= complaint.handled_result %></p>
+              </div>
+            <% end %>
+          </td>
+          <td>
             <% if complaint.comments.empty? %>
               <%= t(:nothing) %>
             <% else %>
               <a class="btn btn-link" data-toggle="collapse" data-target="#<%= complaint.id %>_comments"><%= t(:view) %></a>
-              <div id="<%= complaint.id %>_comments" class="collapse" style='width: 150px'>
+              <div id="<%= complaint.id %>_comments" class="collapse" style='width: 100px'>
               <% complaint.comments.desc(:created_at).each do |c| %>
               <p><%= c.text %></p>
               <% end %>

@@ -49,9 +49,4 @@ class Complaint
   accepts_nested_attributes_for :comments, :allow_destroy => true
 
   attr_accessible :seq, :state, :customer_name, :customer_phone_num, :severity_level, :source, :order_id, :creater_id, :complained_id, :handler_id, :tag_id, :comments_attributes, :detail, :handled_result, :city_id
-  
-  before_create do |c|
-    c.handler = c.complained.leader if c.complained
-  end
-  
 end

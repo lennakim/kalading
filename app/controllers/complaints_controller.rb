@@ -64,6 +64,7 @@ class ComplaintsController < ApplicationController
 
     order = Order.find_by(seq: params[:complaint][:order_seq])
     @complaint.order = order if order
+    @complaint.creater = current_user
 
     respond_to do |format|
       if @complaint.save
@@ -127,7 +128,7 @@ class ComplaintsController < ApplicationController
 
     phone_nums = phone_nums.join(',')
     send_sms phone_nums, '680925', "#complainted#=#{role_and_name}&#reason#=#{c.tag.name}&#order_seq#=#{c.order.seq if c.order}&#source#=#{c.source}&#level#=#{level}&#handler#=#{c.handler.name if c.handler}"
-    c.comments << Comment.new(text: I18n.t(:complaint_sms_comment, handler: c.handler.name, time: Time.now.strftime('%m-%d %H:%M')))
+    c.comments << Comment.new(text: I18n.t(:complaint_sms_comment, handler: current_user.name, time: Time.now.strftime('%m-%d %H:%M')))
     redirect_to session.delete(:return_to), notice: I18n.t(:complaint_send_sms_successful, seq: c.seq)
   end
 end
