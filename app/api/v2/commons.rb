@@ -12,6 +12,11 @@ module V2
       end
     end
 
+      get "/autos" do
+        autos = AutoBrand.group_by_name_pinyin
+        wrapper(autos)
+      end
+
       get "/auto_brands" do
         auto_brands = AutoBrand.all
 

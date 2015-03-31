@@ -20,9 +20,9 @@ class AutoBrand
   index({ service_level: 1 })
 
   validates :name, presence: true
-  
+
   attr_accessible :name, :name_pinyin, :name_mann, :data_source, :service_level, :picture_attributes
-  
+
   index({ name: 1 })
   # 品牌有很多系列
   has_many :auto_models, dependent: :destroy
@@ -36,13 +36,13 @@ class AutoBrand
       all
     end
   end
-  
+
   def name_with_jinkou
     n = self.name.split[0]
     n += ('(' + I18n.t(:jinkou) + ')') if self.name.index I18n.t(:jinkou)
     n
   end
-  
+
   def as_json(options = nil)
     opts = {:except => [:updated_at, :created_at, :version, :modifier_id, :name_mann, :data_source, :service_level, :picture]}
     h = super options.merge(opts) do |k, old_value, new_value|
@@ -51,6 +51,14 @@ class AutoBrand
     h[:logo] = self.picture.p.url if self.picture
     h[:initial] = self.name_pinyin.chr.upcase
     h
+  end
+
+  def initial
+    self.name_pinyin.chr.upcase
+  end
+
+  def self.group_by_name_pinyin
+    all.group_by{ |e| e.initial }
   end
 
 end
