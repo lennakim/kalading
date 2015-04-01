@@ -63,7 +63,7 @@ class AutoBrand
     hash = array.group_by{ |e| e.initial }
 
     hash.each do |k, v|
-      autos <<  {initial: k, autos: v}
+      autos << { initial: k, autos: v }
     end
 
     autos
