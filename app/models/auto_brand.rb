@@ -53,6 +53,10 @@ class AutoBrand
     h
   end
 
+  def logo
+    self.picture? ? self.picture.url : ""
+  end
+
   def initial
     self.name_pinyin.chr.upcase
   end
