@@ -1,18 +1,9 @@
-# 针对某个年款的配件规则
-class PartRule
-  include Mongoid::Document
-
-  field :number, type: String
-  field :text, type: String
-  embedded_in :auto_submodel
-end
-
 # 车型的第三级：年款
 class AutoSubmodel
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  paginates_per 5
+  paginates_per 30
 
   field :name, type: String
   # 机油容量
@@ -47,12 +38,18 @@ class AutoSubmodel
   # 4 for hidden submodels
   field :data_source, type: Integer, default: 0
 
+  field :oil_filter_count, type: Integer, default: 0
+  field :air_filter_count, type: Integer, default: 0
+  field :cabin_filter_count, type: Integer, default: 0
+
+  index({ oil_filter_count: 1, air_filter_count: 1, cabin_filter_count: 1 })
   index({ data_source: 1 })
   index({ full_name_pinyin: 1 })
   index({ service_level: 1 })
 
   SERV_LEVEL = [0, 1, 2]
   SERV_LEVEL_STRINGS = %w[cantmaintain maintain needconfirm]
+
   # 年款属于一个系列
   belongs_to :auto_model
   # 年款有很多适用的配件
@@ -76,6 +73,8 @@ class AutoSubmodel
     :remark, :engine_model, :service_level, :match_rule, :picture_ids, :pictures_attributes,
     :year_range, :name_mann, :full_name_pinyin, :full_name, :data_source, :oil_filter_oe, :fuel_filter_oe, :air_filter_oe,
     :year_mann, :part_rules_attributes, :motoroil_group_id
+
+  attr_accessible :oil_filter_count, :air_filter_count, :cabin_filter_count
 
   validates :auto_model_id, presence: true
   validates_numericality_of :motoroil_cap, :greater_than_or_equal_to => 0.5, :less_than_or_equal_to => 100.0
@@ -167,13 +166,6 @@ class AutoSubmodel
     s
   end
 
-  field :oil_filter_count, type: Integer, default: 0
-  field :air_filter_count, type: Integer, default: 0
-  field :cabin_filter_count, type: Integer, default: 0
-  index({ oil_filter_count: 1, air_filter_count: 1, cabin_filter_count: 1 })
-
-  attr_accessible :oil_filter_count, :air_filter_count, :cabin_filter_count
-
   def check_sanlv_add(p)
     if p.part_type.name == I18n.t(:oil_filter) && p.total_remained_quantity > 0
       self.update_attributes oil_filter_count: self.oil_filter_count + p.total_remained_quantity
@@ -227,8 +219,6 @@ class AutoSubmodel
       self.update_attributes cabin_filter_count: cabin_filter_count
     end
   end
-
-  paginates_per 30
 
   def as_json(options = nil)
     opts = {:except => [:updated_at, :created_at, :version, :modifier_id, :auto_model_id, :part_ids, :city_ids, :remark, :engine_displacement, :match_rule, :name_mann, :data_source, :full_name_pinyin, :air_filter_oe, :fuel_filter_oe, :cabin_filter_oe, :oil_filter_oe, :service_level, :year_range, :motoroil_cap, :air_filter_count, :cabin_filter_count, :check_status, :engine_model, :motoroil_group_id, :oil_filter_count, :part_rules, :year_mann, :pictures]}
