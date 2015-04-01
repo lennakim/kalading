@@ -1,45 +1,63 @@
 <div class="container">
 
   <div class="row">
-    <%= link_to "新建技师", new_engineer_path, class: 'btn btn-default pull-right' %>
+    <%= link_to "新建技师", new_engineer_path, class: 'btn btn-default pull-left' %>
   </div>
 
-  <table class='table table-striped'>
+  <%= render "search_form" %>
 
-    <thead>
-      <td>姓名</td>
-      <td>工牌</td>
-      <td>级别</td>
-      <td>手机</td>
+  <div class="engineer-list">
 
-      <td>状态</td>
+    <%= paginate collection %> | 总数 <%= collection.count %> 名技师
 
-      <td>城市</td>
-      <td>点部</td>
-      <td>本月保养单</td>
-      <td>本月滤芯单</td>
-      <td>本月检测单</td>
-    </thead>
+    <table class='table table-striped'>
 
-    <tbody>
-      <% collection.each do |engineer| %>
-        <tr>
-          <td><%= engineer.name %></td>
-          <td><%= engineer.work_tag_number %></td>
-          <td><%= engineer.level_str %></td>
-          <td><%= engineer.phone_num %></td>
+      <thead>
+        <td>姓名</td>
+        <td>工牌</td>
+        <td>级别</td>
+        <td>手机</td>
 
-          <td><%= engineer.status_str %></td>
+        <td>状态</td>
 
-          <td><%= link_to engineer.city.name, engineer.city %></td>
-          <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
+        <td>城市</td>
+        <td>点部</td>
 
-          <td><%= engineer.maintain_orders.valid.from_this_month.count %></td>
-          <td><%= engineer.pm25_orders.valid.from_this_month.count %></td>
-          <td><%= engineer.detection_orders.valid.from_this_month.count %></td>
-        </tr>
-      <% end %>
-    </tbody>
+        <td>本月订单情况</td>
+      </thead>
 
-  </table>
+      <tbody>
+        <% collection.each do |engineer| %>
+          <tr>
+            <td><%= engineer.name %></td>
+            <td><%= engineer.work_tag_number %></td>
+            <td><%= engineer.level_str %></td>
+            <td><%= engineer.phone_num %></td>
+
+            <td><%= engineer.status_str %></td>
+
+            <td><%= link_to engineer.city.name, engineer.city %></td>
+            <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
+
+            <td>
+              <table class="table">
+                <% engineer.service_orders_count.each do |mapping| %>
+                  <tr>
+                    <td>
+                      <%= ServiceType.find(mapping["_id"]).name %>
+                    </td>
+                    <td>
+                      <%= mapping["value"] %>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= paginate collection %>
 </div>

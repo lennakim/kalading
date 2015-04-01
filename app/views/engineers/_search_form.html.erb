@@ -1,0 +1,72 @@
+<div class="selectors">
+  <%= form_tag engineers_path, method: "get", class: "form-horizontal" do %>
+
+    <div class="control-group">
+      <%= label_tag :name, t('employees_name'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :name, params[:name], class: 'control' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= label_tag :phone_num, t('phone_num'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :phone_num, params[:phone_num], class: 'control', placeholder: t(:phone_num_hint) %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= label_tag :work_tag_number, t('work_tag_number'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= text_field_tag :work_tag_number, params[:work_tag_number], placeholder: "7位",  class: 'control' %>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :city_id, t(:cities), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= select_tag(:city_id, options_for_select(
+          City.all.map do |city|
+            [city.name, city.id]
+          end, params[:city_id]
+        ), {prompt: "所有"}) %>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :city_storehouse_id, t(:storehouse), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= select(:city, :storehouse_id, option_groups_from_collection_for_select(City.all, :storehouses, :name, :id, :name, @storehouse_id), {include_blank: "所有"}) %>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :status, "可派状态", class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= select_tag(:status, options_for_select(
+          (0...Engineer::STATUS_STR.length).map do |status|
+            [t(Engineer::STATUS_STR[status]), status]
+          end, params[:status]
+        ), {prompt: "所有"}) %>
+      </div>
+    </div>
+
+    <div class="control-group select">
+      <%= label_tag :level, "级别", class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= select_tag(:level, options_for_select(
+          (0...Engineer::LEVEL_STR.length).map do |level|
+            [t(Engineer::LEVEL_STR[level]), level]
+          end, params[:level]
+        ), {prompt: "所有"}) %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn">查找</button>
+      </div>
+    </div>
+
+  <% end %>
+</div>

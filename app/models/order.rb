@@ -13,6 +13,15 @@ class Order
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
 
+  class << self
+
+    # 由于数据存在不一致，有的Order没有service_type_ids这个字段，会影响map/reduce统计
+    def update_orders_service_types
+      Order.where(service_type_ids: nil).update_all(service_type_ids: [])
+    end
+
+  end
+
   #订单状态
   field :state, type: Integer, default: 0
   # 地址

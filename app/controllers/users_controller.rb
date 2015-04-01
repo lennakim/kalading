@@ -26,7 +26,7 @@ class UsersController < ApplicationController
     if params[:role].present?
       @users = @users.select { |u| u.roles.include? params[:role] }
     end
-    
+
     if params[:complaint_handler].present?
       @handler = @users.select { |u| u.roles.include? params[:complaint_handler]}
       @handler << User.find('53d8860a9a94e4b00800146b')
@@ -130,7 +130,7 @@ class UsersController < ApplicationController
       format.js
     end
   end
-  
+
   def set_state
     @user = current_user
     @user.update_attribute :state, params[:state]
