@@ -14,7 +14,8 @@ class Engineer < User
   # 工牌 TODO 7位
   field :work_tag_number, type: String
   # TODO：目前技师的工牌都是空，导致update_realtime_info 抛出validation error
-  #validates :work_tag_number, uniqueness: true, length: { minimum: 7, maximum: 7 }
+
+  # validates :work_tag_number, uniqueness: true, length: { is: 7 }
 
   # 所配车辆 TODO
   #
@@ -27,6 +28,10 @@ class Engineer < User
     # migrate所有角色为技师的User的type为Engineer, 用完可以删除
     def migrate_user_to_engineer
       User.where(roles: "5").update_all _type: 'Engineer'
+    end
+
+    def migrate_all_engineers_status_0
+      Engineer.update_all status: 0
     end
   end
 
