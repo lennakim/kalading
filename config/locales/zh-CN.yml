@@ -1108,6 +1108,7 @@ zh-CN:
   orders_card: '施工单'
   work_tag_number: "工牌号"
   new_engineer: "新建技师账号"
+  edit_engineer: "编辑技师账号"
   service_pm25: "单换PM2.5空调滤"
   service_maintain: "换机油机滤"
   service_detection: "车辆安全检测服务"
