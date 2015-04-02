@@ -4,4 +4,10 @@ module ToolTypesHelper
       translate_collection_options(tool_type, :category)
     end
   end
+
+  def tool_type_category_collection
+    ToolType::CATEGORIES.map do |category|
+      [translate_collection_options(ToolType, :category, category), category]
+    end
+  end
 end

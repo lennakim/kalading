@@ -1203,3 +1203,5 @@ zh-CN:
         lose: '标为丢失'
         break_confirmation: '确定要把工具标记为损坏吗？'
         lose_confirmation: '确定要把工具标记为丢失吗？'
+        all_categories: '所有类别'
+        all_cities: '所有城市'

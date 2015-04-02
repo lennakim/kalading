@@ -3,7 +3,11 @@ class ToolTypesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @tool_types = ToolType.page(params[:page]).per(20)
+    criteria = ToolType
+    if params[:category].present?
+      criteria = criteria.where(category: params[:category])
+    end
+    @tool_types = criteria.page(params[:page]).per(20)
   end
 
   def new

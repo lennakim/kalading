@@ -4,7 +4,11 @@ class ServiceVehiclesController < ApplicationController
   load_resource only: [:tool_assignments]
 
   def index
-    @service_vehicles = ServiceVehicle.page(params[:page]).per(20)
+    criteria = ServiceVehicle
+    if params[:city_id].present?
+      criteria = criteria.where(city_id: params[:city_id])
+    end
+    @service_vehicles = criteria.page(params[:page]).per(20)
   end
 
   def new
