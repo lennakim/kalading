@@ -9,7 +9,6 @@ module Mongoid
 
     module ClassMethods
 
-      # search 方法名比较常见, 可能会有冲突
       def _search_(k, v)
         if k && v && v.size > 0
           any_of({ k => /.*#{v}.*/i })
@@ -17,6 +16,8 @@ module Mongoid
           all
         end
       end
+
+      alias_method :like, :_search_
 
     end
   end
