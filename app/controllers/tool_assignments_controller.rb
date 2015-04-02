@@ -6,11 +6,24 @@ class ToolAssignmentsController < ApplicationController
   load_and_authorize_resource except: [:check_batch_assignments, :batch_assign]
 
   def index
-    relation = ToolAssignment
+    criteria = ToolAssignment
     if params[:status] == 'discarded'
-      relation = relation.where(discarded: true)
+      criteria = criteria.where(discarded: true)
     end
-    @assignments = relation.page(params[:page]).per(20)
+
+    if params[:city_id].present?
+      criteria = criteria.where(city_id: params[:city_id])
+    end
+
+    if params[:category].present?
+      criteria = criteria.where(tool_type_category: params[:category])
+    end
+
+    if params[:discarded_type].present?
+      criteria = criteria.where(status: params[:discarded_type])
+    end
+
+    @assignments = criteria.page(params[:page]).per(20)
   end
 
   def check_batch_assignments

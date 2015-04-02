@@ -12,6 +12,7 @@ class ToolAssignment
   field :applied_at, type: DateTime
   # 批准损坏/丢失申请的时间
   field :approved_at, type: DateTime
+  field :tool_type_category, type: String
 
   attr_accessible :city_id, :tool_type_id, :assigner_id
 
@@ -29,7 +30,7 @@ class ToolAssignment
   validates :status, inclusion: { in: STATUSES }
   validates_presence_of :city_id, :tool_type_id, :assigner_id, :assignee_id, :assignee_type
 
-  before_create :decrease_tool_stock
+  before_create :decrease_tool_stock, :set_tool_type_category
   after_create :increase_assignments_count
 
   # 已分配，且没有被标记为损坏或丢失的
@@ -44,6 +45,10 @@ class ToolAssignment
     tool_stock.assigned_count += 1
     tool_stock.remained_count -= 1
     return tool_stock.save
+  end
+
+  def set_tool_type_category
+    self.tool_type_category = tool_type.category
   end
 
   def increase_assignments_count
