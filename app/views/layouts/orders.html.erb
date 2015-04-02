@@ -18,7 +18,7 @@
                   <li>
                 <% end %>
                   <% if can? :edit_all, Order %>
-                    <% orders = current_user.roles.include?('3') ? Order.where(city: current_user.city) : Order.all %>
+                    <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
                     <% if Order::STATE_STRINGS[s] == 'serve_done' %>
                       <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
                      <% else %>

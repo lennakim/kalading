@@ -1122,3 +1122,5 @@ zh-CN:
   not_delivered_yet: '未出库'
   delivered: '已出库'
   backed_to_store: '已回库'
+  parent_city: '运营所在城市'
+  child_cities: '为以下城市服务'

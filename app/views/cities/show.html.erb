@@ -12,6 +12,15 @@
   <dd><%= @city.opened ? t(:shi) : t(:fou) %></dd>
   <dt><strong><%= t(:order_capacity) %>:</strong></dt>
   <dd><%= @city.order_capacity %></dd>
+  <dt><strong><%= t(:parent_city) %>:</strong></dt>
+  <dd><%= @city.parent.try(:name) || @city.name %></dd>
+  <% if @city.child_cities.exists? %>
+    <dt><strong><%= t(:child_cities) %>:</strong></dt>
+    <% @city.child_cities.each do |d| %>
+    <dd><%=  d.name %></dd>
+    <% end %>
+  <% end %>
+  
   <dt><strong><%= t(:district) %>:</strong></dt>
   <% @city.districts.each do |d| %>
   <dd><%=  d.name %></dd>

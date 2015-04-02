@@ -13,15 +13,15 @@ class OrdersController < ApplicationController
     if current_user
       if current_user.roles.empty?
         authorize! :read, Order
-      elsif current_user.roles.include? '5'
+      elsif current_user.engineer?
         @orders = Order.where(:engineer => current_user)
         if Time.now.hour < 18
           @orders = @orders.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.today.end_of_day)
         else
           @orders = @orders.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.tomorrow.end_of_day)
         end     
-      elsif current_user.roles.include? '3'
-        @orders = Order.where(:city => current_user.city)
+      elsif current_user.storehouse_admin?
+        @orders = current_user.city.serve_orders
         params[:city] = current_user.city.id
       else
         @orders = Order.all
@@ -35,6 +35,10 @@ class OrdersController < ApplicationController
       end
     end
     
+    if params[:city].present? && !current_user.storehouse_admin?
+      @orders = @orders.where(city: City.find(params[:city]))
+    end
+
     if !params[:state].blank?
       @orders = @orders.where(state: params[:state])
     end
@@ -107,10 +111,6 @@ class OrdersController < ApplicationController
     if params[:created_at_end].present?
       sds = Date.parse params[:created_at_end]
       @orders = @orders.where :created_at.lte => sds.end_of_day
-    end
-
-    if !params[:city].blank?
-      @orders = @orders.where(city: City.find(params[:city]))
     end
 
     if !params[:login_phone_num].blank? && !params[:client_id].blank?

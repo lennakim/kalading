@@ -8,7 +8,10 @@ class City
   field :area_code, type: String, default: ''
   # 是否开放了上门业务
   field :opened, type: Boolean, default: false
-  
+  field :coordinates, type: Array, default: []
+  has_many :child_cities, class_name: "City", :inverse_of => :parent
+  belongs_to :parent, class_name: "City", :inverse_of => :child_cities
+
   validates :order_capacity, inclusion: { in: 1..9999 }, presence: true
   validates :name, presence: true
   validates :area_code, uniqueness: true, presence: true
@@ -30,5 +33,15 @@ class City
   
   def as_json(opts = nil)
     super except: [:order_capacity, :area_code, :opened, :auto_submodel_ids, :notification_ids, :complaint_ids]
+  end
+  
+  # 本城市可以使用父城市的仓库
+  def available_storehouses
+    self.storehouses.where(type: 1) + (self.parent && self.parent.storehouses.where(type: 1)).to_a
+  end
+  
+  # 本城市的技师服务子城市的订单
+  def serve_orders
+    Order.where(:city_id.in => [self.id] + self.child_cities.map(&:id))
   end
 end
