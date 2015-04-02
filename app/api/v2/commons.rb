@@ -23,15 +23,15 @@ module V2
       params do
         requires :id
       end
-      get "/:id" do
-        auto_brand = AutoBrand.find(params[:id])
-        raise ResourceNotFoundError unless auto_brand
+      get "auto_models/:id" do
+        auto_model = AutoModel.find(params[:id])
+        raise ResourceNotFoundError unless auto_model
 
-        result = auto_brand.auto_models
+        result = auto_model.auto_submodels
 
         present :msg, ""
         present :code, 0
-        present :data, result, with: V2::Entities::AutoModel
+        present :data, result, with: V2::Entities::AutoSubmodel
       end
     end
 

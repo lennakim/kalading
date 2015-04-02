@@ -5,7 +5,7 @@ module V2
       expose :name
       expose :logo
       expose :name_pinyin
-      # expose :auto_models, using: AutoModel
+      expose :auto_models, using: AutoModel
     end
   end
 end
