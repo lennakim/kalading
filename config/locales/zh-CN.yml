@@ -230,6 +230,7 @@ zh-CN:
             category:
               inclusion: '请选择正确的工具类别'
     models:
+      engineer: '技师'
       tool_type: '工具类型'
       service_vehicle: '上门服务车辆'
       tool_batch: '进货信息'
@@ -274,8 +275,6 @@ zh-CN:
       tool_assignee:
         city: '城市'
         tool_type: '工具'
-        engineer: '技师'
-        service_vehicle: '上门服务车辆'
         assigned_count: '已分配数'
         to_be_assigned_tools_count: '待分配数'
         discarded_count: '损坏/丢失数'
@@ -1211,3 +1210,5 @@ zh-CN:
         break_confirmation: '确定要把工具标记为损坏吗？'
         lose_confirmation: '确定要把工具标记为丢失吗？'
         all_categories: '所有类别'
+        assigned: '已分配'
+        unassigned: '未分配'

@@ -10,4 +10,16 @@ module ToolTypesHelper
       [translate_collection_options(ToolType, :category, category), category]
     end
   end
+
+  def tool_assignee_type_collection
+    ['engineer', 'service_vehicle'].map do |type|
+      [type.camelize.constantize.model_name.human, type]
+    end
+  end
+
+  def tool_assignment_type_collection
+    ['assigned', 'unassigned'].map do |type|
+      [t("views.modules.tool_management.#{type}"), type]
+    end
+  end
 end

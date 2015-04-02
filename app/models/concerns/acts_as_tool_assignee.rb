@@ -34,5 +34,22 @@ module Concerns
     def reassign(assignment, assigner)
       assignment.approve_discarded(assigner) && assign_tool_type(assignment.tool_type, assigner)
     end
+
+    module ClassMethods
+      # 为新添加的字段设置默认值，以便查询。用后可删除
+      #   ServiceVehicle.set_default_count!
+      #   Engineer.set_default_count!
+      def set_default_count!
+        self.where(current_tool_assignments_count: nil).all.each do |o|
+          o.current_tool_assignments_count = 0
+          o.save!(validate: false)
+        end
+
+        self.where(discarded_assignments_count: nil).all.each do |o|
+          o.discarded_assignments_count = 0
+          o.save!(validate: false)
+        end; nil
+      end
+    end
   end
 end
