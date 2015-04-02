@@ -2,6 +2,7 @@
   <td><%= l tool_batch.created_at %></td>
   <td><%= tool_batch.city.name %></td>
   <td><%= tool_batch.tool_type.name %></td>
+  <td><%= translate_collection_options(ToolType, :category, tool_batch.tool_type_category) %></td>
   <td><%= tool_batch.quantity %></td>
   <td><%= tool_batch.spec %></td>
 </tr>
