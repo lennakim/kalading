@@ -19,6 +19,7 @@ module V2
         present :code, 0
         present :data, @result, with: V2::Entities::Auto
       end
+    end
 
       params do
         requires :id
@@ -27,13 +28,16 @@ module V2
         auto_model = AutoModel.find(params[:id])
         raise ResourceNotFoundError unless auto_model
 
-        result = auto_model.auto_submodels.without_cities
+        result = auto_model.auto_submodels.group_by_engine_displacement
 
-        present :msg, ""
-        present :code, 0
-        present :data, result, with: V2::Entities::AutoSubmodel
+        # result = auto_model.auto_submodels.group_by_year_range
+
+        # present :msg, ""
+        # present :code, 0
+        present :data, result, with: ::V2::Entities::Submodel
+
+
+        wrapper(result)
       end
-    end
-
   end
 end

@@ -278,4 +278,26 @@ class AutoSubmodel
   def brand
     self.auto_model.auto_brand.name
   end
+
+  def self.group_by_engine_displacement
+    submodels = []
+    hash = self.without_cities.group_by{ |e| e.engine_displacement }
+
+    hash.each do |k, v|
+      submodels << { year_range: k, submodels: v }
+    end
+
+    submodels
+  end
+
+  def self.group_by_year_range
+    submodels = []
+    hash = self.without_cities.group_by{ |e| e.year_range }
+
+    hash.each do |k, v|
+      submodels << { year_range: k, submodels: v }
+    end
+
+    submodels
+  end
 end
