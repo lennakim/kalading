@@ -11,7 +11,8 @@ module Concerns
       has_many :tool_assignments, as: :assignee
     end
 
-    def set_to_be_assigned_tools_count(total)
+    def set_to_be_assigned_tools_count(total = nil)
+      total ||= ToolType.with_assignee(self).count
       self.to_be_assigned_tools_count = total - current_tool_assignments_count
     end
 
@@ -33,6 +34,20 @@ module Concerns
     # 替换已损坏或丢失的工具，重新分配
     def reassign(assignment, assigner)
       assignment.approve_discarded(assigner) && assign_tool_type(assignment.tool_type, assigner)
+    end
+
+    def need_to_be_assigned?
+      set_to_be_assigned_tools_count if self.to_be_assigned_tools_count.nil?
+
+      self.to_be_assigned_tools_count > 0 || self.discarded_assignments_count > 0
+    end
+
+    def can_be_assigned_by_operator?(operator)
+      if operator.storehouse_admin?
+        operator.city == self.city
+      else
+        true
+      end
     end
 
     module ClassMethods

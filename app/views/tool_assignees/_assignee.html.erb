@@ -8,7 +8,7 @@
   <td><%= assignee.to_be_assigned_tools_count %></td>
   <td><%= assignee.discarded_assignments_count %></td>
   <td>
-    <% if (assignee.to_be_assigned_tools_count > 0 || assignee.discarded_assignments_count > 0) && can?(:create, ToolAssignment) -%>
+    <% if assignee.need_to_be_assigned? && assignee.can_be_assigned_by_operator?(current_user) && can?(:create, ToolAssignment) -%>
       <%= link_to t('mongoid.attributes.tool_assignment.assign'),
         check_batch_tool_assignments_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
         class: 'btn btn-small btn-primary' %>
