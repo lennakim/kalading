@@ -14,11 +14,11 @@
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th><%= t('mongoid.attributes.tool_assignee.city') %></th>
-        <th><%= params[:assignee_type].camelize.constantize.model_name.human %></th>
-        <th><%= t('mongoid.attributes.tool_assignee.assigned_count') %></th>
-        <th><%= t('mongoid.attributes.tool_assignee.to_be_assigned_tools_count') %></th>
-        <th><%= t('mongoid.attributes.tool_assignee.discarded_count') %></th>
+        <th><%= @model_class.human_attribute_name('city') %></th>
+        <th><%= @model_class.model_name.human %></th>
+        <th><%= @model_class.human_attribute_name('assigned_count') %></th>
+        <th><%= @model_class.human_attribute_name('to_be_assigned_tools_count') %></th>
+        <th><%= @model_class.human_attribute_name('discarded_count') %></th>
         <th><%= t('actions') %></th>
       </tr>
     </thead>

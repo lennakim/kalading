@@ -17,12 +17,12 @@
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th><%= t('mongoid.attributes.tool_assignment.city') %></th>
-        <th><%= t('mongoid.attributes.tool_assignment.tool_type') %></th>
-        <th><%= t('mongoid.attributes.tool_assignment.tool_type_category') %></th>
-        <th><%= t('mongoid.attributes.tool_assignment.assignee') %></th>
-        <th><%= t('mongoid.attributes.tool_assignment.applicant') %></th>
-        <th><%= t('mongoid.attributes.tool_assignment.discarded_type') %></th>
+        <th><%= ToolAssignment.human_attribute_name('city') %></th>
+        <th><%= ToolAssignment.human_attribute_name('tool_type') %></th>
+        <th><%= ToolAssignment.human_attribute_name('tool_type_category') %></th>
+        <th><%= ToolAssignment.human_attribute_name('assignee') %></th>
+        <th><%= ToolAssignment.human_attribute_name('applicant') %></th>
+        <th><%= ToolAssignment.human_attribute_name('discarded_type') %></th>
       </tr>
     </thead>
     <tbody>

@@ -6,11 +6,12 @@ class ToolAssigneesController < ApplicationController
 
     params[:assignee_type] ||= 'engineer'
     if params[:assignee_type] == 'engineer'
-      criteria = Engineer
+      @model_class = Engineer
     elsif params[:assignee_type] == 'service_vehicle'
-      criteria = ServiceVehicle
+      @model_class = ServiceVehicle
     end
-    @tools_total = ToolType.with_assignee(criteria).count
+    @tools_total = ToolType.with_assignee(@model_class).count
+    criteria = @model_class
 
     if params[:city_id].present?
       criteria = criteria.where(city_id: params[:city_id])

@@ -236,6 +236,11 @@ zh-CN:
       tool_batch: '进货信息'
       tool_stock: '库存信息'
     attributes:
+      engineer:
+        city: '城市'
+        assigned_count: '已分配数'
+        to_be_assigned_tools_count: '待分配数'
+        discarded_count: '损坏/丢失数'
       tool_type:
         name: '名称'
         category: '类别'
@@ -244,6 +249,9 @@ zh-CN:
         number: '车牌号'
         city: '城市'
         local: '上门服务车辆'
+        assigned_count: '已分配数'
+        to_be_assigned_tools_count: '待分配数'
+        discarded_count: '损坏/丢失数'
       tool_batch:
         quantity: '数量'
         price: '进价（元）'
@@ -276,9 +284,6 @@ zh-CN:
       tool_assignee:
         city: '城市'
         tool_type: '工具'
-        assigned_count: '已分配数'
-        to_be_assigned_tools_count: '待分配数'
-        discarded_count: '损坏/丢失数'
 
   devise:
     failure:
