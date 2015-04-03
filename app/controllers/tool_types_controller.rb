@@ -35,7 +35,12 @@ class ToolTypesController < ApplicationController
   end
 
   def destroy
-    @tool_type.destroy
+    if @tool_type.can_be_deleted?
+      flash[:notice] = '删除成功'
+      @tool_type.destroy
+    else
+      flash[:error] = "#{@tool_type.name} 不能被删除"
+    end
     redirect_to tool_types_path
   end
 end

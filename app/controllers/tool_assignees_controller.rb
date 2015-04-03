@@ -7,11 +7,10 @@ class ToolAssigneesController < ApplicationController
     params[:assignee_type] ||= 'engineer'
     if params[:assignee_type] == 'engineer'
       criteria = Engineer
-      @tools_total = ToolType.with_engineer.count
     elsif params[:assignee_type] == 'service_vehicle'
       criteria = ServiceVehicle
-      @tools_total = ToolType.with_vehicle.count
     end
+    @tools_total = ToolType.with_assignee(criteria).count
 
     if params[:city_id].present?
       criteria = criteria.where(city_id: params[:city_id])

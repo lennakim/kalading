@@ -27,4 +27,8 @@ class ToolType
       self
     end
   end
+
+  def can_be_deleted?
+    !ToolBatch.where(tool_type_id: self.id).exists?
+  end
 end

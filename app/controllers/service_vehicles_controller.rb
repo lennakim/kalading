@@ -36,7 +36,12 @@ class ServiceVehiclesController < ApplicationController
   end
 
   def destroy
-    @service_vehicle.destroy
+    if @service_vehicle.can_be_deleted?
+      flash[:notice] = '删除成功'
+      @service_vehicle.destroy
+    else
+      flash[:error] = "#{@service_vehicle.name} 不能被删除"
+    end
     redirect_to service_vehicles_path
   end
 
