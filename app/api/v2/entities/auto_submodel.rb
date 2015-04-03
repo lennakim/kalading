@@ -6,7 +6,7 @@ module V2
       expose :year_range
       expose :engine_displacement
       expose :full_name
-      expose :pictures, using: Picture
+      expose :pictures, using: ::V2::Entities::Picture
     end
   end
 end

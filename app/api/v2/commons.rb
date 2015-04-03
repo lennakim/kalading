@@ -27,17 +27,11 @@ module V2
       get "auto_models/:id" do
         auto_model = AutoModel.find(params[:id])
         raise ResourceNotFoundError unless auto_model
-
         result = auto_model.auto_submodels.group_by_engine_displacement
 
-        # result = auto_model.auto_submodels.group_by_year_range
-
-        # present :msg, ""
-        # present :code, 0
+        present :msg, ""
+        present :code, 0
         present :data, result, with: ::V2::Entities::Submodel
-
-
-        wrapper(result)
       end
   end
 end
