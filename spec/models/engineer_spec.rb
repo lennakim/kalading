@@ -14,8 +14,28 @@ RSpec.describe Engineer, :type => :model do
     user.should be_engineer
   end
 
-  it "should be accessed by right role" do
-    #TODO "技师管理界面的访问权限"
+  it "should generate right working tag number" do
+    e1 = create(:engineer, email: '1@1.com' )
+    e1.generate_working_tag_number
+
+    year_mon = Time.now.strftime("%y%m")
+
+    e1.work_tag_number.should == "#{year_mon}001"
+
+    e2 = create(:engineer, email: '2@1.com', phone_num: "15512314123")
+    e2.generate_working_tag_number
+
+    e2.work_tag_number.should == "#{year_mon}002"
+  end
+
+  it "should have on boarding exam" do
+    e = create(:engineer)
+    examiner = create(:engineer, email: 'examiner@kalading.com', phone_num: '15666666666')
+
+    e.testings.create examiner: examiner
+
+    e.reload
+    e.testings.first.examiner.should == examiner
   end
 
 end

@@ -24,6 +24,7 @@ GIT
 GEM
   remote: http://ruby.taobao.org/
   specs:
+    aasm (4.1.0)
     actionmailer (3.2.21)
       actionpack (= 3.2.21)
       mail (~> 2.5.4)
@@ -419,6 +420,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aasm
   awesome_print
   better_errors
   binding_of_caller

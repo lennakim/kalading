@@ -1,4 +1,7 @@
 Kalading::Application.routes.draw do
+  resources :testings
+
+
   get "doc/v2"
 
   resources :engineers

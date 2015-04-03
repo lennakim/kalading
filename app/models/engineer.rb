@@ -1,5 +1,4 @@
 class Engineer < User
-  include Mongoid::Document
 
   paginates_per 15
 
@@ -18,11 +17,52 @@ class Engineer < User
   # validates :work_tag_number, uniqueness: true, length: { is: 7 }
 
   # 所配车辆 TODO
-  #
-
-  # 培训技能
 
   attr_accessible :work_tag_number
+
+  # 技师状态 培训状态 -- 养护技师状态(生成工号)
+
+  include AASM
+  field :boarding_exam_times, type: Integer, default: 0
+  field :aasm_state
+
+  has_many :testings
+  has_many :examination_papers, class_name: "Testing", inverse_of: :examiner
+
+  aasm do
+    state :training, :initial => true # 培训技师
+    state :boarding # 上岗
+
+    event :exam do
+      transitions from: :training, to: :boarding do
+        guard do
+          exam_pass?
+        end
+      end
+
+      after do
+        generate_working_tag_number
+      end
+    end
+  end
+
+  def exam_pass?
+    true
+  end
+
+  def generate_working_tag_number
+    year_mon = Time.now.strftime("%y%m")
+
+    if last_engineer = Engineer.where(work_tag_number: /^#{year_mon}.*/).desc(:work_tag_number).first
+      self.work_tag_number = "#{last_engineer.work_tag_number.to_i + 1}"
+    else
+      self.work_tag_number = "#{year_mon}001"
+    end
+
+    save
+  end
+
+  ####
 
   class << self
     # migrate所有角色为技师的User的type为Engineer, 用完可以删除
