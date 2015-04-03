@@ -1,5 +1,5 @@
 <tr>
-  <td><%= service_vehicle.number %></td>
+  <td><%= link_to service_vehicle.number, tool_assignments_service_vehicle_path(service_vehicle) %></td>
   <td><%= service_vehicle.city.name %></td>
   <td>
     <%= link_to t('edit'), edit_service_vehicle_path(service_vehicle),

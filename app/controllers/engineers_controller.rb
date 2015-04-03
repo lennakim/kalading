@@ -30,7 +30,7 @@ class EngineersController < ApplicationController
   end
 
   def my_tool_assignments
-    authorize! :read, :my_tool_assignments
+    authorize! :read_and_discard, :my_tool_assignments
 
     @assignee = current_user
     @assignments = @assignee.tool_assignments.current

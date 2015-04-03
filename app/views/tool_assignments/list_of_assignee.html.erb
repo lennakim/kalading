@@ -22,10 +22,10 @@
             <% if !assign.discarded? -%>
               <%= link_to t('views.modules.tool_management.break'), break_tool_assignment_path(assign),
                 method: :put, class: "btn btn-small btn-danger",
-                confirm: t('views.modules.tool_management.break_confirmation') if can? :break, ToolAssignment %>
+                confirm: t('views.modules.tool_management.break_confirmation') if can? :break, assign %>
               <%= link_to t('views.modules.tool_management.lose'), lose_tool_assignment_path(assign),
                 method: :put, class: "btn btn-small btn-danger",
-                confirm: t('views.modules.tool_management.lose_confirmation') if can? :lose, ToolAssignment %>
+                confirm: t('views.modules.tool_management.lose_confirmation') if can? :lose, assign %>
             <% end -%>
           </td>
         </tr>

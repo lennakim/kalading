@@ -1,6 +1,6 @@
 class ServiceVehiclesController < ApplicationController
   before_filter :authenticate_user!
-  load_and_authorize_resource except: [:tool_assignments]
+  load_and_authorize_resource except: [:tool_assignments, :local]
   load_resource only: [:tool_assignments]
 
   def index
@@ -46,9 +46,19 @@ class ServiceVehiclesController < ApplicationController
   end
 
   def tool_assignments
-    authorize! :read, ToolAssignment
+    if current_user.engineer?
+      authorize! :read_and_discard, :local_vehicle_tool_assignments
+    else
+      authorize! :read, ToolAssignment
+    end
+
     @assignee = @service_vehicle
     @assignments = @assignee.tool_assignments.current
     render 'tool_assignments/list_of_assignee'
+  end
+
+  def local
+    authorize! :read_and_discard, :local_vehicle_tool_assignments
+    @service_vehicles = ServiceVehicle.where(city_id: current_user.city_id).page(params[:page]).per(20)
   end
 end

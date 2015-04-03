@@ -243,6 +243,7 @@ zh-CN:
       service_vehicle:
         number: '车牌号'
         city: '城市'
+        local: '上门服务车辆'
       tool_batch:
         quantity: '数量'
         price: '进价（元）'

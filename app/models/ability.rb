@@ -79,9 +79,9 @@ class Ability
         u == user
       end
       can [:set_state], User
-      can :read, :my_tool_assignments
+      can :read_and_discard, [:my_tool_assignments, :local_vehicle_tool_assignments]
       can [:break, :lose], ToolAssignment do |assign|
-        assign.assignee == user
+        assign.assignee == user || (assign.assignee_type == 'ServiceVehicle' && assign.city == user.city)
       end
     end
 

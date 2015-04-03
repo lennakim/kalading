@@ -1,12 +1,19 @@
 <ul class="nav nav-tabs">
   <%= activatable_nav_link 'tool_type', tool_types_path if can? :read, ToolType %>
-  <%= activatable_nav_link 'service_vehicle', service_vehicles_path if can? :read, ServiceVehicle %>
+  <%= activatable_nav_link 'service_vehicle', service_vehicles_path, action: 'index' if can? :read, ServiceVehicle %>
   <%= activatable_nav_link 'tool_batch', tool_batches_path if can? :read, ToolBatch %>
   <%= activatable_nav_link 'tool_stock', tool_stocks_path if can? :read, ToolStock %>
+
   <%= activatable_nav_link 'tool_assignee', tool_assignees_path,
     link_text: t('mongoid.attributes.tool_assignment.assignment_group') if can? :read, ToolAssignment %>
+
   <%= activatable_nav_link 'tool_assignment', tool_assignments_path(status: 'discarded'),
     link_text: t('mongoid.attributes.tool_assignment.discarded') if can? :read, ToolAssignment %>
+
   <%= activatable_nav_link 'engineer', my_tool_assignments_engineers_path,
-    link_text: t('mongoid.attributes.tool_assignment.my_tool_assignments') if current_user.engineer? %>
+    link_text: t('mongoid.attributes.tool_assignment.my_tool_assignments') if can? :read_and_discard, :my_tool_assignments %>
+
+  <%= activatable_nav_link 'service_vehicle', local_service_vehicles_path,
+    link_text: ServiceVehicle.human_attribute_name('local'),
+    action: 'local' if can? :read_and_discard, :local_vehicle_tool_assignments %>
 </ul>

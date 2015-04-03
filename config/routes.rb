@@ -83,6 +83,9 @@ Kalading::Application.routes.draw do
     member do
       get :tool_assignments
     end
+    collection do
+      get :local
+    end
   end
   resources :tool_batches, only: [:index, :new, :create]
   resources :tool_stocks, only: [:index]

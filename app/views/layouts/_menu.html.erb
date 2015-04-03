@@ -109,7 +109,7 @@
             <% else -%>
             <li>
             <% end -%>
-            <% if current_user.engineer? -%>
+            <% if can? :read_and_discard, :my_tool_assignments -%>
               <%= link_to t('views.navbar.tool_management'), my_tool_assignments_engineers_path %>
             <% elsif can? :read, ToolType -%>
               <%= link_to t('views.navbar.tool_management'), tool_types_path if can? :read, ToolType %>
