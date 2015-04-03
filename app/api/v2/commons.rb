@@ -4,7 +4,7 @@ module V2
 
     resources :cities do
       get "/" do
-        cities = City.all
+        cities = City.without_auto_submodels
 
         present :msg, ""
         present :code, 0
@@ -27,7 +27,7 @@ module V2
         auto_model = AutoModel.find(params[:id])
         raise ResourceNotFoundError unless auto_model
 
-        result = auto_model.auto_submodels
+        result = auto_model.auto_submodels.without_cities
 
         present :msg, ""
         present :code, 0

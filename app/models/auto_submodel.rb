@@ -3,6 +3,8 @@ class AutoSubmodel
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  scope :without_cities, -> { without(:cities) }
+
   paginates_per 30
 
   field :name, type: String
