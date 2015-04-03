@@ -284,7 +284,7 @@ class AutoSubmodel
     hash = self.without_cities.group_by{ |e| e.engine_displacement }
 
     hash.each do |k, v|
-      submodels << { year_range: k, submodels: v }
+      submodels << { engine_displacement: k, submodels: v }
     end
 
     submodels
