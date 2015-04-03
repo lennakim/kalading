@@ -1,4 +1,7 @@
 Kalading::Application.routes.draw do
+  resources :testing_items
+
+
   resources :testings
 
 

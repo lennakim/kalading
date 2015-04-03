@@ -1,0 +1,2 @@
+class TestingItemsController < ApplicationController
+end

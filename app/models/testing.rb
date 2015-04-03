@@ -7,5 +7,6 @@ class Testing
 
   # 理论 、 实操 (通过、不通过）
 
-  # has_one :testing_paper
+  has_many :testings_items_mappings
+  has_many :testing_items, through: :testings_items_mappings
 end
