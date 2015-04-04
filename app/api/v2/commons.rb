@@ -4,7 +4,7 @@ module V2
 
     resources :cities do
       get "/" do
-        cities = City.all
+        cities = City.without_auto_submodels
 
         present :msg, ""
         present :code, 0
@@ -12,34 +12,26 @@ module V2
       end
     end
 
-      get "/auto_brands" do
-        auto_brands = AutoBrand.all
-
+    resources :autos do
+      get "/" do
+        @result = AutoBrand.group_by_name_pinyin
         present :msg, ""
         present :code, 0
-        present :data, auto_brands, with: V2::Entities::AutoBrand
+        present :data, @result, with: V2::Entities::Auto
       end
+    end
 
       params do
-        requires :auto_brand_id
+        requires :id
       end
-      get "/auto_brands/:auto_brand_id/auto_models" do
-        auto_models = AutoModel.where(auto_brand_id: params[:auto_brand_id])
+      get "auto_models/:id" do
+        auto_model = AutoModel.find(params[:id])
+        raise ResourceNotFoundError unless auto_model
+        result = auto_model.auto_submodels.group_by_engine_displacement
 
         present :msg, ""
         present :code, 0
-        present :data, auto_models, with: V2::Entities::AutoModel
-      end
-
-      params do
-        requires :auto_model_id
-      end
-      get "/auto_models/:auto_model_id/auto_submodels" do
-        auto_submodels = AutoSubmodel.where(auto_model_id: params[:auto_model_id])
-
-        present :msg, ""
-        present :code, 0
-        present :data, auto_submodels, with: V2::Entities::AutoSubmodel
+        present :data, result, with: ::V2::Entities::Submodel
       end
   end
 end

@@ -12,6 +12,7 @@ module V2
     end
   end
 
+#######
   class Error < Grape::Exceptions::Base
     attr :code, :text
 
@@ -39,6 +40,12 @@ module V2
   class TokenExpiredError < Error
     def initialize
       super code: 1003, text: 'Token expired', status: 403
+    end
+  end
+
+  class ResourceNotFoundError < Error
+    def initialize
+      super code: 2001, text: 'resource not found', status: 404
     end
   end
 end
