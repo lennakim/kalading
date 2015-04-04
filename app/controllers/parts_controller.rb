@@ -140,14 +140,12 @@ class PartsController < ApplicationController
   end
   
   def match
-    pb = PartBrand.find_by name: I18n.t(:mann)
-    @parts = Part.where(part_brand_id: pb.id)
+    @total_parts = Part.desc(:created_at)
     if params[:search] && params[:search] != ''
       s = params[:search].split('').join(".*")
-      @parts = @parts.where :number => /.*#{s}.*/i
+      @total_parts = @total_parts.where :number => /.*#{s}.*/i
     end
-    @total_parts = @parts.asc(:part_type_id).select {|x| x.total_remained_quantity > 0}
-    @parts = Kaminari.paginate_array(@total_parts).page params[:page]
+    @parts = @total_parts.page params[:page]
   end
   
   def part_select
@@ -180,7 +178,6 @@ class PartsController < ApplicationController
           asm.part_rules.create(number: @matched_part.number, text: pr.text)
         end
       end
-      asm.update_attributes data_source: 3
     end
   end
   

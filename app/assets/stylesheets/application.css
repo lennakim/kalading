@@ -49,39 +49,50 @@
 }
 
 .sb-menu { /* Apply to <ul> or <ol>. */
-	padding: 0;
-	margin: 0;
-	list-style-type: none;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  width: 100%;
 }
 
 .sb-menu li {
-	width: 100%;
-	padding: 0;
-	margin: 0;
-	border-top: 1px solid rgba(255, 255, 255, 0.1); /* Will lighten any background colour you set. */
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Will darken any background colour you set. */
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Will lighten any background colour you set. */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Will darken any background colour you set. */
 }
 
 .sb-menu > li:first-child {
-	border-top: none; /* Removes top border from first list item.. */
+  border-top: none; /* Removes top border from first list item.. */
 }
 
 .sb-menu > li:last-child {
-	border-bottom: none; /* Removed bottom border from last list item. */
+  border-bottom: none; /* Removed bottom border from last list item. */
 }
 
 .sb-menu li a {
-	width: 100%; /* Makes links full width. */
-	display: inline-block;
-	padding: 1em; /* Creates an even padding the same size as your font. */
-	color: #f2f2f2;
+  width: 100%; /* Makes links full width. */
+  display: inline-block;
+  padding: 1em; /* Creates an even padding the same size as your font. */
+  color: #f2f2f2;
 }
 
 .sb-menu li a:hover {
-	text-decoration: none;
-	background-color: rgba(255, 255, 255, 0.05); /* Will lighten any background colour you set. */
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.05); /* Will lighten any background colour you set. */
 }
 
 .bootstrap-datetimepicker-widget, .dropdown-menu {
   z-index: 1052;
+}
+
+.modal {
+  z-index: 1053;
+}
+
+@media (max-width: 767px) {
+  .modal {
+    top: 20%;
+  }
 }
