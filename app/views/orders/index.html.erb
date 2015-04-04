@@ -1,58 +1,6 @@
 <%- model_class = Order -%>
-<% if mobile_device? || params[:disable_sidebar] %>
-<% else %>
 <div class="row">
-  <div class="span2">
-    <div class="well sidebar-nav">
-      <ul class="nav nav-list">
-        <li class="nav-header"></li>
-        <% Order::STATES.each do |s| %>
-          <% if params[:state].present? && params[:state].to_i == s %>
-            <li class="active">
-          <% else %>
-            <li>
-          <% end %>
-            <% if can? :edit_all, Order %>
-              <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
-              <% if Order::STATE_STRINGS[s] == 'serve_done' %>
-                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
-               <% else %>
-                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s).count.to_s + ')', orders_path(state: s) %>
-              <% end %>
-              <% if Order::STATE_STRINGS[s] == 'cancel_pending' %>
-                <ul class="nav nav-list">
-                  <% Order::CANCEL_TYPES.reverse_each do |t| %>
-                    <% if params[:cancel_type].present? && params[:cancel_type].to_i == t %>
-                    <li class="active">
-                    <% else %>
-                    <li>
-                    <% end %>
-                      <%= link_to t(Order::CANCEL_TYPE_STRINGS[t]) + ' (' + orders.where(state: s, cancel_type: t).count.to_s + ')', orders_path(state: s, cancel_type: t) %>
-                    </li>
-                  <% end %>
-                </ul>
-              <% end %>
-            <% else %>
-              <% if Order::STATE_STRINGS[s] == 'serve_done' %>
-                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
-              <% else %>
-                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
-              <% end %>
-            <% end %>
-            </li>
-        <% end %>
-        <% if params[:state].present? %>
-          <li>
-        <% else %>
-          <li class="active">
-        <% end %>
-            <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
-          </li>
-      </ul>
-    </div><!--/.well -->
-  </div><!--/span-->
-  <% end %>
-  <div class="span10">
+  <div class="span12">
     <%= bootstrap_flash %>
     <div class="page-header">
       <%  if can? :edit_all, Order and !mobile_device? %>
@@ -91,25 +39,57 @@
         <%= link_to t('new_complaint'), new_complaint_path, :class => 'btn btn-primary' if can? :create, Complaint %>
       </div>
       </h4>
-      <% if mobile_device? %>
       <div class="btn-group">
         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><%= t 'list_by_state' %> <span class="caret"></span></button>
         <ul class="dropdown-menu">
-          <li><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
           <% Order::STATES.each do |s| %>
-            <li><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
+            <% if params[:state].present? && params[:state].to_i == s %>
+              <li class="active">
+            <% else %>
+              <li>
+            <% end %>
+              <% if can? :edit_all, Order %>
+                <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
+                <% if Order::STATE_STRINGS[s] == 'serve_done' %>
+                  <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                 <% else %>
+                  <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s).count.to_s + ')', orders_path(state: s) %>
+                <% end %>
+                <% if Order::STATE_STRINGS[s] == 'cancel_pending' %>
+                  <ul class="">
+                    <% Order::CANCEL_TYPES.reverse_each do |t| %>
+                      <% if params[:cancel_type].present? && params[:cancel_type].to_i == t %>
+                      <li class="active">
+                      <% else %>
+                      <li>
+                      <% end %>&nbsp&nbsp
+                        <%= link_to t(Order::CANCEL_TYPE_STRINGS[t]) + ' (' + orders.where(state: s, cancel_type: t).count.to_s + ')', orders_path(state: s, cancel_type: t) %>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              <% else %>
+                <% if Order::STATE_STRINGS[s] == 'serve_done' %>
+                  <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+                <% else %>
+                  <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
+                <% end %>
+              <% end %>
+              </li>
           <% end %>
+          <% if params[:state].present? %>
+            <li>
+          <% else %>
+            <li class="active">
+          <% end %>
+              <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
+          </li>
         </ul>
       </div>
-      <% end %>
     </div>
     
     <a class="btn btn-link" data-target="#order-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
-    <% if mobile_device? %>
     <div id="order-search-form" class="collapse">
-    <% else %>  
-    <div id="order-search-form" class="collapse in">
-    <% end %>
       <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
         <input name="state" type="hidden" value="<%= params[:state] %>" />
         <% if params[:states].present? %>
