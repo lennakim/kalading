@@ -49,6 +49,12 @@
         <% end %>
       </div>
     </div>
+    <div class="control-group">
+      <%= label_tag :user_type, t('user_type'), class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= collection_select(nil, nil, UserType.asc(:name), :id, :name, {:include_blank => t(:all), :selected => params[:user_type]}, {:class=>'control', :id => 'user_type', :name => 'user_type'}) %>
+      </div>
+    </div>
   <% end %>
 </div>
 <%= javascript_include_tag "highcharts", "chartkick" %>

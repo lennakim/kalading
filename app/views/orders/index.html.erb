@@ -134,20 +134,7 @@
         <div class="control-group select">
           <%= label_tag :city, t('cities'), class: 'control-label' %>
           <div class="controls form-inline">
-            <select name="city" id="city">
-              <% if params[:city].nil? || params[:city] == '' %>
-                <option value="" selected><%= t :all %></option>
-              <% else %>
-                <option value=""><%= t :all %></option>
-              <% end %>
-              <% City.asc(:name).each do |t| %>
-                <% if params[:city] == t.id.to_s %>
-                  <option value="<%= t.id %>" selected><%= t.name %></option>
-                <% else %>
-                  <option value="<%= t.id %>"><%= t.name %></option>
-                <% end %>
-              <% end %>
-            </select>
+            <%= collection_select(nil, nil, City.asc(:name), :id, :name, {:include_blank => t(:national), :selected => params[:city]}, {:class=>'control', :id => 'select-city-1', :name => 'city'}) %>
           </div>
         </div>
         
@@ -224,20 +211,7 @@
         <div class="control-group select">
           <%= label_tag :user_type, t('user_type'), class: 'control-label' %>
           <div class="controls form-inline">
-            <select name="user_type" id="user_type">
-              <% if params[:user_type].nil? || params[:user_type] == '' %>
-                <option value="" selected><%= t :all %></option>
-              <% else %>
-                <option value=""><%= t :all %></option>
-              <% end %>
-              <% UserType.asc(:name).each do |t| %>
-                <% if params[:user_type] == t.id.to_s %>
-                  <option value="<%= t.id %>" selected><%= t.name %></option>
-                <% else %>
-                  <option value="<%= t.id %>"><%= t.name %></option>
-                <% end %>
-              <% end %>
-            </select>
+            <%= collection_select(nil, nil, UserType.asc(:name), :id, :name, {:include_blank => t(:all), :selected => params[:user_type]}, {:class=>'control', :id => 'user_type', :name => 'user_type'}) %>
           </div>
         </div>
     
