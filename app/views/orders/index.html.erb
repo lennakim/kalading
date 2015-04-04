@@ -77,7 +77,25 @@
               <% end %>
               </li>
           <% end %>
-          <% if params[:state].present? %>
+          
+          <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
+          <% if @orders && params[:part_deliver_state].try(:to_i) == 0 %>
+          <li class="active">
+          <% else %>
+          <li>
+          <% end %>
+            <%= link_to t('to_be_delivered_orders', n: orders.to_be_delivered.count), orders_path(Order.to_be_delivered_hash) %>
+          </li>
+
+          <% if @orders && params[:part_deliver_state].to_i == 1 %>
+          <li class="active">
+          <% else %>
+          <li>
+          <% end %>
+            <%= link_to t('to_be_backed_orders', n: orders.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
+          </li>
+              
+          <% if params[:state].present? || params[:states].present? %>
             <li>
           <% else %>
             <li class="active">

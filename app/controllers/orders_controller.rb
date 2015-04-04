@@ -155,9 +155,6 @@ class OrdersController < ApplicationController
         params[:per] ||= 20
         params[:per] = @orders.count if (params[:state].to_i == 2 && params[:serve_datetime_start].present? && params[:serve_datetime_start] == params[:serve_datetime_end])
         @orders = @orders.desc(:seq).page(params[:page]).per(params[:per])
-        if params[:part_deliver_state].present?
-          render layout: 'storehouses'
-        end
       }
       format.json {
         params[:page] ||= 1
