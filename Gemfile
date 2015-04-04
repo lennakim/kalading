@@ -98,3 +98,6 @@ gem 'grape-swagger-rails'
 gem 'rack-cors'
 
 gem 'mongoid_userstamp'
+
+# state machine
+gem 'aasm'

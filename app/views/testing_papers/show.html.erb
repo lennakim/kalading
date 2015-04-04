@@ -1,0 +1,42 @@
+<div class="container">
+  <h1><%= resource.title %></h1>
+
+  <table class="table">
+    <tr>
+      <td>标题</td>
+      <td><%= resource.title %></td>
+    </tr>
+
+    <tr>
+      <td>类型</td>
+      <td><%= resource.type_str %></td>
+    </tr>
+
+    <tr>
+      <td>
+        项目
+        <%= link_to "添加条目", new_testing_paper_testing_item_path(resource) %>
+      </td>
+      <td>
+        <table class="tabel table-striped">
+          <% resource.testing_items.each do |item| %>
+            <tr>
+              <td><%= item.content %></td>
+              <td><%= link_to "编辑", edit_testing_paper_testing_item_path(resource, item) %></td>
+              <td><%= link_to "删除", testing_paper_testing_item_path(resource, item), method: :delete %></td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td>操作</td>
+
+      <td>
+        <%= link_to "编辑", edit_testing_paper_path(resource) %>
+      </td>
+    </tr>
+  </table>
+
+</div>

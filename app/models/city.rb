@@ -36,6 +36,10 @@ class City
   # 城市有很多通知消息
   has_and_belongs_to_many :notifications
 
+  def sections
+    storehouses.where(type: 0)
+  end
+
   def as_json(opts = nil)
     super except: [:order_capacity, :area_code, :opened, :auto_submodel_ids, :notification_ids, :complaint_ids]
   end

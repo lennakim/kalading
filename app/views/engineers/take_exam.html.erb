@@ -1,0 +1,30 @@
+<div class="container">
+  <h1>参加"<%= @paper.title %>"</h1>
+
+  <%= form_tag [@engineer, @engineer.testings.build] do %>
+    <table class='table table-striped'>
+
+      <input type="hidden" name="paper_id" value="<%= params[:paper_id] %>">
+
+      <% @paper.testing_items.each do |item| %>
+        <tr>
+          <td><%= item.content %></td>
+
+          <td>
+            <label>
+              <%= radio_button_tag("testing_item[#{item.id}]", 0, true) %>
+              不通过
+            </label>
+            <label>
+              <%= radio_button_tag("testing_item[#{item.id}]", 1) %>
+              通过
+            </label>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+    <%= submit_tag "提交", class: 'btn' %>
+
+  <% end %>
+</div>

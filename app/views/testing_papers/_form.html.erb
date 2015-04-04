@@ -1,0 +1,7 @@
+<%= simple_form_for resource do |f| %>
+  <%= f.input :title %>
+  <%= f.input :testing_type do %>
+    <%= f.select :testing_type, TestingPaper::TYPES.map {|t| [ TestingPaper::TYPES_STR[t], t ]}, include_blank: false %>
+  <% end %>
+  <%= f.submit "保存" %>
+<% end %>

@@ -45,8 +45,10 @@
       <%= label_tag :state, t('state'), class: 'control-label' %>
       <div class="controls form-inline">
         <%= select_tag(:state, options_for_select(
-          User::STATES.map {|s| [t(User::STATE_STRINGS[s]), s]}, params[:state]), {prompt: t(:all)})
-        %>
+          User::STATES.map do |state|
+            [t(User::STATE_STRINGS[state]), state]
+          end, params[:state]
+        ), { prompt: "所有" }) %>
       </div>
     </div>
     <div class="form-actions">

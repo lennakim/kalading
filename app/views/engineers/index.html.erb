@@ -1,43 +1,46 @@
 <div class="container">
 
-  <div class="row">
-    <%= link_to "新建技师", new_engineer_path, class: 'btn btn-default pull-left' %>
-  </div>
-
   <%= render "search_form" %>
 
   <div class="engineer-list">
 
-    <%= paginate collection %> | 总数 <%= collection.count %> 名技师
+    <%= paginate collection %>
+    共 <%= collection.count %> 名技师
 
     <table class='table table-striped'>
 
       <thead>
         <td>姓名</td>
         <td>工牌</td>
+        <td>状态</td>
         <td>级别</td>
         <td>手机</td>
-
-        <td>状态</td>
 
         <td>城市</td>
         <td>点部</td>
 
         <td>本月订单情况</td>
+
+        <td>操作</td>
       </thead>
 
       <tbody>
         <% collection.each do |engineer| %>
           <tr>
-            <td><%= engineer.name %></td>
+            <td><%= link_to engineer.name, engineer_path(engineer) %></td>
             <td><%= engineer.work_tag_number %></td>
+            <td><%= t(engineer.aasm_state) %></td>
             <td><%= engineer.level_str %></td>
             <td><%= engineer.phone_num %></td>
 
-            <td><%= engineer.status_str %></td>
-
             <td><%= link_to engineer.city.name, engineer.city %></td>
-            <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
+            <td>
+              <% if engineer.storehouse %>
+                <%= link_to engineer.storehouse.try(:name), engineer.storehouse %>
+              <% else %>
+                暂未分配点部
+              <% end %>
+            </td>
 
             <td>
               <table class="table">
@@ -52,6 +55,11 @@
                   </tr>
                 <% end %>
               </table>
+            </td>
+
+            <td>
+              <%= link_to "编辑", edit_engineer_path(engineer), class: 'btn btn-default' %>
+              <%# <%= link_to "删除", engineer_path(engineer), method: :delete, class: 'btn btn-danger', confirm: "确认删除？" %>
             </td>
           </tr>
         <% end %>

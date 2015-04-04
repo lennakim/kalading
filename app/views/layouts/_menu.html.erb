@@ -108,6 +108,7 @@
                 <ul class="dropdown-menu">
                   <li><%= link_to t('video_menu'), videos_path if can? :view, Video %></li>
                   <li><%= link_to t('notifications'), notifications_path if can? :read, Engineer %></li>
+                  <li><%= link_to t('testing_papers'), testing_papers_path if can? :read, Engineer %></li>
                   <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>
                 </ul>
               </div>

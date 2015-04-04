@@ -1,5 +1,5 @@
 <%= simple_form_for resource, :html => { :class => 'form-horizontal' } do |f| %>
-  <%= f.input :work_tag_number, label: t(:work_tag_number) %>
+  <%= f.input :work_tag_number, label: t(:work_tag_number), readonly: true %>
 
   <%= f.association :city, label: t('choose_city'), collection: City.asc(:name), :include_blank => false %>
 
@@ -11,7 +11,8 @@
 
   <%= f.input :email, :required => true, :autofocus => true %>
 
-  <%= f.association :storehouse, label: t('belong'), collection: Storehouse.asc(:name) %>
+  <%= f.association :storehouse, label: t('belong'), collection: Storehouse.sections.asc(:name) %>
+
   <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
 
   <% if params[:action] == 'new' %>
@@ -20,7 +21,7 @@
   <% end %>
 
   <div class="form-actions">
-    <%= f.button :submit, t(:save), :class => 'btn-primary' %>
-    <%= link_to t(:cancel), users_path, :class => 'btn' %>
+    <%= f.button :submit, t(:save), class: 'btn-primary' %>
+    <%= link_to t(:cancel), engineers_path, class: 'btn' %>
   </div>
 <% end %>

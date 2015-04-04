@@ -1,0 +1,12 @@
+<div class="container">
+
+  <h2>录入入职信息</h2>
+
+  <%= simple_form_for @engineer do |f| %>
+    <%= f.input :identity_card, label: "身份证" %>
+
+    <%= f.association :storehouse, label: t('belong'), collection: Storehouse.sections.asc(:name) %>
+
+    <%= f.submit "保存", class: 'btn' %>
+  <% end %>
+</div>

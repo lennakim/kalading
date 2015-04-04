@@ -18,36 +18,14 @@
     <div class="control-group">
       <%= label_tag :work_tag_number, t('work_tag_number'), class: 'control-label' %>
       <div class="controls form-inline">
-        <%= text_field_tag :work_tag_number, params[:work_tag_number], placeholder: "7位",  class: 'control' %>
+        <%= text_field_tag :work_tag_number, params[:work_tag_number], placeholder: "最多7位",  class: 'control' %>
       </div>
     </div>
 
     <div class="control-group select">
-      <%= label_tag :city_id, t(:cities), class: 'control-label' %>
+      <%= label_tag :city_storehouse_id, "点部", class: 'control-label' %>
       <div class="controls form-inline">
-        <%= select_tag(:city_id, options_for_select(
-          City.all.map do |city|
-            [city.name, city.id]
-          end, params[:city_id]
-        ), {prompt: "所有"}) %>
-      </div>
-    </div>
-
-    <div class="control-group select">
-      <%= label_tag :city_storehouse_id, t(:storehouse), class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= select(:city, :storehouse_id, option_groups_from_collection_for_select(City.all, :storehouses, :name, :id, :name, @storehouse_id), {include_blank: "所有"}) %>
-      </div>
-    </div>
-
-    <div class="control-group select">
-      <%= label_tag :status, "可派状态", class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= select_tag(:status, options_for_select(
-          (0...Engineer::STATUS_STR.length).map do |status|
-            [t(Engineer::STATUS_STR[status]), status]
-          end, params[:status]
-        ), {prompt: "所有"}) %>
+        <%= select(:city, :storehouse_id, option_groups_from_collection_for_select(City.all, :sections, :name, :id, :name, @storehouse_id), {include_blank: "所有"}) %>
       </div>
     </div>
 
@@ -62,9 +40,21 @@
       </div>
     </div>
 
+    <div class="control-group select">
+      <%= label_tag :aasm_state, "状态", class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= select_tag(:aasm_state, options_for_select(
+          Engineer.aasm.states.map(&:name).map do |state_name|
+            [t(state_name), state_name]
+          end, params[:aasm_state]
+        ), {prompt: "所有"}) %>
+      </div>
+    </div>
+
     <div class="control-group">
       <div class="controls">
         <button type="submit" class="btn">查找</button>
+        <%= link_to "新建技师", new_engineer_path, class: 'btn btn-default' %>
       </div>
     </div>
 
