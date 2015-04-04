@@ -1,5 +1,6 @@
 <body class="no-padding">
   <div id="fixed-top" class="sb-slide">
+    <% if current_user %>
     <div class="sb-toggle-left">
       <a class="btn btn-inverse"><i class="icon-tasks">&nbsp</i><%= t('admin.misc.navigation') %></a>
     </div>
@@ -16,6 +17,7 @@
     <a type="button" class="btn btn-inverse pull-right">
       <%= t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ) %></i>
     </a>
+    <% end %>
   </div>
   <div id="sb-site" class="top-padding">
     <div class="container-fluid">
