@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <%= render '/layouts/header' %>
-  <body>
+  <body style="">
     <%= render '/layouts/menu' %>
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header"></li>
@@ -57,7 +57,7 @@
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
-        <div class="span9">
+        <div class="span10">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
@@ -71,5 +71,6 @@
     <% if params[:states] %>
       <%= render 'orders/prompt', states: params[:states], part_deliver_state: params[:part_deliver_state] %>
     <% end %>
+    <div id="modal-window" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true"></div>
   </body>
 </html>
