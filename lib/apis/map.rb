@@ -11,7 +11,11 @@ module Map
     h = JSON.parse(response.body)
     return [] if h['status'] != 0
     return [] if h['results'].empty?
-    [ h['results'][0]['location']['lng'], h['results'][0]['location']['lat'] ]
+    begin
+      [ h['results'][0]['location']['lng'], h['results'][0]['location']['lat'] ]
+    rescue
+      []
+    end
   end
   
   RAD_PER_DEG = 0.017453293  #  PI/180
