@@ -96,3 +96,7 @@
     top: 20%;
   }
 }
+
+.tangram-suggestion-main {
+  z-index: 1052;
+}

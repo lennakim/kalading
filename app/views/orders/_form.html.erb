@@ -1,7 +1,7 @@
 <%= simple_nested_form_for @order, :html => { class: "form-horizontal" } do |f| %>
   <% if !params[:cancel] && !params[:add_comment] && ( (%w[unverified verify_error].include? Order::STATE_STRINGS[@order.state]) || params[:edit_all] ) %>
     <h5 id="basic_infos"><%= t(:basic_infos) %></h5>
-    <%= f.input :incoming_call_num, label: t(:incoming_call_num) %>
+    <%= f.input :incoming_call_num, label: t(:incoming_call_num), readonly:  !["new"].include?(params[:action]) %>
     <div class="control-group">
       <label for="select-car-location" class="control-label"><%= t(:car_num) %></label>
       <div class="controls form-inline">
