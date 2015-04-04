@@ -2,8 +2,8 @@
  *= require bootstrap-datetimepicker
  *= require jquery.splitter
  *= require slidebars
- *= require_self
  *= require_directory .
+ *= require_self
  */
 
 @media (min-width: 768px) {
@@ -80,4 +80,8 @@
 .sb-menu li a:hover {
 	text-decoration: none;
 	background-color: rgba(255, 255, 255, 0.05); /* Will lighten any background colour you set. */
+}
+
+.bootstrap-datetimepicker-widget, .dropdown-menu {
+  z-index: 1052;
 }
