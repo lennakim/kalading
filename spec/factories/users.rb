@@ -36,4 +36,22 @@ FactoryGirl.define do
     association :city, factory: :beijing
     roles ["1"]
   end
+
+  factory :client_user, class: User do
+    phone_num "13688888881"
+    email "13688888881@kalading.com"
+    name "客户"
+    password  "12345678"
+    association :city, factory: :beijing
+    roles ["0"]
+  end
+
+  factory :dispatcher, class: User do
+    phone_num "13688888882"
+    email "13688888882@kalading.com"
+    name "调度客服"
+    password  "12345678"
+    association :city, factory: :beijing
+    roles ["6"]
+  end
 end

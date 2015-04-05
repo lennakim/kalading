@@ -11,9 +11,7 @@ class OrdersController < ApplicationController
   # GET /orders.json
   def index
     if current_user
-      if current_user.roles.empty?
-        authorize! :read, Order
-      elsif current_user.engineer?
+      if current_user.engineer?
         @orders = Order.where(:engineer => current_user)
         if Time.now.hour < 18
           @orders = @orders.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.today.end_of_day)
@@ -23,8 +21,10 @@ class OrdersController < ApplicationController
       elsif current_user.storehouse_admin?
         @orders = current_user.city.serve_orders
         params[:city] = current_user.city.id
-      else
+      elsif current_user.role_admin? || current_user.data_admin? || current_user.dispatcher? || current_user.finance? || current_user.engineer_manager?
         @orders = Order.all
+      else
+        return render json: t(:error), status: :bad_request
       end
     else
       if request.format.json?
