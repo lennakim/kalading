@@ -110,12 +110,14 @@ class Engineer < User
     end
   end
 
+  # 咨询单service_type_ids为undefined
   def service_orders_count
     map = %Q{
       function() {
-        this.service_type_ids.forEach(function(service_type_id){
-          emit(service_type_id, 1);
-        });
+        if(this.service_type_ids != undefined)
+          this.service_type_ids.forEach(function(service_type_id){
+            emit(service_type_id, 1);
+          });
       }
     }
     reduce = %Q{
