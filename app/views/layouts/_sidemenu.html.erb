@@ -45,6 +45,7 @@
           <li><%= link_to t('engineer_menu'), engineers_path if can? :view, Engineer %></li>
           <li><%= link_to t('video_menu'), videos_path if can? :view, Video %></li>
           <li><%= link_to t('notifications'), notifications_path if can? :read, Engineer %></li>
+          <li><%= link_to t('testing_papers'), testing_papers_path if can? :read, Engineer %></li>
           <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>
           <li><%= link_to t('log_out'), destroy_user_session_path, :method => :delete %></li>
           <li><%= link_to t(:edit_account), edit_user_registration_path %></li>
