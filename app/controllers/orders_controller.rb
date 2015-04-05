@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
       elsif current_user.storehouse_admin?
         @orders = current_user.city.serve_orders
         params[:city] = current_user.city.id
-      elsif current_user.role_admin? || current_user.data_admin? || current_user.dispatcher? || current_user.finance? || current_user.engineer_manager?
+      elsif current_user.role_admin? || current_user.data_admin? || current_user.dispatcher? || current_user.finance? || current_user.engineer_manager? || current_user.national_storehouse_admin?
         @orders = Order.all
       else
         return render json: t(:error), status: :bad_request
