@@ -99,7 +99,7 @@ $(function() {
       coordinates.push([point.lng, point.lat]);
     });
     $.ajax( {
-        url: '<%= city_url(@city)%>',
+        url: '<%= city_path(@city)%>',
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({coordinates: coordinates}),
