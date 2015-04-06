@@ -1126,8 +1126,8 @@ zh-CN:
   parent_city: '运营所在城市'
   child_cities: '为以下城市服务'
   serve_area: '服务区域'
-
   testing_papers: "试卷管理"
   training: "培训"
   boarding: "入职"
   dimissory: "离职"
+  part_count: '配件型号的个数'

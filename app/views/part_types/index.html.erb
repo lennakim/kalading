@@ -4,6 +4,7 @@
     <tr>
       <th><%= t 'part_type_name' %></th>
       <th><%= t 'unit' %></th>
+      <th><%= t 'part_count' %></th>
       <th><%= t 'actions' %></th>
     </tr>
   </thead>
@@ -12,6 +13,7 @@
       <tr>
         <td><%= part_type.name %></td>
         <td><%= part_type.unit %></td>
+        <td><%= part_type.parts.count %></td>
         <td>
           <%= link_to t('edit'),
                       edit_part_type_path(part_type), :class => 'btn btn-mini' if can? :update, part_type %>
