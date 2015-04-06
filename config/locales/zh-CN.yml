@@ -1124,3 +1124,4 @@ zh-CN:
   backed_to_store: '已回库'
   parent_city: '运营所在城市'
   child_cities: '为以下城市服务'
+  serve_area: '服务区域'

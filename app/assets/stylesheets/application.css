@@ -1,14 +1,82 @@
 /*
- *= require_self
  *= require bootstrap-datetimepicker
  *= require jquery.splitter
+ *= require slidebars
+ *= require_self
  *= require_directory .
  */
 
-body {
-  padding-top: 50px;
+@media (min-width: 768px) {
+  body {
+    padding-top: 50px;
+  }
 }
 
 #car-model-search, .address_input {
   width: 300px;
+}
+
+#sb-site.top-padding {
+  padding-top: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#fixed-top {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  background-color: black;
+  z-index: 4;
+}
+
+#fixed-top div.sb-toggle-left {
+  float: left;
+  color: white;
+  padding: 10px;
+}
+
+#fixed-top div.sb-toggle-right {
+  float: right;
+  color: white;
+  padding: 10px;
+}
+
+.no-padding {
+  padding: 0px;
+}
+
+.sb-menu { /* Apply to <ul> or <ol>. */
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+.sb-menu li {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.1); /* Will lighten any background colour you set. */
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Will darken any background colour you set. */
+}
+
+.sb-menu > li:first-child {
+	border-top: none; /* Removes top border from first list item.. */
+}
+
+.sb-menu > li:last-child {
+	border-bottom: none; /* Removed bottom border from last list item. */
+}
+
+.sb-menu li a {
+	width: 100%; /* Makes links full width. */
+	display: inline-block;
+	padding: 1em; /* Creates an even padding the same size as your font. */
+	color: #f2f2f2;
+}
+
+.sb-menu li a:hover {
+	text-decoration: none;
+	background-color: rgba(255, 255, 255, 0.05); /* Will lighten any background colour you set. */
 }

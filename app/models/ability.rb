@@ -102,7 +102,7 @@ class Ability
       can [:view, :read], Video
       can [:read, :create, :update, :destroy], Notification
       can [:set_state], User
-      can [:edit, :update], City do |c|
+      can [:edit, :update, :mgmt_console], City do |c|
         user.city == c
       end
     end

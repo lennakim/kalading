@@ -119,6 +119,13 @@ class CitiesController < ApplicationController
     end
     render json: h
   end
+
+  def mgmt_console
+    @city = City.find(params[:id])
+    respond_to do |format|
+      format.html
+    end
+  end
 private
   def _time_stage (hour)
     hour_hash = {0..11 => 0, 12..16 => 1, 17..23 => 1}

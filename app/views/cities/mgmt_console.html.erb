@@ -1,0 +1,147 @@
+<div class="page-header">
+  <h1><%= @city.name %><a href="#myModal" role="button" class="btn btn-info pull-right" data-toggle="modal">使用指南</a></h1>
+  <p>我的地盘有&nbsp<span id="polygon_area"></span>&nbsp平方公里<span id="message" class="alert alert-success pull-right hide"></span></p>
+</div>
+<script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+<script type="text/javascript">
+$(function() {
+  var pts = [
+      <% @city.coordinates.each do |c| %>
+        new BMap.Point(<%= c[0] %>, <%= c[1] %>),
+      <% end %>
+  ];
+  function insert_pt(pt) {
+    minDistance = Number.MAX_VALUE;
+    minDistanceIndex = 0;
+    pts.forEach(function(point, j) {
+      var d = map.getDistance(pt, point);
+      if(d < minDistance) {
+        minDistance = d;
+        minDistanceIndex = j;
+      }
+    });
+    pts.splice(minDistanceIndex, 0, pt);
+  }
+  
+  var map = new BMap.Map("serve-map");
+  map.enableScrollWheelZoom();
+  map.enableContinuousZoom();
+  var options = {
+    onSearchComplete: function(results) {
+      if (local.getStatus() == BMAP_STATUS_SUCCESS){
+        var s = [];
+        for (var i = 0; i < results.getCurrentNumPois(); i ++) {
+          map.centerAndZoom(results.getPoi(i).point, 12);
+          redraw_all();
+          break;
+        }
+      }
+    }
+  };
+  var local = new BMap.LocalSearch(map, options);
+  local.search("<%= @city.name %>");
+
+  function draw_polygon(pts) {
+    var polygon = new BMap.Polygon(pts,
+      {strokeColor:"blue", strokeWeight:5, strokeOpacity:0.9, fillColor: "blue", fillOpacity: 0.05, enableMassClear: false });
+    map.addOverlay(polygon);
+    polygon.enableMassClear();
+    return polygon;
+  };
+  
+  var geoc = new BMap.Geocoder();
+  function draw_markers(pts) {
+    pts.forEach(function(point, j) {
+      var marker = new BMap.Marker(point);
+      map.addOverlay(marker);
+      marker.enableDragging();
+      geoc.getLocation(point, function(rs){
+        var addComp = rs.addressComponents;
+        var t = (addComp.district + " " + addComp.street + addComp.streetNumber);
+        var label = new BMap.Label("",{offset:new BMap.Size(1,-7)});
+        marker.setLabel(label);
+        marker.addEventListener("mouseover", function(type, target) {
+          label.setContent(t);
+        });
+        marker.addEventListener("mouseout", function(type, target) {
+          label.setContent("");
+        });
+      });
+      marker.addEventListener("dragend",function (){
+        pts[j] = marker.getPosition();
+        setTimeout(function() {
+          redraw_and_upload();
+        }, 0);
+      });
+      
+      var removeMarker = function(e,ee,marker){
+        setTimeout(function() {
+          pts = pts.splice(j, 1);
+          redraw_and_upload();
+        }, 0);
+      }
+      var markerMenu = new BMap.ContextMenu();
+      markerMenu.addItem(new BMap.MenuItem('删除标注点',removeMarker.bind(marker)));
+      marker.addContextMenu(markerMenu);
+    });
+  };
+  
+  function redraw_all() {
+    map.clearOverlays();
+    polygon = draw_polygon(pts);
+    $("#polygon_area").text((BMapLib.GeoUtils.getPolygonArea(polygon)/1000000).toFixed(2));
+    draw_markers(pts);
+  };
+  
+  function upload_pts() {
+    coordinates = [];
+    pts.forEach(function(point, j) {
+      coordinates.push([point.lng, point.lat]);
+    });
+    $.ajax( {
+        url: '<%= city_url(@city)%>',
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({coordinates: coordinates}),
+        dataType: 'json'
+    })
+    .done(function(){ $("#message").text("更新服务区域成功").fadeIn().delay(2000).fadeOut(); })
+    .fail(function(){ $("#message").text("更新服务区域出错，请重试").fadeIn().delay(2000).fadeOut(); });
+  };
+
+  function redraw_and_upload() {
+    redraw_all();
+    $.debounce(5000, upload_pts)();
+  };
+
+  var menu = new BMap.ContextMenu();
+  var txtMenuItem = [
+    {
+      text:'添加标注点',
+      callback:function(point) {
+        insert_pt(point);
+        redraw_and_upload();
+      }
+    }
+  ];
+  for(var i=0; i < txtMenuItem.length; i++){
+    menu.addItem(new BMap.MenuItem(txtMenuItem[i].text,txtMenuItem[i].callback,100));
+  }
+  map.addContextMenu(menu);
+});
+</script>
+<div id="serve-map" style="width: 100%; height: 550px;"></div>
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">如何修改服务区域</h3>
+  </div>
+  <div class="modal-body">
+    <p><strong>微调服务区域：</strong>鼠标左键拖拽标注点（小红点），可扩大缩小服务区域</p>
+    <p><strong>缩小服务区域：</strong>在标注点上点鼠标右键，选择”删除标注点“，可删除标注点所在区域</p>
+    <p><strong>扩大服务区域：</strong>在服务区域外点鼠标右键，选择”添加标注点“，可扩大区域</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">我知道了</button>
+  </div>
+</div>
