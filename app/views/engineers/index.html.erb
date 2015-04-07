@@ -19,8 +19,6 @@
         <td>级别</td>
         <td>手机</td>
 
-        <td>状态</td>
-
         <td>城市</td>
         <td>点部</td>
 
@@ -36,8 +34,6 @@
             <td><%= engineer.work_tag_number %></td>
             <td><%= engineer.level_str %></td>
             <td><%= engineer.phone_num %></td>
-
-            <td><%= engineer.status_str %></td>
 
             <td><%= link_to engineer.city.name, engineer.city %></td>
             <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>

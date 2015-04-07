@@ -7,9 +7,6 @@ class Engineer < User
   LEVEL_STR = %w-养护技师 高级养护技师 资深养护技师 首席养护技师-
   field :level, type: Integer, default: 0
 
-  STATUS_STR = %w-可派 不可派-
-  field :status, type: Integer, default: 0
-
   # 工牌 TODO 7位
   field :work_tag_number, type: String
   # TODO：目前技师的工牌都是空，导致update_realtime_info 抛出validation error
@@ -100,10 +97,6 @@ class Engineer < User
     }
 
     serve_orders.valid.from_this_month.map_reduce(map, reduce).out(inline: true)
-  end
-
-  def status_str
-    STATUS_STR[status]
   end
 
   def level_str

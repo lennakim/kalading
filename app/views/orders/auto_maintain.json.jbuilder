@@ -19,7 +19,7 @@ parts_to_user_friendly = Proc.new do |parts|
   # engine oil with same spec and brand are merged
   b = {}
   if params[:city_id]
-    storehouses = City.find(params[:city_id]).storehouses
+    storehouses = City.find(params[:city_id]).available_storehouses
   else
     storehouses = Storehouse.all
   end

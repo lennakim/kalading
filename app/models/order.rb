@@ -255,7 +255,7 @@ class Order
   end
 
   def parts_auto_deliver
-    storehouse = self.city.storehouses.where(type: 1).first
+    storehouse = self.city.available_storehouses.first
     deliver_done = 1
     self.parts.each do |p|
       quantity = self.part_counts[p.id.to_s].to_i - self.part_delivered_counts[p.id.to_s].to_i

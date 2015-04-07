@@ -31,6 +31,8 @@ class UsersController < ApplicationController
       @handler = @users.select { |u| u.roles.include? params[:complaint_handler]}
       @handler << User.find('53d8860a9a94e4b00800146b')
       @handler << current_user
+    else
+      @handler = []
     end
 
     respond_to do |format|

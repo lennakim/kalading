@@ -20,7 +20,8 @@
         <td><%= Order.within_datetime_range([0,2,3,4], Date.today.beginning_of_day, Date.today.end_of_day, city).count %></td>
         <td><%= Order.within_datetime_range([5,6,7], Date.today.beginning_of_day, Date.today.end_of_day, city).count %></td>
         <td>
-          <%= link_to t('edit'), edit_city_path(city), :class => 'btn btn-mini' if can? :update, city %>
+          <%= link_to t('serve_area'), city_mgmt_console_path(city), :class => 'btn' if can? :update, city %>
+          <%= link_to t('edit'), edit_city_path(city), :class => 'btn' if can? :update, city %>
         </td>
       </tr>
     <% end %>

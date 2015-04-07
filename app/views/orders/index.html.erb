@@ -1,274 +1,332 @@
 <%- model_class = Order -%>
-<div class="page-header">
-  <%  if can? :edit_all, Order %>
-    <div>
-      <%= form_tag daily_orders_path, :method => 'get', :id => "daily_orders_form", :class => 'form-inline' do %>
-        <div class="control-group select">
-          <div class="form-inline input-append form_datetime">
-            <input data-format="yyyy-MM-dd" type="text" name="date" id="date" value="<%= Time.now.since(1.days).strftime('%Y-%m-%d') %>"></input>
-            <span class="add-on">
-              <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-              </i>
-            </span>
-            <%= collection_select(nil, nil, City.asc(:name), :id, :name, {:include_blank => t(:national)}, {:class=>'input-small control', :id => 'select-city', :name => 'city'}) %>
-          </div>
-          <%= submit_tag t(:orders_assign), class: 'btn btn-primary' %>
+<% if mobile_device? || params[:disable_sidebar] %>
+<% else %>
+<div class="row">
+  <div class="span2">
+    <div class="well sidebar-nav">
+      <ul class="nav nav-list">
+        <li class="nav-header"></li>
+        <% Order::STATES.each do |s| %>
+          <% if params[:state].present? && params[:state].to_i == s %>
+            <li class="active">
+          <% else %>
+            <li>
+          <% end %>
+            <% if can? :edit_all, Order %>
+              <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
+              <% if Order::STATE_STRINGS[s] == 'serve_done' %>
+                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+               <% else %>
+                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s).count.to_s + ')', orders_path(state: s) %>
+              <% end %>
+              <% if Order::STATE_STRINGS[s] == 'cancel_pending' %>
+                <ul class="nav nav-list">
+                  <% Order::CANCEL_TYPES.reverse_each do |t| %>
+                    <% if params[:cancel_type].present? && params[:cancel_type].to_i == t %>
+                    <li class="active">
+                    <% else %>
+                    <li>
+                    <% end %>
+                      <%= link_to t(Order::CANCEL_TYPE_STRINGS[t]) + ' (' + orders.where(state: s, cancel_type: t).count.to_s + ')', orders_path(state: s, cancel_type: t) %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% end %>
+            <% else %>
+              <% if Order::STATE_STRINGS[s] == 'serve_done' %>
+                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
+              <% else %>
+                <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %>
+              <% end %>
+            <% end %>
+            </li>
+        <% end %>
+        <% if params[:state].present? %>
+          <li>
+        <% else %>
+          <li class="active">
+        <% end %>
+            <%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %>
+          </li>
+      </ul>
+    </div><!--/.well -->
+  </div><!--/span-->
+  <% end %>
+  <div class="span10">
+    <%= bootstrap_flash %>
+    <div class="page-header">
+      <%  if can? :edit_all, Order and !mobile_device? %>
+        <div>
+          <%= form_tag daily_orders_path, :method => 'get', :id => "daily_orders_form", :class => 'form-inline' do %>
+            <div class="control-group select">
+              <div class="form-inline input-append form_datetime">
+                <input data-format="yyyy-MM-dd" type="text" name="date" id="date" value="<%= Time.now.since(1.days).strftime('%Y-%m-%d') %>"></input>
+                <span class="add-on">
+                  <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                  </i>
+                </span>
+                <%= collection_select(nil, nil, City.asc(:name), :id, :name, {:include_blank => t(:national)}, {:class=>'input-small control', :id => 'select-city', :name => 'city'}) %>
+              </div>
+              <%= submit_tag t(:orders_assign), class: 'btn btn-primary' %>
+            </div>
+          <% end %>
         </div>
       <% end %>
-    </div>
-  <% end %>
-  <h4>
-  <%= t(:orders) %>
-  <% if params[:state].present? || params[:states].present? %>
-    <% if params[:part_deliver_state] == '0' %>
-      <%= ' - ' + t(:to_be_delivered) %>
-    <% elsif params[:part_deliver_state] == '1' %>
-      <%= ' - ' + t(:to_be_backed) %>
-    <% elsif params[:state].present? %>
-      <%= ' - ' + t(Order::STATE_STRINGS[params[:state].to_i])  %>
-    <% end %>
-  <% end %>
-  <% if params[:auto_submodel].present? %>
-    <%= ' - ' + AutoSubmodel.find(params[:auto_submodel]).full_name %>
-  <% end %>
-  <div class="pull-right">
-    <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary' if can? :create, Order %>
-    <%= link_to t('new_complaint'), new_complaint_path, :class => 'btn btn-primary' if can? :create, Complaint %>
-  </div>
-  </h4>
-  <% if mobile_device? %>
-  <div class="btn-group">
-    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><%= t 'list_by_state' %> <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-      <li><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
-      <% Order::STATES.each do |s| %>
-        <li><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
+      <h4>
+      <%= t(:orders) %>
+      <% if params[:state].present? || params[:states].present? %>
+        <% if params[:part_deliver_state] == '0' %>
+          <%= ' - ' + t(:to_be_delivered) %>
+        <% elsif params[:part_deliver_state] == '1' %>
+          <%= ' - ' + t(:to_be_backed) %>
+        <% elsif params[:state].present? %>
+          <%= ' - ' + t(Order::STATE_STRINGS[params[:state].to_i])  %>
+        <% end %>
       <% end %>
-    </ul>
-  </div>
-  <% end %>
-</div>
-
-<a class="btn btn-link" data-target="#order-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
-<% if mobile_device? %>
-<div id="order-search-form" class="collapse">
-<% else %>  
-<div id="order-search-form" class="collapse in">
-<% end %>
-  <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
-    <input name="state" type="hidden" value="<%= params[:state] %>" />
-    <% if params[:states].present? %>
-      <% params[:states].each do |s| %>
-        <input name="states[]" type="hidden" value="<%= s %>" />
+      <% if params[:auto_submodel].present? %>
+        <%= ' - ' + AutoSubmodel.find(params[:auto_submodel]).full_name %>
       <% end %>
-    <% end %>
-    <input name="part_deliver_state" type="hidden" value="<%= params[:part_deliver_state] %>" />
-    <div class="control-group">
-      <%= label_tag :phone_num, t('phone_num'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= text_field_tag :phone_num, params[:phone_num], class: 'control', placeholder: t(:phone_num_hint) %>
+      <div class="pull-right">
+        <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary' if can? :create, Order %>
+        <%= link_to t('new_complaint'), new_complaint_path, :class => 'btn btn-primary' if can? :create, Complaint %>
       </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :customer_name, t('customer_name'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= text_field_tag :customer_name, params[:customer_name], class: 'control' %>
-      </div>
-    </div>
-
-    <div class="control-group select">
-      <%= label_tag :city, t('cities'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <select name="city" id="city">
-          <% if params[:city].nil? || params[:city] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
+      </h4>
+      <% if mobile_device? %>
+      <div class="btn-group">
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><%= t 'list_by_state' %> <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><%= link_to t(:all) + ' (' + Order.count.to_s + ')', orders_path %></li>
+          <% Order::STATES.each do |s| %>
+            <li><%= link_to t(Order::STATE_STRINGS[s]) + ' (' + Order.where(state: s).count.to_s + ')', orders_path(state: s) %></li>
           <% end %>
-          <% City.asc(:name).each do |t| %>
-            <% if params[:city] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.name %></option>
-            <% else %>
-              <option value="<%= t.id %>"><%= t.name %></option>
-            <% end %>
-          <% end %>
-        </select>
+        </ul>
       </div>
+      <% end %>
     </div>
     
-    <div class="control-group">
-      <%= label_tag :address, t('address'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= text_field_tag :address, params[:address], class: 'control' %>
-      </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :car_num, t('car_num'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= collection_select(nil, nil, t(:locations).split, :to_s, :to_s, {:include_blank => true, :selected => params[:car_location].to_s}, {:class=>'input-small control', :id => 'select-car-location', :name => 'car_location'}) %>
-        <%= text_field_tag :car_num, params[:car_num], class: 'control', placeholder: t(:car_num_hint) %>
-      </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :serve_datetime_start, t('serve_datetime_segment'), class: 'control-label' %>
-      <div class="controls form-inline" id="serve_datetime">
-        <div class="form-inline input-append form_datetime">
-          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_start" id="serve_datetime_start" value="<%= params[:serve_datetime_start] %>"></input>
-          <span class="add-on">
-            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-            </i>
-          </span>
-        </div>
-        <%= t :to %>
-        <div class="form-inline input-append form_datetime">
-          <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_end" id="serve_datetime_end" value="<%= params[:serve_datetime_end] %>"></input>
-          <span class="add-on">
-            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-            </i>
-          </span>
-        </div>
-        <div class="btn-group">
-          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.today.strftime '%Y-%m-%d' %>"><%= t(:today) %></a>
-          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.tomorrow.strftime '%Y-%m-%d' %>"><%= t(:tomorrow) %></a>
-          <a class="btn serve-datetime-shortcut" data-msg="<%= Date.tomorrow.tomorrow.strftime '%Y-%m-%d' %>"><%= t(:the_day_after_tomo) %></a>
-          <a class="btn serve-datetime-clear"><%= t(:clear) %></a>
-        </div>
-      </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :create_at_start, t('created_at_segment'), class: 'control-label' %>
-      <div class="controls form-inline" id="create_at">
-        <div class="form-inline input-append form_datetime">
-          <input data-format="yyyy-MM-dd" type="text" name="created_at_start" id="created_at_start" value="<%= params[:created_at_start] %>"></input>
-          <span class="add-on">
-            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-            </i>
-          </span>
-        </div>
-        <%= t :to %>
-        <div class="form-inline input-append form_datetime">
-          <input data-format="yyyy-MM-dd" type="text" name="created_at_end" id="created_at_end" value="<%= params[:created_at_end] %>"></input>
-          <span class="add-on">
-            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-            </i>
-          </span>
-        </div>
-        <div class="btn-group">
-          <a class="btn created-at-shortcut" data-msg="<%= Date.today.strftime '%Y-%m-%d' %>"><%= t(:today) %></a>
-          <a class="btn created-at-shortcut" data-msg="<%= Date.yesterday.strftime '%Y-%m-%d' %>"><%= t(:yesterday) %></a>
-          <a class="btn created-at-clear"><%= t(:clear) %></a>
-        </div>
-      </div>
-    </div>
-    <div class="control-group">
-      <%= label_tag :seq, t('order_id'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= text_field_tag :seq, params[:seq], class: 'control' %>
-      </div>
-    </div>
-    <div class="control-group select">
-      <%= label_tag :user_type, t('user_type'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <select name="user_type" id="user_type">
-          <% if params[:user_type].nil? || params[:user_type] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
+    <a class="btn btn-link" data-target="#order-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
+    <% if mobile_device? %>
+    <div id="order-search-form" class="collapse">
+    <% else %>  
+    <div id="order-search-form" class="collapse in">
+    <% end %>
+      <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
+        <input name="state" type="hidden" value="<%= params[:state] %>" />
+        <% if params[:states].present? %>
+          <% params[:states].each do |s| %>
+            <input name="states[]" type="hidden" value="<%= s %>" />
           <% end %>
-          <% UserType.asc(:name).each do |t| %>
-            <% if params[:user_type] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.name %></option>
-            <% else %>
-              <option value="<%= t.id %>"><%= t.name %></option>
-            <% end %>
-          <% end %>
-        </select>
-      </div>
+        <% end %>
+        <input name="part_deliver_state" type="hidden" value="<%= params[:part_deliver_state] %>" />
+        <div class="control-group">
+          <%= label_tag :phone_num, t('phone_num'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <%= text_field_tag :phone_num, params[:phone_num], class: 'control', placeholder: t(:phone_num_hint) %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= label_tag :customer_name, t('customer_name'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <%= text_field_tag :customer_name, params[:customer_name], class: 'control' %>
+          </div>
+        </div>
+    
+        <div class="control-group select">
+          <%= label_tag :city, t('cities'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <select name="city" id="city">
+              <% if params[:city].nil? || params[:city] == '' %>
+                <option value="" selected><%= t :all %></option>
+              <% else %>
+                <option value=""><%= t :all %></option>
+              <% end %>
+              <% City.asc(:name).each do |t| %>
+                <% if params[:city] == t.id.to_s %>
+                  <option value="<%= t.id %>" selected><%= t.name %></option>
+                <% else %>
+                  <option value="<%= t.id %>"><%= t.name %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <%= label_tag :address, t('address'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <%= text_field_tag :address, params[:address], class: 'control' %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= label_tag :car_num, t('car_num'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <%= collection_select(nil, nil, t(:locations).split, :to_s, :to_s, {:include_blank => true, :selected => params[:car_location].to_s}, {:class=>'input-small control', :id => 'select-car-location', :name => 'car_location'}) %>
+            <%= text_field_tag :car_num, params[:car_num], class: 'control', placeholder: t(:car_num_hint) %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= label_tag :serve_datetime_start, t('serve_datetime_segment'), class: 'control-label' %>
+          <div class="controls form-inline" id="serve_datetime">
+            <div class="form-inline input-append form_datetime">
+              <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_start" id="serve_datetime_start" value="<%= params[:serve_datetime_start] %>"></input>
+              <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                </i>
+              </span>
+            </div>
+            <%= t :to %>
+            <div class="form-inline input-append form_datetime">
+              <input data-format="yyyy-MM-dd" type="text" name="serve_datetime_end" id="serve_datetime_end" value="<%= params[:serve_datetime_end] %>"></input>
+              <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                </i>
+              </span>
+            </div>
+            <div class="btn-group">
+              <a class="btn serve-datetime-shortcut" data-msg="<%= Date.today.strftime '%Y-%m-%d' %>"><%= t(:today) %></a>
+              <a class="btn serve-datetime-shortcut" data-msg="<%= Date.tomorrow.strftime '%Y-%m-%d' %>"><%= t(:tomorrow) %></a>
+              <a class="btn serve-datetime-shortcut" data-msg="<%= Date.tomorrow.tomorrow.strftime '%Y-%m-%d' %>"><%= t(:the_day_after_tomo) %></a>
+              <a class="btn serve-datetime-clear"><%= t(:clear) %></a>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= label_tag :create_at_start, t('created_at_segment'), class: 'control-label' %>
+          <div class="controls form-inline" id="create_at">
+            <div class="form-inline input-append form_datetime">
+              <input data-format="yyyy-MM-dd" type="text" name="created_at_start" id="created_at_start" value="<%= params[:created_at_start] %>"></input>
+              <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                </i>
+              </span>
+            </div>
+            <%= t :to %>
+            <div class="form-inline input-append form_datetime">
+              <input data-format="yyyy-MM-dd" type="text" name="created_at_end" id="created_at_end" value="<%= params[:created_at_end] %>"></input>
+              <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                </i>
+              </span>
+            </div>
+            <div class="btn-group">
+              <a class="btn created-at-shortcut" data-msg="<%= Date.today.strftime '%Y-%m-%d' %>"><%= t(:today) %></a>
+              <a class="btn created-at-shortcut" data-msg="<%= Date.yesterday.strftime '%Y-%m-%d' %>"><%= t(:yesterday) %></a>
+              <a class="btn created-at-clear"><%= t(:clear) %></a>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= label_tag :seq, t('order_id'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <%= text_field_tag :seq, params[:seq], class: 'control' %>
+          </div>
+        </div>
+        <div class="control-group select">
+          <%= label_tag :user_type, t('user_type'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <select name="user_type" id="user_type">
+              <% if params[:user_type].nil? || params[:user_type] == '' %>
+                <option value="" selected><%= t :all %></option>
+              <% else %>
+                <option value=""><%= t :all %></option>
+              <% end %>
+              <% UserType.asc(:name).each do |t| %>
+                <% if params[:user_type] == t.id.to_s %>
+                  <option value="<%= t.id %>" selected><%= t.name %></option>
+                <% else %>
+                  <option value="<%= t.id %>"><%= t.name %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+        </div>
+    
+        <div class="control-group select">
+          <%= label_tag :engineer, t('engineer'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <select name="engineer" id="engineer">
+              <% if params[:engineer].nil? || params[:engineer] == '' %>
+                <option value="" selected><%= t :all %></option>
+              <% else %>
+                <option value=""><%= t :all %></option>
+              <% end %>
+              <% User.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }.each do |t| %>
+                <% if params[:engineer] == t.id.to_s %>
+                  <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
+                <% else %>
+                  <option value="<%= t.id %>"><%= t.initial_and_name %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+        </div>
+    
+        <div class="control-group select">
+          <%= label_tag :dispatcher, t('dispatcher'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <select name="dispatcher" id="dispatcher">
+              <% if params[:dispatcher].blank? %>
+                <option value="" selected><%= t :all %></option>
+              <% else %>
+                <option value=""><%= t :all %></option>
+              <% end %>
+              <% User.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }.each do |t| %>
+                <% if params[:dispatcher] == t.id.to_s %>
+                  <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
+                <% else %>
+                  <option value="<%= t.id %>"><%= t.initial_and_name %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+        </div>
+    
+        <div class="form-actions">
+          <%= submit_tag t(:search), class: 'btn btn-primary' %>
+        </div>
+      <% end %>
     </div>
-
-    <div class="control-group select">
-      <%= label_tag :engineer, t('engineer'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <select name="engineer" id="engineer">
-          <% if params[:engineer].nil? || params[:engineer] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% User.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('engineer').to_s }.each do |t| %>
-            <% if params[:engineer] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
-            <% else %>
-              <option value="<%= t.id %>"><%= t.initial_and_name %></option>
-            <% end %>
-          <% end %>
-        </select>
-      </div>
+    
+    <%= render 'popup_map' %>
+    <%= render 'serve_areas_map' %>
+    <div id="order-list">
+      <%= t(:total, count: @orders.size) %><br/>
+      <%= render 'orders' %>
     </div>
-
-    <div class="control-group select">
-      <%= label_tag :dispatcher, t('dispatcher'), class: 'control-label' %>
-      <div class="controls form-inline">
-        <select name="dispatcher" id="dispatcher">
-          <% if params[:dispatcher].blank? %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% User.asc(:name_pinyin).select { |u| u.roles.include? User::ROLE_STRINGS.index('dispatcher').to_s }.each do |t| %>
-            <% if params[:dispatcher] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
-            <% else %>
-              <option value="<%= t.id %>"><%= t.initial_and_name %></option>
-            <% end %>
-          <% end %>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <%= submit_tag t(:search), class: 'btn btn-primary' %>
-    </div>
-  <% end %>
-</div>
-
-<%= render 'popup_map' %>
-<%= render 'serve_areas_map' %>
-<div id="order-list">
-  <%= t(:total, count: @orders.size) %><br/>
-  <%= render 'orders' %>
-</div>
-<%= render 'dianbu_map' %>
-<% if can? :get_realtime_info, User %>
-<script type="text/javascript">
-$(function() {
-    window.engineer_markers = [];
-    var timer = null;
-    function timer_func() {
-        $.getScript('<%= get_user_realtime_info_path %>');
-        timer = setTimeout(timer_func, 1 * 60 * 1000);
-    }
-    $('#modal-map').on('show', function () {
-      if(!timer) {
-        timer = setTimeout(timer_func, 0);
-      }
-    });
-    $('#modal-map').on('hidden', function () {
-      if(timer) {
-        clearTimeout(timer);
-        timer = null;  
-      }
-    });
-    $('#locate-engineer-btn').click(function (e) {
-      var textSelected   = $("option:selected", $('#engineer-select')).text();
-      window.engineer_markers.every(function(v) {
-        if(v.getTitle() == textSelected) {
-          window.map.centerAndZoom(v.getPosition(), 13);
-          return false;
+    <%= render 'dianbu_map' %>
+    <% if can? :get_realtime_info, User %>
+    <script type="text/javascript">
+    $(function() {
+        window.engineer_markers = [];
+        var timer = null;
+        function timer_func() {
+            $.getScript('<%= get_user_realtime_info_path %>');
+            timer = setTimeout(timer_func, 1 * 60 * 1000);
         }
-        return true;
-      });
+        $('#modal-map').on('show', function () {
+          if(!timer) {
+            timer = setTimeout(timer_func, 0);
+          }
+        });
+        $('#modal-map').on('hidden', function () {
+          if(timer) {
+            clearTimeout(timer);
+            timer = null;  
+          }
+        });
+        $('#locate-engineer-btn').click(function (e) {
+          var textSelected   = $("option:selected", $('#engineer-select')).text();
+          window.engineer_markers.every(function(v) {
+            if(v.getTitle() == textSelected) {
+              window.map.centerAndZoom(v.getPosition(), 13);
+              return false;
+            }
+            return true;
+          });
+        });
     });
-});
-</script>
-<% end %>
+    </script>
+    <% end %>
+    <%= render 'orders/prompt', states: [0, 10], part_deliver_state: nil if can? :edit_all, Order%>
+  </div>
+</div>

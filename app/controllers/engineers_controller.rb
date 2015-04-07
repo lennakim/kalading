@@ -25,10 +25,6 @@ class EngineersController < ApplicationController
       @engineers = @engineers.where(storehouse_id: @storehouse_id)
     end
 
-    if params[:status].present?
-      @engineers = @engineers.where(status: params[:status])
-    end
-
     if params[:level].present?
       @engineers = @engineers.where(level: params[:level])
     end

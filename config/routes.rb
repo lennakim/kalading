@@ -183,6 +183,7 @@ Kalading::Application.routes.draw do
   get 'discount_query' => 'discounts#query', :as => :discount_query
 
   get 'city_capacity/:id' => 'cities#capacity', :as => :city_capacity
+  get 'cities/:id/mgmt_console' => 'cities#mgmt_console', :as => :city_mgmt_console
   get 'orders/:id/print' => 'orders#print', :as => :print_order
 
   get 'client_query' => 'clients#find', :as => :client_query

@@ -56,7 +56,15 @@
             <% else %>
             <li>
             <% end %>
-            <%= link_to t('cities'), cities_path if can? :read, City %>
+              <div class="btn-group">
+                <button class="btn btn-inverse" ><%= link_to t('cities'), cities_path if can? :read, City %></button>
+                <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <%= link_to (current_user.city.name + ' ' + t('serve_area')), city_mgmt_console_path(current_user.city) if (current_user.city and (can? :update, current_user.city)) %>
+                </ul>
+              </div>
             </li>
 
             <% if ['users'].include? params[:controller] %>
@@ -81,6 +89,7 @@
                   <ul class="dropdown-menu">
                     <li><%= link_to t('service_types'), service_types_path if can? :read, ServiceType %></li>
                     <li><%= link_to t('discount_card'), discounts_path if can? :update, Discount %></li>
+                    <li><%= link_to t('user_type'), user_types_path if can? :update, UserType %></li>
                   </ul>
                 </div>
               </li>
@@ -98,18 +107,17 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li><%= link_to t('video_menu'), videos_path if can? :view, Video %></li>
-                  <li><%= link_to t('engineer_menu'), engineers_path if can? :read, Engineer %></li>
                   <li><%= link_to t('notifications'), notifications_path if can? :read, Engineer %></li>
+                  <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>
                 </ul>
               </div>
             </li>
 
-            <li><%= link_to t(:jishiapp_download) + ' V1.' + (s = Rails.root.join('public', 'system', 'kaladingapp.apk.version'); File.exists?(s) ? File.open(s, 'r').gets : '?' ), '/system/kaladingapp.apk' %></li>
           </ul>
           <ul class="nav pull-right">
             <li class="dropdown">
               <a type="button" class="dropdown-toggle" data-toggle="dropdown">
-                <%= t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ) %>
+                <%= t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ) %>&nbsp<i class="icon-chevron-down"></i>
               </a>
               <ul class="dropdown-menu">
                 <li><%= link_to t('log_out'), destroy_user_session_path, :method => :delete %></li>
@@ -118,7 +126,7 @@
             </li>
             <li class="dropdown">
               <a type="button" class="dropdown-toggle" data-toggle="dropdown">
-                <span id="user_state"><%= t(User::STATE_STRINGS[current_user.state]) %></span>
+                <span id="user_state"><%= t(User::STATE_STRINGS[current_user.state]) %>&nbsp<i class="icon-chevron-down"></i></span>
               </a>
               <ul class="dropdown-menu" id="user_state_id">
                 <% (0..2).each do |s|%>

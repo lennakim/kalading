@@ -7,4 +7,5 @@
 //= require bootstrap-datetimepicker
 //= require jquery.ba-throttle-debounce.min
 //= require jquery.splitter-0.14.0
+//= require slidebars
 //= require_directory .

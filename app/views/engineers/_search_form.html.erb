@@ -41,17 +41,6 @@
     </div>
 
     <div class="control-group select">
-      <%= label_tag :status, "可派状态", class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= select_tag(:status, options_for_select(
-          (0...Engineer::STATUS_STR.length).map do |status|
-            [t(Engineer::STATUS_STR[status]), status]
-          end, params[:status]
-        ), {prompt: "所有"}) %>
-      </div>
-    </div>
-
-    <div class="control-group select">
       <%= label_tag :level, "级别", class: 'control-label' %>
       <div class="controls form-inline">
         <%= select_tag(:level, options_for_select(
