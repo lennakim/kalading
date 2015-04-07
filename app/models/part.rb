@@ -30,7 +30,7 @@ class Part
   has_many :partbatches, dependent: :delete
   # 图文信息
   has_many :image_texts
-  has_many :part_tranfers
+  has_many :part_transfers
 
   attr_accessible :capacity, :number, :match_rule, :spec, :motoroil_type, :remark,
     :part_brand_id, :part_type_id,
