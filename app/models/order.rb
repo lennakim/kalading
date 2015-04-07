@@ -157,6 +157,10 @@ class Order
   STATE_OPERATIONS = %w[verify reverify assign_engineer schedule serve_order handover revisit edit edit edit cancel_confirm]
   STATE_CHANGED_STRS = %w[reverify verify_failed verify_ok assign_ok schedule_ok serve_ok handover_ok revisit_ok]
 
+  def self.state_val(s)
+    Order::STATE_STRINGS.index s
+  end
+  
   # 出库状态：0: 未出库，1：已出库，未回库，2：已回库
   PART_DELIVER_STATES = [0, 1, 2]
   PART_DELIVER_STATE_STRINGS = %w[not_delivered_yet delivered backed_to_store]

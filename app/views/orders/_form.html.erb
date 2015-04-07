@@ -130,11 +130,13 @@
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">
       <% if (%w[new duplicate].include? params[:action]) %>
+        <input name="order[state]" type="hidden" value="<%= Order::state_val 'unassigned' %>" />
         <%= f.button :submit, t(:save), :class => 'btn-primary' %>
         <%= f.button :submit, t(:savs_as_inquiry), :class => 'btn-info', name: "inquire" %>
       <% elsif params[:edit_all] %>
         <%= f.button :submit, t(:save), :class => 'btn-primary', name: "edit_all", value: t(:save) %>
       <% else %>
+        <input name="order[state]" type="hidden" value="<%= Order::state_val 'unassigned' %>" />
         <%= f.button :submit, t(:verify_ok), :class => 'btn-primary' %>
         <%= f.button :submit, t(:verify_failed), :class => 'btn-warning', name: "verify_failed", value: t(:verify_failed) %>
       <% end %>
@@ -181,6 +183,7 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unassigned' %>
+    <input name="order[state]" type="hidden" value="<%= Order::state_val 'unscheduled' %>" />
     <div class="control-group">
       <label for="select-belong" class="control-label"><%= t(:belong) %></label>
       <div class="controls" id="select-belong">
@@ -193,6 +196,7 @@
       <%= f.button :submit, t(:assign_ok), :class => 'btn-primary' %>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'unscheduled' %>
+    <input name="order[state]" type="hidden" value="<%= Order::state_val 'scheduled' %>" />
     <%= f.input :phone_num, label: t(:confirmed_phone_num), input_html: { :class => 'numeric', :numeric => '', minlength: "8", maxlength: "13", "data-msg-required" => t(:phone_num_required), "data-msg-minlength" => t(:phone_num_minlength), "data-msg-maxlength" => t(:phone_num_minlength) } %>
     <%= f.input :address, label: t(:confirmed_address) %>
     <%= f.input :name, label: t(:confirmed_client_name) %>
@@ -204,6 +208,7 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'scheduled' %>
+    <input name="order[state]" type="hidden" value="<%= Order::state_val 'serve_done' %>" />
     <h5><%= t(:gather_auto_info) %></h5>
     <%= f.input :auto_km, label: t(:auto_km) %>
     <%= f.input :oil_out, label: t(:oil_out) %>
@@ -262,6 +267,7 @@
     </div>
     <%= javascript_include_tag "application" %>
   <% elsif Order::STATE_STRINGS[@order.state] == 'serve_done' %>
+    <input name="order[state]" type="hidden" value="<%= Order::state_val 'handovered' %>" />
     <%= render 'comments', :f => f %>
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">
@@ -269,6 +275,7 @@
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
   <% elsif Order::STATE_STRINGS[@order.state] == 'handovered' %>
+    <input name="order[state]" type="hidden" value="<%= Order::state_val 'revisited' %>" />
     <%= render 'comments', :f => f %>
     <%= f.input :client_comment, label: t('client_comment'), as: :text, :input_html => { :cols => 50, :rows => 3, :placeholder => t(:client_comment_usage) } %>
     <div class="form-actions">

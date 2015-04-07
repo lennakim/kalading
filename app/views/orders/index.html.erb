@@ -1,7 +1,6 @@
 <%- model_class = Order -%>
 <div class="row">
   <div class="span12">
-    <%= bootstrap_flash %>
     <div class="page-header">
       <%  if can? :edit_all, Order and !mobile_device? %>
         <div>
@@ -110,6 +109,12 @@
     <div id="order-search-form" class="collapse">
       <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
         <input name="state" type="hidden" value="<%= params[:state] %>" />
+        <div class="control-group">
+          <%= label_tag :seq, t('order_id'), class: 'control-label' %>
+          <div class="controls form-inline">
+            <%= text_field_tag :seq, params[:seq], class: 'control' %>
+          </div>
+        </div>
         <% if params[:states].present? %>
           <% params[:states].each do |s| %>
             <input name="states[]" type="hidden" value="<%= s %>" />
@@ -198,12 +203,6 @@
               <a class="btn created-at-shortcut" data-msg="<%= Date.yesterday.strftime '%Y-%m-%d' %>"><%= t(:yesterday) %></a>
               <a class="btn created-at-clear"><%= t(:clear) %></a>
             </div>
-          </div>
-        </div>
-        <div class="control-group">
-          <%= label_tag :seq, t('order_id'), class: 'control-label' %>
-          <div class="controls form-inline">
-            <%= text_field_tag :seq, params[:seq], class: 'control' %>
           </div>
         </div>
         <div class="control-group select">

@@ -106,6 +106,7 @@ class Ability
       can [:edit, :update, :mgmt_console], City do |c|
         user.city == c
       end
+      can [:create, :update], Engineer
     end
   end
 end

@@ -14,9 +14,11 @@
         <% end %>
       </ul>
     </div>
-    <a type="button" class="btn btn-inverse pull-right">
-      <%= t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ) %></i>
-    </a>
+      <% if !mobile_device? %>
+      <a type="button" class="btn btn-inverse pull-right">
+        <%= t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ) %></i>
+      </a>
+      <% end %>
     <% end %>
   </div>
   <div id="sb-site" class="top-padding">

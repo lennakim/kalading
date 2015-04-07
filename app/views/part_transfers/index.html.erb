@@ -1,0 +1,41 @@
+<%- model_class = PartTransfer -%>
+<div class="page-header">
+  <h1><%=t 'part_transfer' %></h1>
+</div>
+<%= render "search_form" %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th><%= t(:part_number) %></th>
+      <th><%= t(:quantity) %></th>
+      <th><%= t(:state) %></th>
+      <th><%= t(:created_at) %></th>
+      <th><%= t 'actions' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @part_transfers.each do |part_transfer| %>
+      <tr>
+        <td><%= link_to part_transfer.id, part_transfer_path(part_transfer) %></td>
+        <td><%= link_to part_transfer.part.number, part_path(part_transfer.part) %></td>
+        <td><%= part_transfer.quantity %></td>
+        <td><%= t(part_transfer.aasm_state) %></td>
+        <td><%=l part_transfer.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_part_transfer_path(part_transfer), :class => 'btn btn-mini' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      part_transfer_path(part_transfer),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_part_transfer_path,
+            :class => 'btn btn-primary' %>

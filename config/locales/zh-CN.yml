@@ -162,6 +162,12 @@ zh-CN:
   mongoid:
     errors:
       models:
+        part_transfer:
+          attributes:
+            quantity:
+              inclusion: '数量不能为空'
+            target_sh_id:
+              blank: '请选择目标仓库'
         engineer:
           attributes:
             work_tag_number:
@@ -486,7 +492,7 @@ zh-CN:
   order_verify_failed: '订单%{seq} 未通过审核'
   reverify: '重新审核'
   order_verified_notify: '订单%{seq} 审核成功'
-  order_assigned_notify: '订单%{seq} 分配给技师：%{name}'
+  order_assigned_notify: '订单%{seq} 分配成功'
   order_scheduled_notify: '订单%{seq} 预约完成'
   order_served_notify: '订单%{seq} 上门服务完成'
   order_handovered_notify: '订单%{seq} 交接完成'
@@ -1131,3 +1137,7 @@ zh-CN:
   boarding: "入职"
   dimissory: "离职"
   part_count: '配件型号的个数'
+  source_target_sh_same: '不能在一个仓库内调货'
+  part_transfering: '在途'
+  part_transfer_finished: '完成'
+  from: '从'

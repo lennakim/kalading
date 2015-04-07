@@ -5,7 +5,7 @@
 @media screen and (max-width: 568px) {
     #order-table {
         // hide some columns for mobile device
-        @each $i in 4, 5, 6 , 7, 8, 9, 11, 12, 13, 14, 15 {
+        @each $i in 4, 5, 6 , 7, 8, 9, 10, 11, 12, 14, 15 {
             th:nth-child(#{$i}) {
                 display: none;
             }

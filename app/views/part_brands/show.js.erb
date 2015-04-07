@@ -1,4 +1,4 @@
-$("#partbatch_part_id, #part_id").html("<%= escape_javascript( options_for_select(@part_brand.parts.asc(:number).map {|p| [p.number, p.id]})) %>");
+$("#partbatch_part_id, #part_id, #part_transfer_part_id").html("<%= escape_javascript( options_for_select(@part_brand.parts.asc(:number).map {|p| [p.number, p.id]})) %>");
 $("#part-number-search").val("<%= @part_brand.parts.asc(:number).first.number %>");
 <% if params[:sh_id].present? %>
   <% q = Storehouse.find(params[:sh_id]).partbatches.where(part: @part_brand.parts.asc(:number).first).sum(:remained_quantity) %>

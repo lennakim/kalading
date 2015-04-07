@@ -1,5 +1,8 @@
 Kalading::Application.routes.draw do
 
+  resources :part_transfers
+
+
   get "doc/v2"
 
   resources :engineers do

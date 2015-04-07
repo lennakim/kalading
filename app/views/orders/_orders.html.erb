@@ -49,7 +49,15 @@
               <p class="alert alert-error"><%= order.cancel_reason %></p>
             <% end %>
           </td>
-          <td><%= l order.serve_datetime if order.serve_datetime %></td>
+          <td>
+            <% if order.serve_datetime %>
+              <% if mobile_device? %>
+                <%= order.serve_datetime.strftime('%m-%d') %>
+              <% else %>
+                <%= l order.serve_datetime %>
+              <% end %>
+            <% end %>
+          </td>
           <td>
             <% if order.engineer %>
               <%= order.engineer.name %>
@@ -99,7 +107,13 @@
             <% end %>
           </td>
           <td><%= humanized_money_with_symbol order.calc_price %></td>
-          <td><%=l order.created_at %></td>
+          <td>
+            <% if mobile_device? %>
+              <%= order.created_at.strftime('%m-%d') %>
+            <% else %>
+              <%= l order.created_at %>
+            <% end %>
+          </td>
           <td>
             <% if order.comments.empty? %>
               <%= t(:nothing) %>
@@ -123,7 +137,7 @@
               </div>
             <% end %>  
           </td>
-        <% end %>
+          <% end %>
           <% if current_user && current_user.roles.include?('8') %>
             <td><%= t(Order::RECIEPT_STATE_STRINGS[order.reciept_state]) %></td>
             <td><%= t(Order::RECIEPT_TYPE_STRINGS[order.reciept_type]) %></td>
@@ -170,7 +184,7 @@
               <% end %>
               <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
               <%= link_to t(:cancel), edit_order_path(order, cancel: 1), :class => 'btn btn-mini', :remote => true if can? :edit_all, order and (%w[unverified verify_error unassigned unscheduled scheduled].include? Order::STATE_STRINGS[order.state]) %>
-              <%= link_to t(:print), print_order_path(order), :class => 'btn btn-mini', :target => '_blank' if (%w[unscheduled scheduled serve_done].include? Order::STATE_STRINGS[order.state]) %>
+              <%= link_to t(:print), print_order_path(order), :class => 'btn btn-mini', :target => '_blank' if (%w[unscheduled scheduled serve_done].include? Order::STATE_STRINGS[order.state]) && !mobile_device? %>
               <%= link_to t(:comment), edit_order_path(order, add_comment: 1), :class => 'btn btn-mini', :remote => true %>
               <%= link_to t(:send_sms), order_send_sms_notify_path(order),
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },

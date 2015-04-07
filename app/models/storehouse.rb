@@ -30,6 +30,7 @@ class Storehouse
   validates :phone_num, length: { in: 7..32 }, presence: true
 
   scope :sections, -> { where(type: 0) }
+  scope :houses, -> { where(type: 1) }
 
   def to_csv(options = {})
     CSV.generate(options) do |csv|

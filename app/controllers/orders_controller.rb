@@ -282,17 +282,14 @@ class OrdersController < ApplicationController
   # PUT /orders/1
   # PUT /orders/1.json
   def update
-    params[:edit_all] = true if request.format.json?
     params[:order][:car_num].upcase! if params[:order][:car_num]
     @order = Order.find(params[:id])
-    old_state = @order.state
+    return render json: t(:no_orders_found), status: :bad_request if @order.nil?
     if params[:verify_failed]
-      params[:order][:state] = 1
-      notice = I18n.t(:order_verify_failed, seq: @order.seq)
-    elsif params[:edit_all] || params[:add_comment] || params[:invoice]
-      notice = I18n.t(:order_saved_notify, seq: @order.seq)
+      params[:order][:state] = Order::state_val('verify_error')
     elsif params[:cancel]
-      params[:order][:state] = 10
+      params[:order][:state] = Order::state_val('cancel_pending')
+      #取消时退回账户余额
       if @order.balance_pay > 0
         params[:order][:balance_pay] = 0
         c = Client.find_or_create_by phone_num: @order.phone_num
@@ -300,67 +297,22 @@ class OrdersController < ApplicationController
           c.update_attributes balance: c.balance + @order.balance_pay
         end
       end
-      notice = I18n.t(:order_cancel_pending, seq: @order.seq)
     elsif params[:cancel_confirm]
-      params[:order][:state] = 8
-      notice = I18n.t(:order_cancelled, seq: @order.seq)
-    else
-      params[:order][:state] = 1
-      case @order.state
-      when 0..1
-        params[:order][:state] = 2
-        notice = I18n.t(:order_verified_notify, seq: @order.seq)
-      when 2
-        u = User.find(params[:order][:engineer_id])
-        params[:order][:state] = 3
-        notice = I18n.t(:order_assigned_notify, seq: @order.seq, name: u.name)
-      when 3
-        if params[:order][:part_deliver_state] == '1'
-          params[:order][:state] = 3
-          notice = I18n.t(:order_delivered_notify, seq: @order.seq)
-        else
-          params[:order][:state] = 4
-          notice = I18n.t(:order_scheduled_notify, seq: @order.seq)
-        end
-      when 4
-        if params[:order][:part_deliver_state] == '1'
-          params[:order][:state] = 4
-          notice = I18n.t(:order_delivered_notify, seq: @order.seq)
-        else
-          if @order.part_deliver_state == 0
-            return render json: {error: t(:order_create_failed)}, status: :bad_request
-          end
-          params[:order][:state] = 5
-          notice = I18n.t(:order_served_notify, seq: @order.seq)
-        end
-      when 5
-        if params[:order][:part_deliver_state] == '2'
-          params[:order][:state] = 5
-          notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
-        else
-          params[:order][:state] = 6
-          notice = I18n.t(:order_handovered_notify, seq: @order.seq)
-        end
-      when 6
-        params[:order][:state] = 7
-        notice = I18n.t(:order_revisited_notify, seq: @order.seq)
-      when 8
-        params[:order][:state] = 8
-        if params[:order][:part_deliver_state] == '2'
-          notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
-        end
-      when 10
-        params[:order][:state] = 10
-        if params[:order][:part_deliver_state] == '2'
-          notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
-        else
-          notice = I18n.t(:order_served_notify, seq: @order.seq)
-        end
-      else
-        notice = I18n.t(:order_saved_notify, seq: @order.seq)
-      end
+      params[:order][:state] = Order::state_val('service_cancelled')
     end
-
+    
+    if params[:order][:part_deliver_state] == '1'
+      notice = I18n.t(:order_delivered_notify, seq: @order.seq)
+    elsif params[:order][:part_deliver_state] == '2'
+      notice = I18n.t(:order_part_backed_notify, seq: @order.seq)
+    else
+      notices = [
+        :order_saved_notify, :order_verify_failed, :order_verified_notify, :order_assigned_notify, :order_scheduled_notify,
+        :order_served_notify, :order_handovered_notify, :order_revisited_notify, :order_cancelled, :order_saved_notify, :order_cancel_pending
+      ]
+      notice = I18n.t notices[params[:order][:state].to_i], seq: @order.seq
+    end
+    old_state = @order.state
     respond_to do |format|
       if @order.update_attributes(params[:order])
         # 状态改变时，通知微车，发短信

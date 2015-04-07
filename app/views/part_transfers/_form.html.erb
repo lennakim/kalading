@@ -1,0 +1,26 @@
+<%= simple_form_for @part_transfer, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.association :source_sh, label: t('from'), collection: Storehouse.houses.asc(:name) %>
+  <%= f.association :target_sh, label: t('target_storehouse'), collection: Storehouse.houses.asc(:name) %>
+  
+  <div class="control-group">
+    <label for="search-part-number" class="control-label"><%= t(:number_query) %></label>
+    <div class="controls" id="search-part-number">
+      <%= render 'partbatches/part_number_search' %>
+    </div>
+  </div>
+
+  <div class="control-group select">
+    <%= label_tag :part_part_brand_id, t('choose_brand_and_number'), class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select :part, :part_brand_id, PartBrand.desc(:name), :id, :name, {}, {:rel => "/part_brands", :class => 'control form-inline'} %>
+      <%= collection_select :part_transfer, :part_id, PartBrand.desc(:name).first.parts, :id, :number, {}, {:rel => "/parts", :class => 'control form-inline'} %>
+    </div>
+  </div>
+  
+  <%= f.input :quantity, input_html: {type: 'number', value: '1', step:'1', min: '1', max: '99999'}, label: t('quantity') %>
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                part_transfers_path, :class => 'btn' %>
+  </div>
+<% end %>
