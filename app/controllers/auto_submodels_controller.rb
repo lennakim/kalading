@@ -204,5 +204,13 @@ class AutoSubmodelsController < ApplicationController
       @parts = @auto_submodel.parts
     end
   end
-
+  
+  def uploadpic
+    @auto_submodel = AutoSubmodel.find(params[:id])
+    pic = @auto_submodel.pictures.create!(p: params[:pic_data], desc: params[:desc])
+    respond_to do |format|
+      format.html { head :no_content }
+      format.json { render json: {result: 'ok', url: pic.p.url }, status: :ok }
+    end
+  end
 end

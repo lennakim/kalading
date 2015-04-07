@@ -12,8 +12,10 @@ json.serve_datetime o.serve_datetime.strftime('%Y-%m-%d %H:%M') if o.serve_datet
 json.serve_end_datetime o.serve_end_datetime.strftime('%Y-%m-%d %H:%M') if o.serve_end_datetime
 if o.auto_submodel
   json.auto_model o.auto_submodel.full_name
+  json.auto_id o.auto_submodel.id
 else
   json.auto_model ''
+  json.auto_id ''
 end
 json.service_types do
   json.array! o.service_types do |st|
@@ -41,7 +43,7 @@ else
   json.reciept_title o.reciept_title
   json.reciept_address o.reciept_address
 end
-json.evaluated o.evaluation_time ? 1 : 0
+json.evaluated (o.evaluation_time || o.evaluation) ? 1 : 0
 json.set! 'asm_pics' do
   if o.auto_submodel
     json.array! o.auto_submodel.pictures do |p|

@@ -32,7 +32,8 @@
       <%= @discount.service_types.map{|s| s.name}.join(',') %>
     <% end %>
   </dd>
-  
+  <dt><strong><%= t(:desc) %>:</strong></dt>
+  <dd><%= @discount.desc %></dd>
 </dl>
 <% else %>
   <span class="alert"><%= t(:discount_not_exist) %></span>
