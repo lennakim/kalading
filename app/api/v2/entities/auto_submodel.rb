@@ -3,10 +3,10 @@ module V2
     class AutoSubmodel < BaseEntity
       expose :id
       expose :name
-      expose :model
-      expose :brand
+      expose :year_range
+      expose :engine_displacement
       expose :full_name
-      expose :pictures, using: Picture
+      # expose :pictures, using: ::V2::Entities::Picture
     end
   end
 end
