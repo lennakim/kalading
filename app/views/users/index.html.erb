@@ -124,11 +124,6 @@
         <td>
           <%= link_to t('edit'),
                       edit_user_path(user), :class => 'btn btn-mini' if can? :update, user %>
-          <%= link_to t('destroy'),
-                      user_path(user),
-                      :method => :delete,
-                      :data => { :confirm => t('confirm_user_delete', n: user.name) },
-                      :class => 'btn btn-mini btn-danger' if can? :destroy, user %>
         </td>
       </tr>
     <% end %>

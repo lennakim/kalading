@@ -38,7 +38,7 @@
               <li><%= link_to t('part_types'), part_types_path %></li>
               <li><%= link_to t('part_brands'), part_brands_path %></li>
               <li><%= link_to t('supplier'), suppliers_path if !current_user.roles.include?('3') %></li>
-              <% orders = current_user.roles.include?('3') ? Order.where(city: current_user.city) : Order.all%>
+              <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
               <% if @orders && params[:part_deliver_state].to_i == 0 %>
               <li class="active">
               <% else %>

@@ -12,9 +12,9 @@ class Video
   field :create_time, type: DateTime, default: lambda { self.created_at }
   # 是否可以删除
   field :can_delete, type: Boolean, default: true
-  
+
   attr_accessible :url, :engineer_name, :bytes, :create_time, :can_delete
-  
+
   before_destroy :delete_remote_file
   def delete_remote_file
     begin
@@ -26,5 +26,5 @@ class Video
     rescue
     end
   end
-  
+
 end

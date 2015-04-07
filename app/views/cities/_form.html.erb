@@ -3,6 +3,7 @@
   <%= f.input :area_code, label: t('area_code') %>
   <%= f.input :opened, label: t(:opened), as: :boolean %>
   <%= f.input :order_capacity, label: t(:order_capacity), :as => :numeric, input_html: {min: "1", max: "9999", required: '', "data-msg-required" => t(:order_capacity_required) }, placeholder: t(:order_capacity_placeholder) %>
+  <%= f.association :parent, collection: City.not_in(_id: @city._id).asc(:name), label: t('parent_city') %>
   <table>
     <tbody>
       <%= f.fields_for :districts do |sf| %>
@@ -16,8 +17,8 @@
   <p><%= f.link_to_add t('add_district'), :districts %></p>
   
   <div class="form-actions">
-    <%= f.button :submit, :class => 'btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+    <%= f.button :submit, t(:save), :class => 'btn-primary' %>
+    <%= link_to t('cancel'),
                 cities_path, :class => 'btn' %>
   </div>
 <% end %>
