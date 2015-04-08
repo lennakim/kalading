@@ -1,0 +1,23 @@
+<% if @existed_siblings.present? -%>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <caption>
+        工具 <%= @tool_detail.tool_type.identification %> 已存在的组合
+      </caption>
+      <tr>
+        <th><%= ToolDetail.human_attribute_name('tool_type') %></th>
+        <th><%= ToolDetail.human_attribute_name('tool_brand') %></th>
+        <th><%= ToolDetail.human_attribute_name('tool_supplier') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @existed_siblings.each do |sibling| -%>
+        <tr>
+          <td><%= sibling.tool_type.identification %></td>
+          <td><%= sibling.tool_brand.name %></td>
+          <td><%= sibling.tool_supplier.name %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+<% end -%>

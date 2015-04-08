@@ -1,3 +1,25 @@
 <div class="span9 offset2">
   <%= render 'tool_types/nav' %>
+
+  <div>
+    <%= link_to t('new'), new_tool_detail_path, class: 'btn btn-success pull-right' if can? :create, ToolDetail %>
+  </div>
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th><%= ToolDetail.human_attribute_name('tool_type') %></th>
+        <th><%= ToolDetail.human_attribute_name('tool_brand') %></th>
+        <th><%= ToolDetail.human_attribute_name('tool_supplier') %></th>
+        <th><%= ToolDetail.human_attribute_name('lifetime') %></th>
+        <th><%= ToolDetail.human_attribute_name('warranty_period') %></th>
+        <th><%= ToolDetail.human_attribute_name('price') %></th>
+        <th><%= t('actions') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render @tool_details %>
+    </tbody>
+  </table>
+  <%= paginate @tool_details %>
 </div>

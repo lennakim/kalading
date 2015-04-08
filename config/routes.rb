@@ -103,7 +103,7 @@ Kalading::Application.routes.draw do
   resources :tool_assignees, only: [:index]
   resources :tool_brands, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :tool_suppliers, only: [:index, :new, :create, :edit, :update, :destroy]
-  resources :tool_details, only: [:index]
+  resources :tool_details, only: [:index, :new, :create, :edit, :update, :destroy]
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 

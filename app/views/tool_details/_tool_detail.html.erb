@@ -1,0 +1,15 @@
+<tr>
+  <td><%= tool_detail.tool_type.identification %></td>
+  <td><%= tool_detail.tool_brand.name %></td>
+  <td><%= tool_detail.tool_supplier.name %></td>
+  <td><%= tool_detail.lifetime %></td>
+  <td><%= tool_detail.warranty_period %></td>
+  <td><%= tool_detail.price %></td>
+  <td>
+    <%= link_to t('edit'), edit_tool_detail_path(tool_detail),
+      class: 'btn btn-small btn-primary' if can? :update, ToolDetail %>
+    <%= link_to t('destroy'), tool_detail_path(tool_detail),
+      method: 'delete', confirm: t('destroy_confirm'),
+      class: 'btn btn-small btn-danger' if can? :destroy, ToolDetail %>
+  </td>
+</tr>
