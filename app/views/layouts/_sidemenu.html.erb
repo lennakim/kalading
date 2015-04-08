@@ -3,6 +3,19 @@
     <div class="sb-toggle-left">
       <a class="btn btn-inverse"><i class="icon-tasks">&nbsp</i><%= t('admin.misc.navigation') %></a>
     </div>
+    <div class="btn-group pull-right">
+      <a type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+        <span id="user_state"><%= t(User::STATE_STRINGS[current_user.state]) %>&nbsp<i class="icon-chevron-down"></i></span>
+      </a>
+      <ul class="dropdown-menu" id="user_state_id">
+        <% (0..2).each do |s|%>
+          <li><%= link_to t(User::STATE_STRINGS[s]), "#", {:id => 'user_set_state_' + s.to_s }%></li>
+        <% end %>
+      </ul>
+    </div>
+    <a type="button" class="btn btn-inverse pull-right">
+      <%= t(:welcome_user, n: current_user.role_str + ' ' + current_user.name ) %></i>
+    </a>
   </div>
   <div id="sb-site" class="top-padding">
     <div class="container-fluid">

@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <%= render '/layouts/header' %>
-  <% if mobile_device? %>
-    <%= render '/layouts/sidemenu' %>
-  <% else %>
-  <body>
-    <%= render '/layouts/menu' %>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <%= bootstrap_flash %>
-        <%= yield %>
-      </div>
-    </div>
-    <footer>
-      <p>&copy; Kalading 2013-2015</p>
-    </footer>
-  </body>
-  <% end %>
+  <%= render '/layouts/sidemenu' %>
 </html>
