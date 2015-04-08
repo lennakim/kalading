@@ -15,15 +15,9 @@ class Engineer < User
 
   # 工牌 TODO 7位
   field :work_tag_number, type: String
-  # TODO：目前技师的工牌都是空，导致update_realtime_info 抛出validation error
-
-  # validates :work_tag_number, uniqueness: true, length: { is: 7 }
-
-  # 所配车辆 TODO
+  validates :work_tag_number, uniqueness: true, length: { is: 7 }, allow_blank: true
 
   attr_accessible :work_tag_number, :level, :aasm_state, :work_tag_number
-
-  # 技师状态 培训状态 -- 养护技师状态(生成工号)
 
   include AASM
   BOARDING_TEST_LIMIT = 2
