@@ -3,6 +3,17 @@
 
   <div>
     <%= link_to t('new'), new_tool_detail_path, class: 'btn btn-success pull-right' if can? :create, ToolDetail %>
+
+    <%= form_tag tool_details_path, class: 'form-inline', method: :get do %>
+      <%= select_tag 'tool_type_id', options_from_collection_for_select(ToolType.all, 'id', 'identification', params[:tool_type_id]),
+        prompt: ToolType.model_name.human %>
+      <%= select_tag 'tool_brand_id', options_from_collection_for_select(ToolBrand.all, 'id', 'name', params[:tool_brand_id]),
+        prompt: ToolBrand.model_name.human %>
+      <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all, 'id', 'name', params[:tool_supplier_id]),
+        prompt: ToolSupplier.model_name.human %>
+
+      <%= submit_tag t('search'), class: 'btn' %>
+    <% end -%>
   </div>
 
   <table class="table table-striped table-bordered table-hover">

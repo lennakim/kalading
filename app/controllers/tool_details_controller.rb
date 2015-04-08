@@ -3,7 +3,21 @@ class ToolDetailsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @tool_details = ToolDetail.page(params[:page]).per(20)
+    criteria = ToolDetail
+
+    if params[:tool_type_id].present?
+      criteria = criteria.where(tool_type_id: params[:tool_type_id])
+    end
+
+    if params[:tool_brand_id].present?
+      criteria = criteria.where(tool_brand_id: params[:tool_brand_id])
+    end
+
+    if params[:tool_supplier_id].present?
+      criteria = criteria.where(tool_supplier_id: params[:tool_supplier_id])
+    end
+
+    @tool_details = criteria.page(params[:page]).per(20)
   end
 
   def new
