@@ -1,0 +1,8 @@
+<%= simple_form_for @tool_brand, html: { class: 'form-horizontal' } do |f| %>
+  <%= f.input :name %>
+
+  <div class="form-actions">
+    <%= f.button :submit, t('save'), :class => 'btn btn-primary' %>
+    <%= link_to t('cancel'), tool_brands_path, :class => 'btn' %>
+  </div>
+<% end -%>

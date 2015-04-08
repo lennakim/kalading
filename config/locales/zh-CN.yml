@@ -235,6 +235,9 @@ zh-CN:
       service_vehicle: '上门服务车辆'
       tool_batch: '进货信息'
       tool_stock: '库存信息'
+      tool_detail: '工具信息库'
+      tool_brand: '品牌'
+      tool_supplier: '供应商'
     attributes:
       engineer:
         city: '城市'
@@ -286,6 +289,11 @@ zh-CN:
       tool_assignee:
         city: '城市'
         tool_type: '工具'
+      tool_detail:
+      tool_brand:
+        name: '品牌名称'
+      tool_supplier:
+        name: '供应商名称'
 
   devise:
     failure:
