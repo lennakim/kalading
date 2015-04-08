@@ -3,7 +3,7 @@ module V2
     class City < BaseEntity
       expose :id
       expose :name
-      expose :districts, using: District
+      expose :districts, using: ::V2::Entities::District
     end
   end
 end

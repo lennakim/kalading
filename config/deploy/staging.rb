@@ -29,4 +29,15 @@ set :rails_env, :staging
 
 set :enable_ssl, false
 
+namespace :mongoid do
+  desc "Create MongoDB indexes"
+
+  task :index do
+    run "cd #{deploy_to}/current && bundle exec rake db:mongoid:create_indexes", once: true
+  end
+end
+
 after 'deploy:publishing', 'puma:restart'
+
+# after 'deploy:publishing', 'mongoid:index'
+# after 'mongoid:index', 'puma:restart'

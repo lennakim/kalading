@@ -796,6 +796,9 @@ class OrdersController < ApplicationController
     if params[:maintain_only].to_i == 1
       @conditions["service_type_ids"] = { "$all" => [ ServiceType.find_by(name: t(:auto_maintain_service_type_name)).id ] }
     end
+    if params[:user_type].present?
+      @conditions["user_type_id"] = Moped::BSON::ObjectId(params[:user_type])
+    end
     respond_to do |format|
       format.html
     end
