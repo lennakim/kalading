@@ -13,7 +13,7 @@ class EngineersController < ApplicationController
     end
 
     if params[:work_tag_number].present?
-      @engineers = @engineers.where(work_tag_number: params[:work_tag_number])
+      @engineers = @engineers.where(work_tag_number: /.*#{params[:work_tag_number]}.*/i)
     end
 
     if params[:city_id].present?

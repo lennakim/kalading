@@ -23,7 +23,7 @@
     </div>
 
     <div class="control-group select">
-      <%= label_tag :city_storehouse_id, t(:storehouse), class: 'control-label' %>
+      <%= label_tag :city_storehouse_id, "点部", class: 'control-label' %>
       <div class="controls form-inline">
         <%= select(:city, :storehouse_id, option_groups_from_collection_for_select(City.all, :sections, :name, :id, :name, @storehouse_id), {include_blank: "所有"}) %>
       </div>
