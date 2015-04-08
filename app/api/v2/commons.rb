@@ -10,6 +10,20 @@ module V2
         present :code, 0
         present :data, cities, with: V2::Entities::City
       end
+
+      params do
+        requires :id
+        optional :start_at, :end_at
+      end
+      get ":id/capacity" do
+        city = City.find(params[:id])
+
+        start_at = Date.parse params[:start_at] if params[:start_at]
+        end_at = Date.parse params[:end_at] if params[:end_at]
+
+        result = city.capacity(start_at , end_at)
+        wrapper(result)
+      end
     end
 
     resources :autos do
