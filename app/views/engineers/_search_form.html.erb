@@ -23,20 +23,9 @@
     </div>
 
     <div class="control-group select">
-      <%= label_tag :city_id, t(:cities), class: 'control-label' %>
-      <div class="controls form-inline">
-        <%= select_tag(:city_id, options_for_select(
-          City.all.map do |city|
-            [city.name, city.id]
-          end, params[:city_id]
-        ), {prompt: "所有"}) %>
-      </div>
-    </div>
-
-    <div class="control-group select">
       <%= label_tag :city_storehouse_id, t(:storehouse), class: 'control-label' %>
       <div class="controls form-inline">
-        <%= select(:city, :storehouse_id, option_groups_from_collection_for_select(City.all, :storehouses, :name, :id, :name, @storehouse_id), {include_blank: "所有"}) %>
+        <%= select(:city, :storehouse_id, option_groups_from_collection_for_select(City.all, :sections, :name, :id, :name, @storehouse_id), {include_blank: "所有"}) %>
       </div>
     </div>
 

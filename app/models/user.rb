@@ -73,6 +73,8 @@ class User
   belongs_to :storehouse
   belongs_to :city
 
+  has_many :examination_papers, class_name: "Testing", inverse_of: :examiner # 评卷
+
   validates_uniqueness_of :phone_num, :allow_blank => true
   validates :city_id, presence: true
 

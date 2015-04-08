@@ -1,0 +1,73 @@
+<div class="container">
+
+  <h2>员工：<%= resource.name %></h2>
+
+  <table class="table table-striped">
+    <tr>
+      <td>姓名</td>
+      <td><%= resource.name %></td>
+    </tr>
+
+    <tr>
+      <td>工牌</td>
+      <td><%= resource.work_tag_number %></td>
+    </tr>
+
+    <tr>
+      <td>状态</td>
+      <td><%= resource.state_str %></td>
+    </tr>
+
+    <tr>
+      <td>本月订单情况</td>
+
+      <td>
+        <table class="table">
+          <% resource.service_orders_count.each do |mapping| %>
+            <tr>
+              <td>
+                <%= ServiceType.find(mapping["_id"]).name %>
+              </td>
+              <td>
+                <%= mapping["value"] %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td>已经参与的考试</td>
+      <td>
+        <table>
+          <% resource.testings.each do |testing| %>
+            <tr>
+              <td><%= link_to testing.testing_paper.title, engineer_testing_path(resource, testing) %></td>
+              <td><%= testing.pass? ? "通过" : "没通过" %></td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td>考试</td>
+      <td>
+
+        <table class='table table-striped'>
+          <% TestingPaper.all.each do |paper| %>
+            <tr>
+              <td><%= paper.title %></td>
+                <% if resource.can_take_boarding_exam? %>
+                  <td><%= link_to "参加", engineer_take_exam_path(resource, paper) %></td>
+                <% end %>
+            </tr>
+          <% end %>
+        </table>
+
+      </td>
+    </tr>
+
+  </table>
+</div>

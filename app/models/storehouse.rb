@@ -2,7 +2,7 @@
 class Storehouse
   include Mongoid::Document
   include Mongoid::Timestamps
-  
+
   field :name, type: String
   # 地址
   field :address, type: String
@@ -12,9 +12,9 @@ class Storehouse
   field :comment, type: String
   # 类型，点部或仓库
   field :type, type: Integer, default: 0
-  
+
   attr_accessible :name, :address, :phone_num, :partbatch_ids, :partbatches_attributes, :city_id, :comment, :type
-  
+
   # 仓库有很多配件批次
   has_many :partbatches, dependent: :destroy
   # 点部有很多技师
@@ -28,7 +28,7 @@ class Storehouse
   validates :name, length: { in: 2..32 }, presence: true
   validates :address, length: { in: 2..128 }, presence: true
   validates :phone_num, length: { in: 7..32 }, presence: true
-  
+
   def to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << [I18n.t(:part_brand), I18n.t(:part_number), I18n.t(:part_type), I18n.t(:in_quantity), I18n.t(:remained_quantity), I18n.t(:remark)]

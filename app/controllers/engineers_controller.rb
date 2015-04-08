@@ -52,6 +52,15 @@ class EngineersController < ApplicationController
     create!{ engineers_path }
   end
 
+  def take_exam
+    @engineer = Engineer.find params[:engineer_id]
+    @paper = TestingPaper.find params[:paper_id]
+  end
+
+  def boarding_info
+
+  end
+
   protected
 
   def collection

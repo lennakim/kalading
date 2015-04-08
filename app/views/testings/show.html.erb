@@ -1,0 +1,32 @@
+<div class="container">
+  <table class="table table-striped">
+
+    <tr>
+      <td>考生</td>
+      <td><%= link_to parent.name, engineer_path(parent) %></td>
+    </tr>
+
+    <tr>
+      <td>考官</td>
+      <td><%= link_to resource.examiner.name, user_path(resource.examiner) %></td>
+    </tr>
+
+    <tr>
+      <td>考试类型</td>
+      <td><%= resource.type_str %></td>
+    </tr>
+
+    <tr>
+      <td>考试时间</td>
+      <td><%= resource.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+    </tr>
+
+    <% resource.testings_items_mappings.each do |mapping| %>
+      <tr>
+        <td><%= mapping.testing_item.content %></td>
+        <td><%= mapping.pass == 1 ? "通过" : "不通过" %></td>
+      </tr>
+    <% end %>
+
+  </table>
+</div>

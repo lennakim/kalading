@@ -1,5 +1,11 @@
 class Engineer < User
 
+  class << self
+    def migrate_state_to_boarding
+      self.update_all state: 1
+    end
+  end
+
   paginates_per 15
 
   field :roles, type: Array, default: ["5"]
@@ -15,16 +21,21 @@ class Engineer < User
 
   # 所配车辆 TODO
 
-  attr_accessible :work_tag_number
+  attr_accessible :work_tag_number, :level, :state, :aasm_state, :work_tag_number
 
   # 技师状态 培训状态 -- 养护技师状态(生成工号)
 
   include AASM
-  field :boarding_exam_times, type: Integer, default: 0
+  BOARDING_TEST_LIMIT = 2
   field :aasm_state
 
-  has_many :testings
-  has_many :examination_papers, class_name: "Testing", inverse_of: :examiner
+  STATES = %w- 培训 上岗 -
+
+  def state_str
+    STATES[state]
+  end
+
+  has_many :testings # 考卷
 
   aasm do
     state :training, :initial => true # 培训技师
@@ -33,7 +44,7 @@ class Engineer < User
     event :exam do
       transitions from: :training, to: :boarding do
         guard do
-          exam_pass?
+          boarding_exam_pass?
         end
       end
 
@@ -43,8 +54,12 @@ class Engineer < User
     end
   end
 
-  def exam_pass?
-    true
+  def boarding_exam_pass?
+    testings.boarding.any?{ |t| t.pass? }
+  end
+
+  def can_take_boarding_exam?
+    testings.boarding.length < BOARDING_TEST_LIMIT && !boarding_exam_pass?
   end
 
   def generate_working_tag_number

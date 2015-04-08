@@ -3,5 +3,9 @@ class TestingItem
   include Mongoid::Timestamps
 
   has_many :testings_items_mappings
-  has_many :testings, through: :testings_items_mappings
+  belongs_to :testing_paper
+
+  field :content
+
+  validates :content, presence: true
 end
