@@ -21,7 +21,7 @@ class Engineer < User
 
   # 所配车辆 TODO
 
-  attr_accessible :work_tag_number, :level, :state, :aasm_state, :work_tag_number
+  attr_accessible :work_tag_number, :level, :aasm_state, :work_tag_number
 
   # 技师状态 培训状态 -- 养护技师状态(生成工号)
 
@@ -29,10 +29,11 @@ class Engineer < User
   BOARDING_TEST_LIMIT = 2
   field :aasm_state
 
-  STATES = %w- 培训 上岗 -
-
   def state_str
-    STATES[state]
+    {
+      "training" => "培训",
+      "boarding" => "入职"
+    }[aasm_state]
   end
 
   has_many :testings # 考卷

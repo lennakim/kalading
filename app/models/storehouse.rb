@@ -29,6 +29,8 @@ class Storehouse
   validates :address, length: { in: 2..128 }, presence: true
   validates :phone_num, length: { in: 7..32 }, presence: true
 
+  scope :sections, -> { where(type: 0) }
+
   def to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << [I18n.t(:part_brand), I18n.t(:part_number), I18n.t(:part_type), I18n.t(:in_quantity), I18n.t(:remained_quantity), I18n.t(:remark)]

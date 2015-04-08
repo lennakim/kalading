@@ -11,7 +11,8 @@
 
   <%= f.input :email, :required => true, :autofocus => true %>
 
-  <%= f.association :storehouse, label: t('belong'), collection: Storehouse.asc(:name) %>
+  <%= f.association :storehouse, label: t('belong'), collection: Storehouse.sections.asc(:name) %>
+
   <%= f.input :remark, label: t('remark'), as: :text, :input_html => { :cols => 50, :rows => 3 } %>
 
   <% if params[:action] == 'new' %>
