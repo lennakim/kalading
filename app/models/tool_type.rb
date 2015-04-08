@@ -6,10 +6,11 @@ class ToolType
   CATEGORIES = %w[with_engineer with_vehicle]
 
   field :name, type: String
+  field :spec, type: String
   field :category, type: String
   field :unit, type: String
 
-  attr_accessible :name, :category, :unit
+  attr_accessible :name, :spec, :category, :unit
 
   validates :name, presence: true
   validates :category, inclusion: { in: CATEGORIES }
@@ -30,5 +31,9 @@ class ToolType
 
   def can_be_deleted?
     !ToolBatch.where(tool_type_id: self.id).exists?
+  end
+
+  def identification
+    spec.present? ? "#{name}-#{spec}" : name
   end
 end

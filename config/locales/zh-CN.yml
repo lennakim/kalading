@@ -243,8 +243,10 @@ zh-CN:
         discarded_count: '损坏/丢失数'
       tool_type:
         name: '名称'
+        spec: '规格'
         category: '类别'
         unit: '单位'
+        identification: '名称-规格'
       service_vehicle:
         number: '车牌号'
         city: '城市'
