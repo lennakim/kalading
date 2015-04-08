@@ -17,7 +17,7 @@
 }
 
 #sb-site.top-padding {
-  padding-top: 50px;
+  padding-top: 70px;
   padding-left: 20px;
   padding-right: 20px;
   z-index: 1051; /*z-index of bootstrap backdrop is 1050*/
