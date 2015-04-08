@@ -35,7 +35,7 @@ class ToolSuppliersController < ApplicationController
       flash[:notice] = '删除成功'
       @tool_supplier.destroy
     else
-      flash[:error] = "#{@tool_supplier.model_name.human} #{@tool_supplier.name} 不能被删除"
+      flash[:error] = "#{@tool_supplier.model_name.human} #{@tool_supplier.name} 已使用，不能被删除"
     end
     redirect_to tool_suppliers_path
   end

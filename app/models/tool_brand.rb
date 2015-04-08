@@ -9,7 +9,6 @@ class ToolBrand
   validates :name, presence: true
 
   def can_be_deleted?
-    # TODO: 需实现
-    true
+    !ToolDetail.where(tool_brand_id: id).exists?
   end
 end
