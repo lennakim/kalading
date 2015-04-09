@@ -34,7 +34,13 @@
             <td><%= engineer.phone_num %></td>
 
             <td><%= link_to engineer.city.name, engineer.city %></td>
-            <td><%= link_to engineer.storehouse.try(:name), engineer.storehouse %></td>
+            <td>
+              <% if engineer.storehouse %>
+                <%= link_to engineer.storehouse.try(:name), engineer.storehouse %>
+              <% else %>
+                暂未分配点部
+              <% end %>
+            </td>
 
             <td>
               <table class="table">

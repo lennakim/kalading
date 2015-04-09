@@ -2,7 +2,7 @@ class EngineersController < ApplicationController
   inherit_resources
 
   def index
-    @engineers = Engineer.all
+    @engineers = Engineer.desc(:created_at)
 
     if params[:name].present?
       @engineers = @engineers.where(name: /.*#{params[:name]}.*/i)
@@ -47,6 +47,7 @@ class EngineersController < ApplicationController
   end
 
   def boarding_info
+    @engineer = Engineer.find params[:engineer_id]
   end
 
   protected

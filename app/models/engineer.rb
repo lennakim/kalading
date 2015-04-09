@@ -2,6 +2,12 @@ class Engineer < User
 
   paginates_per 15
 
+  # info
+  field :identity_card
+
+  attr_accessible :identity_card
+  # info
+
   field :roles, type: Array, default: ["5"]
 
   LEVEL_STR = %w-养护技师 高级养护技师 资深养护技师 首席养护技师-
@@ -12,6 +18,10 @@ class Engineer < User
   validates :work_tag_number, uniqueness: true, length: { is: 7 }, allow_blank: true
 
   attr_accessible :work_tag_number, :level, :aasm_state, :work_tag_number
+
+  # 入职、离职 时间
+  field :boarding_date, type: Date
+  field :leaving_date, type: Date
 
   include AASM
   BOARDING_TEST_LIMIT = 2
@@ -31,12 +41,16 @@ class Engineer < User
         end
         after do
           generate_working_tag_number
+          set_boarding_date
         end
       end
 
       transitions from: :training, to: :dimissory do
         guard do
           !boarding_exam_pass? && !can_take_boarding_exam?
+        end
+        after do
+          set_leaving_date
         end
       end
     end
@@ -48,6 +62,16 @@ class Engineer < User
 
   def can_take_boarding_exam?
     testings.boarding.length < BOARDING_TEST_LIMIT && !boarding_exam_pass?
+  end
+
+  def set_boarding_date
+    self.boarding_date = Time.now
+    save
+  end
+
+  def set_leaving_date
+    self.leaving_date = Time.now
+    save
   end
 
   def generate_working_tag_number

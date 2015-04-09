@@ -1,7 +1,10 @@
 <div class="container">
 
-  <h2>员工：<%= resource.name %></h2>
+  <h2>技师：<%= resource.name %></h2>
 
+  <hr>
+
+  <h4>基本信息</h4>
   <table class="table table-striped">
     <tr>
       <td>姓名</td>
@@ -14,30 +17,22 @@
     </tr>
 
     <tr>
+      <td>级别</td>
+      <td><%= resource.level_str %></td>
+    </tr>
+
+    <tr>
+      <td>入职日期</td>
+      <td><%= resource.boarding_date %></td>
+    </tr>
+
+    <tr>
       <td>状态</td>
       <td><%= t resource.aasm_state %></td>
     </tr>
 
     <tr>
-      <td>本月订单情况</td>
-      <td>
-        <table class="table">
-          <% resource.service_orders_count.each do |mapping| %>
-            <tr>
-              <td>
-                <%= ServiceType.find(mapping["_id"]).name %>
-              </td>
-              <td>
-                <%= mapping["value"] %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
-      </td>
-    </tr>
-
-    <tr>
-      <td>已经参与的考试</td>
+      <td>已经参与过的考试</td>
       <td>
         <table>
           <% resource.testings.each do |testing| %>
@@ -69,9 +64,72 @@
     <% if resource.boarding_exam_pass? %>
       <tr>
         <td>补全入职员工信息</td>
-        <td><%= link_to "开始录入", engineer_boarding_info_path(resource) %></td>
+        <td><%= link_to "录入", engineer_boarding_info_path(resource) %></td>
       </tr>
     <% end %>
 
   </table>
+
+  <hr>
+
+  <h4>详细信息</h4>
+  <table class="table table-striped">
+
+    <tr>
+      <td>身份证号</td>
+      <td><%= resource.identity_card %></td>
+    </tr>
+
+    <tr>
+      <td>点部</td>
+      <td>
+        <%= link_to resource.storehouse.name, resource.storehouse %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Email</td>
+      <td><%= resource.email %></td>
+    </tr>
+
+    <tr>
+      <td>系统角色</td>
+      <td><%= resource.role_str %></td>
+    </tr>
+
+    <tr>
+      <td>系统状态</td>
+      <td><%= t User::STATE_STRINGS[resource.state] %></td>
+    </tr>
+
+    <tr>
+      <td>手机号码</td>
+      <td><%= resource.phone_num %></td>
+    </tr>
+
+    <tr>
+      <td>本月订单情况</td>
+      <td>
+        <table class="table">
+          <% resource.service_orders_count.each do |mapping| %>
+            <tr>
+              <td>
+                <%= ServiceType.find(mapping["_id"]).name %>
+              </td>
+              <td>
+                <%= mapping["value"] %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td>备注</td>
+      <td><%= resource.remark %></td>
+    </tr>
+
+  </table>
+
 </div>
