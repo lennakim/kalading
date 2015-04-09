@@ -1,9 +1,16 @@
 <%= render 'existed_siblings' %>
 
 <%= simple_form_for @tool_detail, html: { class: 'form-horizontal' } do |f| %>
-  <%= f.association :tool_type, collection: ToolType.all, label_method: :identification, prompt: :translate %>
-  <%= f.association :tool_brand, collection: ToolBrand.all, label_method: :name, prompt: :translate %>
-  <%= f.association :tool_supplier, collection: ToolSupplier.all, label_method: :name, prompt: :translate %>
+  <% if @tool_detail.new_record? -%>
+    <%= f.association :tool_type, collection: ToolType.all, label_method: :identification, prompt: :translate %>
+    <%= f.association :tool_brand, collection: ToolBrand.all, label_method: :name, prompt: :translate %>
+    <%= f.association :tool_supplier, collection: ToolSupplier.all, label_method: :name, prompt: :translate %>
+  <% else -%>
+    <%= f.association :tool_type, collection: ToolType.all, label_method: :identification, disabled: true %>
+    <%= f.association :tool_brand, collection: ToolBrand.all, label_method: :name, disabled: true %>
+    <%= f.association :tool_supplier, collection: ToolSupplier.all, label_method: :name, disabled: true %>
+  <% end -%>
+
   <%= f.input :lifetime %>
   <%= f.input :warranty_period %>
   <%= f.input :price %>
