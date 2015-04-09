@@ -53,4 +53,45 @@ class City
   def serve_orders
     Order.where(:city_id.in => [self.id] + self.child_cities.map(&:id))
   end
+
+  def self.work_time?(time)
+    time == Date.tomorrow && DateTime.now.hour >= 17
+  end
+
+  def self.date_range(start_at, end_at)
+
+    start_at = Date.tomorrow if start_at.blank?
+    end_at = 2.weeks.since.to_date if end_at.blank?
+
+    start_date = if (start_at < Date.today) || (start_at > end_at)
+      Date.today
+    else
+      start_at
+    end
+
+    end_date = if (end_at < start_date) || (end_at - start_date > 14)
+      2.weeks.since.to_date
+    else
+      end_at
+    end
+
+    [start_date, end_date]
+  end
+
+  def capacity(start_at, end_at)
+    d1, d2 = City.date_range(start_at, end_at)
+
+    (d1 .. d2).inject([]) do |result, ele|
+      result << {
+        'date' => ele,
+        'capacity' => distribution_capacity(ele)
+      }
+    end
+  end
+
+  private
+
+  def distribution_capacity(time)
+    City.work_time?(time) ? [0,0,0] : Array.new(3, (order_capacity / 3))
+  end
 end
