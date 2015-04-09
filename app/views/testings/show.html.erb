@@ -1,4 +1,5 @@
 <div class="container">
+  <h3><%= resource.type_str %> 考试信息</h3>
   <table class="table table-striped">
 
     <tr>
@@ -17,7 +18,7 @@
     </tr>
 
     <tr>
-      <td>考试时间</td>
+      <td>成绩录入时间</td>
       <td><%= resource.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
     </tr>
 
