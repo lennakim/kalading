@@ -77,14 +77,17 @@ class City
   def capacity(start_at, end_at)
     d1, d2 = City.date_range(start_at, end_at)
 
-    [].tap do |item|
-      (d1..d2).inject({}) do |result, ele|
-        result['date'] = ele
-        result['capacity'] = City.work_time?(ele) ? [0,0,0] : Array.new(3, (order_capacity / 3))
-        item << result
-        {}
-      end
+    (d1 .. d2).inject([]) do |result, ele|
+      result << {
+        'date' => ele,
+        'capacity' => distribution_capacity(ele)
+      }
     end
   end
 
+  private
+
+  def distribution_capacity(time)
+    City.work_time?(time) ? [0,0,0] : Array.new(3, (order_capacity / 3))
+  end
 end
