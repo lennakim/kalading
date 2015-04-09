@@ -6,10 +6,10 @@ RSpec.describe TestingPaper, :type => :model do
     item_a = TestingItem.create content: "1111"
     item_b = TestingItem.create content: "2222"
 
-    @paper = TestingPaper.create
+    @paper = TestingPaper.create title: 'test'
 
-    @paper.add_items item_a
-    @paper.add_items item_b
+    @paper.testing_items << item_a
+    @paper.testing_items << item_b
   end
 
   it "should have testing paper with correct items" do

@@ -20,7 +20,6 @@
 
     <tr>
       <td>本月订单情况</td>
-
       <td>
         <table class="table">
           <% resource.service_orders_count.each do |mapping| %>
@@ -54,7 +53,6 @@
     <tr>
       <td>考试</td>
       <td>
-
         <table class='table table-striped'>
           <% TestingPaper.all.each do |paper| %>
             <tr>
@@ -65,9 +63,15 @@
             </tr>
           <% end %>
         </table>
-
       </td>
     </tr>
+
+    <% if resource.boarding_exam_pass? %>
+      <tr>
+        <td>补全入职员工信息</td>
+        <td><%= link_to "开始录入", engineer_boarding_info_path(resource) %></td>
+      </tr>
+    <% end %>
 
   </table>
 </div>

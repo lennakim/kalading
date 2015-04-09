@@ -1,11 +1,5 @@
 class Engineer < User
 
-  class << self
-    def migrate_state_to_boarding
-      self.update_all state: 1
-    end
-  end
-
   paginates_per 15
 
   field :roles, type: Array, default: ["5"]
@@ -13,7 +7,7 @@ class Engineer < User
   LEVEL_STR = %w-养护技师 高级养护技师 资深养护技师 首席养护技师-
   field :level, type: Integer, default: 0
 
-  # 工牌 TODO 7位
+  # 工牌
   field :work_tag_number, type: String
   validates :work_tag_number, uniqueness: true, length: { is: 7 }, allow_blank: true
 
@@ -26,18 +20,24 @@ class Engineer < User
   has_many :testings # 考卷
 
   aasm do
-    state :training, :initial => true # 培训技师
+    state :training, :initial => true # 培训
     state :boarding # 上岗
+    state :dimissory # 离职
 
     event :exam do
       transitions from: :training, to: :boarding do
         guard do
           boarding_exam_pass?
         end
+        after do
+          generate_working_tag_number
+        end
       end
 
-      after do
-        generate_working_tag_number
+      transitions from: :training, to: :dimissory do
+        guard do
+          !boarding_exam_pass? && !can_take_boarding_exam?
+        end
       end
     end
   end
@@ -70,9 +70,10 @@ class Engineer < User
       User.where(roles: "5").update_all _type: 'Engineer'
     end
 
-    def migrate_all_engineers_status_0
-      Engineer.update_all status: 0
+    def migrate_state_to_boarding
+      self.update_all state: 1
     end
+
   end
 
   # pm25_orders

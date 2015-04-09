@@ -23,12 +23,16 @@ class TestingsController < ApplicationController
       TestingsItemsMapping.create objs
 
       begin
-        parent.exam
+        parent.exam!
       rescue
         return redirect_to engineer_testing_path(parent, testing)
       end
 
-      redirect_to engineer_boarding_info_path parent
+      if parent.boarding?
+        redirect_to engineer_boarding_info_path parent
+      elsif parent.dimissory?
+        redirect_to engineers_path
+      end
     else
       render text: '出错了'
     end

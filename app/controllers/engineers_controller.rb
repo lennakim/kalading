@@ -47,7 +47,6 @@ class EngineersController < ApplicationController
   end
 
   def boarding_info
-
   end
 
   protected
