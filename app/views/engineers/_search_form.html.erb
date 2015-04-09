@@ -40,12 +40,21 @@
       </div>
     </div>
 
+    <div class="control-group select">
+      <%= label_tag :aasm_state, "状态", class: 'control-label' %>
+      <div class="controls form-inline">
+        <%= select_tag(:aasm_state, options_for_select(
+          Engineer.aasm.states.map(&:name).map do |state_name|
+            [t(state_name), state_name]
+          end, params[:aasm_state]
+        ), {prompt: "所有"}) %>
+      </div>
+    </div>
+
     <div class="control-group">
       <div class="controls">
         <button type="submit" class="btn">查找</button>
-
         <%= link_to "新建技师", new_engineer_path, class: 'btn btn-default' %>
-
       </div>
     </div>
 

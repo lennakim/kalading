@@ -29,7 +29,7 @@
           <tr>
             <td><%= link_to engineer.name, engineer_path(engineer) %></td>
             <td><%= engineer.work_tag_number %></td>
-            <td><%= engineer.state_str %></td>
+            <td><%= t(engineer.aasm_state) %></td>
             <td><%= engineer.level_str %></td>
             <td><%= engineer.phone_num %></td>
 

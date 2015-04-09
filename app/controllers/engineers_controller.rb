@@ -29,6 +29,10 @@ class EngineersController < ApplicationController
       @engineers = @engineers.where(level: params[:level])
     end
 
+    if params[:aasm_state].present?
+      @engineers = @engineers.where(aasm_state: params[:aasm_state])
+    end
+
     @engineers = @engineers.page params[:page]
     index!
   end

@@ -23,13 +23,6 @@ class Engineer < User
   BOARDING_TEST_LIMIT = 2
   field :aasm_state
 
-  def state_str
-    {
-      "training" => "培训",
-      "boarding" => "入职"
-    }[aasm_state]
-  end
-
   has_many :testings # 考卷
 
   aasm do
