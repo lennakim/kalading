@@ -1,123 +1,3 @@
-# 保养记录的轮胎信息
-class Wheel
-  include Mongoid::Document
-
-  field :name, type: String, default: ""
-  field :brand, type: String, default: ""
-  field :factory_data_checked, type: Boolean, default: true
-  field :factory_data, type: String, default: ""
-  field :tread_depth, type: Float, default: 0
-  field :ageing_desc, type: Integer, default: 0
-  field :tread_desc, type: Array, default: [0]
-  field :sidewall_desc, type: Array, default: [0]
-  field :pressure, type: Float, default: 0
-  field :width, type: Integer, default: 0
-  field :brake_pad_checked, type: Boolean, default: true
-  field :brake_pad_thickness, type: Float, default: 0
-  field :brake_disc_desc, type: Array, default: [0]
-
-  embedded_in :maintain, :inverse_of => :wheels
-
-  NAME_STRINGS_WIHT_SPARE = {0=>"left_front", 1=>"right_front", 2=>"left_back", 3=>"right_back", 4=>"spare"}
-  NAME_STRINGS = {0=>"left_front", 1=>"right_front", 2=>"left_back", 3=>"right_back"}
-  AGEING_STRINGS = %w[slight general serious]
-  TREAD_STRINGS = %w[normal local_cracking wear_in_middle wear_in_sides puncture]
-  SIDEWALL_STRINGS = %w[normal local_cracking cut wear_in_sides swelling abnormal_wear]
-  BRAKE_DISC_STRINGS = %w[no_uneven_wear uneven_wear recommend_replace not_recommend_replace undetectable]
-  AGEING_SCORE = [1,0.5,0]
-  TREAD_SCORE = [1,-0.25,-0.25,-0.25,-0.25]
-  SIDEWALL_SCORE = [1.5,-0.25,-0.25,-0.25,-0.5,-0.25]
-  BRAKE_DISC_SCORE = [1,0,0,1,1]
-  LIFE_SCORE = {0..365*3 => 1, 365*3..365*5 => 0.5}
-  PRESSURE_SCORE = {1..2 => 1, 2..2.5 => 2, 2.5..5 => 1}
-  TREAD_DEPTH_SCORE = {1.5..3 => 0.5, 3..5 => 1, 5..100 => 1.5}
-  BRAKE_PAD_THICKNESS_SCORE = {2..4 => 1, 4..100 => 2}
-  validates :name, uniqueness:  {case_sensitive: false}, presence: true
-
-  attr_accessible :name, :brand, :factory_data, :factory_data_checked,
-    :tread_depth, :ageing_desc, :tread_desc, :sidewall_desc,
-    :pressure, :width, :brake_pad_checked, :brake_pad_thickness, :brake_disc_desc
-    
-  def score
-    score = 0.0
-    days = (Date.today() - (Date.new(2000 + self.factory_data[2,2].to_i) + self.factory_data[0,2].to_i.weeks)).to_i
-    LIFE_SCORE.each do |k, v|
-      if k.include?(days)
-        score += v
-        break
-      end
-    end
-
-    PRESSURE_SCORE.each do |k, v|
-      if k.include? self.pressure
-        score += v
-        break
-      end
-    end
-    if self.name != "spare"
-      TREAD_DEPTH_SCORE.each do |k, v|
-        if k.include? self.tread_depth
-          score += v
-          break
-        end
-      end
-      score += AGEING_SCORE[self.ageing_desc] if AGEING_SCORE.include?(self.ageing_desc)
-      score += TREAD_SCORE[0]
-      self.tread_desc.each do |v|
-        score += TREAD_SCORE[v] if TREAD_SCORE.include?(v) && TREAD_SCORE[v] < 0
-      end
-      score += SIDEWALL_SCORE[0]
-      self.sidewall_desc.each do |v|
-        score += SIDEWALL_SCORE[v] if SIDEWALL_SCORE.include?(v) && SIDEWALL_SCORE[v] < 0
-      end
-      if !self.brake_pad_checked 
-        score += 2
-      else
-        BRAKE_PAD_THICKNESS_SCORE.each do |k, v|
-          if k.include? self.brake_pad_thickness
-            score += v
-            break
-          end
-        end
-      end
-      
-      self.brake_disc_desc.each do |v|
-        score += BRAKE_DISC_SCORE[v] if BRAKE_DISC_SCORE.include?(v)
-      end
-    end
-    score
-  end
-end
-
-# 保养记录的灯光信息
-class Light
-  include Mongoid::Document
-  
-  field :name, type: String, default: ""
-  field :desc, type: Array, default: [0]
-  
-  embedded_in :maintain, :inverse_of => :lights
-  DESC = [0,1,4,5,6,7,8,9]
-  DESC_STRINGS = %w[bright undetectable not_bright right_not_bright left_front_not_bright right_front_not_bright left_back_not_bright right_back_not_bright high_not_bright back_fog_not_bright]
-  NAME_STRINGS = %w[high_beam low_beam turn_light fog_light small_light backup_light brake_light]
-  validates :name, uniqueness: {case_sensitive: false}, presence: true
-  
-  attr_accessible :name, :desc
-
-  SCORE = {'high_beam' => {0=>2,2=>-2,4=>-1,5=>-1}, 'low_beam' => {0=>2,2=>-2,4=>-1,5=>-1}, 'turn_light' => {0=>4,2=>-4,4=>-1,5=>-1,6=>-1,7=>-1},
-    'fog_light' => {0=>1,2=>-1,6=>-0.5,7=>-0.5,9=>-0.5}, 'small_light' => {0=>2,2=>-2,4=>-0.5,5=>-0.5,6=>-0.5,7=>-0.5},
-    'backup_light' => {0=>1,2=>-1,6=>-0.5,7=>-0.5,1=>1}, 'brake_light' => {0=>3,2=>-3,6=>-1.5,7=>-1.5,8=>-1,1=>3},
-  }
-  def score
-    score = SCORE[self.name][0]
-    self.desc.each do |d|
-      score += SCORE[self.name][d] if SCORE.include?(self.name) && SCORE[self.name].include?(d) && SCORE[self.name][d] < 0 
-    end
-    score
-  end
-
-end
-
 # 保养记录
 class Maintain
   include Mongoid::Document
@@ -218,7 +98,7 @@ class Maintain
   field :total_time, type: Integer, default: 0
   # 属于订单
   belongs_to :order
-  
+
   POSITION_STRINGS = %w[high middle low undetectable]
   OIL_STRINGS = %w[muddy dirty serious_dirty]
   OTHER_OIL_STRINGS = %w[clean muddy dirty undetectable]
@@ -230,9 +110,9 @@ class Maintain
   ENGINE_HOSE_AND_LINE_STRINGS = %w[normal slight serious]
   WIPER_STRINGS = %w[normal recommend_replace none]
   AUTO_TOOLS_STRINGS = %w[existed not_existed undetected]
-  
+
   # desc and position same score
-  OIL_SCORE = [1,2,0] 
+  OIL_SCORE = [1,2,0]
   ANTIFREEZE_SCORE = [2,1,0]
   OTHER_OIL_SCORE = [1,0.5,0,1]
 
@@ -249,7 +129,7 @@ class Maintain
   ANTIFREEZE_POINT_SCORE = {-100..-35 => 3, -35..-10 => 1}
   BATTERY_HEALTH_SCORE = {60..70 => 1, 70..90 => 2, 90..100 => 3}
   BATTERY_CHARGE_SCORE = {60..90 => 1, 90..100 => 2}
-  
+
   embeds_many :wheels, :cascade_callbacks => true
   embeds_many :lights, :cascade_callbacks => true
   embeds_many :outlook_pics, class_name: "Picture"
@@ -262,7 +142,7 @@ class Maintain
   embeds_many :tire_right_back_pics, class_name: "Picture"
   embeds_many :tire_spare_pics, class_name: "Picture"
   embeds_many :oil_and_battery_pics, class_name: "Picture"
-  
+
 
   accepts_nested_attributes_for :wheels, :allow_destroy => true
   accepts_nested_attributes_for :lights, :allow_destroy => true
@@ -337,7 +217,7 @@ class Maintain
       when "black", "white"
         score += 0.5
       end
-      
+
       BATTERY_HEALTH_SCORE.each do |k, v|
         if k.include? self.battery_health.to_i
           score += v
@@ -360,7 +240,7 @@ class Maintain
     end
     score
   end
-  
+
   def calc_total_score
     score = 0.0
     score += self.calc_score("wheels_brake")
@@ -368,7 +248,7 @@ class Maintain
     score += self.calc_score("filter_oil_battery")
     score += self.calc_score("others")
   end
-  
+
   OILTYPE_TO_KM = [5000, 7500, 10000]
   SERVICES_GROUP1 = %w[oil_filter_changed]
   SERVICES_GROUP2 = %w[oil_filter_changed cabin_filter_changed]
@@ -376,7 +256,7 @@ class Maintain
   NEXT_SERVICES_RULE = {5000 => {0 => SERVICES_GROUP1, 1 => SERVICES_GROUP3},
                       7500 => {0 => SERVICES_GROUP2, 1 => SERVICES_GROUP3},
                       10000 => {0 => SERVICES_GROUP2, 1 => SERVICES_GROUP3}}
-  
+
   def next_maintain_km_by_oil
     km = 0
     self.order.parts.each do |p|
@@ -386,7 +266,7 @@ class Maintain
     end
     km
   end
-  
+
   def next_maintain_time
     next_date = ''
     km_period = self.next_maintain_km_by_oil
@@ -396,14 +276,14 @@ class Maintain
     end
     next_date
   end
-  
+
   def next_maintain_services
     services = []
     km_period = self.next_maintain_km_by_oil
-    services = NEXT_SERVICES_RULE[km_period][(self.curr_km.to_i / km_period).to_i % 2] if km_period != 0 
+    services = NEXT_SERVICES_RULE[km_period][(self.curr_km.to_i / km_period).to_i % 2] if km_period != 0
     services
   end
-  
+
   validates :order_id, presence: true
 
   def as_json(options = nil)
