@@ -34,60 +34,27 @@
     <div class="control-group select">
       <%= label_tag :severity_level, t('severity_level'), class: 'control-label' %>
       <div class="controls form-inline">
-        <select name="severity_level" id="severity_level">
-          <% if params[:severity_level].nil? || params[:severity_level] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% Complaint::SEVERITY_LEVELS.each do |l| %>
-            <% if params[:city] == l.to_s %>
-              <option value="<%= l %>" selected><%= t(Complaint::SEVERITY_LEVEL_STRINGS[l]) %></option>
-            <% else %>
-              <option value="<%= l %>"><%= t(Complaint::SEVERITY_LEVEL_STRINGS[l]) %></option>
-            <% end %>
-          <% end %>
-        </select>
+        <%= select_tag(:severity_level, options_for_select(
+          Complaint::SEVERITY_LEVELS.map {|l| [t(Complaint::SEVERITY_LEVEL_STRINGS[l]), l]}, params[:severity_level]), {prompt: t(:all)})
+        %>
       </div>
     </div>
 
     <div class="control-group select">
       <%= label_tag :complained, t('complained'), class: 'control-label' %>
       <div class="controls form-inline">
-        <select name="complained" id="complained">
-          <% if params[:complained].nil? || params[:complained] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% User.asc(:name_pinyin).each do |t| %>
-            <% if params[:complained] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
-            <% else %>
-              <option value="<%= t.id %>"><%= t.initial_and_name %></option>
-            <% end %>
-          <% end %>
-        </select>
+        <%= select_tag(:complained, options_for_select(
+          User.asc(:name_pinyin).map {|u| [u.initial_and_name, u.id.to_s]}, params[:complained]), {prompt: t(:all)})
+        %>
       </div>
     </div>
     
     <div class="control-group select">
       <%= label_tag :handler, t('handler'), class: 'control-label' %>
       <div class="controls form-inline">
-        <select name="handler" id="handler">
-          <% if params[:handler].nil? || params[:handler] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% User.asc(:name_pinyin).each do |t| %>
-            <% if params[:handler] == t.id.to_s %>
-              <option value="<%= t.id %>" selected><%= t.initial_and_name %></option>
-            <% else %>
-              <option value="<%= t.id %>"><%= t.initial_and_name   %></option>
-            <% end %>
-          <% end %>
-        </select>
+        <%= select_tag(:handler, options_for_select(
+          User.asc(:name_pinyin).map {|u| [u.initial_and_name, u.id.to_s]}, params[:handler]), {prompt: t(:all)})
+        %>
       </div>
     </div>
 

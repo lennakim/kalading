@@ -27,7 +27,7 @@ class Ability
     # 视频审查员
     if user.video_inspector?
       can [:view, :read], Video
-      can [:set_state], User
+      can [:set_state, :read], User
     end
 
     # 地方库管和全国库管
@@ -41,7 +41,7 @@ class Ability
       can :update, Complaint do |c|
         c.handler == user
       end
-      can [:set_state], User
+      can [:set_state, :read], User
     end
 
     # 全国库管
@@ -84,7 +84,7 @@ class Ability
       can :read, :all
       can [:create, :update, :destroy, :edit_all, :duplicate, :calcprice, :order_prompt, :print, :send_sms_notify, :daily_orders, :history], Order
       can [:create, :update, :edit_all, :send_sms_notify], Complaint
-      can [:set_state], User
+      can [:set_state, :read], User
     end
 
     # 财务
@@ -96,13 +96,13 @@ class Ability
     # 技师主管,运营主管
     if user.engineer_manager?
       can [:read, :calcprice, :print, :daily_orders, :history], Order
-      can :read, Complaint
+      can :read, [Complaint, Discount]
       can :update, Complaint do |c|
         c.handler == user
       end
       can [:view, :read], Video
       can [:read, :create, :update, :destroy], Notification
-      can [:set_state], User
+      can [:set_state, :read], User
       can [:edit, :update, :mgmt_console], City do |c|
         user.city == c
       end

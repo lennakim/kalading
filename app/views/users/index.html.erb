@@ -20,68 +20,33 @@
     <div class="control-group select">
       <%= label_tag :role, t('role'), class: 'control-label' %>
       <div class="controls form-inline">
-        <select name="role" id="role">
-          <% if params[:role].nil? || params[:role] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% User::ROLES.each do |r| %>
-            <% if params[:role] == r.to_s %>
-              <option value="<%= r %>" selected><%= t(User::ROLE_STRINGS[r]) %></option>
-            <% else %>
-              <option value="<%= r %>"><%= t(User::ROLE_STRINGS[r]) %></option>
-            <% end %>
-          <% end %>
-        </select>
+        <%= select_tag(:role, options_for_select(
+          User::ROLES.map {|r| [t(User::ROLE_STRINGS[r]), r]}, params[:role]), {prompt: t(:all)})
+        %>
       </div>
     </div>
     <div class="control-group select">
       <%= label_tag :city, t('cities'), class: 'control-label' %>
       <div class="controls form-inline">
-        <select name="city" id="city">
-          <% if params[:city].nil? || params[:city] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% City.each do |c| %>
-            <% if params[:city] == c.id.to_s %>
-              <option value="<%= c.id %>" selected><%= c.name %></option>
-            <% else %>
-              <option value="<%= c.id %>"><%= c.name %></option>
-            <% end %>
-          <% end %>
-        </select>
+        <%= select_tag(:city, options_for_select(
+          City.all.map {|c| [c.name, c.id]}, params[:city]), {prompt: t(:all)})
+        %>
       </div>
     </div>
     <div class="control-group select">
       <%= label_tag :belong, t('belong'), class: 'control-label' %>
       <div class="controls form-inline">
-        <select name="belong" id="belong">
-          <% if params[:belong].nil? || params[:belong] == '' %>
-            <option value="" selected><%= t :all %></option>
-          <% else %>
-            <option value=""><%= t :all %></option>
-          <% end %>
-          <% Storehouse.each do |s| %>
-            <% if params[:belong] == s.id.to_s %>
-              <option value="<%= s.id %>" selected><%= s.name %></option>
-            <% else %>
-              <option value="<%= s.id %>"><%= s.name %></option>
-            <% end %>
-          <% end %>
-        </select>
+        <%= select_tag(:belong, options_for_select(
+          Storehouse.all.map {|s| [s.name, s.id]}, params[:belong]), {prompt: t(:all)})
+        %>
       </div>
     </div>
     <div class="control-group select">
-      <%= label_tag :state, "状态", class: 'control-label' %>
+      <%= label_tag :state, t('state'), class: 'control-label' %>
       <div class="controls form-inline">
         <%= select_tag(:state, options_for_select(
-          User::STATES.map do |state|
-            [t(User::STATE_STRINGS[state]), state]
-          end, params[:state]
-        )) %>
+          User::STATES.map {|s| [t(User::STATE_STRINGS[s]), s]}, params[:state]), {prompt: t(:all)})
+        %>
       </div>
     </div>
     <div class="form-actions">
