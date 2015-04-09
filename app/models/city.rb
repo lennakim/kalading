@@ -50,6 +50,10 @@ class City
     Order.where(:city_id.in => [self.id] + self.child_cities.map(&:id))
   end
 
+  def self.work_time?(time)
+    time == Date.tomorrow && DateTime.now.hour >= 17
+  end
+
   def self.date_range(start_at, end_at)
 
     start_at = Date.tomorrow if start_at.blank?
@@ -73,19 +77,14 @@ class City
   def capacity(start_at, end_at)
     d1, d2 = City.date_range(start_at, end_at)
 
-    arr = []
-
-    (d1..d2).each do |d|
-      h = {}
-      h[:date] = d
-      h[:capacity] = if d == Date.tomorrow && DateTime.now.hour >= 17
-        [0,0,0]
-      else
-        Array.new(3, (order_capacity / 3))
+    [].tap do |item|
+      (d1..d2).inject({}) do |result, ele|
+        result['date'] = ele
+        result['capacity'] = City.work_time?(ele) ? [0,0,0] : Array.new(3, (order_capacity / 3))
+        item << result
+        {}
       end
-
-      arr << h
     end
-    arr
   end
+
 end
