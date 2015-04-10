@@ -16,6 +16,7 @@ class ToolBatch
   belongs_to :city
   belongs_to :operator, class_name: 'User'
   belongs_to :tool_stock
+  has_many :tools, dependent: :destroy
 
   validates :quantity, numericality: { greater_than: 0, less_than: 100_000, only_integer: true }
   validates :lifetime, numericality: { greater_than: 0, less_than: 10*12, only_integer: true }
@@ -25,6 +26,7 @@ class ToolBatch
 
   before_validation :set_default_city, :set_tool_detail_attrs, on: :create
   before_create :increase_tool_stock
+  after_create :generate_tools
 
   def set_default_city
     self.city_id = City.where(name: /\A北京/).first.id
@@ -42,4 +44,19 @@ class ToolBatch
     tool_stock.inc(:remained_count, self.quantity)
     self.tool_stock = tool_stock
   end
+
+  # 如果实际存在的工具数少于quantity，则创建少了的工具
+  def correct_tools!
+    (quantity - tools.count).times do
+      Tool.create!(tool_batch_id: id)
+    end
+  end
+
+  private
+
+    def generate_tools
+      quantity.times do
+        Tool.create!(tool_batch_id: id)
+      end
+    end
 end

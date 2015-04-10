@@ -9,8 +9,8 @@ class ToolDetailsController < ApplicationController
       # '-'.bytes  #=> [45]
       # '－'.bytes #=> [239, 188, 141]
       values = params[:search].split(/-|－/).map(&:strip)
-      tool_type_ids = ToolType.where(name: /#{values[0]}/i).only(:id).map(&:id) if values[0].present?
-      tool_brand_ids = ToolBrand.where(name: /#{values[1]}/i).only(:id).map(&:id) if values[1].present?
+      tool_type_ids = ToolType.where(:name => /#{values[0]}/i).pluck(:id) if values[0].present?
+      tool_brand_ids = ToolBrand.where(:name => /#{values[1]}/i).pluck(:id) if values[1].present?
       criteria = criteria.where(:tool_type_id.in => tool_type_ids)
       criteria = criteria.where(:tool_brand_id.in => tool_brand_ids) if tool_brand_ids.present?
     end
