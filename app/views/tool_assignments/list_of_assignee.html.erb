@@ -16,7 +16,7 @@
     <tbody>
       <% @assignments.each do |assign| -%>
         <tr>
-          <td><%= assign.tool_type.name %></td>
+          <td><%= assign.tool_type.identification %></td>
           <td><%= translate_collection_options(assign, :status) %></td>
           <td>
             <% if !assign.discarded? -%>

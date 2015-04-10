@@ -39,7 +39,7 @@ class ToolTypesController < ApplicationController
       flash[:notice] = '删除成功'
       @tool_type.destroy
     else
-      flash[:error] = "#{@tool_type.name} 不能被删除"
+      flash[:error] = "#{@tool_type.identification} 不能被删除"
     end
     redirect_to tool_types_path
   end

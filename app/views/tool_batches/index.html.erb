@@ -43,6 +43,11 @@
       <tr>
         <th><%= ToolBatch.human_attribute_name('created_at') %></th>
         <th><%= ToolBatch.human_attribute_name('tool_type') %></th>
+        <th><%= ToolBatch.human_attribute_name('tool_brand') %></th>
+        <th class="span4">
+          <%= ToolBatch.human_attribute_name('tool_supplier') %>
+        </th>
+        <th><%= ToolBatch.human_attribute_name('price') %></th>
         <th><%= ToolBatch.human_attribute_name('quantity') %></th>
       </tr>
     </thead>

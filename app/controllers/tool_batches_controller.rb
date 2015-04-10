@@ -14,12 +14,16 @@ class ToolBatchesController < ApplicationController
       criteria = criteria.where(:created_at.lte => date_to)
     end
 
-    if params[:category].present?
-      criteria = criteria.where(tool_type_category: params[:category])
+    if params[:tool_type_id].present?
+      criteria = criteria.where(tool_type_id: params[:tool_type_id])
     end
 
-    if params[:city_id].present?
-      criteria = criteria.where(city_id: params[:city_id])
+    if params[:tool_brand_id].present?
+      criteria = criteria.where(tool_brand_id: params[:tool_brand_id])
+    end
+
+    if params[:tool_supplier_id].present?
+      criteria = criteria.where(tool_supplier_id: params[:tool_supplier_id])
     end
 
     @tool_batches = criteria.page(params[:page]).per(20)
