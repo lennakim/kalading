@@ -7,6 +7,9 @@
     <%= link_to t('new'), new_service_vehicle_path, class: 'btn btn-success pull-right' if can? :create, ServiceVehicle %>
 
     <%= form_tag service_vehicles_path, class: 'form-inline', method: :get do %>
+      <%= ServiceVehicle.human_attribute_name('number') %>
+      <%= text_field_tag :number, params[:number], class: 'input-small' %>
+
       <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name', params[:city_id]), prompt: t('national') %>
       <%= submit_tag t('search'), class: 'btn' %>
     <% end -%>

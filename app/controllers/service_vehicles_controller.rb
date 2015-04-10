@@ -5,9 +5,16 @@ class ServiceVehiclesController < ApplicationController
 
   def index
     criteria = ServiceVehicle
+
+    if params[:number].present?
+      params[:number].strip!
+      criteria = criteria.where(:number => /#{params[:number]}/i)
+    end
+
     if params[:city_id].present?
       criteria = criteria.where(city_id: params[:city_id])
     end
+
     @service_vehicles = criteria.page(params[:page]).per(20)
   end
 
