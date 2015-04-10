@@ -266,7 +266,6 @@ zh-CN:
         lifetime: '使用寿命（月）'
         warranty_period: '保修期（月）'
         price: '进价（元）'
-        batch_number: '批次'
         tool_type: '工具'
         tool_brand: '品牌'
         tool_supplier: '供应商'

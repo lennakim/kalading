@@ -34,15 +34,9 @@
           prompt: ToolBatch.human_attribute_name('tool_brand') %>
         <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all, 'id', 'name', params[:tool_supplier_id]),
           prompt: ToolBatch.human_attribute_name('tool_supplier') %>
-      </div>
-
-      <div class="control-group">
-        <%= ToolBatch.human_attribute_name('batch_number') %>
-        <input type="text" name="batch_number" value="<%= params[:batch_number] %>" />
 
         <%= submit_tag t('search'), class: 'btn' %>
       </div>
-
     <% end -%>
   </div>
 
@@ -50,7 +44,6 @@
     <thead>
       <tr>
         <th><%= ToolBatch.human_attribute_name('created_at') %></th>
-        <th><%= ToolBatch.human_attribute_name('batch_number') %></th>
         <th><%= ToolBatch.human_attribute_name('tool_type') %></th>
         <th><%= ToolBatch.human_attribute_name('tool_brand') %></th>
         <th class="span4">

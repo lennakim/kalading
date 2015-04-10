@@ -26,10 +26,6 @@ class ToolBatchesController < ApplicationController
       criteria = criteria.where(tool_supplier_id: params[:tool_supplier_id])
     end
 
-    if params[:batch_number].present?
-      criteria = criteria.where(batch_number: params[:batch_number])
-    end
-
     @tool_batches = criteria.page(params[:page]).per(20)
   end
 
