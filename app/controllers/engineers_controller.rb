@@ -37,6 +37,15 @@ class EngineersController < ApplicationController
     index!
   end
 
+  def edit
+    session[:engineer_list_path] = request.referer
+    edit!
+  end
+
+  def update
+    update! { session.delete(:engineer_list_path) }
+  end
+
   def create
     create!{ engineers_path }
   end

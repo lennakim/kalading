@@ -10,7 +10,7 @@ class Engineer < User
 
   field :roles, type: Array, default: ["5"]
 
-  LEVEL_STR = %w-养护技师 高级养护技师 资深养护技师 首席养护技师-
+  LEVEL_STR = %w-培训 养护技师 高级养护技师 资深养护技师 首席养护技师-
   field :level, type: Integer, default: 0
 
   # 工牌
@@ -42,6 +42,7 @@ class Engineer < User
         after do
           generate_working_tag_number
           set_boarding_date
+          update_level
         end
       end
 
@@ -54,6 +55,11 @@ class Engineer < User
         end
       end
     end
+  end
+
+  def update_level
+    self.level = 1
+    save
   end
 
   def boarding_exam_pass?
@@ -90,13 +96,6 @@ class Engineer < User
 
   class << self
     # migrate所有角色为技师的User的type为Engineer, 用完可以删除
-    def migrate_user_to_engineer
-      User.where(roles: "5").update_all _type: 'Engineer'
-    end
-
-    def migrate_state_to_boarding
-      self.update_all state: 1
-    end
 
   end
 

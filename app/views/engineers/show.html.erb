@@ -83,7 +83,9 @@
     <tr>
       <td>点部</td>
       <td>
-        <%= link_to resource.storehouse.name, resource.storehouse %>
+        <% if resource.storehouse %>
+          <%= link_to resource.storehouse.name, resource.storehouse %>
+        <% end %>
       </td>
     </tr>
 
