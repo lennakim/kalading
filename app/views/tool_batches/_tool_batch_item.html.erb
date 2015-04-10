@@ -1,0 +1,26 @@
+<tr>
+  <%= fields_for 'tool_batches[]', tool_batch do |f| %>
+    <%= f.hidden_field :tool_detail_id, class: 'tool_detail_id' %>
+    <td class="tool_type">
+      <%= tool_batch.tool_type.try(:identification) %>
+    </td>
+    <td class="tool_brand">
+      <%= tool_batch.tool_brand.try(:name) %>
+    </td>
+    <td class="lifetime">
+      <%= f.text_field :lifetime, class: 'input-mini' %>
+    </td>
+    <td class="warranty_period">
+      <%= f.text_field :warranty_period, class: 'input-mini' %>
+    </td>
+    <td class="price">
+      <%= f.text_field :price, class: 'input-mini' %>
+    </td>
+    <td class="quantity">
+      <%= f.text_field :quantity, class: 'input-mini' %>
+    </td>
+    <td>
+      <%= link_to '删除', 'javascript:void(0)', class: 'btn btn-danger btn-small remove_tool_batch_item' %>
+    </td>
+  <% end -%>
+</tr>

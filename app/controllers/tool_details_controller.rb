@@ -5,6 +5,16 @@ class ToolDetailsController < ApplicationController
   def index
     criteria = ToolDetail
 
+    if params[:search].present?
+      # '-'.bytes  #=> [45]
+      # '－'.bytes #=> [239, 188, 141]
+      values = params[:search].split(/-|－/).map(&:strip)
+      tool_type_ids = ToolType.where(name: /#{values[0]}/i).only(:id).map(&:id) if values[0].present?
+      tool_brand_ids = ToolBrand.where(name: /#{values[1]}/i).only(:id).map(&:id) if values[1].present?
+      criteria = criteria.where(:tool_type_id.in => tool_type_ids)
+      criteria = criteria.where(:tool_brand_id.in => tool_brand_ids) if tool_brand_ids.present?
+    end
+
     if params[:tool_type_id].present?
       criteria = criteria.where(tool_type_id: params[:tool_type_id])
     end
@@ -17,7 +27,10 @@ class ToolDetailsController < ApplicationController
       criteria = criteria.where(tool_supplier_id: params[:tool_supplier_id])
     end
 
-    @tool_details = criteria.page(params[:page]).per(20)
+    respond_to do |format|
+      format.html { @tool_details = criteria.page(params[:page]).per(20) }
+      format.json { render json: criteria.as_json }
+    end
   end
 
   def new

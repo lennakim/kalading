@@ -34,6 +34,6 @@ class ToolType
   end
 
   def identification
-    spec.present? ? "#{name}-#{spec}" : name
+    spec.present? ? "#{name} #{spec}" : name
   end
 end

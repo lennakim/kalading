@@ -21,13 +21,36 @@ class ToolDetail
   validates_uniqueness_of :tool_type_id, scope: [:tool_brand_id, :tool_supplier_id]
 
   def can_be_deleted?
-    # TODO: 需实现
-    true
+    !ToolBatch.where(tool_detail_id: id).exists?
   end
 
   def existed_siblings_by_tool_type
     if tool_type_id.present?
       self.class.where(tool_type_id: tool_type_id).all
+    end
+  end
+
+  def price_to_f
+    price.to_f
+  end
+
+  def identification
+    "#{tool_type.identification}-#{tool_brand.name}-#{tool_supplier.name}"
+  end
+
+  def as_json(options = nil)
+    if options.present?
+      super(options)
+    else
+      super(
+        except: [:price],
+        methods: [:price_to_f, :identification],
+        include: {
+          tool_type: { only: [:name], methods: [:identification] },
+          tool_brand: { only: [:name] },
+          tool_supplier: { only: [:name] }
+        }
+      )
     end
   end
 end

@@ -27,9 +27,12 @@
         </div>
       </div>
 
-      <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name', params[:city_id]), prompt: t('national') %>
-      <%= select_tag 'category', options_for_select(tool_type_category_collection, params[:category]),
-        prompt: t('views.modules.tool_management.all_categories') %>
+      <%= select_tag 'tool_type_id', options_from_collection_for_select(ToolType.all, 'id', 'identification', params[:tool_type_id]),
+        prompt: ToolBatch.human_attribute_name('tool_type') %>
+      <%= select_tag 'tool_brand_id', options_from_collection_for_select(ToolBrand.all, 'id', 'name', params[:tool_brand_id]),
+        prompt: ToolBatch.human_attribute_name('tool_brand') %>
+      <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all, 'id', 'name', params[:tool_supplier_id]),
+        prompt: ToolBatch.human_attribute_name('tool_supplier') %>
 
       <%= submit_tag t('search'), class: 'btn' %>
     <% end -%>
@@ -39,11 +42,8 @@
     <thead>
       <tr>
         <th><%= ToolBatch.human_attribute_name('created_at') %></th>
-        <th><%= ToolBatch.human_attribute_name('city') %></th>
         <th><%= ToolBatch.human_attribute_name('tool_type') %></th>
-        <th><%= ToolBatch.human_attribute_name('tool_type_category') %></th>
         <th><%= ToolBatch.human_attribute_name('quantity') %></th>
-        <th><%= ToolBatch.human_attribute_name('spec') %></th>
       </tr>
     </thead>
     <tbody>

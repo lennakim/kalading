@@ -87,7 +87,13 @@ Kalading::Application.routes.draw do
       get :local
     end
   end
-  resources :tool_batches, only: [:index, :new, :create]
+
+  resources :tool_batches, only: [:index, :new] do
+    collection do
+      post :bulk_create
+    end
+  end
+
   resources :tool_stocks, only: [:index]
   resources :tool_assignments, only: [:index] do
     member do
@@ -100,6 +106,7 @@ Kalading::Application.routes.draw do
       post :batch_assign, as: :batch
     end
   end
+
   resources :tool_assignees, only: [:index]
   resources :tool_brands, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :tool_suppliers, only: [:index, :new, :create, :edit, :update, :destroy]

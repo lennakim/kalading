@@ -1,17 +1,43 @@
-<%= simple_form_for @tool_batch, html: { class: 'form-horizontal' } do |f| %>
-  <%= f.association :tool_type, collection: tool_type_grouped_collection, as: :grouped_select, group_method: :last, prompt: :translate %>
+<%= form_tag bulk_create_tool_batches_path do %>
+  <div class="form-inline">
+    <label for="tool_supplier_id">
+      <%= ToolBatch.human_attribute_name('tool_supplier') %>
+    </label>
+    <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all, 'id', 'name', params[:tool_supplier_id]),
+      prompt: t('helpers.select.prompt') %>
 
-  <% if !current_user.storehouse_admin? -%>
-  <%= f.association :city, collection: City.all, label_method: :name, prompt: :translate %>
-  <% end -%>
+    <label for="tool_detail_search">
+      工具信息库搜索
+    </label>
+    <input type="text" name="tool_detail" id="tool_detail_search" class="input-xlarge" placeholder="工具-品牌，请输入至少2个字符" autocomplete="off" />
 
-  <%= f.input :quantity %>
-  <%= f.input :price %>
-  <%= f.input :spec %>
-  <%= f.input :note, as: :text, input_html: { rows: 3 } %>
+    <%= link_to '添加进货信息', 'javascript:void(0)', id: 'add_tool_batch_item', class: 'btn btn-success btn-small' %>
+  </div>
+
+  <hr>
+
+  <table id="tool_detail_items" class="table table-condensed">
+    <thead>
+      <tr>
+        <th><%= ToolBatch.human_attribute_name('tool_type') %></th>
+        <th><%= ToolBatch.human_attribute_name('tool_brand') %></th>
+        <th><%= ToolBatch.human_attribute_name('lifetime') %></th>
+        <th><%= ToolBatch.human_attribute_name('warranty_period') %></th>
+        <th><%= ToolBatch.human_attribute_name('price') %></th>
+        <th><%= ToolBatch.human_attribute_name('quantity') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'tool_batch_item', collection: @tool_batches, as: :tool_batch %>
+    </tbody>
+  </table>
 
   <div class="form-actions">
-    <%= f.button :submit, t('save'), :class => 'btn btn-primary' %>
-    <%= link_to t('cancel'), tool_batches_path, :class => 'btn' %>
+    <%= submit_tag t('save'), class: 'btn btn-primary', 'data-disable-with' => "处理中" %>
+    <%= link_to t('cancel'), tool_batches_path, class: 'btn' %>
+  </div>
+
+  <div data-blueprint="<%= render(partial: 'tool_batch_item', locals: {tool_batch: ToolBatch.new}).to_str %>" id="tool_batch_item_blueprint" style="display: none">
   </div>
 <% end -%>
