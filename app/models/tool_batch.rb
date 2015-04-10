@@ -9,7 +9,7 @@ class ToolBatch
   # 批次
   field :batch_number, type: String
 
-  attr_accessible :quantity, :lifetime, :warranty_period, :price, :tool_detail_id
+  attr_accessible :quantity, :lifetime, :warranty_period, :price, :tool_detail_id, :batch_number
 
   belongs_to :tool_detail
   belongs_to :tool_type
@@ -23,7 +23,7 @@ class ToolBatch
   validates :lifetime, numericality: { greater_than: 0, less_than: 10*12, only_integer: true }
   validates :warranty_period, numericality: { greater_than: 0, less_than: 10*12, only_integer: true }
   validates :price, numericality: { greater_than: 0 }
-  validates_presence_of :tool_detail_id, :tool_type_id, :tool_brand_id, :tool_supplier_id, :city_id, :operator_id
+  validates_presence_of :tool_detail_id, :tool_type_id, :tool_brand_id, :tool_supplier_id, :city_id, :operator_id, :batch_number
 
   before_validation :set_default_city, :set_tool_detail_attrs, on: :create
   before_create :increase_tool_stock

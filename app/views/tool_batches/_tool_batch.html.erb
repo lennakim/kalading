@@ -1,5 +1,6 @@
 <tr>
   <td><%= l tool_batch.created_at %></td>
+  <td><%= tool_batch.batch_number %></td>
   <td><%= tool_batch.tool_type.identification %></td>
   <td><%= tool_batch.tool_brand.try(:name) %></td>
   <td><%= tool_batch.tool_supplier.try(:name) %></td>
