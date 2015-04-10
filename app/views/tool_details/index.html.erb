@@ -1,6 +1,8 @@
 <div class="span9 offset2">
   <%= render 'tool_types/nav' %>
 
+  <h3><%= ToolDetail.model_name.human %></h3>
+
   <div>
     <%= link_to t('new'), new_tool_detail_path, class: 'btn btn-success pull-right' if can? :create, ToolDetail %>
 

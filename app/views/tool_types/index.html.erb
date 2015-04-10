@@ -1,9 +1,10 @@
 <div class="span9 offset2">
   <%= render 'tool_types/nav' %>
 
+  <h3><%= ToolType.model_name.human %></h3>
+
   <div>
     <%= link_to t('new'), new_tool_type_path, class: 'btn btn-success pull-right' if can? :create, ToolType %>
-    <%= render 'tool_batches/new_btn' %>
 
     <%= form_tag tool_types_path, class: 'form-inline', method: :get do %>
       <%= select_tag 'category', options_for_select(tool_type_category_collection, params[:category]),

@@ -1,9 +1,8 @@
 <div class="span9 offset2">
   <%= render 'tool_types/nav' %>
 
-  <div>
-    <%= link_to t('new'), new_tool_supplier_path, class: 'btn btn-success pull-right' if can? :create, ToolSupplier %>
-  </div>
+  <%= link_to t('new'), new_tool_supplier_path, class: 'btn btn-success pull-right' if can? :create, ToolSupplier %>
+  <h3><%= ToolSupplier.model_name.human %></h3>
 
   <table class="table table-striped table-bordered table-hover">
     <thead>

@@ -1,22 +1,22 @@
 <ul class="nav nav-tabs">
-  <%= activatable_nav_link 'tool_type', tool_types_path if can? :read, ToolType %>
-
-  <% if can? :read, ToolDetail -%>
-    <li class="dropdown <%= 'active' if %w[tool_details tool_brands tool_suppliers].include?(params[:controller]) %>">
+  <% if can? :read, :tool_base_info -%>
+    <li class="dropdown <%= 'active' if %w[tool_types tool_details tool_brands tool_suppliers service_vehicles].include?(params[:controller]) %>">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        <%= ToolDetail.model_name.human %>
+        基础信息
         <b class="caret"></b>
       </a>
       <ul class="dropdown-menu">
-        <li><%= link_to ToolDetail.model_name.human, tool_details_path %></li>
-        <li class="divider"></li>
+        <li><%= link_to ToolType.model_name.human, tool_types_path %></li>
         <li><%= link_to ToolBrand.model_name.human, tool_brands_path %></li>
         <li><%= link_to ToolSupplier.model_name.human, tool_suppliers_path %></li>
+        <li class="divider"></li>
+        <li><%= link_to ToolDetail.model_name.human, tool_details_path %></li>
+        <li class="divider"></li>
+        <li><%= link_to ServiceVehicle.model_name.human, service_vehicles_path %></li>
       </ul>
     </li>
   <% end -%>
 
-  <%= activatable_nav_link 'service_vehicle', service_vehicles_path, action: 'index' if can? :read, ServiceVehicle %>
   <%= activatable_nav_link 'tool_batch', tool_batches_path if can? :read, ToolBatch %>
   <%= activatable_nav_link 'tool_stock', tool_stocks_path if can? :read, ToolStock %>
 

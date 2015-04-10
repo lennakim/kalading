@@ -53,6 +53,7 @@ class Ability
       can :order_stats,  Order
       can [:set_state], User
       can [:create, :update, :destroy], [ToolType, ServiceVehicle, ToolBrand, ToolSupplier, ToolDetail]
+      can :read, :tool_base_info
     end
 
     # 数据管理员
