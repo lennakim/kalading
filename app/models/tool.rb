@@ -11,8 +11,6 @@ class Tool
   field :tool_number, type: String
   # 是否分配
   field :assigned, type: Boolean, default: false
-  # 是否调货途中
-  field :delivering, type: Boolean, default: false
 
   attr_accessible :tool_batch_id
 
@@ -21,6 +19,7 @@ class Tool
   belongs_to :tool_brand
   belongs_to :tool_supplier
   belongs_to :city
+  belongs_to :tool_delivery
 
   validates :lifetime, numericality: { greater_than: 0, only_integer: true }
   validates :warranty_period, numericality: { greater_than: 0, only_integer: true }
@@ -29,11 +28,18 @@ class Tool
 
   before_validation :set_tool_batch_attrs, on: :create
 
+  scope :stock, -> { where(tool_delivery_id: nil) }
+  scope :delivering, -> { where(:tool_delivery_id.ne => nil) }
+
   def set_tool_batch_attrs
     %w[tool_type_id tool_brand_id tool_supplier_id city_id lifetime warranty_period price].each do |attr|
       # self.tool_type_id = tool_batch.tool_type_id
       self.send("#{attr}=", tool_batch.send(attr))
     end
     self.batch_created_at = tool_batch.created_at
+  end
+
+  def delivering?
+    tool_delivery_id.present?
   end
 end

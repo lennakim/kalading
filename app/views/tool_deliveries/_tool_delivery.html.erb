@@ -1,0 +1,13 @@
+<tr>
+  <td><%= l tool_delivery.created_at %></td>
+  <td><%= tool_delivery.from_city.name %></td>
+  <td><%= tool_delivery.to_city.name %></td>
+  <td><%= tool_delivery.deliverer.name %></td>
+  <td><%= tool_delivery.recipient.try(:name) %></td>
+  <td><%= l tool_delivery.received_at if tool_delivery.received_at %></td>
+  <td><%= tool_delivery.tools_count %></td>
+  <td>
+    <%= link_to '收货', prepare_for_receiving_tool_delivery_path(tool_delivery),
+      class: 'btn btn-small btn-primary' if can? :receive, tool_delivery %>
+  </td>
+</tr>

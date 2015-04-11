@@ -29,7 +29,7 @@ class ToolBatch
   after_create :generate_tools
 
   def set_default_city
-    self.city_id = City.where(name: /\A北京/).first.id
+    self.city_id = City.beijing.id
   end
 
   def set_tool_detail_attrs

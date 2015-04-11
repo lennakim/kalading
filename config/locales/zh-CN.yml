@@ -233,6 +233,12 @@ zh-CN:
           attributes:
             tool_type_id:
               taken: '这个组合（工具+品牌+供应商）已经存在'
+        tool_delivery_item:
+          attributes:
+            quantity:
+              more_than_stock: '库存数为%{count}'
+            tool_type_id:
+              taken: '不能有相同的工具+品牌'
     models:
       engineer: '技师'
       tool_type: '工具类型'
@@ -243,6 +249,7 @@ zh-CN:
       tool_detail: '工具信息库'
       tool_brand: '品牌'
       tool_supplier: '供应商'
+      tool_delivery: '调货信息'
     attributes:
       engineer:
         city: '城市'
@@ -316,6 +323,18 @@ zh-CN:
         name: '品牌名称'
       tool_supplier:
         name: '供应商名称'
+      tool_delivery:
+        created_at: '发货时间'
+        from_city: '发货地'
+        to_city: '收货地'
+        deliverer: '发货人'
+        recipient: '收货人'
+        received_at: '收货时间'
+        tools_count: '发货数'
+      tool_delivery_item:
+        tool_type: '工具'
+        tool_brand: '品牌'
+        quantity: '数量'
 
   devise:
     failure:

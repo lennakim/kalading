@@ -27,7 +27,11 @@ class City
   has_and_belongs_to_many :auto_submodels
   # 城市有很多通知消息
   has_and_belongs_to_many :notifications
-  
+
+  def self.beijing
+    where(name: /\A北京/).first
+  end
+
   def as_json(opts = nil)
     super except: [:order_capacity, :area_code, :opened, :auto_submodel_ids, :notification_ids, :complaint_ids]
   end

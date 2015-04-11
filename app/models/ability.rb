@@ -42,8 +42,10 @@ class Ability
         c.handler == user
       end
       can [:set_state], User
-      can :create, ToolBatch
       can :create, ToolAssignment
+      can :receive, ToolDelivery do |d|
+        d.to_city == user.city
+      end
     end
 
     # 全国库管
@@ -52,8 +54,9 @@ class Ability
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can :order_stats,  Order
       can [:set_state], User
-      can [:create, :update, :destroy], [ToolType, ServiceVehicle, ToolBrand, ToolSupplier, ToolDetail]
+      can [:create, :update, :destroy], [ToolType, ServiceVehicle, ToolBrand, ToolSupplier, ToolDetail, ToolBatch]
       can :read, :tool_base_info
+      can :create, ToolDelivery
     end
 
     # 数据管理员

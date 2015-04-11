@@ -111,6 +111,12 @@ Kalading::Application.routes.draw do
   resources :tool_brands, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :tool_suppliers, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :tool_details, only: [:index, :new, :create, :edit, :update, :destroy]
+  resources :tool_deliveries, only: [:index, :new, :create] do
+    member do
+      get :prepare_for_receiving
+      put :receive
+    end
+  end
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
