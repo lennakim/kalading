@@ -331,10 +331,12 @@ zh-CN:
         recipient: '收货人'
         received_at: '收货时间'
         tools_count: '发货数'
+        received_tools_count: '收货数'
       tool_delivery_item:
         tool_type: '工具'
         tool_brand: '品牌'
         quantity: '数量'
+        received_quantity: '实际收货数'
 
   devise:
     failure:

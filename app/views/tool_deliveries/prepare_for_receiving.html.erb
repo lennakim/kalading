@@ -1,0 +1,35 @@
+<div class="span9 offset2">
+  <div class="page-header">
+    <h1>
+      工具收货
+    </h1>
+  </div>
+
+  <%= simple_form_for @tool_delivery, url: receive_tool_delivery_path(@tool_delivery), method: :put do |f| %>
+    <table class="table table-hover">
+      <thead>
+        <th><%= ToolDeliveryItem.human_attribute_name('tool_type') %></th>
+        <th><%= ToolDeliveryItem.human_attribute_name('tool_brand') %></th>
+        <th><%= ToolDeliveryItem.human_attribute_name('quantity') %></th>
+        <th><%= ToolDeliveryItem.human_attribute_name('received_quantity') %></th>
+      </thead>
+      <tbody>
+        <%= f.fields_for :tool_delivery_items, wrapper: false do |nf| %>
+          <tr>
+            <td><%= nf.object.tool_type.name %></td>
+            <td><%= nf.object.tool_brand.name %></td>
+            <td><%= nf.object.quantity %></td>
+            <td>
+              <%= nf.input :received_quantity, label: false, wrapper: :inline, input_html: { class: 'input-mini' } %>
+            </td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+
+    <div class="form-actions">
+      <%= submit_tag '收货', class: 'btn btn-primary' %>
+      <%= link_to t('cancel'), tool_deliveries_path, class: 'btn' %>
+    </div>
+  <% end -%>
+</div>

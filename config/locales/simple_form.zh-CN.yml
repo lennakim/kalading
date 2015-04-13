@@ -10,3 +10,8 @@ zh-CN:
           normal: '使用中'
           broken: '损坏'
           lost: '丢失'
+      tool:
+        status:
+          stock: '库存'
+          delivering: '调货中'
+          assigned: '已分配'

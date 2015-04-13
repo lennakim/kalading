@@ -6,23 +6,24 @@ class ToolDeliveryItem
   field :quantity, type: Integer
   # 实际收货数
   field :received_quantity, type: Integer
+  field :tool_ids, type: Array, default: []
+  field :received_tool_ids, type: Array, default: []
 
   attr_accessible :quantity, :tool_type_id, :tool_brand_id
 
   embedded_in :tool_delivery
   belongs_to :tool_type
   belongs_to :tool_brand
-  has_and_belongs_to_many :tools, inverse_of: nil
 
   validates :quantity, numericality: { greater_than: 0, only_integer: true }
   validates :received_quantity, numericality: { greater_than: 0, only_integer: true, allow_nil: true }
   validates_presence_of :tool_type_id, :tool_brand_id
   validates :tool_type_id, uniqueness: { scope: :tool_brand_id }
-
-  before_create :check_stock_and_set_tools
+  validate :check_stock_and_set_tools, on: :create
 
   def check_stock_and_set_tools
-    return if !valid?
+    # 不能使用 valid?，因为该方法本身就是个 validation，会造成循环调用
+    return if !errors.empty?
 
     _tool_ids = Tool.stock.where(tool_type_id: tool_type_id,
                                  tool_brand_id: tool_brand_id,
@@ -31,10 +32,25 @@ class ToolDeliveryItem
 
     if _tool_ids.size < quantity
       errors.add(:quantity, :more_than_stock, count: _tool_ids.size)
-      return false
+    else
+      self.tool_ids = _tool_ids
+    end
+  end
+
+  def receive(received_quantity)
+    self.received_quantity = received_quantity
+    if self.received_quantity.blank?
+      errors.add(:received_quantity, :blank)
+    elsif self.received_quantity > quantity
+      errors.add(:received_quantity, :less_than_or_equal_to, count: quantity)
     end
 
-    self.tool_ids = _tool_ids
+    if errors.empty?
+      self.received_tool_ids = self.tool_ids[0...self.received_quantity]
+      true
+    else
+      false
+    end
   end
 end
 
@@ -71,10 +87,50 @@ class ToolDelivery
     tool_delivery_items.sum { |item| item.tool_ids.size }
   end
 
-  def set_tools_for_delivering
-    Tool.where(:id.in => tool_delivery_items.map(&:tool_ids).flatten).update_all(tool_delivery_id: id)
+  def received_tools_count
+    return if !received?
+    tool_delivery_items.sum { |item| item.received_tool_ids.size }
   end
 
-  def receive
+  def received?
+    received_at.present?
+  end
+
+  def tools
+    Tool.where(:id.in => tool_delivery_items.map(&:tool_ids).flatten)
+  end
+
+  def received_tools
+    return [] if !received?
+    Tool.where(:id.in => tool_delivery_items.map(&:received_tool_ids).flatten)
+  end
+
+  def unreceived_tools
+    return [] if !received?
+    ids = tool_delivery_items.map(&:tool_ids).flatten - tool_delivery_items.map(&:received_tool_ids).flatten
+    Tool.where(:id.in => ids)
+  end
+
+  def set_tools_for_delivering
+    tools.update_all(tool_delivery_id: id, status: 'delivering')
+  end
+
+  def receive(item_attrs, recipient)
+    can_be_received = item_attrs.inject(true) do |result, attr|
+      item = tool_delivery_items.find(attr[:id])
+      item.receive(attr[:received_quantity]) && result
+    end
+    self.received_at = Time.current
+    self.recipient = recipient
+
+    if can_be_received && save
+      set_tools_for_receiving
+      true
+    end
+  end
+
+  def set_tools_for_receiving
+    received_tools.update_all(city_id: to_city_id, status: 'stock')
+    unreceived_tools.update_all(city_id: from_city_id, status: 'stock')
   end
 end

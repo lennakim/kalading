@@ -18,7 +18,13 @@
   <% end -%>
 
   <%= activatable_nav_link 'tool_batch', tool_batches_path if can? :read, ToolBatch %>
-  <%= activatable_nav_link 'tool_delivery', tool_deliveries_path if can? :read, ToolDelivery %>
+
+  <% if current_user.storehouse_admin? -%>
+    <%= activatable_nav_link 'tool_delivery', tool_deliveries_path, link_text: '收货信息' if can? :read, ToolDelivery %>
+  <% else -%>
+    <%= activatable_nav_link 'tool_delivery', tool_deliveries_path if can? :read, ToolDelivery %>
+  <% end -%>
+
   <%= activatable_nav_link 'tool_stock', tool_stocks_path if can? :read, ToolStock %>
 
   <%= activatable_nav_link 'tool_assignee', tool_assignees_path,
