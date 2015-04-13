@@ -1,4 +1,6 @@
 # This file is used by Rack-based servers to start the application.
+require 'bundler'
+Bundler.setup
 
 require 'rack/cors'
 use Rack::Cors do
