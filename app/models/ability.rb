@@ -46,6 +46,7 @@ class Ability
       can :receive, ToolDelivery do |d|
         d.to_city == user.city
       end
+      can :inspect, :tool_statistics
     end
 
     # 全国库管

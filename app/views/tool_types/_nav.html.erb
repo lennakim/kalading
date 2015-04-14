@@ -25,6 +25,20 @@
     <%= activatable_nav_link 'tool_delivery', tool_deliveries_path if can? :read, ToolDelivery %>
   <% end -%>
 
+  <% if can? :inspect, :tool_statistics -%>
+    <li class="dropdown <%= 'active' if %w[tool_statistics].include?(params[:controller]) %>">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        工具统计
+        <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu">
+        <li><%= link_to '汇总信息', '#' %></li>
+        <li class="divider"></li>
+        <li><%= link_to '库存统计', tool_statistics_path %></li>
+      </ul>
+    </li>
+  <% end -%>
+
   <%= activatable_nav_link 'tool_stock', tool_stocks_path if can? :read, ToolStock %>
 
   <%= activatable_nav_link 'tool_assignee', tool_assignees_path,

@@ -118,6 +118,8 @@ Kalading::Application.routes.draw do
     end
   end
 
+  resources :tool_statistics, only: [:index]
+
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   devise_for :users, :skip => [:registrations], controllers: { sessions: "sessions" }
