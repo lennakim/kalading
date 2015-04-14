@@ -19,11 +19,7 @@
       <tr>
         <th><%= Tool.human_attribute_name('city') %></th>
         <th><%= Tool.human_attribute_name('tool_type') %></th>
-
-        <% if @show_tool_brand -%>
-          <td><%= Tool.human_attribute_name('tool_brand') %></td>
-        <% end -%>
-
+        <td><%= Tool.human_attribute_name('tool_brand') %></td>
         <th><%= Tool.human_attribute_name('assigned_count') %></th>
         <th><%= Tool.human_attribute_name('delivering_count') %></th>
         <th><%= Tool.human_attribute_name('stock_count') %></th>
@@ -33,11 +29,13 @@
     <tbody>
       <% (@result || []).each do |item| %>
         <tr>
-          <td><%= item.city.name %></td>
+          <td><%= link_to item.city.name, tool_statistics_path(city_id: item.city.id) %></td>
           <td><%= item.tool_type.identification %></td>
 
           <% if @show_tool_brand -%>
             <td><%= item.tool_brand.name %></td>
+          <% else -%>
+            <td><%= link_to '查看', tool_statistics_path(city_id: item.city.id, tool_type_id: item.tool_type.id) %></td>
           <% end -%>
 
           <td><%= item.assigned %></td>
