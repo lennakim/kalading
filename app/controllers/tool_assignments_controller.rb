@@ -30,9 +30,7 @@ class ToolAssignmentsController < ApplicationController
     authorize! :create, ToolAssignment
 
     @to_be_assigned = @assignee.to_be_assigned_tool_types
-    @not_enough_stock = @to_be_assigned.reject do |tool_type|
-      ToolStock.where(tool_type: tool_type, city: @assignee.city, :remained_count.gt => 0).exists?
-    end
+    @not_enough_stock = []
   end
 
   def batch_assign

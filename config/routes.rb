@@ -94,7 +94,6 @@ Kalading::Application.routes.draw do
     end
   end
 
-  resources :tool_stocks, only: [:index]
   resources :tool_assignments, only: [:index] do
     member do
       put :break

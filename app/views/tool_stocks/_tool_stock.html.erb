@@ -1,8 +1,0 @@
-<tr>
-  <td><%= tool_stock.city.name %></td>
-  <td><%= tool_stock.tool_type.identification %></td>
-  <td><%= translate_collection_options(ToolType, :category, tool_stock.tool_type_category) %></td>
-  <td><%= tool_stock.assigned_count %></td>
-  <td><%= tool_stock.remained_count %></td>
-  <td><%= tool_stock.assigned_count + tool_stock.remained_count %></td>
-</tr>

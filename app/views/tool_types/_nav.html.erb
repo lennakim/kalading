@@ -39,8 +39,6 @@
     </li>
   <% end -%>
 
-  <%= activatable_nav_link 'tool_stock', tool_stocks_path if can? :read, ToolStock %>
-
   <%= activatable_nav_link 'tool_assignee', tool_assignees_path,
     link_text: t('mongoid.attributes.tool_assignment.assignment_group') if can? :read, ToolAssignment %>
 

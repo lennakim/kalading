@@ -244,7 +244,6 @@ zh-CN:
       tool_type: '工具类型'
       service_vehicle: '上门服务车辆'
       tool_batch: '进货信息'
-      tool_stock: '库存信息'
       tool: '工具'
       tool_detail: '工具信息库'
       tool_brand: '品牌'
@@ -280,13 +279,6 @@ zh-CN:
         city: '城市'
         operator: '操作人员'
         created_at: '进货时间'
-      tool_stock:
-        assigned_count: '正在使用'
-        remained_count: '库房存留'
-        total: '合计'
-        tool_type: '工具'
-        tool_type_category: '工具类别'
-        city: '城市'
       tool:
         lifetime: '使用寿命（月）'
         warranty_period: '保修期（月）'
