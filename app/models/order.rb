@@ -113,6 +113,8 @@ class Order
 
   has_many :maintains
 
+  has_one :evaluation
+
   field :part_counts, type: Hash, default: {}
   field :part_delivered_counts, type: Hash, default: {}
   field :part_deliver_state, type: Integer, default: 0

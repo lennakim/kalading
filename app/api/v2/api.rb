@@ -17,6 +17,7 @@ module V2
 
     mount Commons
     mount Maintains
+    mount Evaluations
 
     add_swagger_documentation base_path: "/api", api_version: 'v2', mount_path: 'doc.json'
   end
