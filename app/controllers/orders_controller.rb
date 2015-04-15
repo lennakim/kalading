@@ -895,6 +895,7 @@ private
         @discount_error = I18n.t(:discount_service_types_error, s: discount.service_types.map{|s| s.name}.join(',') )
       else
         @order.discounts << discount
+        @order.comments << Comment.new(text: discount.desc) if !discount.desc.blank?
       end
     else
       @discount_error = I18n.t(:discount_not_exist)

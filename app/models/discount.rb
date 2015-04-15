@@ -16,13 +16,15 @@ class Discount
   field :times, type: Integer, default: 1
   # 优惠码
   field :token, type: String
+  # 描述信息
+  field :desc, type: String, default: ''
 
   validates :times, inclusion: { in: 1..999999 }, presence: true
   validates :name, presence: true
   validates :percent, inclusion: { in: 0..100 }, presence: true
   has_and_belongs_to_many :orders
   has_and_belongs_to_many :service_types
-  attr_accessible :name, :discount, :percent, :order_ids, :expire_date, :times, :final_price, :service_type_ids, :token
+  attr_accessible :name, :discount, :percent, :order_ids, :expire_date, :times, :final_price, :service_type_ids, :token, :desc
   
   paginates_per 10
   

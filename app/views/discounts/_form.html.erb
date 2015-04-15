@@ -20,6 +20,7 @@
     </div>
   <% end %>
   <%= f.association :service_types, collection: ServiceType.asc(:name), label: t('service_types'), include_blank: true, multiple: true, size: 3 %>
+  <%= f.input :desc, label: t(:desc), as: :text, :input_html => { :cols => 50, :rows => 4 } %>
   <div class="form-actions">
     <%= f.button :submit, t(:save), :class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
