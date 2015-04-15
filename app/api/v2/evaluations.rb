@@ -16,6 +16,14 @@ module V2
         status(200)  #设定http code为200 grape默认的 post 请求返回 201
         wrapper(result)
       end
+
+      get "/" do
+        result = Evaluation.recent.limit(10)
+
+        present :msg, ""
+        present :code, 0
+        present :data, result, with: V2::Entities::Evaluation
+      end
     end
 
   end
