@@ -319,6 +319,8 @@ class Order
   before_create do |o|
     #临时的：去掉方括号之间的文字
     o.address.gsub!(/\[.*\]/, '') if o.address.present?
+    #优惠券描述加入客户意见中
+    o.client_comment += ('－－' + o.discounts.first.desc) if !o.discounts.empty? && !o.discounts.first.desc.blank?
   end
 
   before_save :update_location
