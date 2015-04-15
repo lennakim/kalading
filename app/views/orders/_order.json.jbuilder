@@ -43,7 +43,7 @@ else
   json.reciept_title o.reciept_title
   json.reciept_address o.reciept_address
 end
-json.evaluated o.evaluation_time ? 1 : 0
+json.evaluated (o.evaluation_time || o.evaluation) ? 1 : 0
 json.set! 'asm_pics' do
   if o.auto_submodel
     json.array! o.auto_submodel.pictures do |p|
