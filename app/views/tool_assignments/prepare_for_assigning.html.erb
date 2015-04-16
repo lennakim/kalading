@@ -9,8 +9,9 @@
     分配对象：<%= @assignee.model_name.human %> <%= @assignee.name %>
   </p>
 
-  <%= simple_nested_form_for @assignee, url: batch_tool_assignments_path(assignee_id: @assignee.id, assignee_type: @assignee.model_name),
-    method: :post, html: { class: 'form-horizontal' } do |f| %>
+  <%= simple_nested_form_for @assignee,
+    url: batch_tool_assignments_path(assignee_id: @assignee.id, assignee_type: @assignee.model_name),
+    method: :post do |f| %>
     <table id="tool_assignments" class="table table-hover">
       <thead>
         <th><%= ToolAssignment.human_attribute_name('tool_type') %></th>

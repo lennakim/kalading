@@ -1,4 +1,4 @@
-<div class="span10 offset1 tool_assignment_history">
+<div class="span10 offset1 tools">
   <%= render 'tool_types/nav' %>
 
   <div class="page-header">
@@ -19,7 +19,7 @@
         <th><%= ToolAssignment.human_attribute_name('tool_brand') %></th>
         <th><%= Tool.human_attribute_name('tool_number') %></th>
         <th><%= ToolAssignment.human_attribute_name('status') %></th>
-        <th>丢失/损坏情况</th>
+        <th>丢失/损坏信息</th>
       </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@
           <td><%= translate_collection_options(assign, :status) %></td>
           <td>
             <% if assign.discarded? -%>
-              <span class="popover_discarded_info" data-content="<%= render partial: 'discarded_info', locals: {assign: assign} %>">查看</span>
+              <span class="popover_discarded_info btn btn-mini" data-content="<%= render partial: 'discarded_info', locals: {assign: assign} %>">查看</span>
             <% end -%>
           </td>
         </tr>

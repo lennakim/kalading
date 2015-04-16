@@ -1,4 +1,4 @@
-<div class="span10 offset1">
+<div class="span10 offset1 tools">
   <%= render 'tool_types/nav' %>
 
   <h3>已批准的丢失/损坏工具</h3>
@@ -26,11 +26,8 @@
         <th><%= ToolAssignment.human_attribute_name('tool_brand') %></th>
         <th><%= Tool.human_attribute_name('tool_number') %></th>
         <th><%= ToolAssignment.human_attribute_name('assignee') %></th>
-        <th><%= ToolAssignment.human_attribute_name('applied_at') %></th>
-        <th><%= ToolAssignment.human_attribute_name('applicant') %></th>
         <th><%= ToolAssignment.human_attribute_name('discarded_type') %></th>
-        <th><%= ToolAssignment.human_attribute_name('approved_at') %></th>
-        <th><%= ToolAssignment.human_attribute_name('approver') %></th>
+        <th>丢失/损坏信息</th>
       </tr>
     </thead>
     <tbody>
@@ -41,11 +38,14 @@
           <td><%= assignment.tool_brand.name %></td>
           <td><%= assignment.tool.tool_number %></td>
           <td><%= assignment.assignee.name %></td>
-          <td><%= l assignment.applied_at %></td>
-          <td><%= assignment.applicant.try(:name) %></td>
           <td><%= translate_collection_options(assignment, :status) %></td>
-          <td><%= l assignment.approved_at %></td>
-          <td><%= assignment.approver.name %></td>
+
+          <td>
+            <% if assignment.discarded? -%>
+              <span class="popover_discarded_info btn btn-mini" data-content="<%= render partial: 'discarded_info', locals: {assign: assignment} %>">查看</span>
+            <% end -%>
+          </td>
+
         </tr>
       <% end -%>
     </tbody>
