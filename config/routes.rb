@@ -103,6 +103,7 @@ Kalading::Application.routes.draw do
     collection do
       get :prepare_for_assigning, as: :prepare
       post :batch_assign, as: :batch
+      get :history
     end
   end
 

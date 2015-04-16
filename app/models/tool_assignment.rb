@@ -120,6 +120,7 @@ class ToolAssignment
 
   def assign
     saved_count = 0
+    self.tool_numbers = Array.wrap(tool_numbers)
 
     if save && tool.mark_as_assigned(tool_numbers.shift)
       saved_count += 1

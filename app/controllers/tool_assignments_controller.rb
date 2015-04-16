@@ -1,9 +1,9 @@
 class ToolAssignmentsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :find_assignee, only: [:prepare_for_assigning, :batch_assign]
+  before_filter :find_assignee, only: [:history, :prepare_for_assigning, :batch_assign]
   before_filter :find_assignment, only: [:break, :lose]
   before_filter :check_for_discarding, only: [:break, :lose]
-  load_and_authorize_resource except: [:prepare_for_assigning, :batch_assign]
+  load_and_authorize_resource except: [:history, :prepare_for_assigning, :batch_assign]
 
   def index
     criteria = ToolAssignment
@@ -24,6 +24,12 @@ class ToolAssignmentsController < ApplicationController
     end
 
     @assignments = criteria.page(params[:page]).per(20)
+  end
+
+  def history
+    authorize! :read, ToolAssignment
+
+    @tool_assignments = @assignee.tool_assignments.page(params[:page]).per(20)
   end
 
   def prepare_for_assigning

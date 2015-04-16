@@ -8,6 +8,13 @@
     <% end -%>
   </td>
   <td>
+    <%= link_to history_tool_assignments_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
+      class: 'btn btn-small', target: '_blank' do %>
+      查看
+      <i class="icon-external-link"></i>
+    <% end -%>
+  </td>
+  <td>
     <% if can? :create, ToolAssignment -%>
       <%= link_to t('mongoid.attributes.tool_assignment.assign'),
         prepare_tool_assignments_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
