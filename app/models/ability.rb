@@ -49,6 +49,13 @@ class Ability
       can :inspect, :tool_statistics
     end
 
+    # 地方库管
+    if user.storehouse_admin?
+      can [:break, :lose, :approve], ToolAssignment do |assign|
+        assign.city == user.city
+      end
+    end
+
     # 全国库管
     if user.national_storehouse_admin?
       can [:manage_all, :part_transfer, :part_transfer_to, :part_yingyusunhao, :do_part_yingyusunhao, :statistics], Storehouse
@@ -58,6 +65,7 @@ class Ability
       can [:create, :update, :destroy], [ToolType, ServiceVehicle, ToolBrand, ToolSupplier, ToolDetail, ToolBatch]
       can :read, :tool_base_info
       can :create, ToolDelivery
+      can [:break, :lose, :approve], ToolAssignment
     end
 
     # 数据管理员

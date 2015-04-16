@@ -1,22 +1,26 @@
 class ToolAssignmentsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :find_assignee, only: [:history, :prepare_for_assigning, :batch_assign]
-  before_filter :find_assignment, only: [:break, :lose]
+  before_filter :find_assignment, only: [:break, :lose, :approve]
   before_filter :check_for_discarding, only: [:break, :lose]
   load_and_authorize_resource except: [:history, :prepare_for_assigning, :batch_assign]
 
   def index
     criteria = ToolAssignment
-    if params[:status] == 'discarded'
-      criteria = criteria.where(discarded: true)
+
+    if params[:status] == 'discarding'
+      criteria = criteria.discarding
+      template = 'discarding_list'
+    elsif params[:status] == 'approved'
+      criteria = criteria.approved
+      template = 'approved_list'
     end
 
+    if current_user.storehouse_admin?
+      params[:city_id] = current_user.city_id
+    end
     if params[:city_id].present?
       criteria = criteria.where(city_id: params[:city_id])
-    end
-
-    if params[:category].present?
-      criteria = criteria.where(tool_type_category: params[:category])
     end
 
     if params[:discarded_type].present?
@@ -24,6 +28,12 @@ class ToolAssignmentsController < ApplicationController
     end
 
     @assignments = criteria.page(params[:page]).per(20)
+
+    if template.present?
+      render template
+    else
+      render 'index'
+    end
   end
 
   def history
@@ -85,6 +95,16 @@ class ToolAssignmentsController < ApplicationController
       flash[:notice] = '标为丢失成功'
     else
       flash[:error] = '标为丢失失败'
+    end
+
+    redirect_to :back
+  end
+
+  def approve
+    if @assignment.approve_discarded(current_user)
+      flash[:notice] = '批准丢/损申请成功'
+    else
+      flash[:error] = '批准丢/损申请失败'
     end
 
     redirect_to :back

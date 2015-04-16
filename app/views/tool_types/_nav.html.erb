@@ -25,6 +25,22 @@
     <%= activatable_nav_link 'tool_delivery', tool_deliveries_path if can? :read, ToolDelivery %>
   <% end -%>
 
+  <%= activatable_nav_link 'tool_assignee', tool_assignees_path,
+    link_text: t('mongoid.attributes.tool_assignment.assignment_group') if can? :read, ToolAssignment %>
+
+  <% if can? :read, ToolAssignment -%>
+    <li class="dropdown <%= 'active' if %w[tool_assignments].include?(params[:controller]) %>">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        丢失/损坏
+        <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu">
+        <li><%= link_to '待批准', tool_assignments_path(status: 'discarding') %></li>
+        <li><%= link_to '已批准', tool_assignments_path(status: 'approved') %></li>
+      </ul>
+    </li>
+  <% end -%>
+
   <% if can? :inspect, :tool_statistics -%>
     <li class="dropdown <%= 'active' if %w[tool_statistics].include?(params[:controller]) %>">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -38,12 +54,6 @@
       </ul>
     </li>
   <% end -%>
-
-  <%= activatable_nav_link 'tool_assignee', tool_assignees_path,
-    link_text: t('mongoid.attributes.tool_assignment.assignment_group') if can? :read, ToolAssignment %>
-
-  <%= activatable_nav_link 'tool_assignment', tool_assignments_path(status: 'discarded'),
-    link_text: t('mongoid.attributes.tool_assignment.discarded') if can? :read, ToolAssignment %>
 
   <%= activatable_nav_link 'engineer', my_tool_assignments_engineers_path,
     link_text: t('mongoid.attributes.tool_assignment.my_tool_assignments') if can? :read_and_discard, :my_tool_assignments %>

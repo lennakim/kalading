@@ -310,7 +310,7 @@ zh-CN:
         approver: '丢/损批准人'
         discarded_type: '原因'
         assignment_group: '工具分配'
-        discarded: '损坏/丢失'
+        discarded: '丢失/损坏'
         my_tool_assignments: '我的工具'
         assign: '分配'
         assigned_tools: '已分配工具'

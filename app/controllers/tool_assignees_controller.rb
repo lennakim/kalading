@@ -15,7 +15,6 @@ class ToolAssigneesController < ApplicationController
     if current_user.storehouse_admin?
       params[:city_id] = current_user.city_id
     end
-
     if params[:city_id].present?
       criteria = criteria.where(city_id: params[:city_id])
     end

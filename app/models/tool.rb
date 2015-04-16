@@ -2,7 +2,7 @@ class Tool
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  STATUSES = %w[stock delivering assigned]
+  STATUSES = %w[stock delivering assigned discarded]
 
   field :lifetime, type: Integer
   field :warranty_period, type: Integer
@@ -132,6 +132,11 @@ class Tool
   def mark_as_assigned(tool_number = nil)
     self.tool_number = tool_number.try(:strip)
     self.status = 'assigned'
+    self.save(validate: false)
+  end
+
+  def approve_discarded
+    self.status = 'discarded'
     self.save(validate: false)
   end
 end

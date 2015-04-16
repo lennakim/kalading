@@ -98,6 +98,7 @@ Kalading::Application.routes.draw do
     member do
       put :break
       put :lose
+      put :approve
     end
 
     collection do

@@ -6,11 +6,11 @@ class ToolAssignment
   STATUSES = %w[normal broken lost]
 
   field :status, type: String, default: 'normal'
-  # 是否损坏/丢失
+  # 是否丢失/损坏
   field :discarded, type: Boolean, default: false
   # 将工具标记为损坏或丢失的时间
   field :applied_at, type: DateTime
-  # 批准损坏/丢失申请的时间
+  # 批准丢失/损坏申请的时间
   field :approved_at, type: DateTime
 
   attr_accessible :tool_type_id, :tool_brand_id, :batch_quantity, :batch_tool_numbers
@@ -29,7 +29,7 @@ class ToolAssignment
   belongs_to :assignee, polymorphic: true
   # 将工具标记为损坏或丢失的技师
   belongs_to :applicant, class_name: 'User'
-  # 批准损坏/丢失申请的操作者
+  # 批准丢失/损坏申请的操作者
   belongs_to :approver, class_name: 'User'
 
   validates :status, inclusion: { in: STATUSES }
@@ -44,10 +44,12 @@ class ToolAssignment
 
   # 已分配，且没有被标记为损坏或丢失的
   scope :normal, -> { where(discarded: false) }
-  # 已分配的，包括被标记为损坏或丢失且没有被重新分配的
+  # 已分配的，包括被标记为损坏或丢失且没有被批准的
   scope :current, -> { where(approved_at: nil) }
-  # 已被标记为损坏或丢失，还没有被重新分配的
+  # 已被标记为损坏或丢失，还没有被批准的
   scope :discarding, -> { where(discarded: true, approved_at: nil) }
+  # 损坏或丢失，且已经被批准的
+  scope :approved, -> { where(:approved_at.ne => nil) }
 
   def self.batch_assign(attrs, assignee, assigner)
     assignments = attrs.map do |attr|
@@ -165,10 +167,16 @@ class ToolAssignment
     mark_as_discarded(applicant)
   end
 
+  def approved?
+    approved_at.present?
+  end
+
   def approve_discarded(approver)
+    return if approved?
+
     self.approved_at = Time.current
     self.approver = approver
-    self.save
+    self.save && tool.approve_discarded
   end
 
   private

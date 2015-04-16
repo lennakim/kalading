@@ -1,8 +1,7 @@
 <tr>
   <td><%= assignment.city.name %></td>
   <td><%= assignment.tool_type.identification %></td>
-  <td><%= translate_collection_options(assignment.tool_type, :category) %></td>
+  <td><%= assignment.tool_brand.name %></td>
+  <td><%= assignment.tool.tool_number %></td>
   <td><%= assignment.assignee.name %></td>
-  <td><%= assignment.applicant.try(:name) %></td>
-  <td><%= translate_collection_options(assignment, :status) %></td>
 </tr>
