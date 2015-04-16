@@ -260,7 +260,6 @@ zh-CN:
     attributes:
       engineer:
         city: '城市'
-        assigned: '已分配'
       tool_type:
         name: '名称'
         spec: '规格'
@@ -271,7 +270,6 @@ zh-CN:
         number: '车牌号'
         city: '城市'
         local: '上门服务车辆'
-        assigned: '已分配'
       tool_batch:
         quantity: '数量'
         lifetime: '使用寿命（月）'
@@ -312,6 +310,7 @@ zh-CN:
         discarded: '损坏/丢失'
         my_tool_assignments: '我的工具'
         assign: '分配'
+        assigned_tools: '已分配工具'
       tool_assignee:
         city: '城市'
         tool_type: '工具'

@@ -1,7 +1,12 @@
 <tr>
   <td><%= assignee.city.name %></td>
   <td><%= assignee.name %></td>
-  <td><%= link_to '查看', send("tool_assignments_#{assignee.model_name.underscore}_path", assignee), class: 'btn btn-small' %></td>
+  <td>
+    <%= link_to send("tool_assignments_#{assignee.model_name.underscore}_path", assignee), class: 'btn btn-small', target: '_blank' do %>
+      查看
+      <i class="icon-external-link"></i>
+    <% end -%>
+  </td>
   <td>
     <% if can? :create, ToolAssignment -%>
       <%= link_to t('mongoid.attributes.tool_assignment.assign'),
