@@ -17,7 +17,6 @@ gem 'jbuilder'
 
 group :test, :development do
   gem 'rspec-rails', '~> 3.0'
-  gem 'spreadsheet'
 end
 
 group :test do
@@ -101,3 +100,4 @@ gem 'mongoid_userstamp'
 
 # state machine
 gem 'aasm'
+gem 'spreadsheet'
