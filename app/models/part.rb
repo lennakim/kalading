@@ -33,7 +33,7 @@ class Part
   has_many :part_transfers
 
   attr_accessible :capacity, :number, :match_rule, :spec, :motoroil_type, :remark,
-    :part_brand_id, :part_type_id,
+    :part_brand_id, :part_type_id, :part_brand, :part_type,
     :auto_submodel_ids,
     :urlinfo_ids, :urlinfos_attributes, :price, :order_ids, :partbatch_ids,
     :motoroil_group_id,

@@ -564,4 +564,91 @@ namespace :rename_asm do
       o.update_attribute :car_num, o.car_num.gsub(/[^a-zA-Z\d]/, '')
     end
   end
+
+  task :import_part_match_check => :environment do
+    # 2015-04-16 张河的需求：导入火花塞匹配
+    # 序号	配件型号	配件品牌	配件类型	品牌	款式	发动机型号	年代
+    # 检查车型full_name
+    begin
+      book = Spreadsheet.open './tmp/1.xls'
+      sheet1 = book.worksheet 0
+      sheet1.each 1 do |row|
+        next if row[0].nil?
+        #puts "#{row[1]},#{row[2]},#{row[3]},#{row[5]}" if !row[1].empty?
+        asm = AutoSubmodel.where(data_source: 2).find_by(full_name: /.*#{row[5].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i)
+        if asm.nil?
+          puts "#{row[0]} #{row[5]} not found, engine: #{row[6]}"
+          AutoSubmodel.where(data_source: 2).where(full_name: /.*#{row[5].gsub(row[7],'').gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i).each do |aasm|
+            puts aasm.full_name
+            puts aasm.engine_model
+          end
+          break
+        end
+      end
+    rescue Exception => e
+      puts e.message  
+    end
+
+    # 检查配件型号和品牌
+    begin
+      book = Spreadsheet.open './tmp/1.xls'
+      sheet1 = book.worksheet 0
+      a = []
+      sheet1.each 1 do |row|
+        next if row[0].nil?
+        pb = PartBrand.find_by name: row[2]
+        if pb.nil?
+          a << "#{row[0]} part brand #{row[2]} not found\n"
+          next
+        end
+        pt = PartType.find_by name: row[3]
+        if pt.nil?
+          a << "#{row[0]} part type #{row[3]} not found\n"
+          next
+        end
+        p = Part.find_by number: /.*#{row[1].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i, part_brand: pb
+        if p.nil?
+          a << "#{row[0]} #{row[1]} not found\n"
+        end
+      end
+      puts a
+    rescue Exception => e
+      puts e.message  
+    end
+  end
+
+  task :import_part_match => :environment do
+    # 序号	配件型号	配件品牌	配件类型	品牌	款式	发动机型号	年代
+    book = Spreadsheet.open './tmp/1.xls'
+    sheet1 = book.worksheet 0
+    sheet1.each 1 do |row|
+      next if row[0].nil?
+      asm = AutoSubmodel.where(data_source: 2).find_by(full_name: /.*#{row[5].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i)
+      if asm.nil?
+        puts "#{row[0]} #{row[5]} not found, engine: #{row[6]}"
+        AutoSubmodel.where(data_source: 2).where(full_name: /.*#{row[5].gsub(row[7],'').gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i).each do |aasm|
+          puts aasm.full_name
+          puts aasm.engine_model
+        end
+        break
+      end
+
+      pb = PartBrand.find_by name: row[2]
+      if pb.nil?
+        puts "#{row[0]} part brand #{row[2]} not found\n"
+        break
+      end
+      pt = PartType.find_by name: row[3]
+      if pt.nil?
+        puts "#{row[0]} part type #{row[3]} not found\n"
+        break
+      end
+      p = Part.find_by(number: /.*#{row[1].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i, part_brand: pb, part_type: pt)
+      if p.nil?
+        puts "Creating #{row[1]}"
+        p = Part.create!(number: row[1].strip, part_brand: pb, part_type: pt )
+      end
+      asm.parts << p
+    end
+  end
 end
