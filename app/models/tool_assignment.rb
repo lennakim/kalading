@@ -41,7 +41,6 @@ class ToolAssignment
   validates_presence_of :tool_id
 
   before_validation :set_city, on: :create
-  after_create :increase_assignments_count
 
   # 已分配，且没有被标记为损坏或丢失的
   scope :normal, -> { where(discarded: false) }
@@ -119,10 +118,6 @@ class ToolAssignment
     end
   end
 
-  def increase_assignments_count
-    assignee.inc(:current_tool_assignments_count, 1)
-  end
-
   def assign
     saved_count = 0
 
@@ -172,7 +167,7 @@ class ToolAssignment
   def approve_discarded(approver)
     self.approved_at = Time.current
     self.approver = approver
-    self.save && modify_assignments_counts_after_approving
+    self.save
   end
 
   private
@@ -181,12 +176,6 @@ class ToolAssignment
       self.discarded = true
       self.applied_at = Time.current
       self.applicant = applicant
-      self.save && !!assignee.inc(:discarded_assignments_count, 1)
-    end
-
-    def modify_assignments_counts_after_approving
-      assignee.current_tool_assignments_count -= 1
-      assignee.discarded_assignments_count -= 1
-      assignee.save(validate: false)
+      self.save
     end
 end
