@@ -1,0 +1,7 @@
+<%= ToolAssignment.human_attribute_name('applied_at') %>: <%= l assign.applied_at if assign.applied_at %>
+<br>
+<%= ToolAssignment.human_attribute_name('applicant') %>: <%= assign.applicant.try(:name) %>
+<br>
+<%= ToolAssignment.human_attribute_name('approved_at') %>: <%= l assign.approved_at if assign.approved_at %>
+<br>
+<%= ToolAssignment.human_attribute_name('approver') %>: <%= assign.approver.try(:name) %>

@@ -64,10 +64,14 @@ zh-CN:
       model_name: "类别"
       last_used: "上次使用"
       records: "数目"
+  date:
+    formats:
+      default: "%Y/%m/%d"
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
       long: "%m/%d %H:%M"
+      short: "%Y/%m/%d"
   datetime:
     distance_in_words:
       less_than_x_minutes:
@@ -304,10 +308,10 @@ zh-CN:
         batch_tool_numbers: '工具编号'
         status: '状态'
         assignee: '拥有者'
-        applied_at: '报丢/损时间'
-        applicant: '报丢/损人'
-        approved_at: '丢/损批准时间'
-        approver: '丢/损批准人'
+        applied_at: '报损时间'
+        applicant: '报损人'
+        approved_at: '批准时间'
+        approver: '批准人'
         discarded_type: '原因'
         assignment_group: '工具分配'
         discarded: '丢失/损坏'
@@ -406,9 +410,6 @@ zh-CN:
   common_info: '基本属性'
   applicable_auto_submodels_num: '适用车型个数'
   total_models: "共%{count}款"
-  date:
-    formats:
-      default: "%Y/%m/%d"
   buy_price: '进价'
   quantity: '数量'
   storehouse: '库房'

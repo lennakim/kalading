@@ -1,4 +1,4 @@
-<div class="span10 offset1">
+<div class="span10 offset1 tool_assignment_history">
   <%= render 'tool_types/nav' %>
 
   <div class="page-header">
@@ -19,25 +19,27 @@
         <th><%= ToolAssignment.human_attribute_name('tool_brand') %></th>
         <th><%= Tool.human_attribute_name('tool_number') %></th>
         <th><%= ToolAssignment.human_attribute_name('status') %></th>
-        <th><%= ToolAssignment.human_attribute_name('applied_at') %></th>
-        <th><%= ToolAssignment.human_attribute_name('applicant') %></th>
-        <th><%= ToolAssignment.human_attribute_name('approved_at') %></th>
-        <th><%= ToolAssignment.human_attribute_name('approver') %></th>
+        <th>丢失/损坏情况</th>
       </tr>
     </thead>
     <tbody>
       <% @tool_assignments.each do |assign| %>
+        <% if assign.discarded? -%>
+        <tr class="warning">
+        <% else -%>
         <tr>
+        <% end -%>
           <td><%= l assign.created_at %></td>
           <td><%= assign.assigner.name %></td>
           <td><%= assign.tool_type.identification %></td>
           <td><%= assign.tool_brand.name %></td>
           <td><%= assign.tool.tool_number %></td>
           <td><%= translate_collection_options(assign, :status) %></td>
-          <td><%= l assign.applied_at if assign.applied_at %></td>
-          <td><%= assign.applicant.try(:name) %></td>
-          <td><%= l assign.approved_at if assign.approved_at %></td>
-          <td><%= assign.approver.try(:name) %></td>
+          <td>
+            <% if assign.discarded? -%>
+              <span class="popover_discarded_info" data-content="<%= render partial: 'discarded_info', locals: {assign: assign} %>">查看</span>
+            <% end -%>
+          </td>
         </tr>
       <% end -%>
     </tbody>
