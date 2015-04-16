@@ -1,11 +1,17 @@
-# source 'https://rubygems.org'
+#source 'https://rubygems.org'
 source 'http://ruby.taobao.org'
 
-gem 'rails', '3.2.21'
-gem 'i18n',  '0.6.11'
+gem 'rails', '3.2.12'
 
+# Bundle edge Rails instead:
+# gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+
+
+# Gems used only for assets and not required
+# in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.5'
+  gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
 end
@@ -15,9 +21,14 @@ gem 'jquery-rails'
 # To use Jbuilder templates for JSON
 gem 'jbuilder'
 
+# Use unicorn as the app server
+# gem 'unicorn'
+
+# To use debugger
+# gem 'debugger'
+
 group :test, :development do
   gem 'rspec-rails', '~> 3.0'
-  gem 'spreadsheet'
 end
 
 group :test do
@@ -46,6 +57,7 @@ gem 'kaminari'
 # Fix rails console error on ubuntu
 gem 'rb-readline', '~> 0.5.0', require: 'readline'
 
+gem 'quiet_assets', :group => :development
 gem 'money-rails'
 gem 'nested_form'
 gem 'datetimepicker-rails', git: 'git://github.com/zpaulovics/datetimepicker-rails', tag: 'v1.0.0'
@@ -55,49 +67,8 @@ gem 'jquery-validation-rails'
 gem 'ruby-pinyin'
 gem 'mongoid_auto_increment', :git => 'git://github.com/teriyakisan/mongoid_auto_increment.git'
 
+gem 'capistrano', '~> 3.0.1'
+gem 'pry-rails'
 gem 'rqrcode-with-patches'
 gem 'chartkick'
-gem 'newrelic_rpm'
-gem 'puma'
-
-group :development, :test do
-  gem 'http_logger' # log api request response
-  gem 'pry'
-  gem 'pry-rails'
-  gem 'awesome_print' # pretty log
-
-  gem 'quiet_assets'
-
-  # debug
-  gem 'better_errors'
-  gem 'meta_request'
-  gem 'binding_of_caller'
-end
-
-
-# clean code
-gem 'inherited_resources'
-
-group :development do
-  gem 'capistrano'
-  gem 'capistrano-bundler'
-  gem 'capistrano-rails'
-  gem 'capistrano-rbenv'
-  gem 'capistrano3-puma'
-  # highlight mongoid output for optimizing
-  gem 'mongoid_colored_logger'
-end
-
-# api
-
-gem 'grape'
-gem 'grape-entity'
-gem 'grape-jbuilder'
-gem 'swagger-ui_rails'
-gem 'grape-swagger-rails'
-gem 'rack-cors'
-
-gem 'mongoid_userstamp'
-
-# state machine
-gem 'aasm'
+gem 'spreadsheet'
