@@ -1,11 +1,13 @@
 <div class="span9 offset2">
+  <%= render 'tool_types/nav' %>
+
   <div class="page-header">
     <h1>分配工具</h1>
   </div>
 
-  <h4>
+  <p>
     分配对象：<%= @assignee.model_name.human %> <%= @assignee.name %>
-  </h4>
+  </p>
 
   <%= simple_nested_form_for @assignee, url: batch_tool_assignments_path(assignee_id: @assignee.id, assignee_type: @assignee.model_name),
     method: :post, html: { class: 'form-horizontal' } do |f| %>

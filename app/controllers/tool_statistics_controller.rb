@@ -9,7 +9,7 @@ class ToolStatisticsController < ApplicationController
     end
 
     if params[:city_id].blank? && params[:tool_type_id].blank?
-      flash[:error] = '请至少选择一个城市或工具'
+      flash.now[:error] = '请至少选择一个城市或工具'
       return
     end
 

@@ -2,7 +2,12 @@
   <%= render 'tool_types/nav' %>
 
   <div>
-    <%= render 'tool_batches/new_btn' %>
+    <% if can? :create, ToolBatch -%>
+      <%= link_to new_tool_batch_path, class: 'btn btn-success pull-right' do %>
+        <i class="icon-plus-sign"></i>
+        <%= t('views.modules.tool_management.tool_batch_in_btn') %>
+      <% end -%>
+    <% end -%>
 
     <%= form_tag tool_batches_path, class: 'form-inline', method: :get do %>
       <div class="control-group">
