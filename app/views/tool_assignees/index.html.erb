@@ -3,9 +3,10 @@
 
   <div>
     <%= form_tag tool_assignees_path, class: 'form-inline', method: :get do %>
-      <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name', params[:city_id]), prompt: t('national') %>
+      <% if !current_user.storehouse_admin? -%>
+        <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name', params[:city_id]), prompt: t('national') %>
+      <% end -%>
       <%= select_tag 'assignee_type', options_for_select(tool_assignee_type_collection, params[:assignee_type]) %>
-      <%= select_tag 'assignment_type', options_for_select(tool_assignment_type_collection, params[:assignment_type]), prompt: t('all') %>
 
       <%= submit_tag t('search'), class: 'btn' %>
     <% end -%>
@@ -17,7 +18,6 @@
         <th><%= @model_class.human_attribute_name('city') %></th>
         <th><%= @model_class.model_name.human %></th>
         <th><%= @model_class.human_attribute_name('assigned_count') %></th>
-        <th><%= @model_class.human_attribute_name('to_be_assigned_tools_count') %></th>
         <th><%= @model_class.human_attribute_name('discarded_count') %></th>
         <th><%= t('actions') %></th>
       </tr>

@@ -1,16 +1,20 @@
-<% assignee.set_to_be_assigned_tools_count(@tools_total) -%>
 <tr>
   <td><%= assignee.city.name %></td>
-  <td>
-    <%= link_to assignee.name, send("tool_assignments_#{assignee.model_name.underscore}_path", assignee) %>
-  </td>
-  <td><%= assignee.current_tool_assignments_count %></td>
-  <td><%= assignee.to_be_assigned_tools_count %></td>
+  <td><%= assignee.name %></td>
+
+  <% if assignee.current_tool_assignments_count > 0 -%>
+    <td>
+      <%= link_to assignee.current_tool_assignments_count, send("tool_assignments_#{assignee.model_name.underscore}_path", assignee) %>
+    </td>
+  <% else -%>
+    <td><%= assignee.current_tool_assignments_count %></td>
+  <% end -%>
+
   <td><%= assignee.discarded_assignments_count %></td>
   <td>
-    <% if assignee.need_to_be_assigned? && assignee.can_be_assigned_by_operator?(current_user) && can?(:create, ToolAssignment) -%>
+    <% if can? :create, ToolAssignment -%>
       <%= link_to t('mongoid.attributes.tool_assignment.assign'),
-        check_batch_tool_assignments_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
+        prepare_tool_assignments_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
         class: 'btn btn-small btn-primary' %>
     <% end -%>
   </td>

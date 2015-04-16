@@ -27,7 +27,7 @@
       </tr>
     </thead>
     <tbody>
-      <% (@result || []).each do |item| %>
+      <% Array.wrap(@result).each do |item| %>
         <tr>
           <td><%= link_to item.city.name, tool_statistics_path(city_id: item.city.id) %></td>
           <td><%= item.tool_type.identification %></td>

@@ -12,6 +12,7 @@ class Tool
   # 工具编号
   field :tool_number, type: String
   field :status, type: String, default: 'stock'
+  field :tool_type_category, type: String
 
   attr_accessible :tool_batch_id
 
@@ -31,6 +32,7 @@ class Tool
   validates_presence_of :tool_batch_id, :tool_type_id, :tool_brand_id, :tool_supplier_id, :city_id
 
   before_validation :set_tool_batch_attrs, on: :create
+  before_create :set_tool_type_category
 
   scope :stock, -> { where(status: 'stock') }
   scope :delivering, -> { where(status: 'delivering') }
@@ -121,5 +123,15 @@ class Tool
       self.send("#{attr}=", tool_batch.send(attr))
     end
     self.batch_created_at = tool_batch.created_at
+  end
+
+  def set_tool_type_category
+    self.tool_type_category = tool_type.category
+  end
+
+  def mark_as_assigned(tool_number = nil)
+    self.tool_number = tool_number.try(:strip)
+    self.status = 'assigned'
+    self.save(validate: false)
   end
 end

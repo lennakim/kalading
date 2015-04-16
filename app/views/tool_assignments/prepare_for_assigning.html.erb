@@ -1,0 +1,53 @@
+<div class="span9 offset2">
+  <div class="page-header">
+    <h1>分配工具</h1>
+  </div>
+
+  <h4>
+    分配对象：<%= @assignee.model_name.human %> <%= @assignee.name %>
+  </h4>
+
+  <%= simple_nested_form_for @assignee, url: batch_tool_assignments_path(assignee_id: @assignee.id, assignee_type: @assignee.model_name),
+    method: :post, html: { class: 'form-horizontal' } do |f| %>
+    <table id="tool_assignments" class="table table-hover">
+      <thead>
+        <th><%= ToolAssignment.human_attribute_name('tool_type') %></th>
+        <th><%= ToolAssignment.human_attribute_name('tool_brand') %></th>
+        <th><%= ToolAssignment.human_attribute_name('batch_quantity') %></th>
+        <th><%= ToolAssignment.human_attribute_name('batch_tool_numbers') %></th>
+        <th class="span2"></th>
+      </thead>
+      <tbody>
+        <%= f.fields_for :tool_assignments, @new_tool_assignments, wrapper: false do |nf| %>
+          <tr class="fields">
+            <td>
+              <%= nf.association :tool_type, label: false, wrapper: :inline,
+                collection: ToolType.all, label_method: :name, prompt: :translate %>
+            </td>
+            <td>
+              <%= nf.association :tool_brand, label: false, wrapper: :inline,
+                collection: ToolBrand.all, label_method: :name, prompt: :translate %>
+            </td>
+            <td>
+              <%= nf.input :batch_quantity, label: false, wrapper: :inline, input_html: { class: 'input-mini'} %>
+            </td>
+            <td>
+              <%= nf.input :batch_tool_numbers, label: false, wrapper: :inline, placeholder: '多个编号用逗号分隔' %>
+            </td>
+            <td>
+              <%= nf.link_to_remove t('destroy'), class: 'btn btn-small btn-danger' %>
+            </td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+    <p>
+      <%= f.link_to_add '添加要分配的工具', :tool_assignments, data: { target: '#tool_assignments' }, class: 'btn btn-small btn-info' %>
+    </p>
+
+    <div class="form-actions">
+      <%= f.button :submit, t('save'), class: 'btn btn-primary' %>
+      <%= link_to t('cancel'), tool_assignees_path, class: 'btn' %>
+    </div>
+  <% end -%>
+</div>

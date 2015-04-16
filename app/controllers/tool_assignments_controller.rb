@@ -1,9 +1,9 @@
 class ToolAssignmentsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :find_assignee, only: [:check_batch_assignments, :batch_assign]
+  before_filter :find_assignee, only: [:prepare_for_assigning, :batch_assign]
   before_filter :find_assignment, only: [:break, :lose]
   before_filter :check_for_discarding, only: [:break, :lose]
-  load_and_authorize_resource except: [:check_batch_assignments, :batch_assign]
+  load_and_authorize_resource except: [:prepare_for_assigning, :batch_assign]
 
   def index
     criteria = ToolAssignment
@@ -26,31 +26,42 @@ class ToolAssignmentsController < ApplicationController
     @assignments = criteria.page(params[:page]).per(20)
   end
 
-  def check_batch_assignments
+  def prepare_for_assigning
     authorize! :create, ToolAssignment
 
-    @to_be_assigned = @assignee.to_be_assigned_tool_types
-    @not_enough_stock = []
+    # 在工具分配页面不显示已分配的工具
+    @new_tool_assignments = []
   end
 
   def batch_assign
     authorize! :create, ToolAssignment
 
-    failed_list = @assignee.unassigned_tool_types.reject do |tool_type|
-      @assignee.assign_tool_type(tool_type, current_user)
+    attrs = params.try(:[], @assignee.model_name.underscore).try(:[], :tool_assignments_attributes).try(:values)
+
+    # 去掉工具分配页面上被删除的工具行
+    # 因为不使用tool_assignments_attributes=，所以_destroy要自己处理一下
+    # _destroy: 1 or '1' or true or 'true' 都表示要删除，false or 'false' 表示不删除
+    attrs = Array.wrap(attrs).select { |v| v[:_destroy].to_s == 'false' }
+
+    if attrs.blank?
+      # 在工具分配页面不显示已分配的工具
+      @new_tool_assignments = []
+      flash.now[:error] = '请添加要分配的工具'
+      render action: 'prepare_for_assigning' and return
     end
 
-    @assignee.tool_assignments.discarding.each do |assignment|
-      failed_list << assignment.tool_type if !@assignee.reassign(assignment, current_user)
-    end
-
-    if failed_list.blank?
-      flash[:notice] = '分配成功'
+    @new_tool_assignments, saved_count = ToolAssignment.batch_assign(attrs, @assignee, current_user)
+    if saved_count > 0
+      batch_quantity_sum = @new_tool_assignments.sum { |a| a.batch_quantity.to_i }
+      if saved_count == batch_quantity_sum
+        flash[:notice] = "成功分配#{saved_count}件工具给#{@assignee.model_name.human}#{@assignee.name}"
+      else
+        flash[:error] = "预计分配#{batch_quantity_sum}件工具给#{@assignee.model_name.human}#{@assignee.name}，实际分配#{saved_count}件。"
+      end
+      redirect_to tool_assignees_path
     else
-      # 工具 xxx, xxx 由于库存不足，给#{@assignee.model_name.human}#{@assignee.name}分配失败
-      flash[:error] = '分配失败'
+      render action: 'prepare_for_assigning'
     end
-    redirect_to tool_assignees_path
   end
 
   def break

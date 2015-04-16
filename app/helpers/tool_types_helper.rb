@@ -11,12 +11,6 @@ module ToolTypesHelper
     end
   end
 
-  def tool_assignment_type_collection
-    %w[assigned unassigned].map do |type|
-      [t("views.modules.tool_management.#{type}"), type]
-    end
-  end
-
   def tool_assignment_discarded_type_collection
     %w[broken lost].map do |type|
       [translate_collection_options(ToolAssignment, :status, type), type]

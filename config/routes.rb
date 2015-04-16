@@ -101,7 +101,7 @@ Kalading::Application.routes.draw do
     end
 
     collection do
-      get :check_batch_assignments, as: :check_batch
+      get :prepare_for_assigning, as: :prepare
       post :batch_assign, as: :batch
     end
   end

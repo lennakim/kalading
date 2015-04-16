@@ -22,8 +22,7 @@ class ToolDeliveryItem
   validate :check_stock_and_set_tools, on: :create
 
   def check_stock_and_set_tools
-    # 不能使用 valid?，因为该方法本身就是个 validation，会造成循环调用
-    return if !errors.empty?
+    return if tool_type_id.blank? || tool_brand_id.blank? || errors.has_key?(:quantity)
 
     _tool_ids = Tool.stock.where(tool_type_id: tool_type_id,
                                  tool_brand_id: tool_brand_id,
