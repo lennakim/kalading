@@ -66,6 +66,7 @@ class Ability
       can :read, :tool_base_info
       can :create, ToolDelivery
       can [:break, :lose, :approve], ToolAssignment
+      can :inspect, :tool_summary
     end
 
     # 数据管理员

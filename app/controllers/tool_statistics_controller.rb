@@ -17,4 +17,15 @@ class ToolStatisticsController < ApplicationController
     @result = Tool.statistics_to_objects(data)
     @show_tool_brand = @result.first.try(:tool_brand).present?
   end
+
+  def summary
+    authorize! :inspect, :tool_summary
+
+    tool_data = Tool.statistics_summary
+    @result = Tool.statistics_to_objects(tool_data)
+    @total = Tool.set_statistics_summary_total(@result)
+
+    delivery_data = ToolDelivery.statistics_summary
+    @delivery_result = Tool.statistics_to_objects(delivery_data)
+  end
 end

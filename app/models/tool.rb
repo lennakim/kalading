@@ -37,6 +37,61 @@ class Tool
   scope :stock, -> { where(status: 'stock') }
   scope :delivering, -> { where(status: 'delivering') }
 
+  def self.statistics_summary
+    statistics_statuses = %w[stock delivering assigned]
+
+    match = {
+      status: {'$in' => statistics_statuses}
+    }
+
+    project = {
+      city_id: 1,
+      status: 1,
+      tool_type_category: 1
+    }
+
+    group = {
+      _id: {city_id: '$city_id'},
+      total: {'$sum' => 1}
+    }
+
+    ToolType::CATEGORIES.product(statistics_statuses).each do |category, status|
+      identification = "#{category}_#{status}"
+      group[identification] = {
+        '$sum' => {
+          '$cond' => [{
+              '$and' => [
+                {'$eq' => ['$tool_type_category', category]},
+                {'$eq' => ['$status', status]}
+              ]
+            }, 1, 0]
+        }
+      }
+    end
+
+    collection.aggregate(
+      { '$match' => match },
+      { '$project' => project },
+      { '$group' => group }
+    )
+  end
+
+  def self.set_statistics_summary_total(statistics_result)
+    total = {}
+    statistics_statuses = %w[stock delivering assigned]
+
+    ToolType::CATEGORIES.product(statistics_statuses).each do |item|
+      identification = item.join('_')
+      total[identification] = statistics_result.sum(&:"#{identification}")
+    end
+
+    ToolType::CATEGORIES.each do |category|
+      total[category] = statistics_statuses.map {|status| total["#{category}_#{status}"].to_i}.sum
+    end
+
+    total
+  end
+
   def self.statistics_with_city_and_tool_type(options)
     match = {}
     if options[:city_id].present?
@@ -46,14 +101,23 @@ class Tool
       match[:tool_type_id] = Moped::BSON::ObjectId(options[:tool_type_id])
     end
 
-    group = {}
-    group[:_id] = {city_id: '$city_id', tool_type_id: '$tool_type_id'}
+    project = {
+      city_id: 1,
+      tool_type_id: 1,
+      tool_brand_id: 1,
+      status: 1
+    }
+
+    group = {
+      _id: {city_id: '$city_id', tool_type_id: '$tool_type_id'},
+      total: {'$sum' => 1}
+    }
     # 如果既选了城市又选了工具类型，则查询细分到工具品牌
     if options[:city_id].present? && options[:tool_type_id].present?
       group[:_id].merge!(tool_brand_id: '$tool_brand_id')
     end
 
-    STATUSES.each do |status|
+    %w[stock delivering assigned].each do |status|
       group[status] = {
         '$sum' => {
           # '$status' == 'stock' ? 1 : 0
@@ -61,10 +125,10 @@ class Tool
         }
       }
     end
-    group[:total] = {'$sum' => 1}
 
     collection.aggregate(
       { '$match' => match },
+      { '$project' => project },
       { '$group' => group }
     )
   end
@@ -87,7 +151,7 @@ class Tool
     # }
     models_by_key = {}
     data.first['_id'].each do |key, _|
-      models_by_key[key] = key.gsub(/_id\Z/, '').camelize.constantize
+      models_by_key[key] = key.gsub(/_id\Z/, '').camelize.constantize if key =~ /_id\Z/
     end
 
     # objs_by_id:
@@ -99,7 +163,7 @@ class Tool
     objs_by_id = {}
     data.each do |datum|
       datum['_id'].each do |key, id|
-        objs_by_id["#{key}-#{id}"] ||= models_by_key[key].find(id)
+        objs_by_id["#{key}-#{id}"] ||= models_by_key[key].find(id) if key =~ /_id\Z/
       end
     end
 
@@ -107,6 +171,7 @@ class Tool
       obj = OpenStruct.new
       datum['_id'].each do |key, id|
         obj[key.gsub(/_id\Z/, '')] = objs_by_id["#{key}-#{id}"]
+        obj[key] = id
       end
 
       (datum.keys - ['_id']).each do |key|

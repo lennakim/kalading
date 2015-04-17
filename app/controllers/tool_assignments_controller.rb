@@ -74,7 +74,7 @@ class ToolAssignmentsController < ApplicationController
       else
         flash[:error] = "预计分配#{batch_quantity_sum}件工具给#{@assignee.model_name.human}#{@assignee.name}，实际分配#{saved_count}件。"
       end
-      redirect_to tool_assignees_path
+      redirect_to tool_assignees_path(assignee_type: @assignee.model_name.underscore)
     else
       render action: 'prepare_for_assigning'
     end

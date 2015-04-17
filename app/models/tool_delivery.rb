@@ -60,6 +60,8 @@ class ToolDelivery
 
   # 收货时间
   field :received_at, type: DateTime
+  field :with_engineer_tools_count, type: Integer
+  field :with_vehicle_tools_count, type: Integer
 
   attr_accessible :to_city_id, :tool_delivery_items_attributes
 
@@ -76,14 +78,49 @@ class ToolDelivery
   validates_presence_of :from_city_id, :to_city_id, :deliverer_id, :tool_delivery_items
 
   before_validation :set_default_from_city, on: :create
+  before_create :set_tools_count
   after_create :set_tools_for_delivering
 
-  def set_default_from_city
-    self.from_city_id = City.beijing.id
+  def self.statistics_summary
+    match = {
+      received_at: {'$exists' => false}
+    }
+
+    project = {
+      to_city_id: 1,
+      with_engineer_tools_count: '$with_engineer_tools_count',
+      with_vehicle_tools_count: '$with_vehicle_tools_count'
+    }
+
+    group = {
+      _id: {city_id: '$to_city_id'},
+      with_engineer_tools_count: {'$sum' => '$with_engineer_tools_count'},
+      with_vehicle_tools_count: {'$sum' => '$with_vehicle_tools_count'}
+    }
+
+    collection.aggregate(
+      { '$match' => match },
+      { '$project' => project },
+      { '$group' => group }
+    )
   end
 
   def tools_count
-    tool_delivery_items.sum { |item| item.tool_ids.size }
+    with_engineer_tools_count + with_vehicle_tools_count
+  end
+
+  def set_tools_count
+    self.with_engineer_tools_count = tool_delivery_items.sum do |item|
+      item.tool_type.category == 'with_engineer' ? item.quantity : 0
+    end
+
+    self.with_vehicle_tools_count = tool_delivery_items.sum do |item|
+      item.tool_type.category == 'with_vehicle' ? item.quantity : 0
+    end
+  end
+
+  def set_default_from_city
+    self.from_city_id = City.beijing.id
   end
 
   def received_tools_count

@@ -35,6 +35,7 @@ class ToolAssignment
   validates :status, inclusion: { in: STATUSES }
   validates_presence_of :city_id, :tool_type_id, :tool_brand_id, :assigner_id, :assignee_id, :assignee_type
   validates :batch_quantity, numericality: { greater_than: 0, only_integer: true }, on: :create, if: :is_batch_primary
+  validate :check_tool_type_category, on: :create
   validate :validate_batch_tool_numbers, on: :create, if: :is_batch_primary
   validate :check_stock_and_set_tool_ids, on: :create, if: :is_batch_primary
   # 这个validation必须放在check_stock_and_set_tool_ids之后
@@ -90,6 +91,15 @@ class ToolAssignment
     end
 
     assignments.all? { |assign| assign.errors.empty? }
+  end
+
+  def check_tool_type_category
+    if (assignee_type == 'Engineer' && tool_type.category == 'with_vehicle') ||
+      (assignee_type == 'ServiceVehicle' && tool_type.category == 'with_engineer')
+      errors.add(:tool_type_id, :invalid_tool_type_category,
+                 category: tool_type.category_human,
+                 assignee_type: assignee.model_name.human)
+    end
   end
 
   def validate_batch_tool_numbers

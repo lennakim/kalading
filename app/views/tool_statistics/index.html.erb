@@ -1,13 +1,15 @@
 <div class="span10 offset1">
   <%= render 'tool_types/nav' %>
 
+  <h3>库存统计</h3>
+
   <div>
     <%= form_tag tool_statistics_path, class: 'form-inline', method: :get do %>
       <% if !current_user.storehouse_admin? -%>
         <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name', params[:city_id]),
           prompt: Tool.human_attribute_name('city') %>
       <% end -%>
-      <%= select_tag 'tool_type_id', options_from_collection_for_select(ToolType.all, 'id', 'name', params[:tool_type_id]),
+      <%= select_tag 'tool_type_id', options_from_collection_for_select(ToolType.all, 'id', 'identification', params[:tool_type_id]),
         prompt: Tool.human_attribute_name('tool_type') %>
 
       <%= submit_tag t('search'), class: 'btn' %>

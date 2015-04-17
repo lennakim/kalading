@@ -251,6 +251,7 @@ zh-CN:
               match: '编号数量必须跟工具数量匹配'
             tool_type_id:
               taken: '不能有相同的工具+品牌'
+              invalid_tool_type_category: '不能把%{category}分配给%{assignee_type}'
     models:
       engineer: '技师'
       tool_type: '工具类型'

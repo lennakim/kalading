@@ -8,16 +8,20 @@
       <ul class="dropdown-menu">
         <li><%= link_to ToolType.model_name.human, tool_types_path %></li>
         <li><%= link_to ToolBrand.model_name.human, tool_brands_path %></li>
-        <li><%= link_to ToolSupplier.model_name.human, tool_suppliers_path %></li>
-        <li class="divider"></li>
-        <li><%= link_to ToolDetail.model_name.human, tool_details_path %></li>
+        <li><%= link_to ToolSupplier.model_name.human, tool_suppliers_path if can? :create, ToolSupplier %></li>
+
+        <% if can? :create, ToolDetail -%>
+          <li class="divider"></li>
+          <li><%= link_to ToolDetail.model_name.human, tool_details_path %></li>
+        <% end -%>
+
         <li class="divider"></li>
         <li><%= link_to ServiceVehicle.model_name.human, service_vehicles_path %></li>
       </ul>
     </li>
   <% end -%>
 
-  <%= activatable_nav_link 'tool_batch', tool_batches_path if can? :read, ToolBatch %>
+  <%= activatable_nav_link 'tool_batch', tool_batches_path if can? :create, ToolBatch %>
 
   <% if current_user.storehouse_admin? -%>
     <%= activatable_nav_link 'tool_delivery', tool_deliveries_path, link_text: '收货信息' if can? :read, ToolDelivery %>
@@ -48,8 +52,11 @@
         <b class="caret"></b>
       </a>
       <ul class="dropdown-menu">
-        <li><%= link_to '汇总信息', '#' %></li>
-        <li class="divider"></li>
+        <% if can? :inspect, :tool_summary -%>
+          <li><%= link_to '汇总信息', summary_tool_statistics_path %></li>
+          <li class="divider"></li>
+        <% end -%>
+
         <li><%= link_to '库存统计', tool_statistics_path %></li>
       </ul>
     </li>

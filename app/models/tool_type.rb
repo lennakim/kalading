@@ -12,7 +12,7 @@ class ToolType
 
   attr_accessible :name, :spec, :category, :unit
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: { scope: :spec }
   validates :category, inclusion: { in: CATEGORIES }
 
   scope :with_engineer, -> { where(category: 'with_engineer') }
@@ -35,5 +35,9 @@ class ToolType
 
   def identification
     spec.present? ? "#{name} #{spec}" : name
+  end
+
+  def category_human
+    I18n.t("simple_form.options.tool_type.category.#{category}")
   end
 end

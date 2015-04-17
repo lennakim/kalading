@@ -1,4 +1,4 @@
-module ToolTypesHelper
+module ToolsHelper
   def tool_type_category_collection
     ToolType::CATEGORIES.map do |category|
       [translate_collection_options(ToolType, :category, category), category]
@@ -15,5 +15,12 @@ module ToolTypesHelper
     %w[broken lost].map do |type|
       [translate_collection_options(ToolAssignment, :status, type), type]
     end
+  end
+
+  def display_delivery_statistics(data, tool_type_category)
+    data.map do |item|
+      count = item.send("#{tool_type_category}_tools_count")
+      "#{item.city.name}#{count}套" if count > 0
+    end.compact.join('，')
   end
 end

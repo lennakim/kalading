@@ -119,7 +119,11 @@ Kalading::Application.routes.draw do
     end
   end
 
-  resources :tool_statistics, only: [:index]
+  resources :tool_statistics, only: [:index] do
+    collection do
+      get :summary
+    end
+  end
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 

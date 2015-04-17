@@ -13,7 +13,7 @@
         <tr class="fields">
           <td>
             <%= nf.association :tool_type, label: false, wrapper: :inline,
-              collection: ToolType.all, label_method: :name, prompt: :translate %>
+              collection: ToolType.all, label_method: :identification, prompt: :translate %>
           </td>
           <td>
             <%= nf.association :tool_brand, label: false, wrapper: :inline,
