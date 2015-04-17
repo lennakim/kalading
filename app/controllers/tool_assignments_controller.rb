@@ -1,7 +1,6 @@
 class ToolAssignmentsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :find_assignee, only: [:history, :prepare_for_assigning, :batch_assign]
-  before_filter :find_assignment, only: [:break, :lose, :approve]
   before_filter :check_for_discarding, only: [:break, :lose]
   load_and_authorize_resource except: [:history, :prepare_for_assigning, :batch_assign]
 
@@ -81,7 +80,7 @@ class ToolAssignmentsController < ApplicationController
   end
 
   def break
-    if @assignment.mark_as_broken(current_user)
+    if @tool_assignment.mark_as_broken(current_user)
       flash[:notice] = '标为损坏成功'
     else
       flash[:error] = '标为损坏失败'
@@ -91,7 +90,7 @@ class ToolAssignmentsController < ApplicationController
   end
 
   def lose
-    if @assignment.mark_as_lost(current_user)
+    if @tool_assignment.mark_as_lost(current_user)
       flash[:notice] = '标为丢失成功'
     else
       flash[:error] = '标为丢失失败'
@@ -101,7 +100,7 @@ class ToolAssignmentsController < ApplicationController
   end
 
   def approve
-    if @assignment.approve_discarded(current_user)
+    if @tool_assignment.approve_discarded(current_user)
       flash[:notice] = '批准丢/损申请成功'
     else
       flash[:error] = '批准丢/损申请失败'
@@ -116,13 +115,9 @@ class ToolAssignmentsController < ApplicationController
       @assignee = params[:assignee_type].constantize.find(params[:assignee_id])
     end
 
-    def find_assignment
-      @assignment = ToolAssignment.find(params[:id])
-    end
-
     def check_for_discarding
-      if current_user.engineer? && @assignment.assignee_type == 'Engineer' &&
-        @assignment.assignee != current_user
+      if current_user.engineer? && @tool_assignment.assignee_type == 'Engineer' &&
+        @tool_assignment.assignee != current_user
         flash[:error] = '没有权限'
         redirect_to :back
       end

@@ -1,0 +1,58 @@
+<div class="span10 offset1">
+  <%= render 'tool_types/nav' %>
+
+  <div class="page-header">
+    <h1>调货明细</h1>
+
+    <div>
+      <%= link_to '收货', prepare_for_receiving_tool_delivery_path(@tool_delivery),
+        class: 'btn btn-primary pull-right' if can?(:receive, @tool_delivery) && !@tool_delivery.received? %>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+  <dl class="dl-horizontal">
+    <dt><%= ToolDelivery.human_attribute_name('created_at') %></dt>
+    <dd><%= l @tool_delivery.created_at %></dd>
+
+    <dt><%= ToolDelivery.human_attribute_name('from_city') %></dt>
+    <dd><%= @tool_delivery.from_city.name %></dd>
+
+    <dt><%= ToolDelivery.human_attribute_name('to_city') %></dt>
+    <dd><%= @tool_delivery.to_city.name %></dd>
+
+    <dt><%= ToolDelivery.human_attribute_name('deliverer') %></dt>
+    <dd><%= @tool_delivery.deliverer.name %></dd>
+
+    <dt><%= ToolDelivery.human_attribute_name('recipient') %></dt>
+    <dd><%= @tool_delivery.recipient.try(:name) %></dd>
+
+    <dt><%= ToolDelivery.human_attribute_name('received_at') %></dt>
+    <dd><%= l @tool_delivery.received_at if @tool_delivery.received_at %></dd>
+
+    <dt><%= ToolDelivery.human_attribute_name('tools_count') %></dt>
+    <dd><%= @tool_delivery.tools_count %></dd>
+
+    <dt><%= ToolDelivery.human_attribute_name('received_tools_count') %></dt>
+    <dd><%= @tool_delivery.received_tools_count %></dd>
+  </dl>
+
+  <table class="table table-hover">
+    <thead>
+      <th><%= ToolDeliveryItem.human_attribute_name('tool_type') %></th>
+      <th><%= ToolDeliveryItem.human_attribute_name('tool_brand') %></th>
+      <th><%= ToolDeliveryItem.human_attribute_name('quantity') %></th>
+      <th><%= ToolDeliveryItem.human_attribute_name('received_quantity') %></th>
+    </thead>
+    <tbody>
+      <% @tool_delivery.tool_delivery_items.each do |item| %>
+        <tr>
+          <td><%= item.tool_type.name %></td>
+          <td><%= item.tool_brand.name %></td>
+          <td><%= item.quantity %></td>
+          <td><%= item.received_quantity %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+</div>

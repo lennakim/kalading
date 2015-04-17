@@ -27,6 +27,9 @@ class ToolDeliveriesController < ApplicationController
     end
   end
 
+  def show
+  end
+
   def prepare_for_receiving
     authorize! :receive, @tool_delivery
   end

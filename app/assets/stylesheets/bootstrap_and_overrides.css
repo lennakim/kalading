@@ -10,3 +10,8 @@
 .table.text-center td {
   text-align: center;
 }
+
+.dl-horizontal dd {
+  float: left;
+  margin-left: 20px;
+}
