@@ -485,13 +485,30 @@ namespace :rename_asm do
     ut1 = UserType.find_by name: /中进/
     ut2 = UserType.find_by name: /良好/
     a = Order.valid.not_in(:user_type => [ut1, ut2]).map_reduce(map, reduce).out(inline: true).sort_by{|x| -x["value"]}
+    am_to_order_count = {}
+    ab_to_order_count = {}
     a[0..-1].each do |x|
       asm = AutoSubmodel.find(x["_id"])
       if asm.nil?
-        puts "车型：#{x["_id"]}, 保养次数: #{x["value"]}"
+        #puts "车型：#{x["_id"]}, 保养次数: #{x["value"]}"
       else
-        puts "车型：#{asm.full_name}, 保养次数: #{x["value"]}"
+        am_to_order_count[asm.auto_model.auto_brand.name + ' ' + asm.auto_model.name] ||= 0
+        am_to_order_count[asm.auto_model.auto_brand.name + ' ' + asm.auto_model.name] += x["value"]
+        ab_to_order_count[asm.auto_model.auto_brand.name] ||= 0
+        ab_to_order_count[asm.auto_model.auto_brand.name] += x["value"]
+        #puts "车型：#{asm.full_name}, 保养次数: #{x["value"]}"
       end
+    end
+    x = 0
+    ab_to_order_count.sort_by {|k, v| -v}.each_with_index do |(k, v), i|
+      x += v.to_i
+      puts "#{i}: 品牌：#{k}, 服务次数: #{v.to_i}, #{x}"
+    end
+
+    x = 0
+    am_to_order_count.sort_by {|k, v| -v}.each_with_index do |(k, v), i|
+      x += v.to_i
+      puts "#{i}: 车型：#{k}, 服务次数: #{v.to_i}, #{x}"
     end
     #a = AutoSubmodel.all.select {|x| x.orders.not_in(:state => [1,8,9], :user_type => [ut1, ut2]).exists?}.sort_by {|x| -x.orders.size}
     #puts "服务车型数：#{a.count}"

@@ -1143,3 +1143,4 @@ zh-CN:
   from: '从'
   desc: '描述'
   order_card_opts: '施工单选项'
+  dispatch_card_opts: '派送单选项'

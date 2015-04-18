@@ -28,7 +28,52 @@
         <td>
           <%= link_to t('edit'),
                       edit_storehouse_path(storehouse), :class => 'btn btn-mini' if can? :update, storehouse %>
-          <%= link_to t('dispatch_card'), print_dispatch_card_path(storehouse), :class => 'btn btn-info btn-mini', :target => '_blank' if can? :print_dispatch_card, storehouse %>
+          <% if can? :print_dispatch_card, storehouse %>
+          <a href="#" class="btn btn-info btn-mini" data-target="#print-dispatch-<%= storehouse.id %>" data-toggle="modal"><%= t(:dispatch_card) %></a>
+          <div id="print-dispatch-<%= storehouse.id %>" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true" style="">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="modal-label"><%= t(:dispatch_card_opts) %></h3>
+            </div>
+            <div class="modal-body">
+            <%= form_tag print_dispatch_card_path(storehouse), :method => 'get', :class => 'form-horizontal' do %>
+              <div class="control-group">
+                <%= label_tag :start_time, t(:serve_datetime_segment), class: 'control-label' %>
+                <div class="controls form-inline" id="start_time">
+                  <div class="form-inline input-append form_datetime">
+                    <input data-format="yyyy-MM-dd hh:mm" type="text" name="start_time" value="<%= (DateTime.now.hour <= 12 ? Date.today.beginning_of_day : Date.tomorrow.beginning_of_day).strftime("%Y-%m-%d %H:%M") %>"></input>
+                    <span class="add-on">
+                      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                      </i>
+                    </span>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <%= label_tag :end_time, t(:to), class: 'control-label' %>
+                  <div class="controls form-inline" id="end_time">
+                    <div class="form-inline input-append form_datetime">
+                      <input data-format="yyyy-MM-dd hh:mm" type="text" name="end_time" value="<%= Date.tomorrow.end_of_day.strftime("%Y-%m-%d %H:%M") %>"></input>
+                      <span class="add-on">
+                        <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                        </i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls form-inline">
+                    <%= submit_tag t(:ok), class: 'btn btn-primary' %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('close') %></button>
+            </div>
+          </div>
+          <% end %>
+        
           <a href="#" class="btn btn-info btn-mini" data-target="#print-orders-<%= storehouse.id %>" data-toggle="modal"><%= t(:orders_card) %></a>
           <div id="print-orders-<%= storehouse.id %>" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true" style="">
             <div class="modal-header">

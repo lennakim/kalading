@@ -291,6 +291,8 @@ class StorehousesController < ApplicationController
   
   def print_dispatch_card
     @storehouse = Storehouse.find(params[:id])
+    @start_time = (params[:start_time].present? && DateTime.parse(params[:start_time])) || (DateTime.now.hour <= 12 ? Date.today.beginning_of_day : Date.tomorrow.beginning_of_day)
+    @end_time = (params[:end_time].present? && DateTime.parse(params[:end_time])) || Date.tomorrow.end_of_day
     render layout: false
   end
   
