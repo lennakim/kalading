@@ -61,8 +61,6 @@
         <td><%= discount.times - discount.orders.count %></td>
         <td><%= discount.times %></td>
         <td>
-          <%= link_to t('edit'),
-                      edit_discount_path(discount), :class => 'btn btn-mini' if can? :update, discount %>
           <%= link_to t('destroy'),
                       discount_path(discount),
                       :method => :delete,

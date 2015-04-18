@@ -470,13 +470,34 @@ namespace :rename_asm do
   end
 
   task :asm_stats => :environment do
+    map = %Q{
+      function() {
+        if(this.auto_submodel_id != undefined)
+          emit(this.auto_submodel_id, 1);
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        return Array.sum(values);
+      }
+    }
+
     ut1 = UserType.find_by name: /中进/
     ut2 = UserType.find_by name: /良好/
-    a = AutoSubmodel.all.select {|x| x.orders.not_in(:state => [1,8,9], :user_type => [ut1, ut2]).exists?}.sort_by {|x| -x.orders.size}
-    puts "服务车型数：#{a.count}"
-    (0..9).each do |i|
-      puts "车型：#{a[i].full_name}，保养次数：#{a[i].orders.count}"
+    a = Order.valid.not_in(:user_type => [ut1, ut2]).map_reduce(map, reduce).out(inline: true).sort_by{|x| -x["value"]}
+    a[0..-1].each do |x|
+      asm = AutoSubmodel.find(x["_id"])
+      if asm.nil?
+        puts "车型：#{x["_id"]}, 保养次数: #{x["value"]}"
+      else
+        puts "车型：#{asm.full_name}, 保养次数: #{x["value"]}"
+      end
     end
+    #a = AutoSubmodel.all.select {|x| x.orders.not_in(:state => [1,8,9], :user_type => [ut1, ut2]).exists?}.sort_by {|x| -x.orders.size}
+    #puts "服务车型数：#{a.count}"
+    #(0..9).each do |i|
+    #  puts "车型：#{a[i].full_name}，保养次数：#{a[i].orders.count}"
+    #end
   end
 
   task :order_count => :environment do
@@ -606,7 +627,7 @@ namespace :rename_asm do
           a << "#{row[0]} part type #{row[3]} not found\n"
           next
         end
-        p = Part.find_by number: /.*#{row[1].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i, part_brand: pb
+        p = Part.find_by number: /.*#{row[1].gsub(/[\s]+/, "").split('').join(".*")}.*/i, part_brand: pb
         if p.nil?
           a << "#{row[0]} #{row[1]} not found\n"
         end
@@ -643,7 +664,7 @@ namespace :rename_asm do
         puts "#{row[0]} part type #{row[3]} not found\n"
         break
       end
-      p = Part.find_by(number: /.*#{row[1].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i, part_brand: pb, part_type: pt)
+      p = Part.find_by(number: /.*#{row[1].gsub(/[\s]+/, "").split('').join(".*")}.*/i, part_brand: pb, part_type: pt)
       if p.nil?
         puts "Creating #{row[1]}"
         p = Part.create!(number: row[1].strip, part_brand: pb, part_type: pt )

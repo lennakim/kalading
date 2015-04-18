@@ -296,6 +296,8 @@ class StorehousesController < ApplicationController
   
   def print_orders_card
     @storehouse = Storehouse.find(params[:id])
+    @start_time = (params[:start_time].present? && DateTime.parse(params[:start_time])) || Date.tomorrow.beginning_of_day
+    @end_time = (params[:end_time].present? && DateTime.parse(params[:end_time])) || Date.tomorrow.end_of_day
     render layout: false
   end
 

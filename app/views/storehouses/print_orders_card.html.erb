@@ -12,7 +12,7 @@
   <body style="padding-top: 10px; overflow:visible;">
     <a class="btn btn-primary pull-right" id="print-btn" onclick="$('#print-btn').hide(); window.print(); $('#print-btn').show();"><%= t(:print) %></a>
     <% @storehouse.users.each do |u|%>
-    <% u.serve_orders.any_in(:state => [3,4]).where(:part_deliver_state => 1, :serve_datetime.lte => Date.tomorrow.end_of_day, :serve_datetime.gte => Date.tomorrow.beginning_of_day).each do |o|%>
+    <% u.serve_orders.any_in(:state => [3,4]).where(:part_deliver_state => 1, :serve_datetime.lte => @end_time, :serve_datetime.gte => @start_time).each do |o|%>
     <h3 class="text-left"><%= t :order_id %>:&nbsp&nbsp<%= o.seq %></h3>
     <h3 class="text-center"><%= t :shigongdan %></h3>
     <div class="row">
