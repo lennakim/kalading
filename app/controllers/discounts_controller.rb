@@ -6,7 +6,7 @@ class DiscountsController < ApplicationController
   # GET /discounts
   # GET /discounts.json
   def index
-    @discounts = Discount.desc(:created_at)
+    @discounts = Discount.desc(:created_at).includes(:orders)
     if params[:discount_token].present?
       @discounts = @discounts.where(token: /.*#{params[:discount_token]}.*/)
     end
@@ -23,9 +23,9 @@ class DiscountsController < ApplicationController
       }
       format.csv {
         csv_data = CSV.generate({}) do |csv|
-          csv << [I18n.t(:discount_num), I18n.t(:name), I18n.t(:discount_percent), I18n.t(:expire_date), I18n.t(:service_types)]
+          csv << [I18n.t(:discount_num), I18n.t(:name), I18n.t(:discount_percent), I18n.t(:expire_date), I18n.t(:service_types),I18n.t(:available_times),I18n.t(:total_times)]
           @discounts.each do |d|
-            csv << [d.token, d.name, d.percent, d.expire_date, d.service_types.map{|s| s.name}.join(',') ]
+            csv << [d.token, d.name, d.percent, d.expire_date, d.service_types.map{|s| s.name}.join(','), d.available_times, d.times]
           end
         end
         headers['Last-Modified'] = Time.now.httpdate
