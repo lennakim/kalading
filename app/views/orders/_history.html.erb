@@ -15,7 +15,7 @@
               <% if k == 'state' %>
                 <%= t(Order::STATE_STRINGS[v]) %>
               <% elsif k == 'serve_datetime' %>
-                <%= l v %>
+                <%= l (v + Time.zone.utc_offset) %>
               <% elsif k == 'part_deliver_state' %>
                 <%= t(Order::PART_DELIVER_STATE_STRINGS[v]) %>
               <% elsif k == 'auto_submodel_id' %>

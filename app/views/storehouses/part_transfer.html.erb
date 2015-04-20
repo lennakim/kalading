@@ -47,6 +47,7 @@
         <input type="submit" id="part-transfer-btn" value="<%= t(:ok) %>" class="btn btn-disabled" disabled/>
       <% end %>
       <%= link_to t('cancel'), storehouse_path(@storehouse), :class => 'btn' %>
+      <%= link_to t('part_transfers'), part_transfers_path, :class => 'btn', :target => '_blank' %>
     </div>
   <% end %>
 </div>

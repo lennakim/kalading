@@ -8,13 +8,20 @@
           PartTransfer.aasm.states.map(&:name).map do |state_name|
             [t(state_name), state_name]
           end, params[:aasm_state]
-        ), {prompt: "所有"}) %>
+        ), {prompt: t(:all)}) %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= label_tag :target_storehouse_id, t('target_storehouse'), class: 'control-label' %>
+      <div class="controls">
+        <%= collection_select(nil, nil, Storehouse.asc(:city_id), :id, :name, {include_blank: t(:all), :selected => params[:target_sh]}, {:name => :target_sh}) %>
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-        <button type="submit" class="btn">查找</button>
+        <button type="submit" class="btn"><%= t :search %></button>
       </div>
     </div>
   <% end %>

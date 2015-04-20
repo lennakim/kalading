@@ -54,6 +54,9 @@
               <% end %>
                 <%= link_to t('to_be_backed_orders', n: orders.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
               </li>
+              <li>
+                <%= link_to t('part_transfers'), part_transfers_path %>
+              </li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

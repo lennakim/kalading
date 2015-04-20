@@ -7,7 +7,7 @@ $("#quantity").val("");
 <% else %>
 $("#part-transfer-btn").prop('disabled', false).prop("class", "btn btn-primary");
 <% end %>
-window.alert("<%= t(:part_transfer_succeeded)%>" + "\n" +
+window.alert("<%= t(:part_transfer_initialized)%>" + "\n" +
             $("#part_part_brand_id").find("option:selected").text() + " " +
             $("#part_id").find("option:selected").text() + "\n" +
             $("#storehouse_name").text() + " " + "<%= t(:remained_quantity) %>" + ": " + $("#remained_quantity").val() + "\n" +

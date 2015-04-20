@@ -1,0 +1,19 @@
+<td><%= link_to part_transfer.part.part_brand.name + ' ' + part_transfer.part.number, part_path(part_transfer.part) %></td>
+<td><%= part_transfer.quantity %></td>
+<td><%= part_transfer.source_sh.name %></td>
+<td><%= part_transfer.target_sh.name %></td>
+<td><%= l part_transfer.created_at %></td>
+<td><%= part_transfer.created_by.name %></td>
+<td><%= part_transfer.updated_by.name %></td>
+<td><%= t(part_transfer.aasm_state) %></td>
+<td>
+  <% if can?(:update, part_transfer)  %>
+    <%= link_to t(:finish_part_transfer),
+      finish_part_transfer_path(part_transfer),
+      :method => :put,
+      :class => 'btn btn-info',
+      :remote => true,
+      :data => { :confirm => t('part_transfer_finish_confirm', u: current_user.name, sh: part_transfer.target_sh.name) } if part_transfer.may_finish?
+     %>
+  <% end %>
+</td>

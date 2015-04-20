@@ -1,6 +1,8 @@
 class PartTransfer
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Userstamp
+  mongoid_userstamp user_model: 'User'
   
   field :quantity, type: Integer
   
@@ -20,28 +22,39 @@ class PartTransfer
   
   include AASM
   field :aasm_state
-  attr_accessible :source_sh_id, :target_sh_id, :aasm_state, :quantity, :part_id
+  attr_accessible :source_sh, :target_sh, :aasm_state, :quantity, :part_id, :part
 
   aasm do
     state :part_transfering, :initial => true # 在途中
     state :part_transfer_finished # 完成
 
-    event :begin do
-      transitions from: :initialized, to: :pending do
+    event :transfer do
+      transitions from: :part_transfering, to: :part_transfering do
         guard do
           true
         end
         after do
-          generate_working_tag_number
-          set_boarding_date
-        end
-      end
-
-      transitions from: :pending, to: :finished do
-        after do
-          set_leaving_date
+          
         end
       end
     end
+    
+    event :finish do
+      transitions from: :part_transfering, to: :part_transfer_finished, after: Proc.new {|*args| create_partbatch(*args)} do
+        guard do
+          true
+        end
+      end
+    end
+  end
+    
+  def create_partbatch current_user
+    supplier = Supplier.find_or_create_by name: I18n.t(:fake_supplier_for_transfer), type: 1
+    self.target_sh.partbatches.create! part_id: self.part.id,
+      supplier_id: supplier.id,
+      price: self.source_sh.partbatches.where(part: @part).desc(:created_at).first.price,
+      quantity: self.quantity,
+      remained_quantity: self.quantity,
+      user_id: current_user.id
   end
 end

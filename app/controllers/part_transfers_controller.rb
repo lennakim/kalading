@@ -9,8 +9,21 @@ class PartTransfersController < InheritedResources::Base
       @part_transfers = @part_transfers.where(aasm_state: params[:aasm_state])
     end
 
+    if params[:target_sh].present?
+      @part_transfers = @part_transfers.where(target_sh: Storehouse.find(params[:target_sh]))
+    end
+
     @part_transfers = @part_transfers.page params[:page]
     index!
+  end
+  
+  def finish
+    @part_transfer = PartTransfer.find params[:id]
+    @part_transfer.finish!(:part_transfer_finished, current_user)
+    respond_to do |format|
+      format.js
+      format.json
+    end
   end
 end
 

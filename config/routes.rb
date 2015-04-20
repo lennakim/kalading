@@ -197,6 +197,7 @@ Kalading::Application.routes.draw do
   get 'orders/:id/print' => 'orders#print', :as => :print_order
 
   get 'client_query' => 'clients#find', :as => :client_query
+  put 'part_transfers/:id/finish' => 'part_transfers#finish', :as => :finish_part_transfer
 
   resources :auto_brands
   root :to => 'orders#index'

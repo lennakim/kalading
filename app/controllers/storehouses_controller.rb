@@ -267,22 +267,20 @@ class StorehousesController < ApplicationController
     @partbatches = @storehouse.partbatches.where(part: @part).asc(:created_at)
     @quantity = params[:quantity].to_i
     need_q = @quantity
-    @partbatches.each do |pb|
-      c = [need_q, pb.remained_quantity].min
-      pb.update_attribute :remained_quantity, pb.remained_quantity - c
-      pb.part.auto_submodels.each do |asm|
-        asm.on_part_inout pb.part, -c
+    # 调货不产生出入库记录
+    Partbatch.disable_tracking do
+      @partbatches.each do |pb|
+        c = [need_q, pb.remained_quantity].min
+        pb.update_attribute :remained_quantity, pb.remained_quantity - c
+        pb.part.auto_submodels.each do |asm|
+          asm.on_part_inout pb.part, -c
+        end
+        need_q -= c
+        break if need_q <= 0
       end
-      need_q -= c
-      break if need_q <= 0
     end
-    supplier = Supplier.find_or_create_by name: I18n.t(:fake_supplier_for_transfer), type: 1
-    @target_storehouse.partbatches.create! part_id: @part.id,
-      supplier_id: supplier.id,
-      price: @partbatches.last.price,
-      quantity: @quantity,
-      remained_quantity: @quantity,
-      user_id: current_user.id
+    
+    @pt = PartTransfer.create!(source_sh: @storehouse, target_sh: @target_storehouse, quantity: @quantity, part: @part)
     respond_to do |format|
       format.html
       format.js # show.js.erb

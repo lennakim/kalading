@@ -1,0 +1,1 @@
+$("#tr-<%= @part_transfer.id.to_s %>").html("<%= escape_javascript(render("row", part_transfer: @part_transfer)) %>").fadeIn();
