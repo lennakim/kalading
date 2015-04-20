@@ -38,4 +38,8 @@ class Discount
     end
   end
   
+  def available_times
+    self.times - self.orders.count
+  end
+  
 end
