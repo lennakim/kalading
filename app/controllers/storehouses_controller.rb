@@ -289,15 +289,19 @@ class StorehousesController < ApplicationController
   
   def print_dispatch_card
     @storehouse = Storehouse.find(params[:id])
-    @start_time = (params[:start_time].present? && DateTime.parse(params[:start_time])) || (DateTime.now.hour <= 12 ? Date.today.beginning_of_day : Date.tomorrow.beginning_of_day)
-    @end_time = (params[:end_time].present? && DateTime.parse(params[:end_time])) || Date.tomorrow.end_of_day
+    if params[:start_time].present?
+      @start_time = Date.parse(params[:start_time]).beginning_of_day
+    else
+      @start_time = (DateTime.now.hour <= 12 && Date.today.beginning_of_day) || Date.tomorrow.beginning_of_day
+    end
+    @end_time = ((params[:end_time].present? && Date.parse(params[:end_time])) || Date.tomorrow).end_of_day
     render layout: false
   end
   
   def print_orders_card
     @storehouse = Storehouse.find(params[:id])
-    @start_time = (params[:start_time].present? && DateTime.parse(params[:start_time])) || Date.tomorrow.beginning_of_day
-    @end_time = (params[:end_time].present? && DateTime.parse(params[:end_time])) || Date.tomorrow.end_of_day
+    @start_time = ((params[:start_time].present? && Date.parse(params[:start_time])) || Date.tomorrow).beginning_of_day
+    @end_time = ((params[:end_time].present? && Date.parse(params[:end_time])) || Date.tomorrow).end_of_day
     render layout: false
   end
 

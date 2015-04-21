@@ -41,7 +41,7 @@
                 <%= label_tag :start_time, t(:serve_datetime_segment), class: 'control-label' %>
                 <div class="controls form-inline" id="start_time">
                   <div class="form-inline input-append form_datetime">
-                    <input data-format="yyyy-MM-dd hh:mm" type="text" name="start_time" value="<%= (DateTime.now.hour <= 12 ? Date.today.beginning_of_day : Date.tomorrow.beginning_of_day).strftime("%Y-%m-%d %H:%M") %>"></input>
+                    <input data-format="yyyy-MM-dd" type="text" name="start_time" value="<%= (DateTime.now.hour <= 12 ? Date.today : Date.tomorrow).strftime("%Y-%m-%d") %>"></input>
                     <span class="add-on">
                       <i data-time-icon="icon-time" data-date-icon="icon-calendar">
                       </i>
@@ -52,7 +52,7 @@
                   <%= label_tag :end_time, t(:to), class: 'control-label' %>
                   <div class="controls form-inline" id="end_time">
                     <div class="form-inline input-append form_datetime">
-                      <input data-format="yyyy-MM-dd hh:mm" type="text" name="end_time" value="<%= Date.tomorrow.end_of_day.strftime("%Y-%m-%d %H:%M") %>"></input>
+                      <input data-format="yyyy-MM-dd" type="text" name="end_time" value="<%= Date.tomorrow.strftime("%Y-%m-%d") %>"></input>
                       <span class="add-on">
                         <i data-time-icon="icon-time" data-date-icon="icon-calendar">
                         </i>
@@ -86,7 +86,7 @@
                 <%= label_tag :start_time, t(:serve_datetime_segment), class: 'control-label' %>
                 <div class="controls form-inline" id="start_time">
                   <div class="form-inline input-append form_datetime">
-                    <input data-format="yyyy-MM-dd hh:mm" type="text" name="start_time" value="<%= Date.tomorrow.beginning_of_day.strftime("%Y-%m-%d %H:%M") %>"></input>
+                    <input data-format="yyyy-MM-dd" type="text" name="start_time" value="<%= Date.tomorrow.strftime("%Y-%m-%d") %>"></input>
                     <span class="add-on">
                       <i data-time-icon="icon-time" data-date-icon="icon-calendar">
                       </i>
@@ -97,7 +97,7 @@
                   <%= label_tag :end_time, t(:to), class: 'control-label' %>
                   <div class="controls form-inline" id="end_time">
                     <div class="form-inline input-append form_datetime">
-                      <input data-format="yyyy-MM-dd hh:mm" type="text" name="end_time" value="<%= Date.tomorrow.end_of_day.strftime("%Y-%m-%d %H:%M") %>"></input>
+                      <input data-format="yyyy-MM-dd hh:mm" type="text" name="end_time" value="<%= Date.tomorrow.strftime("%Y-%m-%d") %>"></input>
                       <span class="add-on">
                         <i data-time-icon="icon-time" data-date-icon="icon-calendar">
                         </i>
