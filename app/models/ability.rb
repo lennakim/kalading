@@ -42,7 +42,7 @@ class Ability
         c.handler == user
       end
       can [:set_state, :read], User
-      can [:create, :update], PartTransfer
+      can [:create, :update, :finish], PartTransfer
     end
 
     # 全国库管
