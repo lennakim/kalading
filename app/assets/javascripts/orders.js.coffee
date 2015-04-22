@@ -387,4 +387,15 @@ $ ->
                     return $(this).text() == e.originalEvent.item.value.district
                 .prop 'selected', true
         
-        
+    $(document).on "change", "#order_city_id", ->
+        city_id = $(this).val()
+        show_or_hide_city(city_id)
+
+    show_or_hide_city = (city_id) ->
+        $(".order-storehouse-city").each ->
+            if city_id == $(this).val()
+                $(this).parent().show()
+            else
+                $(this).parent().hide()
+
+    show_or_hide_city($("#order_city_id").val())

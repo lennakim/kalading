@@ -31,6 +31,7 @@
               <% s = pbs.sum(&:remained_quantity) %>
               <% next if s == 0%>
               <tr>
+                <input type="hidden" class="order-storehouse-city" value="<%= sh.city.id%>"/>
                 <td><%= sh.name %></td>
                 <td><%= s %></td>
               </tr>
