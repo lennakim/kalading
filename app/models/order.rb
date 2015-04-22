@@ -401,12 +401,20 @@ class Order
                 :on => [:state, :address, :phone_num, :name, :serve_datetime, :registration_date, :car_location, :car_num, :discount_num, :pay_type, :cancel_reason, :incoming_call_num, :engineer, :engineer2, :dispatcher,
                         :auto_submodel, :service_type_ids, :part_ids, :engine_num, :vin, :part_deliver_state, :auto_owner_name]
 
-
-  def car_info
+  # api
+  def license_plate
     car_location + car_num
   end
 
-  def model_info
-    auto_submodel.model + auto_submodel.brand + auto_submodel.engine_displacement
+  def brand_full_name
+    auto_submodel.full_name
+  end
+
+  def order_state
+    I18n.t(Order::STATE_STRINGS[self.state])
+  end
+
+  def order_pay_type
+    I18n.t(PAY_TYPE_STRINGS[self.pay_type])
   end
 end
