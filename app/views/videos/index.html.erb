@@ -8,7 +8,9 @@
   <thead>
     <tr>
       <th><%= t(:create_time) %></th>
+      <th><%= t(:engineer_name) %></th>
       <th><%= t(:size) %></th>
+      <th><%= t(:created_at) %></th>
       <th><%= t 'actions' %></th>
     </tr>
   </thead>
@@ -16,7 +18,9 @@
     <% @videos.each do |video| %>
       <tr>
         <td><%= l video.create_time %></td>
+        <td><%= video.engineer.try(:name) || video.engineer_name %></td>
         <td><%= number_to_human_size(video.bytes) %></td>
+        <td><%= l video.created_at %></td>
         <td>
           <%= link_to t('view'), video_path(video), :class => 'btn btn-primary' %>
         </td>

@@ -44,6 +44,9 @@ class VideosController < ApplicationController
   # POST /videos.json
   def create
     @video = Video.new(params[:video])
+    if params[:video][:phone_num].present?
+      @video.engineer = Engineer.find_by phone_num: params[:video][:phone_num]
+    end
 
     respond_to do |format|
       if @video.save

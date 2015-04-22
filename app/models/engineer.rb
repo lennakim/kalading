@@ -28,6 +28,7 @@ class Engineer < User
   field :aasm_state
 
   has_many :testings # 考卷
+  has_many :videos
 
   aasm do
     state :training, :initial => true # 培训
