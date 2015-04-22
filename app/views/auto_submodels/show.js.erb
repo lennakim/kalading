@@ -8,3 +8,13 @@ $("#select-service-types").html("<%= escape_javascript(render("service_types")) 
 $("#auto_submodels").html("<%= escape_javascript(render("auto_submodels")) %>");
 $("#order_auto_submodel_id").val("<%= @auto_submodel.id %>");
 $("#models_and_parts_info").html("<%= escape_javascript(render('auto_submodels/models_has_same_displacement', asm: @auto_submodel)) %>");
+
+city_id = $("#order_city_id").val()
+$.each($(".order-storehouse-city"), function( i, val ){
+    if(city_id == $(val).val()) {
+        $(val).parent().show()
+    }else{
+        $(val).parent().hide()
+    }
+    
+});
