@@ -411,10 +411,10 @@ class Order
   end
 
   def order_state
-    I18n.t(Order::STATE_STRINGS[self.state])
+    "#{self.state}-#{I18n.t(Order::STATE_STRINGS[self.state])}"
   end
 
   def order_pay_type
-    I18n.t(PAY_TYPE_STRINGS[self.pay_type])
+    "#{self.pay_type}-#{I18n.t(PAY_TYPE_STRINGS[self.pay_type])}"
   end
 end
