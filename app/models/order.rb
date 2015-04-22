@@ -162,7 +162,7 @@ class Order
   def self.state_val(s)
     Order::STATE_STRINGS.index s
   end
-  
+
   # 出库状态：0: 未出库，1：已出库，未回库，2：已回库
   PART_DELIVER_STATES = [0, 1, 2]
   PART_DELIVER_STATE_STRINGS = %w[not_delivered_yet delivered backed_to_store]
@@ -400,4 +400,13 @@ class Order
                 :track_destroy  =>  false,
                 :on => [:state, :address, :phone_num, :name, :serve_datetime, :registration_date, :car_location, :car_num, :discount_num, :pay_type, :cancel_reason, :incoming_call_num, :engineer, :engineer2, :dispatcher,
                         :auto_submodel, :service_type_ids, :part_ids, :engine_num, :vin, :part_deliver_state, :auto_owner_name]
+
+
+  def car_info
+    car_location + car_num
+  end
+
+  def model_info
+    auto_submodel.model + auto_submodel.brand + auto_submodel.engine_displacement
+  end
 end
