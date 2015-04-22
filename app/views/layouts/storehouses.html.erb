@@ -24,13 +24,15 @@
                 <%= link_to t('storehouses'), storehouses_path %>
                 <% storehouses = current_user.roles.include?('3') ? Storehouse.where(city: current_user.city) : Storehouse.all%>
                 <ul class="nav nav-list">
-                  <% storehouses.all.each do |sh| %>
-                    <% if @storehouse == sh %>
-                    <li class="active">
-                    <% else %>
-                    <li>
-                    <% end %>
-                    <%= link_to sh.name, storehouse_path(sh) %></li>
+                  <% storehouses.where(:type => Storehouse::WAREHOUSE).each do |sh| %>
+                    <li class="<%= @storehouse == sh ? 'active' : ''%>">
+                      <%= link_to sh.name, storehouse_path(sh) %>
+                    </li>
+                  <% end %>
+                  <% storehouses.in(:type => [Storehouse::DEPOT_CENTRE, nil]).each do |sh| %>
+                    <li class="<%= @storehouse == sh ? 'active' : ''%>">
+                      <%= link_to sh.name, storehouse_path(sh) %>
+                    </li>
                   <% end %>
                 </ul>
               </li>

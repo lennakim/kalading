@@ -29,6 +29,9 @@ class Storehouse
   validates :address, length: { in: 2..128 }, presence: true
   validates :phone_num, length: { in: 7..32 }, presence: true
 
+  WAREHOUSE    = 1
+  DEPOT_CENTRE = 0
+
   scope :sections, -> { where(type: 0) }
   scope :houses, -> { where(type: 1) }
 
