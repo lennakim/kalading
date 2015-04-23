@@ -28,6 +28,7 @@
           <tbody>
           <% p.partbatches.group_by(&:storehouse).each do |sh, pbs| %>
             <tr>
+              <input type="hidden" class="order-storehouse-city" value="<%= sh.city.id%>" />
               <td><%= sh.name %></td>
               <td><%= pbs.sum(&:remained_quantity) %></td>
             </tr>

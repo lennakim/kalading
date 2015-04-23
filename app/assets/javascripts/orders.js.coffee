@@ -392,6 +392,7 @@ $ ->
         show_or_hide_city(city_id)
 
     show_or_hide_city = (city_id) ->
+        return unless $("#order_city_id").val()
         $(".order-storehouse-city").each ->
             if city_id == $(this).val()
                 $(this).parent().show()
