@@ -3,6 +3,7 @@ module V2
     class Engineer < BaseEntity
       expose :id
       expose :name
+      expose :phone_num
     end
   end
 end
