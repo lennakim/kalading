@@ -406,8 +406,24 @@ class Order
     car_location + car_num
   end
 
-  def brand_full_name
-    auto_submodel.full_name
+  def brand_logo
+    auto_submodel.auto_model.auto_brand.logo
+  end
+
+  def brand_name
+    auto_submodel.auto_model.auto_brand.name
+  end
+
+  def model_name
+    auto_submodel.auto_model.name
+  end
+
+  def model_engine_displacement
+    auto_submodel.engine_displacement
+  end
+
+  def model_year_range
+    auto_submodel.year_range
   end
 
   def order_state
@@ -420,9 +436,5 @@ class Order
 
   def commented
     comments.count > 0 or evaluation?
-  end
-
-  def brand_logo
-    auto_submodel.auto_model.auto_brand.logo
   end
 end

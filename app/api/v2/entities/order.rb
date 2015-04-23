@@ -12,7 +12,10 @@ module V2
       expose :order_pay_type, as: :pay_type
       expose :calc_price, as: :total_price, format_with: :human_money
       expose :license_plate
-      expose :brand_full_name
+      expose :brand_name
+      expose :model_name
+      expose :model_engine_displacement
+      expose :model_year_range
       expose :parts, using: ::V2::Entities::Part
       expose :engineer, using: ::V2::Entities::Engineer
     end
