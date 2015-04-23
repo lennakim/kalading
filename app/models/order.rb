@@ -421,4 +421,8 @@ class Order
   def commented
     comments.count > 0 or evaluation?
   end
+
+  def brand_logo
+    auto_submodel.auto_model.auto_brand.logo
+  end
 end

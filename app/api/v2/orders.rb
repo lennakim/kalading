@@ -3,6 +3,17 @@ module V2
     resources :orders do
 
       params do
+        requires :phone
+      end
+      get "/" do
+        orders = Order.where(phone_num: params[:phone])
+
+        present :msg, ""
+        present :code, 0
+        present :data, orders, with: ::V2::Entities::Orders
+      end
+
+      params do
         requires :id
       end
       get "/:id" do
