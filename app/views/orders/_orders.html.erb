@@ -154,41 +154,34 @@
               
             <% if can? :update, Order %>
               <% if !(%w[revisited inquiry].include? Order::STATE_STRINGS[order.state]) %>
-                <% if order.part_deliver_state == 0 %>
+                <% if order.part_deliver_state == Order::NOT_DELIVERED_YET_STATE %>
                   <% if %w[unscheduled scheduled].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(:parts_deliver), edit_order_path(order, part_deliver: 1), :class => 'btn btn-mini', :remote => true if can?(:inout, Storehouse) %>
                   <% end %>
-                  <% if %w[unverified verify_error unassigned].include? Order::STATE_STRINGS[order.state] %>
-                    <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
-                  <% end %>
-                <% elsif order.part_deliver_state == 1 %>
+                <% elsif order.part_deliver_state == Order::DELIVERED_STATE %>
                   <% if %w[serve_done service_cancelled cancel_pending].include? Order::STATE_STRINGS[order.state] %>
                     <%= link_to t(:storehouse_back), edit_order_path(order, part_back: 1), :class => 'btn btn-mini', :remote => true if can?(:inout, Storehouse) %>
                   <% end %>
-                  <% if  %w[scheduled].include? Order::STATE_STRINGS[order.state] %>
-                    <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
-                  <% end %>
-                <% elsif order.part_deliver_state == 2 %>
-                  <% if %w[scheduled serve_done].include? Order::STATE_STRINGS[order.state] %>
-                    <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => true %>
-                  <% end %>
+                <% end %>
+                <% if %w[unverified verify_error unassigned scheduled serve_done].include? Order::STATE_STRINGS[order.state] and current_user.is_dispatcher? %>
+                  <%= link_to t(Order::STATE_OPERATIONS[order.state]), edit_order_path(order), :class => 'btn btn-mini', :remote => !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
                 <% end %>
               <% end %>
-              
-              <% if Order::STATE_STRINGS[order.state] == 'cancel_pending' %>
-                <%= link_to t(:verify), edit_order_path(order), :class => 'btn btn-mini', :remote => true if can? :update, order %>
+              <% if current_user.is_dispatcher? %>
+                <% if Order::STATE_STRINGS[order.state] == 'cancel_pending' %>
+                  <%= link_to t(:verify), edit_order_path(order), :class => 'btn btn-mini', :remote => true if can? :update, order %>
+                <% end %>
+                <% if !(%w[handovered revisited service_cancelled cancel_pending].include? Order::STATE_STRINGS[order.state]) %>
+                  <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
+                <% end %>
+                <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
+                <%= link_to t(:cancel), edit_order_path(order, cancel: 1), :class => 'btn btn-mini', :remote => true if can? :edit_all, order and (%w[unverified verify_error unassigned unscheduled scheduled].include? Order::STATE_STRINGS[order.state]) %>
+                <%= link_to t(:send_sms), order_send_sms_notify_path(order),
+                            :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                            :class => 'btn btn-mini' if (%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) || (%w[client_reschedule part_error].include? Order::CANCEL_TYPE_STRINGS[order.cancel_type]) %>
               <% end %>
-
-              <% if !(%w[handovered revisited service_cancelled cancel_pending].include? Order::STATE_STRINGS[order.state]) %>
-                <%= link_to t(:edit), edit_order_path(order, edit_all: 1), :class => 'btn btn-mini' if can? :edit_all, order and !(%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) %>
-              <% end %>
-              <%= link_to t('duplicate_order'), duplicate_order_path(order), :class => 'btn btn-mini' %>
-              <%= link_to t(:cancel), edit_order_path(order, cancel: 1), :class => 'btn btn-mini', :remote => true if can? :edit_all, order and (%w[unverified verify_error unassigned unscheduled scheduled].include? Order::STATE_STRINGS[order.state]) %>
               <%= link_to t(:print), print_order_path(order), :class => 'btn btn-mini', :target => '_blank' if (%w[unscheduled scheduled serve_done].include? Order::STATE_STRINGS[order.state]) && !mobile_device? %>
               <%= link_to t(:comment), edit_order_path(order, add_comment: 1), :class => 'btn btn-mini', :remote => true %>
-              <%= link_to t(:send_sms), order_send_sms_notify_path(order),
-                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          :class => 'btn btn-mini' if (%w[unverified verify_error].include? Order::STATE_STRINGS[order.state]) || (%w[client_reschedule part_error].include? Order::CANCEL_TYPE_STRINGS[order.cancel_type]) %>
               <%= link_to t(:op_history), order_history_path(order, page: 1), {:remote => true, 'data-toggle' => "modal", 'data-target' => '#modal-window', :class => 'btn btn-info btn-mini' } %>
             <% end %>
           </td>
