@@ -417,4 +417,8 @@ class Order
   def order_pay_type
     "#{self.pay_type}-#{I18n.t(PAY_TYPE_STRINGS[self.pay_type])}"
   end
+
+  def commented
+    comments.count > 0 or evaluation?
+  end
 end
