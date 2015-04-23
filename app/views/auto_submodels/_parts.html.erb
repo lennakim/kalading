@@ -27,10 +27,7 @@
           </thead>
           <tbody>
           <% p.partbatches.group_by(&:storehouse).each do |sh, pbs| %>
-            <% s = pbs.sum(&:remained_quantity) %>
-            <% next if s == 0%>
             <tr>
-              <input type="hidden" class="order-storehouse-city" value="<%= sh.city.id%>"/>
               <td><%= sh.name %></td>
               <td><%= pbs.sum(&:remained_quantity) %></td>
             </tr>
