@@ -2,7 +2,7 @@
 <div class="row">
   <div class="span12">
     <div class="page-header">
-      <%  if can? :edit_all, Order and !mobile_device? %>
+      <% if can? :edit_all, Order and !mobile_device? and current_user.is_dispatcher? %>
         <div>
           <%= form_tag daily_orders_path, :method => 'get', :id => "daily_orders_form", :class => 'form-inline' do %>
             <div class="control-group select">

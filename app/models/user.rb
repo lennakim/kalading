@@ -129,6 +129,15 @@ class User
     end
   end
 
+  def is_dispatcher?
+    [1, 6].each do |role|
+      if self.roles.include? role.to_s
+        return true
+      end
+    end
+    return false
+  end
+
   before_create do |u|
     u.name_pinyin = PinYin.of_string(u.name.gsub(/\s+/, "")).join
   end

@@ -62,7 +62,7 @@ gem 'puma'
 
 group :development, :test do
   gem 'http_logger' # log api request response
-  gem 'pry'
+  gem 'pry-nav'
   gem 'pry-rails'
   gem 'awesome_print' # pretty log
 

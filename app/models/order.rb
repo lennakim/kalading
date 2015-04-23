@@ -164,7 +164,10 @@ class Order
   end
   
   # 出库状态：0: 未出库，1：已出库，未回库，2：已回库
-  PART_DELIVER_STATES = [0, 1, 2]
+  NOT_DELIVERED_YET_STATE = 0
+  DELIVERED_STATE         = 1
+  BACKED_TO_STORE_STATE   = 2
+  PART_DELIVER_STATES = [NOT_DELIVERED_YET_STATE, DELIVERED_STATE, BACKED_TO_STORE_STATE]
   PART_DELIVER_STATE_STRINGS = %w[not_delivered_yet delivered backed_to_store]
 
   PAY_TYPES = [0, 1]
