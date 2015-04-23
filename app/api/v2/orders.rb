@@ -3,7 +3,7 @@ module V2
     resources :orders do
 
       params do
-        requires :phone
+        requires :phone, regexp: /^\d{11}$/, desc: "11位纯数字"
       end
       get "/" do
         orders = Order.where(phone_num: params[:phone])

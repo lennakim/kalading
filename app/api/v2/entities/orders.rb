@@ -12,6 +12,7 @@ module V2
       expose :model_name
       expose :model_engine_displacement
       expose :model_year_range
+      expose :service_types, using: ::V2::Entities::ServiceType
       expose :parts, using: ::V2::Entities::Part
     end
   end
