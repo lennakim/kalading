@@ -1,3 +1,4 @@
+#coding: utf-8
 class OrdersController < ApplicationController
   before_filter :check_for_mobile, :only => [:index, :order_begin, :choose_service]
   @except_actions = [
@@ -17,7 +18,7 @@ class OrdersController < ApplicationController
           @orders = @orders.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.today.end_of_day)
         else
           @orders = @orders.where(:serve_datetime.gte => Date.today.beginning_of_day, :serve_datetime.lte => Date.tomorrow.end_of_day)
-        end     
+        end
       elsif current_user.storehouse_admin?
         @orders = current_user.city.serve_orders
         params[:city] = current_user.city.id
@@ -34,7 +35,7 @@ class OrdersController < ApplicationController
         return redirect_to new_user_session_url
       end
     end
-    
+
     if params[:city].present? && !current_user.storehouse_admin?
       @orders = @orders.where(city: City.find(params[:city]))
     end
@@ -130,11 +131,11 @@ class OrdersController < ApplicationController
     if params[:auto_submodel].present?
       @orders = @orders.where auto_submodel_id: params[:auto_submodel]
     end
-    
+
     if !params[:reciept_type].blank?
       @orders = @orders.where reciept_type: params[:reciept_type]
     end
-    
+
     if !params[:reciept_state].blank?
       @orders = @orders.where reciept_state: params[:reciept_state]
     end
@@ -146,7 +147,7 @@ class OrdersController < ApplicationController
     if !params[:storehouse].blank?
       @orders = @orders.where(storehouse: Storehouse.find(params[:storehouse]))
     end
-    
+
     respond_to do |format|
       format.html {
         @storehouses = Storehouse.all
@@ -300,7 +301,7 @@ class OrdersController < ApplicationController
     elsif params[:cancel_confirm]
       params[:order][:state] = Order::state_val('service_cancelled')
     end
-    
+
     if params[:order][:part_deliver_state] == '1'
       notice = I18n.t(:order_delivered_notify, seq: @order.seq)
     elsif params[:order][:part_deliver_state] == '2'
@@ -344,7 +345,7 @@ class OrdersController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def calcprice
     @order = Order.new(params[:order])
     d = Discount.find_by token: @order.discount_num
@@ -361,7 +362,7 @@ class OrdersController < ApplicationController
         @order.balance_pay = used
       end
     end
-    
+
     respond_to do |format|
       format.html
       format.js
@@ -403,7 +404,7 @@ class OrdersController < ApplicationController
     auto_maintain
     render 'auto_maintain'
   end
-  
+
   def auto_maintain_packs
     @asms = []
     @asms = AutoSubmodel.where(data_source: 2, service_level: 1).where(:oil_filter_count.gt => 0, :air_filter_count.gt => 0, :cabin_filter_count.gt => 0).asc(:full_name_pinyin)
@@ -432,12 +433,12 @@ class OrdersController < ApplicationController
       }
     end
   end
-  
+
   def auto_maintain_price
     _create_auto_maintain_order
     render :action => "auto_maintain"
   end
-  
+
   def create_auto_maintain_order
     return render json: { result: t(:auto_submodel_required)}, status: :bad_request if params[:asm_id].nil?
     asm = AutoSubmodel.find(params[:asm_id])
@@ -505,7 +506,7 @@ class OrdersController < ApplicationController
     @order.save!
     render json: {result: 'succeeded', seq: @order.seq }
   end
-  
+
   def create_auto_maintain_order5
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
     return render json: {result: t(:address_needed)}, status: :bad_request if params[:info][:address].blank?
@@ -517,7 +518,7 @@ class OrdersController < ApplicationController
     else
       @order.user_type = UserType.find_or_create_by name: I18n.t(:renbao)
     end
-    
+
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
@@ -587,7 +588,7 @@ class OrdersController < ApplicationController
     @order.save!
     render json: {result: 'succeeded', seq: @order.seq }
   end
-  
+
   # only phone_num and car_num, default city is beijing
   def create_auto_special_order
     return render json: {result: t(:info_needed)}, status: :bad_request if params[:info].nil?
@@ -608,7 +609,7 @@ class OrdersController < ApplicationController
     @order.save!
     render json: {result: 'succeeded', seq: @order.seq }
   end
-    
+
   def auto_test_price
     @order = Order.new
     st = ServiceType.find '52c186d4098e7133cd000005'
@@ -621,7 +622,7 @@ class OrdersController < ApplicationController
   def auto_test_order
     auto_test_price
   end
-  
+
   def auto_verify_price
     @order = Order.new
     st = ServiceType.find '52cb67839a94e4fd190001eb'
@@ -634,7 +635,7 @@ class OrdersController < ApplicationController
   def auto_verify_order
     auto_verify_price
   end
-  
+
   def order_prompt
     @orders = Order.all
     if params[:state].present?
@@ -648,7 +649,7 @@ class OrdersController < ApplicationController
     if params[:part_deliver_state].present?
       @orders = @orders.where(part_deliver_state: params[:part_deliver_state])
     end
-    
+
     if current_user.roles == [User::ROLE_STRINGS.index('dispatcher').to_s]
       @orders = @orders.where dispatcher: current_user
     end
@@ -657,16 +658,16 @@ class OrdersController < ApplicationController
       format.js
     end
   end
-  
+
   def order_seq_check
     @order = Order.where(seq: params[:seq]).first
 
     respond_to do |format|
-      format.json 
+      format.json
       format.js
     end
   end
-  
+
   def tag_stats
     result = {}
     #orders = AutoSubmodel.find(params[:auto_submodel_id]).orders
@@ -677,7 +678,7 @@ class OrdersController < ApplicationController
       format.json { render json: result}
     end
   end
-  
+
   def evaluation_list
     @orders = Order.any_in(state: [5,6,7]).where(:evaluation_tags.ne => []).desc(:evaluation_time).page(params[:page]).per(params[:per])
   end
@@ -697,6 +698,7 @@ class OrdersController < ApplicationController
       users = User.all
       @storehouses = Storehouse.all
     end
+    @storehouses = @storehouses.where(:type => Storehouse::DEPOT_CENTRE)
     @unassigned_orders = orders.where(state: 2, :serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:address)
     @engineer_order_hash = orders.any_of({state: 3}, {state: 4}).where(:serve_datetime.lte => @d.end_of_day, :serve_datetime.gte => @d.beginning_of_day).asc(:serve_datetime).group_by(&:engineer)
     @storehouse_engineers = users.where(state: 0, roles: ['5']).asc(:storehouse).group_by(&:storehouse)
@@ -708,7 +710,7 @@ class OrdersController < ApplicationController
     @service_type_names = Hash[*ServiceType.all.collect {|c|[c.id, c.name]}.flatten]
     render layout: false
   end
-  
+
   def send_sms_notify
     session[:return_to] ||= request.referer
     @order = Order.find(params[:id])
@@ -752,7 +754,7 @@ class OrdersController < ApplicationController
       format.html
     end
   end
-  
+
   def order_parts_auto_deliver
     @order = Order.find(params[:id])
     if @order.parts_auto_deliver == 1
@@ -821,7 +823,7 @@ private
     st = ServiceType.find_by name: service_type_names[st_index]
     return render json: t(:auto_maintain_service_type_not_found), status: :bad_request if st.nil?
     @order.service_types << st
-    
+
     if params[:info].present? && params[:info][:discount].present?
       check_discount(params[:info][:discount])
     elsif params[:discount].present?

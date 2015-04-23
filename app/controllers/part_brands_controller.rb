@@ -2,7 +2,7 @@ class PartBrandsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :set_default_operator
   load_and_authorize_resource
-  
+
   # GET /part_brands
   # GET /part_brands.json
   def index

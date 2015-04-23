@@ -29,7 +29,7 @@
                       <%= link_to sh.name, storehouse_path(sh) %>
                     </li>
                   <% end %>
-                  <% storehouses.in(:type => [Storehouse::DEPOT_CENTRE, nil]).each do |sh| %>
+                  <% storehouses.where(:type => Storehouse::DEPOT_CENTRE).each do |sh| %>
                     <li class="<%= @storehouse == sh ? 'active' : ''%>">
                       <%= link_to sh.name, storehouse_path(sh) %>
                     </li>
