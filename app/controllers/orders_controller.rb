@@ -254,10 +254,7 @@ class OrdersController < ApplicationController
     end
     @order.car_num.upcase!
     if params[:order][:discount_num].present?
-      d = Discount.find_by token: @order.discount_num
-      if d && d.expire_date >= Date.today && d.orders.count < d.times && (d.service_types.blank? || d.service_type_ids.sort == @order.service_type_ids.sort)
-        @order.discounts << d
-      end
+      Discount.find_by(token: @order.discount_num).try(:apply_to_order, @order)
     end
     if params[:inquire]
       @order.state = 9
@@ -317,12 +314,9 @@ class OrdersController < ApplicationController
       if @order.update_attributes(params[:order])
         # 状态改变时，通知微车，发短信
         _notify_order_state_change @order, params[:order][:state] if (params[:order][:state] && old_state != params[:order][:state])
-        if params[:order][:discount_num]
+        if params[:order][:discount_num].present?
           @order.discounts = nil
-          d = Discount.find_by token: params[:order][:discount_num]
-          if d && d.expire_date >= Date.today && d.orders.count < d.times && (d.service_types.blank? || d.service_type_ids.sort == @order.service_type_ids.sort)
-            @order.discounts << d
-          end
+          Discount.find_by(token: params[:order][:discount_num]).try(:apply_to_order, @order)
         end
         format.html { redirect_to session.delete(:return_to), notice: notice }
         format.json { render json: {result: 'ok'} }
@@ -347,11 +341,7 @@ class OrdersController < ApplicationController
   
   def calcprice
     @order = Order.new(params[:order])
-    d = Discount.find_by token: @order.discount_num
-    if d && d.expire_date >= Date.today && d.orders.count < d.times
-      @order.discounts << d
-    end
-
+    Discount.find_by(token: @order.discount_num).try(:apply_to_order, @order)
     p = @order.calc_price
     if p > 0.0 && @order.phone_num.present?
       c = Client.find_by phone_num: @order.phone_num
@@ -837,20 +827,7 @@ private
   end
 
   def check_discount discount
-    discount = Discount.find_by token: discount
-    if discount
-      if discount.expire_date < Date.today
-        @discount_error = I18n.t(:discount_expired, s: (I18n.l discount.expire_date ) )
-      elsif discount.orders.count >= discount.times
-        @discount_error = I18n.t(:discount_no_capacity)
-      elsif discount.service_types.present? && discount.service_type_ids.sort != @order.service_type_ids.sort
-        @discount_error = I18n.t(:discount_service_types_error, s: discount.service_types.map{|s| s.name}.join(',') )
-      else
-        @order.discounts << discount
-      end
-    else
-      @discount_error = I18n.t(:discount_not_exist)
-    end
+    @discount_error = Discount.find_by(token: discount).try(:apply_to_order, @order) || I18n.t(:discount_not_exist)
   end
 
   def _notify_order_state_change( o, state)
