@@ -130,12 +130,7 @@ class User
   end
 
   def is_dispatcher?
-    [1, 6].each do |role|
-      if self.roles.include? role.to_s
-        return true
-      end
-    end
-    return false
+    role_admin? || storehouse_admin? || dispatcher? || national_storehouse_admin?
   end
 
   before_create do |u|
