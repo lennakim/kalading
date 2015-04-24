@@ -1,5 +1,10 @@
 zh-CN:
   simple_form:
+    "yes": '是'
+    "no": '不是'
+    required:
+      text: '必填项'
+      mark: '*'
     options:
       tool_type:
         category:

@@ -1,0 +1,23 @@
+<div class="span10 offset1">
+  <%= render 'tool_types/nav' %>
+
+  <h3><%= ToolSuite.model_name.human %></h3>
+
+  <div class="control-group">
+    <%= link_to t('new'), new_tool_suite_path, class: 'btn btn-success pull-right' if can? :create, ToolSuite %>
+    <div class="clearfix"></div>
+  </div>
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th><%= ToolSuite.human_attribute_name('name') %></th>
+        <th><%= ToolSuite.human_attribute_name('tool_type_category') %></th>
+        <th><%= t('actions') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render @tool_suites %>
+    </tbody>
+  </table>
+</div>

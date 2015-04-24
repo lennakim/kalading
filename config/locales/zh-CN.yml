@@ -252,6 +252,15 @@ zh-CN:
             tool_type_id:
               taken: '不能有相同的工具+品牌'
               invalid_tool_type_category: '不能把%{category}分配给%{assignee_type}'
+        tool_suite:
+          attributes:
+            tool_type_category:
+              inclusion: '请选择正确的工具类别'
+        tool_suite_item:
+          attributes:
+            tool_type:
+              illegal_category: '不是%{category}'
+              taken: '不能有相同的工具'
     models:
       engineer: '技师'
       tool_type: '工具类型'
@@ -262,6 +271,8 @@ zh-CN:
       tool_brand: '品牌'
       tool_supplier: '供应商'
       tool_delivery: '调货信息'
+      tool_suite: '工具套装'
+      tool_suite_item: '工具套装项'
     attributes:
       engineer:
         city: '城市'
@@ -350,6 +361,13 @@ zh-CN:
         tool_brand: '品牌'
         quantity: '数量'
         received_quantity: '实际收货数'
+      tool_suite:
+        name: '名称'
+        tool_type_category: '类别'
+      tool_suite_item:
+        quantity: '数量'
+        required: '是否必需'
+        tool_type: '工具'
 
   devise:
     failure:

@@ -62,7 +62,7 @@ class Ability
       can [:create, :update, :destroy], [Storehouse, Partbatch, Part, PartType, PartBrand, Supplier]
       can :order_stats,  Order
       can [:set_state], User
-      can [:create, :update, :destroy], [ToolType, ServiceVehicle, ToolBrand, ToolSupplier, ToolDetail, ToolBatch]
+      can [:create, :update, :destroy], [ToolType, ServiceVehicle, ToolBrand, ToolSupplier, ToolDetail, ToolBatch, ToolSuite]
       can :read, :tool_base_info
       can :create, ToolDelivery
       can [:break, :lose, :approve], ToolAssignment

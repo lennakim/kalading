@@ -29,6 +29,10 @@ class ToolType
     end
   end
 
+  def self.category_human(category)
+    I18n.t("simple_form.options.tool_type.category.#{category}")
+  end
+
   def can_be_deleted?
     !ToolBatch.where(tool_type_id: self.id).exists?
   end
@@ -38,6 +42,6 @@ class ToolType
   end
 
   def category_human
-    I18n.t("simple_form.options.tool_type.category.#{category}")
+    self.class.category_human(category)
   end
 end

@@ -1,0 +1,11 @@
+<tr>
+  <td><%= tool_suite.name %></td>
+  <td><%= translate_collection_options(ToolType, :category, tool_suite.tool_type_category) %></td>
+  <td>
+    <%= link_to t('edit'), edit_tool_suite_path(tool_suite),
+      class: 'btn btn-small btn-primary' if can? :update, ToolSuite %>
+    <%= link_to t('destroy'), tool_suite_path(tool_suite),
+      method: 'delete', confirm: t('destroy_confirm'),
+      class: 'btn btn-small btn-danger' if can? :destroy, ToolSuite %>
+  </td>
+</tr>
