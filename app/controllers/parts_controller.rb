@@ -64,14 +64,6 @@ class PartsController < ApplicationController
   # POST /parts.json
   def create
     @part = Part.new(params[:part])
-    matches = Part.where number: /.*#{@part.number.gsub(/\s+/, "").split('').join(".*")}.*/i, part_brand_id: @part.part_brand, part_type_id: @part.part_type
-    if matches.exists?
-      len_matched = matches.select {|x| x.number.gsub(/\s+/, "").size == @part.number.gsub(/\s+/, "").size }
-      if !len_matched.empty?
-        render json: {status: :bad_request}
-      end
-    end
-
     respond_to do |format|
       if @part.save
         format.html { redirect_to parts_url, notice: 'Part was successfully created.' }

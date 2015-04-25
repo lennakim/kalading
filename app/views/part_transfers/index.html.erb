@@ -3,6 +3,7 @@
   <h1><%= t 'part_transfers' %></h1>
 </div>
 <%= render "search_form" %>
+<%= paginate @part_transfers %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -25,3 +26,4 @@
     <% end %>
   </tbody>
 </table>
+<%= paginate @part_transfers %>

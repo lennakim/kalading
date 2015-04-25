@@ -7,7 +7,7 @@
 <td><%= part_transfer.updated_by.name %></td>
 <td><%= t(part_transfer.aasm_state) %></td>
 <td>
-  <% if can?(:update, part_transfer) && current_user.city == part_transfer.target_sh.city %>
+  <% if can?(:update, part_transfer) && (current_user.city == part_transfer.target_sh.city || current_user.national_storehouse_admin?) %>
     <%= link_to t(:finish_part_transfer),
       finish_part_transfer_path(part_transfer),
       :method => :put,

@@ -44,10 +44,16 @@ class Part
   MOTOROIL_TYPE = [0, 1, 2]
   MOTOROIL_TYPE_STRINGS = %w[mineral_oil semi_synthetic_oil fully_synthetic_oil]
   
-  validates :number, uniqueness:  {case_sensitive: false}, presence: true
   validates :part_brand_id, presence: true
   validates :part_type_id, presence: true
   validates :capacity, presence: true
+  
+  validate :validate_number
+
+  def validate_number
+    p = Part.find_by number: /^#{number}$/xi, part_brand: part_brand, part_type: part_type
+    errors.add(:number, I18n.t(:duplicated_part, n: p.number)) if p and p != self
+  end
   
   def total_remained_quantity
     rq = 0

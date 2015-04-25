@@ -1150,3 +1150,4 @@ zh-CN:
   search: '查找'
   created_by: '发起者'
   updated_by: '当前负责人'
+  duplicated_part: '配件型号已经存在：%{n}'

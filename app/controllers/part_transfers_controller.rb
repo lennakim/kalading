@@ -16,7 +16,6 @@ class PartTransfersController < InheritedResources::Base
     if params[:target_sh].present?
       @part_transfers = @part_transfers.where(target_sh: Storehouse.find(params[:target_sh]))
     end
-    @part_transfers = @part_transfers.page params[:page]
     if params[:export].present?
       csv_data = CSV.generate do |csv|
         a = [I18n.t(:brand), I18n.t(:manuf_number), I18n.t(:part_type), I18n.t(:quantity), I18n.t(:to), I18n.t(:created_at), I18n.t(:state)]
@@ -29,6 +28,7 @@ class PartTransfersController < InheritedResources::Base
       send_data csv_data, :filename => I18n.t(:part_transfer)+ I18n.l(DateTime.now.to_date) + '.csv'
       return
     end
+    @part_transfers = @part_transfers.page params[:page]
     index!
   end
   

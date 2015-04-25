@@ -57,4 +57,6 @@ class PartTransfer
       remained_quantity: self.quantity,
       user_id: current_user.id
   end
+  
+  paginates_per 20
 end
