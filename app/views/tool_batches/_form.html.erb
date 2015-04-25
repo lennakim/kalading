@@ -1,3 +1,36 @@
+<% if @saved_tool_batches.present? -%>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <caption>
+        刚刚成功添加的进货信息，请不要重复添加
+      </caption>
+      <tr>
+        <th><%= ToolBatch.human_attribute_name('created_at') %></th>
+        <th><%= ToolBatch.human_attribute_name('tool_type') %></th>
+        <th><%= ToolBatch.human_attribute_name('tool_brand') %></th>
+        <th class="span4">
+          <%= ToolBatch.human_attribute_name('tool_supplier') %>
+        </th>
+        <th><%= ToolBatch.human_attribute_name('price') %></th>
+        <th><%= ToolBatch.human_attribute_name('quantity') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @saved_tool_batches.each do |tool_batch| -%>
+        <tr>
+          <td><%= l tool_batch.created_at %></td>
+          <td><%= tool_batch.tool_type.identification %></td>
+          <td><%= tool_batch.tool_brand.name %></td>
+          <td><%= tool_batch.tool_supplier.name %></td>
+          <td><%= tool_batch.price %></td>
+          <td><%= tool_batch.quantity %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+  <hr>
+<% end -%>
+
 <%= form_tag bulk_create_tool_batches_path do %>
   <div class="form-inline">
     <label for="tool_supplier_id">
@@ -29,7 +62,7 @@
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'tool_batch_item', collection: @tool_batches, as: :tool_batch %>
+      <%= render partial: 'tool_batch_item', collection: @new_tool_batches, as: :tool_batch %>
     </tbody>
   </table>
 

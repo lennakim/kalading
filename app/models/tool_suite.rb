@@ -1,3 +1,4 @@
+# 工具套装
 class ToolSuite
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -7,11 +8,12 @@ class ToolSuite
 
   attr_accessible :name, :tool_type_category, :tool_suite_items_attributes
 
+  # 一个套装里包含哪些工具
   has_many :tool_suite_items
   accepts_nested_attributes_for :tool_suite_items, allow_destroy: true
 
-  validates :name, presence: true, uniqueness: { scope: :tool_type_category }
-  validates :tool_type_category, inclusion: { in: ToolType::CATEGORIES }
+  validates :name, presence: true
+  validates :tool_type_category, inclusion: { in: ToolType::CATEGORIES }, uniqueness: true
   validates_presence_of :tool_suite_items
   # 不能用validate，因为error是加在item上的，用validate的话tool_suite.valid?仍然返回true，进而save
   before_save :check_tool_type_category, :check_duplicated_items
@@ -52,6 +54,17 @@ class ToolSuite
     end
 
     all_valid
+  end
+
+  def whole_requirement
+    tool_suite_items.inject({}) do |memo, item|
+      memo[item.tool_type_id] = item.quantity
+      memo
+    end
+  end
+
+  # TODO
+  def core_requirement
   end
 
   # TODO

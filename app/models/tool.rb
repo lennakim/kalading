@@ -24,6 +24,7 @@ class Tool
   # 如果要能多次调货，就
   # has_and_belongs_to_many :tool_deliveries
   belongs_to :tool_delivery
+  belongs_to :tool_suite_inventory
 
   validates :lifetime, numericality: { greater_than: 0, only_integer: true }
   validates :warranty_period, numericality: { greater_than: 0, only_integer: true }
@@ -36,6 +37,7 @@ class Tool
 
   scope :stock, -> { where(status: 'stock') }
   scope :delivering, -> { where(status: 'delivering') }
+  scope :individual, -> { where(tool_suite_inventory_id: nil) }
 
   def self.statistics_summary
     statistics_statuses = %w[stock delivering assigned]

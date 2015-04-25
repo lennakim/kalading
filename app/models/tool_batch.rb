@@ -24,7 +24,7 @@ class ToolBatch
   validates_presence_of :tool_detail_id, :tool_type_id, :tool_brand_id, :tool_supplier_id, :city_id, :operator_id
 
   before_validation :set_default_city, :set_tool_detail_attrs, on: :create
-  after_create :generate_tools
+  after_create :generate_tools, :organize_to_suite
 
   def set_default_city
     self.city_id = City.beijing.id
@@ -50,5 +50,9 @@ class ToolBatch
       quantity.times do
         Tool.create!(tool_batch_id: id)
       end
+    end
+
+    def organize_to_suite
+      ToolSuiteInventory.organize_all
     end
 end

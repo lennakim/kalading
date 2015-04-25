@@ -39,14 +39,19 @@ class ToolBatchesController < ApplicationController
       render action: 'new' and return
     end
 
-    @tool_batches = params[:tool_batches].map do |attrs|
+    @saved_tool_batches = []
+    @new_tool_batches = []
+    params[:tool_batches].each do |attrs|
       tool_batch = ToolBatch.new(attrs)
       tool_batch.operator = current_user
-      tool_batch.save
-      tool_batch
+      if tool_batch.save
+        @saved_tool_batches << tool_batch
+      else
+        @new_tool_batches << tool_batch
+      end
     end
 
-    if @tool_batches.all?(&:valid?)
+    if @new_tool_batches.empty?
       redirect_to tool_batches_path
     else
       render action: 'new'
