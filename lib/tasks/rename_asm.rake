@@ -689,4 +689,114 @@ namespace :rename_asm do
       asm.parts << p
     end
   end
+
+  task :import_yushua_asm_check => :environment do
+    # 2015-04-26 张河的需求：导入雨刷匹配
+    # 品牌 款式(full_name) 发动机型号 年代	配件类型 配件品牌 配件型号
+    Dir.glob('./tmp/**/*.xls*') do |f|
+      begin
+        puts "Checking asms of #{f}"
+        book = Spreadsheet.open f
+        sheet1 = book.worksheet 0
+        # no each_with_index method found for worksheet
+        i = 0
+        sheet1.each 1 do |row|
+          #puts "#{row[0]} #{row[1]}"
+          i += 1
+          next if row[0].nil?
+          # 检查车型full_name
+          asm = AutoSubmodel.where(data_source: 2).find_by(full_name: /.*#{row[1].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i)
+          if asm.nil?
+            puts "#{i} #{row[1]} not found, engine: #{row[2]}"
+            AutoSubmodel.where(data_source: 2).where(full_name: /.*#{row[1].gsub(row[3],'').gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i).each do |aasm|
+              puts aasm.full_name
+              puts aasm.engine_model
+            end
+            break
+          end
+        end
+      rescue Exception => e
+        puts e.message  
+      end
+    end
+  end
+  
+  task :import_yushua_part_check => :environment do
+    # 品牌 款式(full_name) 发动机型号 年代	配件类型 配件品牌 配件型号
+    Dir.glob('./tmp/**/*.xls*') do |f|
+      # 检查配件型号和品牌
+      begin
+        puts "Checking parts of #{f}"
+        book = Spreadsheet.open f
+        sheet1 = book.worksheet 0
+        a = []
+        i = 0
+        sheet1.each 1 do |row|
+          i += 1
+          next if row[0].nil?
+          #puts "#{row[4]} #{row[5]} #{row[6]}"
+          pb = PartBrand.find_by name: row[5]
+          if pb.nil?
+            a << "#{i} part brand #{row[5]} not found\n"
+            next
+          end
+          pt = PartType.find_by name: row[4]
+          if pt.nil?
+            a << "#{i} part type #{row[4]} not found\n"
+            next
+          end
+          p = Part.find_by number: /.*#{row[6].gsub(/[\s]+/, "").split('').join(".*")}.*/i, part_brand: pb
+          if p.nil?
+            a << "#{i} #{row[6]} not found\n"
+          end
+        end
+        puts a
+      rescue Exception => e
+        puts e.message  
+      end
+    end
+  end
+
+  task :import_yushua_match => :environment do
+    # 品牌 款式(full_name) 发动机型号 年代	配件类型 配件品牌 配件型号
+    Dir.glob('./tmp/**/*.xls*') do |f|
+      # 检查配件型号和品牌
+      begin
+        puts "Importing #{f}"
+        book = Spreadsheet.open f
+        sheet1 = book.worksheet 0
+        sheet1.each 1 do |row|
+          next if row[0].nil?
+          asm = AutoSubmodel.where(data_source: 2).find_by(full_name: /.*#{row[1].gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i)
+          if asm.nil?
+            puts "#{row[1]} not found, engine: #{row[2]}"
+            AutoSubmodel.where(data_source: 2).where(full_name: /.*#{row[1].gsub(row[3],'').gsub(/[\s,\+]+/, "").split('').join(".*")}.*/i).each do |aasm|
+              puts aasm.full_name
+              puts aasm.engine_model
+            end
+            break
+          end
+    
+          pb = PartBrand.find_by name: row[5]
+          if pb.nil?
+            puts "part brand #{row[5]} not found\n"
+            break
+          end
+          pt = PartType.find_by name: row[4]
+          if pt.nil?
+            puts "part type #{row[4]} not found\n"
+            break
+          end
+          p = Part.find_by(number: /.*#{row[6].gsub(/[\s]+/, "").split('').join(".*")}.*/i, part_brand: pb, part_type: pt)
+          if p.nil?
+            puts "Creating #{row[6]}"
+            p = Part.create!(number: row[6].strip, part_brand: pb, part_type: pt )
+          end
+          asm.parts << p
+        end
+      rescue Exception => e
+        puts e.message  
+      end
+    end
+  end
 end
