@@ -46,7 +46,7 @@ class Discount
     return I18n.t(:discount_expired) if expire_date < Date.today
     return I18n.t(:discount_no_capacity) if orders.count > times
     # 优惠券的服务项目列表中任意一个项目都可以享受优惠，因此只要订单的服务项目列表有交集就可以用
-    return I18n.t(:discount_service_types_error) if service_types.present? and (service_type_ids & o.service_type_ids).empty?
+    return I18n.t(:discount_service_types_error, s: self.service_types.map{|s| s.name}.join(',')) if service_types.present? and (service_type_ids & o.service_type_ids).empty?
     o.discounts << self
     return ''
   end
