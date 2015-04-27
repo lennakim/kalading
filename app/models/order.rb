@@ -435,6 +435,6 @@ class Order
   end
 
   def commented
-    comments.count > 0 or evaluation?
+    evaluation?
   end
 end
