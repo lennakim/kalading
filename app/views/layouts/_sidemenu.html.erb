@@ -34,7 +34,7 @@
       <ul class="sb-menu">
         <li class="sb-toggle-left"><h3>Kalading</h3></li>
           <li><%= link_to t('order_menu'), orders_path %></li>
-          <li><%= link_to t('repository_menu'), storehouses_path if can? :read, Storehouse %></li>
+          <li><%= link_to t('repository_menu'), storehouses_path(:type => Storehouse::WAREHOUSE) if can? :read, Storehouse %></li>
           <li><%= link_to t('auto_menu'), auto_submodels_path if can? :read, AutoSubmodel %></li>
           <li><%= link_to t('cities'), cities_path if can? :read, City %></li>
           <li><%= link_to t('order_stats'), order_stats_path(:disable_sidebar => 1) if can? :order_stats, Order %></li>

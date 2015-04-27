@@ -12,6 +12,8 @@ class StorehousesController < ApplicationController
       @storehouses = Storehouse.all
     end
 
+    @storehouses = @storehouses.where(:type => params[:type]) if params[:type].present?
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @storehouses }
@@ -51,7 +53,7 @@ class StorehousesController < ApplicationController
       format.json { render json: @history_trackers }
     end
   end
-  
+
   # GET /storehouses/new
   # GET /storehouses/new.json
   def new
@@ -163,7 +165,7 @@ class StorehousesController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def print_storehouse_out
     @storehouse = Storehouse.find(params[:id])
     @ht = HistoryTracker.find(params[:ht_id])
@@ -173,7 +175,7 @@ class StorehousesController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def import
     part_brand = PartBrand.find_by name: /.*#{params[I18n.t(:part_brand)]}.*/
     return render json: "#{params[I18n.t(:part_brand)]} not found" if part_brand.nil?
@@ -189,7 +191,7 @@ class StorehousesController < ApplicationController
     supplier = Supplier.create name: params[I18n.t(:part_supplier)] if supplier.nil?
     price = 0.0
     price = params[I18n.t(:buy_price)].to_f if params[I18n.t(:buy_price)]
-    
+
     sh.partbatches.create part_id: part.id,
       supplier_id: supplier.id,
       price: price,
@@ -198,7 +200,7 @@ class StorehousesController < ApplicationController
       user_id: u.id
     return render json: 'ok'
   end
-  
+
   def statistics
     respond_to do |format|
       format.csv {
@@ -279,14 +281,14 @@ class StorehousesController < ApplicationController
         break if need_q <= 0
       end
     end
-    
+
     @pt = PartTransfer.create!(source_sh: @storehouse, target_sh: @target_storehouse, quantity: @quantity, part: @part)
     respond_to do |format|
       format.html
       format.js # show.js.erb
     end
   end
-  
+
   def print_dispatch_card
     @storehouse = Storehouse.find(params[:id])
     if params[:start_time].present?
@@ -297,7 +299,7 @@ class StorehousesController < ApplicationController
     @end_time = ((params[:end_time].present? && Date.parse(params[:end_time])) || Date.tomorrow).end_of_day
     render layout: false
   end
-  
+
   def print_orders_card
     @storehouse = Storehouse.find(params[:id])
     @start_time = ((params[:start_time].present? && Date.parse(params[:start_time])) || Date.tomorrow).beginning_of_day
@@ -345,7 +347,7 @@ class StorehousesController < ApplicationController
       format.js # show.js.erb
     end
   end
-  
+
   def city_part_requirements
     @city = City.find params[:city]
     storehouse_ids = @city.storehouses.map(&:id)

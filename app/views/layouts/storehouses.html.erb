@@ -16,12 +16,8 @@
               <% end %>
                 <%= link_to t(:part_requirement), city_part_requirements_path(city: current_user.city, start_date: Date.today, end_date: Date.today.since(7.days).to_date) %>
               </li>
-              <% unless ( @storehouse || @orders || @city) %>
-              <li class="active">
-              <% else %>
-              <li>
-              <% end %>
-                <%= link_to t('storehouses'), storehouses_path %>
+              <li class="<%= (params[:controller] == 'storehouses' and params[:action] == 'index' and params[:type] == '1') ? 'active' : ''%>">
+                <%= link_to t('storehouses'), storehouses_path(:type => 1) %>
                 <% storehouses = current_user.roles.include?('3') ? Storehouse.where(city: current_user.city) : Storehouse.all%>
                 <ul class="nav nav-list">
                   <% storehouses.where(:type => Storehouse::WAREHOUSE).each do |sh| %>
@@ -29,13 +25,9 @@
                       <%= link_to sh.name, storehouse_path(sh) %>
                     </li>
                   <% end %>
-                  <% storehouses.where(:type => Storehouse::DEPOT_CENTRE).each do |sh| %>
-                    <li class="<%= @storehouse == sh ? 'active' : ''%>">
-                      <%= link_to sh.name, storehouse_path(sh) %>
-                    </li>
-                  <% end %>
                 </ul>
               </li>
+              <li class="<%= (params[:controller] == 'storehouses' and params[:action] == 'index' and params[:type] == '0') ? 'active' : ''%>"><%= link_to t('dianbu'), storehouses_path(:type => Storehouse::DEPOT_CENTRE) %></li>
               <li><%= link_to t('part_stock'), parts_path %></li>
               <li><%= link_to t('part_types'), part_types_path %></li>
               <li><%= link_to t('part_brands'), part_brands_path %></li>
