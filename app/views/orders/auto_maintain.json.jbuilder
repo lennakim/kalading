@@ -6,7 +6,7 @@ json.discount do
     json.name @order.discounts.first.name
     json.expire_date @order.discounts.first.expire_date
   end
-  if @discount_error
+  if @discount_error.present?
     json.error @discount_error
   end
 end

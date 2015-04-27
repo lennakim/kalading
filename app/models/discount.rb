@@ -48,5 +48,6 @@ class Discount
     # 优惠券的服务项目列表中任意一个项目都可以享受优惠，因此只要订单的服务项目列表有交集就可以用
     return I18n.t(:discount_service_types_error) if service_types.present? and (service_type_ids & o.service_type_ids).empty?
     o.discounts << self
+    return ''
   end
 end
