@@ -19,7 +19,7 @@ module ToolsHelper
 
   def display_delivery_statistics(data, tool_type_category)
     data.map do |item|
-      count = item.send("#{tool_type_category}_tools_count")
+      count = item.send("#{tool_type_category}_suites_count")
       "#{item.city.name}#{count}套" if count > 0
     end.compact.join('，')
   end

@@ -66,6 +66,62 @@ class ToolSuiteInventory
     end
   end
 
+  def self.statistics_summary
+    statistics_statuses = %w[stock delivering assigned]
+
+    match = {
+      status: {'$in' => statistics_statuses},
+      completeness: {'$in' => %w[whole core]}
+    }
+
+    project = {
+      city_id: 1,
+      status: 1,
+      tool_type_category: 1
+    }
+
+    group = {
+      _id: {city_id: '$city_id'},
+      total: {'$sum' => 1}
+    }
+
+    ToolType::CATEGORIES.product(statistics_statuses).each do |category, status|
+      identification = "#{category}_#{status}"
+      group[identification] = {
+        '$sum' => {
+          '$cond' => [{
+              '$and' => [
+                {'$eq' => ['$tool_type_category', category]},
+                {'$eq' => ['$status', status]}
+              ]
+            }, 1, 0]
+        }
+      }
+    end
+
+    collection.aggregate(
+      { '$match' => match },
+      { '$project' => project },
+      { '$group' => group }
+    )
+  end
+
+  def self.set_statistics_summary_total(statistics_result)
+    total = {}
+    statistics_statuses = %w[stock delivering assigned]
+
+    ToolType::CATEGORIES.product(statistics_statuses).each do |item|
+      identification = item.join('_')
+      total[identification] = statistics_result.sum(&:"#{identification}")
+    end
+
+    ToolType::CATEGORIES.each do |category|
+      total[category] = statistics_statuses.map {|status| total["#{category}_#{status}"].to_i}.sum
+    end
+
+    total
+  end
+
   def set_attrs_by_tool_suite
     self.tool_type_category = tool_suite.tool_type_category
   end

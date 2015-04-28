@@ -152,13 +152,17 @@ class ToolDelivery
     project = {
       to_city_id: 1,
       with_engineer_tools_count: '$with_engineer_tools_count',
-      with_vehicle_tools_count: '$with_vehicle_tools_count'
+      with_vehicle_tools_count: '$with_vehicle_tools_count',
+      with_engineer_suites_count: '$with_engineer_suites_count',
+      with_vehicle_suites_count: '$with_vehicle_suites_count'
     }
 
     group = {
       _id: {city_id: '$to_city_id'},
       with_engineer_tools_count: {'$sum' => '$with_engineer_tools_count'},
-      with_vehicle_tools_count: {'$sum' => '$with_vehicle_tools_count'}
+      with_vehicle_tools_count: {'$sum' => '$with_vehicle_tools_count'},
+      with_engineer_suites_count: {'$sum' => '$with_engineer_suites_count'},
+      with_vehicle_suites_count: {'$sum' => '$with_vehicle_suites_count'}
     }
 
     collection.aggregate(
