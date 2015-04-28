@@ -12,7 +12,7 @@ class StorehousesController < ApplicationController
       @storehouses = Storehouse.all
     end
 
-    @storehouses = @storehouses.where(:type => params[:type]) if params[:type].present?
+    @storehouses = @storehouses.where(:type => params[:type]).asc(:city) if params[:type].present?
 
     respond_to do |format|
       format.html # index.html.erb
