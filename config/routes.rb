@@ -180,7 +180,7 @@ Kalading::Application.routes.draw do
   post 'auto_submodels_service_level_modify' => 'auto_submodels#service_level_modify', :as => :auto_submodels_service_level_modify
   get 'auto_submodels/:id/available_parts' => 'auto_submodels#available_parts', :as => :auto_submodels_available_parts
   post 'auto_submodels/:id/uploadpic' => 'auto_submodels#uploadpic', :as => :uploadpic_asm
-  get 'part_select/:id' => 'parts#part_select', :as => :part_select
+  get 'asms_with_verified_knowledge_imgs' => 'auto_submodels#knowledge_imgs', :as => :asm_knowledge_imgs
 
 
   get 'part_match' => 'parts#match', :as => :part_match
