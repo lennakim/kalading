@@ -6,7 +6,7 @@ module V2
         requires :phone, regexp: /^\d{11}$/, desc: "11位纯数字"
       end
       get "/" do
-        orders = Order.where(phone_num: params[:phone])
+        orders = Order.where(phone_num: params[:phone]).recent
 
         present :msg, ""
         present :code, 0

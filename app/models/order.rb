@@ -4,6 +4,8 @@ class Order
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
 
+  scope :recent, -> { desc(:create_at) }
+
   class << self
 
     # 由于数据存在不一致，有的Order没有service_type_ids这个字段，会影响map/reduce统计
