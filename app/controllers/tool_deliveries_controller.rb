@@ -1,6 +1,6 @@
 class ToolDeliveriesController < ApplicationController
   before_filter :authenticate_user!
-  load_and_authorize_resource except: [:prepare_for_receiving]
+  load_and_authorize_resource except: [:prepare_for_receiving, :new_suite_delivery, :deliver_suite]
   before_filter :find_tool_delivery, only: [:prepare_for_receiving]
 
   def index
@@ -19,11 +19,32 @@ class ToolDeliveriesController < ApplicationController
   def create
     @tool_delivery = ToolDelivery.new(params[:tool_delivery])
     @tool_delivery.deliverer = current_user
+    @tool_delivery.delivery_type = 'part'
 
     if @tool_delivery.save
       redirect_to tool_deliveries_path
     else
       render action: 'new'
+    end
+  end
+
+  def new_suite_delivery
+    authorize! :create, ToolDelivery
+
+    @tool_delivery = ToolDelivery.new
+  end
+
+  def deliver_suite
+    authorize! :create, ToolDelivery
+
+    @tool_delivery = ToolDelivery.new(params[:tool_delivery])
+    @tool_delivery.deliverer = current_user
+    @tool_delivery.delivery_type = 'suite'
+
+    if @tool_delivery.save
+      redirect_to tool_deliveries_path
+    else
+      render action: 'new_suite_delivery'
     end
   end
 
@@ -35,7 +56,9 @@ class ToolDeliveriesController < ApplicationController
   end
 
   def receive
-    if @tool_delivery.receive(params[:tool_delivery][:tool_delivery_items_attributes].values, current_user)
+    item_attrs = @tool_delivery.part? ? params[:tool_delivery][:tool_delivery_items_attributes].values :
+                                        params[:tool_delivery][:tool_suite_deliveries_attributes].values
+    if @tool_delivery.receive(item_attrs, current_user)
       redirect_to tool_deliveries_path
     else
       render action: 'prepare_for_receiving'

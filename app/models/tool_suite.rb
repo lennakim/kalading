@@ -69,6 +69,6 @@ class ToolSuite
 
   # TODO
   def can_be_deleted?
-    true
+    false
   end
 end

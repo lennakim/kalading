@@ -119,6 +119,11 @@ Kalading::Application.routes.draw do
       get :prepare_for_receiving
       put :receive
     end
+
+    collection do
+      get :new_suite_delivery, as: :new_suite
+      post :deliver_suite, as: :suite
+    end
   end
 
   resources :tool_statistics, only: [:index] do

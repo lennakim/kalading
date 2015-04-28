@@ -1,11 +1,19 @@
 <tr>
-  <td><%= link_to l(tool_delivery.created_at), tool_delivery_path(tool_delivery) %></td>
+  <td><%= link_to l(tool_delivery.created_at), tool_delivery_path(tool_delivery), class: 'underline' %></td>
   <td><%= tool_delivery.from_city.name %></td>
   <td><%= tool_delivery.to_city.name %></td>
   <td><%= tool_delivery.deliverer.name %></td>
   <td><%= tool_delivery.recipient.try(:name) %></td>
   <td><%= l tool_delivery.received_at if tool_delivery.received_at %></td>
-  <td><%= link_to tool_delivery.tools_count, tool_delivery_path(tool_delivery) %></td>
+
+  <td>
+    <% if tool_delivery.suite? -%>
+      <%= link_to tool_delivery.suites_count.to_s + '套', tool_delivery_path(tool_delivery), class: 'underline' %>
+    <% else -%>
+      <%= link_to tool_delivery.tools_count.to_s + '件', tool_delivery_path(tool_delivery), class: 'underline' %>
+    <% end -%>
+  </td>
+
   <td><%= tool_delivery.received_tools_count %></td>
   <td>
     <%= link_to '收货', prepare_for_receiving_tool_delivery_path(tool_delivery),

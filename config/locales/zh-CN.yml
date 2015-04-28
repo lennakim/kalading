@@ -243,6 +243,12 @@ zh-CN:
               more_than_stock: '库存数为%{count}'
             tool_type_id:
               taken: '不能有相同的工具+品牌'
+        tool_suite_delivery:
+          attributes:
+            quantity:
+              more_than_stock: '库存数为%{count}'
+            tool_suite_id:
+              taken: '不能有相同的工具套装'
         tool_assignment:
           attributes:
             batch_quantity:
@@ -357,11 +363,17 @@ zh-CN:
         received_at: '收货时间'
         tools_count: '发货数'
         received_tools_count: '收货数'
+        suites_count: '发货套数'
+        received_suites_count: '收获套数'
       tool_delivery_item:
         tool_type: '工具'
         tool_brand: '品牌'
         quantity: '数量'
         received_quantity: '实际收货数'
+      tool_suite_delivery:
+        quantity: '套数'
+        received_quantity: '实际收货套数'
+        tool_suite: '工具套装'
       tool_suite:
         name: '名称'
         tool_type_category: '类别'

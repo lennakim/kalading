@@ -13,14 +13,19 @@ class ToolSuiteInventory
   field :completeness, type: String
   field :tool_type_category, type: String
 
+  belongs_to :city
+  belongs_to :tool_delivery
   belongs_to :tool_suite
-  has_many :tools
+  has_many :tools, dependent: :nullify
 
   validates :status, inclusion: { in: STATUSES }
   validates :completeness, inclusion: { in: COMPLETENESS }
-  validates_presence_of :tool_suite_id, :tool_type_category
+  validates_presence_of :tool_suite_id, :tool_type_category, :city_id
 
   before_validation :set_attrs_by_tool_suite
+
+  scope :stock, -> { where(status: 'stock') }
+  scope :whole, -> { where(completeness: 'whole') }
 
   def self.organize_all
     beijing = City.beijing
@@ -52,6 +57,7 @@ class ToolSuiteInventory
         end
 
         new_inventory = self.new
+        new_inventory.city = city
         new_inventory.completeness = 'whole'
         new_inventory.tool_suite = suite
         new_inventory.save!
