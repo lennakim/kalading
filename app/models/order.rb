@@ -4,7 +4,7 @@ class Order
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
 
-  scope :recent, -> { desc(:create_at) }
+  scope :recent, -> { desc(:created_at) }
 
   class << self
 
