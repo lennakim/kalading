@@ -1,10 +1,14 @@
 # 配件
 class Part
+  delegate :name, to: :part_type, prefix: true # self.part_type_name
+  delegate :name, to: :part_brand, prefix: true # self.part_brand_name
+
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
-  
-  # 型号 
+
+
+  # 型号
   field :number, type: String
   # 容量（机油）
   field :capacity, type: Integer, default: 1
@@ -38,9 +42,9 @@ class Part
     :urlinfo_ids, :urlinfos_attributes, :price, :order_ids, :partbatch_ids,
     :motoroil_group_id,
     :image_text_ids, :image_texts_attributes
-  
+
   accepts_nested_attributes_for :urlinfos, :allow_destroy => true
-  
+
   MOTOROIL_TYPE = [0, 1, 2]
   MOTOROIL_TYPE_STRINGS = %w[mineral_oil semi_synthetic_oil fully_synthetic_oil]
   
@@ -62,9 +66,9 @@ class Part
     end
     rq
   end
-  
+
   paginates_per 10
-  
+
   def url_price
     ui = self.urlinfos.all.min {|x| x.price}
     ui ? ui.price : Money.new(0)
@@ -75,11 +79,11 @@ class Part
     ui = self.urlinfos.all.min {|x| x.price}
     ui ? ui.price : Money.new(0)
   end
-  
+
   def brand_and_number
     self.part_brand.name + ' ' + self.number
   end
-  
+
   def matched_parts
     ref_asm = self.auto_submodels.find_by(data_source: 2)
     return [] if ref_asm.nil?
@@ -95,10 +99,9 @@ class Part
       parts
     end
   end
-  
+
   def as_json(options = nil)
     super except: [:price, :auto_submodel_ids, :updated_at, :spec, :created_at, :version, :order_ids, :part_brand_id, :part_type_id, :modifier_id, :capacity, :motoroil_type, :remark]
   end
-  
-  
+
 end

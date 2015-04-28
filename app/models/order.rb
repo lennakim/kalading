@@ -4,6 +4,8 @@ class Order
   include Mongoid::Timestamps
   include Mongoid::History::Trackable
 
+  scope :recent, -> { desc(:created_at) }
+
   class << self
 
     # 由于数据存在不一致，有的Order没有service_type_ids这个字段，会影响map/reduce统计
@@ -162,7 +164,7 @@ class Order
   def self.state_val(s)
     Order::STATE_STRINGS.index s
   end
-  
+
   # 出库状态：0: 未出库，1：已出库，未回库，2：已回库
   NOT_DELIVERED_YET_STATE = 0
   DELIVERED_STATE         = 1
@@ -403,4 +405,41 @@ class Order
                 :track_destroy  =>  false,
                 :on => [:state, :address, :phone_num, :name, :serve_datetime, :registration_date, :car_location, :car_num, :discount_num, :pay_type, :cancel_reason, :incoming_call_num, :engineer, :engineer2, :dispatcher,
                         :auto_submodel, :service_type_ids, :part_ids, :engine_num, :vin, :part_deliver_state, :auto_owner_name]
+
+  # api
+  def license_plate
+    car_location + car_num
+  end
+
+  def brand_logo
+    auto_submodel.auto_model.auto_brand.logo
+  end
+
+  def brand_name
+    auto_submodel.auto_model.auto_brand.name
+  end
+
+  def model_name
+    auto_submodel.auto_model.name
+  end
+
+  def model_engine_displacement
+    auto_submodel.engine_displacement
+  end
+
+  def model_year_range
+    auto_submodel.year_range
+  end
+
+  def order_state
+    "#{self.state}-#{I18n.t(Order::STATE_STRINGS[self.state])}"
+  end
+
+  def order_pay_type
+    "#{self.pay_type}-#{I18n.t(PAY_TYPE_STRINGS[self.pay_type])}"
+  end
+
+  def commented
+    evaluation?
+  end
 end

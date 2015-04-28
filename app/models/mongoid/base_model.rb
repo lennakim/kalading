@@ -4,7 +4,7 @@ module Mongoid
     extend ActiveSupport::Concern
 
     included do
-      scope :recent, -> { desc(:create_at) }
+      scope :recent, -> { desc(:created_at) }
     end
 
     module ClassMethods

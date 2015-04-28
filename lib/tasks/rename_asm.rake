@@ -799,4 +799,21 @@ namespace :rename_asm do
       end
     end
   end
+
+  task :clear_tiaohuo_hts => :environment do
+    I18n.locale = 'zh-CN'
+    s = Supplier.find_by name: I18n.t(:part_transfer)
+    Partbatch.where(supplier: s).asc(:created_at).each do |pb|
+      hts = HistoryTracker.where(scope: 'partbatch').between(created_at: pb.created_at.ago(10.seconds)..(pb.created_at))
+      hts.each do |ht|
+        apb = Partbatch.find ht.association_chain[0]['id']
+        if apb.nil?
+          puts "apb not found for #{ht.association_chain[0]['id']}" or break
+        end
+        if apb.part != pb.part
+          puts "part mismatch for #{ht.association_chain[0]['id']}" or break
+        end
+      end
+    end
+  end
 end

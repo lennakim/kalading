@@ -22,7 +22,7 @@ set :ssh_options, {
 }
 
 set :stage, :staging
-set :branch, 'master'
+set :branch, ENV['BR'] || 'master'
 set :deploy_to, "/home/#{fetch(:deploy_user)}/backend"
 set :rails_env, :staging
 # set :puma_bind, "unix:///tmp/kalading-backend.sock"
