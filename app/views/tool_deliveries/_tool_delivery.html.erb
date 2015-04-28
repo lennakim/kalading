@@ -6,15 +6,14 @@
   <td><%= tool_delivery.recipient.try(:name) %></td>
   <td><%= l tool_delivery.received_at if tool_delivery.received_at %></td>
 
-  <td>
-    <% if tool_delivery.suite? -%>
-      <%= link_to tool_delivery.suites_count.to_s + '套', tool_delivery_path(tool_delivery), class: 'underline' %>
-    <% else -%>
-      <%= link_to tool_delivery.tools_count.to_s + '件', tool_delivery_path(tool_delivery), class: 'underline' %>
-    <% end -%>
-  </td>
+  <% if tool_delivery.suite? -%>
+    <td><%= link_to tool_delivery.suites_count.to_s + '套', tool_delivery_path(tool_delivery), class: 'underline' %></td>
+    <td><%= tool_delivery.received_suites_count.to_s + '套' if tool_delivery.received_suites_count %></td>
+  <% else -%>
+    <td><%= link_to tool_delivery.tools_count.to_s + '件', tool_delivery_path(tool_delivery), class: 'underline' %></td>
+    <td><%= tool_delivery.received_tools_count.to_s + '件' if tool_delivery.received_tools_count %></td>
+  <% end -%>
 
-  <td><%= tool_delivery.received_tools_count %></td>
   <td>
     <%= link_to '收货', prepare_for_receiving_tool_delivery_path(tool_delivery),
       class: 'btn btn-small btn-primary' if can?(:receive, tool_delivery) && !tool_delivery.received? %>

@@ -71,13 +71,14 @@ class ToolSuiteDelivery
   validates :quantity, numericality: { greater_than: 0, only_integer: true }
   validates :received_quantity, numericality: { greater_than_or_equal_to: 0, only_integer: true, allow_nil: true }
   validates :tool_suite_id, presence: true, uniqueness: true
-  validate :check_stock_and_set_suites
+  validate :check_stock_and_set_suites, on: :create
 
   def check_stock_and_set_suites
     return if tool_suite_id.blank? || errors.has_key?(:quantity)
 
     inventory_ids = ToolSuiteInventory.stock.whole
-                                            .where(tool_suite_id: tool_suite_id)
+                                            .where(tool_suite_id: tool_suite_id,
+                                                   city_id: _parent.from_city_id)
                                             .limit(quantity).pluck(:id)
 
     if inventory_ids.size < quantity
@@ -283,11 +284,8 @@ class ToolDelivery
     self.recipient = recipient
 
     if can_be_received && save
-      if part?
-        set_tools_for_receiving
-      else
-        set_suites_for_receiving
-      end
+      set_tools_for_receiving
+      set_suites_for_receiving
       true
     end
   end
