@@ -5,6 +5,39 @@
       <%= f.button :submit, t(:ok), :class => 'btn-primary'%>
       <a class="btn cancel-edit-btn"><%= t(:cancel) %></a>
     </div>
+  <% elsif params[:verify_pics]%>
+    <h3><%= @auto_submodel.full_name %></h3>
+    <h5><%= t :knowledge_base_imgs %></h5>
+    <table id="pictures" class="table table-hover table-small">
+      <tbody>
+        <%= f.fields_for :pictures, :wrapper => false do |sf| %>
+          <tr class="fields">
+            <td><%= sf.input :p, label: t(:picture) %></td>
+          </tr>
+          <tr class="fields">
+            <td><%= sf.input :desc, label: t(:desc) %></td>
+          </tr>
+          <tr class="fields">
+            <td><%= sf.input :state, label: t(:state), collection: Picture::STATES, label_method: lambda { |s| t(Picture::STATE_STRINGS[s])}, include_blank: false %></td>
+          </tr>
+          <tr class="fields">
+            <td><%= sf.association :user, label: t(:creater), collection: User.all, label_method: lambda { |u| u.initial_and_name }, include_blank: true, disabled: true %></td>
+          </tr>
+          <tr class="fields">
+            <td><%= image_tag sf.object.p.url if sf.object.p.url %></td>
+            <td>
+              <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
+            </td>
+          </tr> 
+        <% end %>
+      </tbody>
+    </table>
+    <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
+    <div class="form-actions">
+      <%= f.button :submit, t('save'), :class => 'btn-primary', name: "verify_pics" %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  asm_knowledge_imgs_path, :class => 'btn' %>
+    </div>
   <% else %>
     <%= f.association :auto_model, collection: AutoModel.where(data_source: 2).asc(:auto_brand), prompt: t('choose_model'), label: t('owner_auto_model'), label_method: :full_name %>
     <%= f.input :name, label: t('auto_submodel_name'), placeholder: t(:placeholder_submodel_name) %>
@@ -37,25 +70,7 @@
       </tbody>
     </table>
     <p><%= f.link_to_add t('add_part_rule'), :part_rules, :data => { :target => "#part_rules > tbody" }, class: 'btn btn-small btn-info' %></p>
-    <h5><%= t :knowledge_base_imgs %></h5>
-    <table id="pictures" class="table table-hover table-small">
-      <tbody>
-        <%= f.fields_for :pictures, :wrapper => false do |sf| %>
-          <tr class="fields">
-            <td>
-              <%= sf.input :p, label: t(:picture) %>
-            </td>
-            <td><%= sf.input :desc, label: t(:comment) %></td>
-            <td><%= image_tag sf.object.p.url if sf.object.p.url %></td>
-            <td>
-              <%= sf.link_to_remove t('remove_pic'), class: 'btn btn-small btn-warning' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <p><%= f.link_to_add t('add_pic'), :pictures, :data => { :target => "#pictures > tbody" }, class: 'btn btn-small btn-info' %></p>
-  
+     
     <div class="control-group">
       <label for="search-car-model" class="control-label"><%= t(:matched_auto_submodel) %></label>
       <div class="controls" id="search-car-model">

@@ -58,6 +58,7 @@ class Ability
       can :read, :all
       can [:create, :update, :destroy], [AutoBrand, AutoModel, AutoSubmodel, Partbatch, Part, PartType, PartBrand, Supplier, Storehouse, Discount, UserType]
       can :inout, Storehouse
+      can :knowledge_imgs, AutoSubmodel
       can [:match, :part_select, :update_part_select, :parts_by_brand_and_type, :delete_match, :edit_part_automodel, :add_auto_submodel, :delete_auto_submodel], Part
       can [:order_seq_check, :order_stats], Order
       can [:set_state], User
@@ -68,6 +69,7 @@ class Ability
     if user.engineer?
       can [:read, :order_prompt], Order
       can :read, Complaint
+      can :uploadpic, AutoSubmodel
       can :update, Complaint do |c|
         c.handler == user
       end

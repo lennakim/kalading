@@ -1151,3 +1151,6 @@ zh-CN:
   created_by: '发起者'
   updated_by: '当前负责人'
   duplicated_part: '配件型号已经存在：%{n}'
+  order_unpayable: '订单支付超时，无法继续支付'
+  verify_autosubmodel_knowledge_imgs: '审核车型知识库图片'
+  verified: '已审核'

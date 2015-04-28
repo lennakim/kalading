@@ -24,6 +24,11 @@ class Picture
   embedded_in :maintain, :inverse_of => :oil_and_battery_pics
 
   field :desc, type: String, default: ''
+  #1: verified, 0: unverified
+  field :state, type: Integer, default: 0
+  STATES = [0, 1]
+  STATE_STRINGS = %w[unverified verified]
+  belongs_to :user
   has_mongoid_attached_file :p, :path => ":class/:attachment/:id/:basename.:extension"
   validates_attachment_content_type :p, :content_type => %w(image/jpeg image/jpg image/png)
 

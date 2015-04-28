@@ -46,7 +46,7 @@ end
 json.evaluated (o.evaluation_time || o.evaluation) ? 1 : 0
 json.set! 'asm_pics' do
   if o.auto_submodel
-    json.array! o.auto_submodel.pictures do |p|
+    json.array! o.auto_submodel.pictures.where(state: 1) do |p|
       json.url p.p.url
       json.bytes p.p.size
       json.desc p.desc

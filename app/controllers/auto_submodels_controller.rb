@@ -117,7 +117,7 @@ class AutoSubmodelsController < ApplicationController
   # PUT /auto_submodels/1.json
   def update
     @auto_submodel = AutoSubmodel.find(params[:id])
-    if params[:auto_submodel][:data_source]
+    if params[:auto_submodel][:data_source] || params[:verify_pics]
       # verify ok 
       @ds = params[:auto_submodel][:data_source].to_i
       # show visible asms after hiding a asm
@@ -132,7 +132,13 @@ class AutoSubmodelsController < ApplicationController
     respond_to do |format|
       if @auto_submodel.update_attributes(params[:auto_submodel])
         @notify_message = t(:auto_submodel_updated, n: @auto_submodel.full_name)
-        format.html { redirect_to auto_submodels_url(data_source: @ds), notice: t('auto_submodel_updated') }
+        format.html {
+          if params[:verify_pics]
+            redirect_to asm_knowledge_imgs_path, notice: t('auto_submodel_updated')
+          else
+            redirect_to auto_submodels_url(data_source: @ds), notice: t('auto_submodel_updated')
+          end
+        }
         format.js { render action: 'show'  }
         format.json { head :no_content }
       else
@@ -207,10 +213,15 @@ class AutoSubmodelsController < ApplicationController
   
   def uploadpic
     @auto_submodel = AutoSubmodel.find(params[:id])
-    pic = @auto_submodel.pictures.create!(p: params[:pic_data], desc: params[:desc])
+    pic = @auto_submodel.pictures.create!(p: params[:pic_data], desc: params[:desc], user: current_user)
+    @auto_submodel.update_attribute :pics_verified, false
     respond_to do |format|
       format.html { head :no_content }
       format.json { render json: {result: 'ok', url: pic.p.url }, status: :ok }
     end
+  end
+  
+  def knowledge_imgs
+    @auto_submodels = AutoSubmodel.desc(:updated_at).select {|asm| asm.pictures.where(state: 0).exists?}
   end
 end

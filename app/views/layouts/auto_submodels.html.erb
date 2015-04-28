@@ -76,6 +76,8 @@
                 <% end %>
 
                 <li><%= link_to t('motoroil_group_list'), motoroil_groups_path %></li>
+                
+                <li class="<%= (params[:controller] == 'auto_submodels' and params[:action] == 'knowledge_imgs') ? 'active' : ''%>"><%= link_to t('knowledge_base_imgs'), asm_knowledge_imgs_path %></li>
 
               </ul>
             </div><!--/.well -->
