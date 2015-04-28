@@ -65,18 +65,17 @@ class Partbatch
   def self.stats
     map = %Q{
       function() {
-          o = { quantity: this.quantity, remained_quantity: this.remained_quantity, storehouse_remained: {}, pb_ids: [this._id.str] };
+          o = { quantity: this.quantity, remained_quantity: this.remained_quantity, storehouse_remained: {} };
           o.storehouse_remained[this.storehouse_id.str] = this.remained_quantity;
           emit(this.part_id, o);
       }
     }
     reduce = %Q{
       function(key, values) {
-        var result = { quantity: 0, remained_quantity: 0, storehouse_remained: {}, pb_ids: [] };
+        var result = { quantity: 0, remained_quantity: 0, storehouse_remained: {} };
         values.forEach(function(value) {
           result.quantity += value.quantity;
           result.remained_quantity += value.remained_quantity;
-          result.pb_ids = result.pb_ids.concat(value.pb_ids);
           for (var sh_id in value.storehouse_remained) {
             if (value.storehouse_remained.hasOwnProperty(sh_id)) {
               if (result.storehouse_remained[sh_id] == undefined)

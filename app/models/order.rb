@@ -6,15 +6,6 @@ class Order
 
   scope :recent, -> { desc(:created_at) }
 
-  class << self
-
-    # 由于数据存在不一致，有的Order没有service_type_ids这个字段，会影响map/reduce统计
-    def update_orders_service_types
-      Order.where(service_type_ids: nil).update_all(service_type_ids: [])
-    end
-
-  end
-
   #订单状态
   field :state, type: Integer, default: 0
   # 地址
@@ -400,6 +391,27 @@ class Order
     end << {name: "#{I18n.t(:national)} (#{total_sum})", data: total_data}
   end
 
+  # 统计某个时间段每种配件的出库量
+  def self.part_deliver_stats d1, d2
+    map = %Q{
+      function() {
+        for( var part_id in this.part_delivered_counts) {
+          if (this.part_delivered_counts.hasOwnProperty(part_id)) {
+            c = parseInt(this.part_delivered_counts[part_id]);
+            if (!isNaN(c) && c > 0)
+              emit(part_id, c);
+          }
+        }
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        return Array.sum(values);
+      }
+    }
+    Hash[Order.valid.between(:serve_datetime => d1..d2).map_reduce(map, reduce).out(inline: true).map { |data| [data['_id'].to_s, data['value'].to_i] }]
+  end
+  
   track_history :track_create   =>  false,
                 :track_update   =>  true,
                 :track_destroy  =>  false,

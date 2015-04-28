@@ -221,21 +221,25 @@ class StorehousesController < ApplicationController
           d = d1
           while d < d2
             a << I18n.t(:month_delivered, y: d.year, m: d.month)
-            # 统计每个月每个partbatch的出库量
-            monthly_part_delivered << HistoryTracker.pb_to_part_delivered(d, 1.month.since(d))
+            # 统计每个月每个配件的出库量
+            monthly_part_delivered << Order.part_deliver_stats(d, 1.month.since(d))
             d = 1.month.since(d)
           end
           a += [I18n.t(:total_delivered), I18n.t(:needed_this_week), I18n.t(:store_warning), I18n.t(:max_delivered), I18n.t(:remark)]
           csv << a
+          # 避免n+1问题
+          part_brand_names = Hash[PartBrand.all.map {|pb| [pb.id, pb.name]}]
+          part_type_names = Hash[PartType.all.map {|pt| [pt.id, pt.name]}]
+          # 统计每种配件每个月的出库信息
           Partbatch.stats do |data|
             p = Part.find data['_id']
-            a = [p.part_brand.name, p.number, p.part_type.name]
+            a = [part_brand_names[p.part_brand_id], p.number, part_type_names[p.part_type_id] ]
             a += [data['value']['quantity'], data['value']['remained_quantity']]
             a += storehouse_ids_of_cities.map do |sh_ids|
               data['value']['storehouse_remained'].inject(0) { |sum, (k,v)| sum + (sh_ids.has_key?(k) ? v : 0) }
             end
             monthly_part_delivered.each do |mpd|
-              a << data['value']['pb_ids'].inject(0) { |sum, pb_id| sum + mpd[pb_id].to_i }
+              a << mpd[data['_id'].to_s].to_i
             end
             a << data['value']['quantity'] - data['value']['remained_quantity']
             last_month_delivered = a[-2].to_f
