@@ -8,6 +8,7 @@ module V2
       expose :phone_num
       expose :address
       expose :commented
+      expose :created_at, format_with: :human_date
       expose :serve_datetime, format_with: :human_date
       expose :order_pay_type, as: :pay_type
       expose :calc_price, as: :total_price, format_with: :human_money

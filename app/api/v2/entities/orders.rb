@@ -7,6 +7,7 @@ module V2
       expose :phone_num
       expose :commented
       expose :serve_datetime, format_with: :human_date
+      expose :created_at, format_with: :human_date
       expose :calc_price, as: :total_price, format_with: :human_money
       expose :brand_logo
       expose :brand_name
