@@ -54,4 +54,4 @@ json.applicable_parts @order.auto_submodel.parts_includes_motoroil_ignore_quanti
   end
 end
 
-
+json.variants @order.auto_submodel.models_and_parts_with_same_displacement([:cabin_filter, :oil_filter, :air_filter])[0]

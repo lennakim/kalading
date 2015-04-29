@@ -32,8 +32,6 @@ class StorehousesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        #@history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
-        @history_trackers = Kaminari.paginate_array([]).page(0).per(5)
       }
       format.js # show.js.erb
       format.json { render json: pbs }
@@ -41,16 +39,6 @@ class StorehousesController < ApplicationController
         headers['Last-Modified'] = Time.now.httpdate
         send_data @storehouse.to_csv, :filename => @storehouse.name + I18n.l(DateTime.now) + '.csv'
       }
-    end
-  end
-
-  def show_history
-    @storehouse = Storehouse.find(params[:id])
-    @history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(params[:pagina]).per(5)
-    respond_to do |format|
-      format.html
-      format.js
-      format.json { render json: @history_trackers }
     end
   end
 
@@ -119,7 +107,6 @@ class StorehousesController < ApplicationController
       @order.part_delivered_counts[@part.id.to_s] += @quantity
     end
     @order.save!
-    #@history_trackers = Kaminari.paginate_array(HistoryTracker.where(scope: 'partbatch').desc(:created_at)).page(0).per(5)
   end
 
   # POST /storehouses
@@ -166,16 +153,6 @@ class StorehousesController < ApplicationController
     end
   end
 
-  def print_storehouse_out
-    @storehouse = Storehouse.find(params[:id])
-    @ht = HistoryTracker.find(params[:ht_id])
-    @pb = Partbatch.find(@ht.association_chain[0]['id'])
-    respond_to do |format|
-      format.html { render 'print_ht', layout: false }
-      format.json { head :no_content }
-    end
-  end
-
   def import
     part_brand = PartBrand.find_by name: /.*#{params[I18n.t(:part_brand)]}.*/
     return render json: "#{params[I18n.t(:part_brand)]} not found" if part_brand.nil?
@@ -214,8 +191,6 @@ class StorehousesController < ApplicationController
             storehouse_ids_of_cities << Hash[city.storehouses.map {|sh| [sh.id.to_s, 1]}]
           end
           d1 = Date.today.ago(1.year).beginning_of_month
-          first_ht_dt = HistoryTracker.asc(:created_at).first.created_at
-          d1 = first_ht_dt.beginning_of_month if d1 < first_ht_dt
           d2 = Date.today.ago(1.month).end_of_month
           monthly_part_delivered = []
           d = d1

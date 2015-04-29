@@ -3,8 +3,6 @@
 <% else %>
     $("#<%= @partbatch.id %>").text("<%= @partbatch.remained_quantity %>");
     $('#modal-window').modal('hide').html("");
-    $("#history_trackers").html("<%= escape_javascript(render("storehouses/history")) %>");
-    $("#history_trackers ul li:first-child").fadeOut().fadeIn();
 <% end %>
 
  

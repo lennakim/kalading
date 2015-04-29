@@ -21,7 +21,7 @@ describe '查询车型保养套餐', :type => :request do
     get "/auto_maintain_order/#{asm.id}.json"
     expect(response).to have_http_status(200)
     a = JSON.parse(response.body)
-    a
+    expect(a['variants']).to be
   end
 end
 

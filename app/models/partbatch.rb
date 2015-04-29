@@ -36,10 +36,6 @@ class Partbatch
   # 库管
   belongs_to :user
   
-  track_history :track_create   =>  false,    # track document creation, default is false
-                :track_update   =>  true,     # track document updates, default is true
-                :track_destroy  =>  false     # track document destruction, default is false
-
   after_create :on_create
   before_destroy :on_destroy
   

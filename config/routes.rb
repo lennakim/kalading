@@ -110,12 +110,10 @@ Kalading::Application.routes.draw do
   get 'user_realtime_info' => 'users#get_realtime_info', :as => :get_user_realtime_info
   get 'curr_user_state' => 'users#set_state', :as => :set_user_state
 
-  get 'storehouses/:id/show_history' => 'storehouses#show_history', :as => :show_history
   post 'storehouses_inout/:id' => 'storehouses#inout', :as => :inout_storehouse
   get 'parts/:id/edit_part_automodel' => 'parts#edit_part_automodel', :as => :edit_part_automodel
   delete 'parts/:id/automodels/:auto_submodel_id' => 'parts#delete_auto_submodel', :as => :delete_part_auto_submodel
   post 'parts/:id/automodels' => 'parts#add_auto_submodel', :as => :add_part_auto_submodel
-  get 'storehouses/:id/print_storehouse_out/:ht_id' => 'storehouses#print_storehouse_out', :as => :print_storehouse_out
   get 'part_statistics' => 'storehouses#statistics', :as => :part_statistics
   delete 'part_urlinfo/:id' => 'parts#destroy_urlinfo', :as => :delete_part_urlinfo
   get 'storehouses/:id/part_transfer' => 'storehouses#part_transfer', :as => :storehouse_part_transfer

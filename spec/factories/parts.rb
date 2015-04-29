@@ -14,9 +14,9 @@ FactoryGirl.define do
     number 'C 2001'
     spec ''
     price Money.new(55.0)
+    capacity 1
     association :part_brand, factory: :mann_brand
     association :part_type, factory: :oil_filter
-    initialize_with { Part.find_or_create_by(number: number)}
     before(:create) do |p|
       p.auto_submodels << create(:audi_a3_20_2012)
     end
