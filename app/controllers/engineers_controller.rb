@@ -25,7 +25,8 @@ class EngineersController < ApplicationController
     authorize! :read, ToolAssignment
 
     @assignee = @engineer
-    @assignments = @assignee.tool_assignments.current
+    @suite_assignments = @assignee.tool_suite_assignments
+    @part_assignments = @assignee.part_tool_assignments.current
     render 'tool_assignments/list_of_assignee'
   end
 
