@@ -1,0 +1,31 @@
+<div class="span10 offset1">
+  <%= render 'tool_types/nav' %>
+
+  <div class="page-header">
+    <h1>成套分配工具</h1>
+  </div>
+
+  <p>
+    分配对象：<%= @assignee.model_name.human %> <%= @assignee.name %>
+  </p>
+  <p>
+    已分配套装：
+    <ul>
+      <% @assignee.tool_suite_assignments.each do |assign| -%>
+        <% next if assign.new_record? -%>
+        <li><%= assign.tool_suite.name %></li>
+      <% end -%>
+    </ul>
+  </p>
+
+  <%= simple_form_for @tool_suite_assignment, html: { class: 'form-horizontal' } do |f| %>
+    <%= hidden_field_tag 'assignee_id', @assignee.id %>
+    <%= hidden_field_tag 'assignee_type', @assignee.model_name %>
+    <%= f.association :tool_suite, collection: ToolSuite.with_assignee(@assignee), label_method: :name, prompt: nil %>
+
+    <div class="form-actions">
+      <%= f.button :submit, t('save'), class: 'btn btn-primary' %>
+      <%= link_to t('cancel'), tool_assignees_path, class: 'btn' %>
+    </div>
+  <% end -%>
+</div>

@@ -18,6 +18,17 @@ class ToolSuite
   # 不能用validate，因为error是加在item上的，用validate的话tool_suite.valid?仍然返回true，进而save
   before_save :check_tool_type_category, :check_duplicated_items
 
+  def self.with_assignee(assignee)
+    case assignee.model_name
+    when 'Engineer'
+      where(tool_type_category: 'with_engineer')
+    when 'ServiceVehicle'
+      where(tool_type_category: 'with_vehicle')
+    else
+      self
+    end
+  end
+
   # 不能放到tool_suite_item里去，item.tool_suite.object_id != tool_suite.object_id
   # 如果tool_suite.tool_type_category的值改变了的话，在item里是无法获取到的
   def check_tool_type_category

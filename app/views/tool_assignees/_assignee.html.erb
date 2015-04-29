@@ -16,9 +16,15 @@
   </td>
   <td>
     <% if can? :create, ToolAssignment -%>
-      <%= link_to t('mongoid.attributes.tool_assignment.assign'),
+      <%= link_to '零散分配',
         prepare_tool_assignments_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
         class: 'btn btn-small btn-primary' %>
+
+      <%= link_to new_tool_suite_assignment_path(assignee_id: assignee.id, assignee_type: assignee.model_name),
+        class: 'btn btn-small btn-primary' do %>
+        <i class="icon-suitcase"></i>
+        成套分配
+      <% end -%>
     <% end -%>
   </td>
 </tr>

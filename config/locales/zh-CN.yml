@@ -258,6 +258,12 @@ zh-CN:
             tool_type_id:
               taken: '不能有相同的工具+品牌'
               invalid_tool_type_category: '不能把%{category}分配给%{assignee_type}'
+        tool_suite_assignment:
+          attributes:
+            tool_suite_id:
+              taken: '已经分配过了'
+              more_than_stock: '库存数为0'
+              invalid_tool_type_category: '不能把%{suite}分配给%{assignee_type}'
         tool_suite:
           attributes:
             tool_type_category:
@@ -335,10 +341,14 @@ zh-CN:
         assignment_group: '工具分配'
         discarded: '丢失/损坏'
         my_tool_assignments: '我的工具'
-        assign: '分配'
         assigned_tools: '已分配工具'
         history: '分配历史记录'
         created_at: '分配时间'
+        assigner: '分配人'
+      tool_suite_assignment:
+        tool_suite: '工具套装'
+        created_at: '分配时间'
+        assignee: '拥有者'
         assigner: '分配人'
       tool_assignee:
         city: '城市'

@@ -24,6 +24,7 @@ class Tool
   # 如果要能多次调货，就
   # has_and_belongs_to_many :tool_deliveries
   belongs_to :tool_delivery
+  # 如果是套装内的工具，则tool_suite_inventory_id不为空
   belongs_to :tool_suite_inventory
 
   validates :lifetime, numericality: { greater_than: 0, only_integer: true }

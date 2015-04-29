@@ -2,16 +2,18 @@
   <%= render 'tool_types/nav' %>
 
   <div class="page-header">
-    <h1>分配工具</h1>
+    <h1>零散分配工具</h1>
   </div>
 
   <p>
     分配对象：<%= @assignee.model_name.human %> <%= @assignee.name %>
   </p>
 
-  <%= simple_nested_form_for @assignee,
-    url: batch_tool_assignments_path(assignee_id: @assignee.id, assignee_type: @assignee.model_name),
-    method: :post do |f| %>
+  <%= simple_nested_form_for @assignee, url: batch_tool_assignments_path, method: :post do |f| %>
+
+    <%= hidden_field_tag 'assignee_id', @assignee.id %>
+    <%= hidden_field_tag 'assignee_type', @assignee.model_name %>
+
     <table id="tool_assignments" class="table table-hover">
       <thead>
         <th><%= ToolAssignment.human_attribute_name('tool_type') %></th>

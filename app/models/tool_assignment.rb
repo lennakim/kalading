@@ -31,6 +31,8 @@ class ToolAssignment
   belongs_to :applicant, class_name: 'User'
   # 批准丢失/损坏申请的操作者
   belongs_to :approver, class_name: 'User'
+  # 按套分配，则tool_suite_assignment_id不为空
+  belongs_to :tool_suite_assignment
 
   validates :status, inclusion: { in: STATUSES }
   validates_presence_of :city_id, :tool_type_id, :tool_brand_id, :assigner_id, :assignee_id, :assignee_type
@@ -119,8 +121,12 @@ class ToolAssignment
     return if city_id.blank? || tool_type_id.blank? || tool_brand_id.blank? || errors.has_key?(:batch_quantity)
 
     _batch_quantity = batch_quantity.to_i
-    _tool_ids = Tool.stock.where(city_id: city_id, tool_type_id: tool_type_id, tool_brand_id: tool_brand_id)
-                          .limit(_batch_quantity).pluck(:id)
+    _tool_ids = Tool.stock.individual
+                          .where(city_id: city_id,
+                                 tool_type_id: tool_type_id,
+                                 tool_brand_id: tool_brand_id)
+                          .limit(_batch_quantity)
+                          .pluck(:id)
 
     if _tool_ids.size < _batch_quantity
       errors.add(:batch_quantity, :more_than_stock, count: _tool_ids.size)
