@@ -26,7 +26,7 @@ class EngineersController < ApplicationController
 
     @assignee = @engineer
     @suite_assignments = @assignee.tool_suite_assignments
-    @part_assignments = @assignee.part_tool_assignments.current
+    @part_assignments = @assignee.part_tool_assignments.owned
     render 'tool_assignments/list_of_assignee'
   end
 
@@ -34,7 +34,7 @@ class EngineersController < ApplicationController
     authorize! :read_and_discard, :my_tool_assignments
 
     @assignee = current_user
-    @assignments = @assignee.tool_assignments.current
+    @assignments = @assignee.tool_assignments.owned
     render 'tool_assignments/list_of_assignee'
   end
 end

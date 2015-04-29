@@ -44,6 +44,10 @@ class ToolAssignmentsController < ApplicationController
   def prepare_for_assigning
     authorize! :create, ToolAssignment
 
+    if @assignee.tool_suite_assignments.count == 0
+      flash.now[:error] = "还没有给该#{@assignee.model_name.human}成套分配过工具，请先成套分配"
+    end
+
     # 在工具分配页面不显示已分配的工具
     @new_tool_assignments = []
   end

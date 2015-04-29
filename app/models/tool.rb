@@ -157,7 +157,9 @@ class Tool
     self.save(validate: false)
   end
 
-  def approve_discarded
+  def mark_as_discarded
+    # 报损后就把该工具从套装中剔除
+    self.tool_suite_inventory_id = nil
     self.status = 'discarded'
     self.save(validate: false)
   end

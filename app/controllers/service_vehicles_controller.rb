@@ -61,7 +61,7 @@ class ServiceVehiclesController < ApplicationController
 
     @assignee = @service_vehicle
     @suite_assignments = @assignee.tool_suite_assignments
-    @part_assignments = @assignee.part_tool_assignments.current
+    @part_assignments = @assignee.part_tool_assignments.owned
     render 'tool_assignments/list_of_assignee'
   end
 

@@ -48,7 +48,7 @@ class ToolAssignment
   # 已分配，且没有被标记为损坏或丢失的
   scope :normal, -> { where(discarded: false) }
   # 已分配的，包括被标记为损坏或丢失且没有被批准的
-  scope :current, -> { where(approved_at: nil) }
+  scope :owned, -> { where(approved_at: nil) }
   # 已被标记为损坏或丢失，还没有被批准的
   scope :discarding, -> { where(discarded: true, approved_at: nil) }
   # 损坏或丢失，且已经被批准的
@@ -192,15 +192,17 @@ class ToolAssignment
 
     self.approved_at = Time.current
     self.approver = approver
-    self.save && tool.approve_discarded
+    self.save
   end
 
   private
 
     def mark_as_discarded(applicant)
       self.discarded = true
+      # 报损后就把该工具从套装中剔除
+      self.tool_suite_assignment_id = nil
       self.applied_at = Time.current
       self.applicant = applicant
-      self.save
+      self.save && tool.mark_as_discarded
     end
 end
