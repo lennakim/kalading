@@ -9,12 +9,12 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= t(:storehouse_name) %></th>
-      <th><%= t(:cities) %></th>
-      <th><%= t(:address) %></th>
-      <th><%= t(:phone_num) %></th>
-      <th><%= t(:comment) %></th>
-      <th><%=t 'actions' %></th>
+      <th width="8%"><%= t(:storehouse_name) %></th>
+      <th width="6%"><%= t(:cities) %></th>
+      <th width="30%"><%= t(:address) %></th>
+      <th width="15%"><%= t(:phone_num) %></th>
+      <th width="25%"><%= t(:comment) %></th>
+      <th width="16%"><%=t 'actions' %></th>
     </tr>
   </thead>
   <tbody>
@@ -73,7 +73,7 @@
             </div>
           </div>
           <% end %>
-        
+
           <a href="#" class="btn btn-info btn-mini" data-target="#print-orders-<%= storehouse.id %>" data-toggle="modal"><%= t(:orders_card) %></a>
           <div id="print-orders-<%= storehouse.id %>" class="modal hide" role="dialog" aria-labelledby="modal-label" aria-hidden="true" style="">
             <div class="modal-header">

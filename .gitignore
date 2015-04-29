@@ -34,3 +34,4 @@ README.rdoc
 *.swp
 /data
 .rvmrc
+.DS_Store
