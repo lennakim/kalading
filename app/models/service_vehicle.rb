@@ -7,6 +7,9 @@ class ServiceVehicle
   field :number, type: String
   field :city_name, type: String
 
+  index({ city_id: 1, number: 1 })
+  index({ number: 1 })
+
   belongs_to :city
 
   attr_accessible :number, :city_id
