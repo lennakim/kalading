@@ -13,6 +13,9 @@ class ToolSuiteInventory
   field :completeness, type: String
   field :tool_type_category, type: String
 
+  # 统计页面使用
+  index({ status: 1, completeness: 1, city_id: 1 })
+
   belongs_to :city
   belongs_to :tool_delivery
   belongs_to :tool_suite

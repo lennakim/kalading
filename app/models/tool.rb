@@ -14,6 +14,10 @@ class Tool
   field :status, type: String, default: 'stock'
   field :tool_type_category, type: String
 
+  # 统计页面使用
+  index({ city_id: 1, tool_suite_inventory_id: 1, tool_type_id: 1, tool_brand_id: 1 })
+  index({ tool_type_id: 1, tool_suite_inventory_id: 1, city_id: 1, tool_brand_id: 1 })
+
   attr_accessible :tool_batch_id
 
   belongs_to :tool_batch
