@@ -32,6 +32,7 @@ class Order
   field :discount_num, type: String, default: ''
   # 支付类型
   field :pay_type, type: Integer, default: 0
+  field :pay_state, type: Integer, default: 0
   # 发票类型
   field :reciept_type, type: Integer, default: 0
   # 发票抬头
@@ -120,7 +121,7 @@ class Order
 
   attr_accessible :state, :address, :phone_num,:buymyself,:serve_datetime,
     :customer_id, :engineer_id, :auto_id, :engineer2_id, :dispatcher_id, :friend_id, :balance_pay,
-    :service_type_ids,
+    :service_type_ids, :pay_state,
     :auto_id,
     :discount_ids,
     :part_ids,
@@ -163,13 +164,17 @@ class Order
   PART_DELIVER_STATES = [NOT_DELIVERED_YET_STATE, DELIVERED_STATE, BACKED_TO_STORE_STATE]
   PART_DELIVER_STATE_STRINGS = %w[not_delivered_yet delivered backed_to_store]
 
-  PAY_TYPES = [0, 1]
-  PAY_TYPE_STRINGS = %w[cash card]
+  PAY_TYPES = [0, 1, 2, 3]
+  PAY_TYPE_STRINGS = %w[cash card wechatpay alipay]
+  ONLINE_PAY_TYPES = [2, 3]
+  PAY_STATES = [0, 1, 2, 3]
+  PAY_STATE_STRINGS = %w[unpaid paid refunding refunded]
 
   RECIEPT_TYPES = [0, 1, 2]
   RECIEPT_TYPE_STRINGS = %w[none personal firm]
   RECIEPT_STATES = [0, 1]
   RECIEPT_STATE_STRINGS = %w[not_wrote wrote]
+
 
   # 取消类型：0: 自定义取消原因，1：客户未到场，2：客户改约，3：配件错误。
   CANCEL_TYPES = [0, 1, 2, 3]
@@ -424,23 +429,23 @@ class Order
   end
 
   def brand_logo
-    auto_submodel.auto_model.auto_brand.logo
+    auto_submodel.auto_model.auto_brand.logo if auto_submodel
   end
 
   def brand_name
-    auto_submodel.auto_model.auto_brand.name
+    auto_submodel.auto_model.auto_brand.name if auto_submodel
   end
 
   def model_name
-    auto_submodel.auto_model.name
+    auto_submodel.auto_model.name if auto_submodel
   end
 
   def model_engine_displacement
-    auto_submodel.engine_displacement
+    auto_submodel.engine_displacement if auto_submodel
   end
 
   def model_year_range
-    auto_submodel.year_range
+    auto_submodel.year_range if auto_submodel
   end
 
   def order_state
@@ -451,7 +456,28 @@ class Order
     "#{self.pay_type}-#{I18n.t(PAY_TYPE_STRINGS[self.pay_type])}"
   end
 
-  def commented
+  def evaluated
     evaluation?
+  end
+
+  def parts_detail
+    ps = []
+    parts.each do |p|
+      ps << {
+        :brand => p.part_brand.name,
+        :type => p.part_type.name,
+        :number => p.number,
+        :price => p.ref_price.to_f * self.part_counts[p.id.to_s].to_i
+      }
+    end
+    ps
+  end
+
+  def services_desc
+    (service_types.size > 1) ? I18n.t(:auto_maintain_desc) : (I18n.t(:service_desc_pre) + service_types.first.name)
+  end
+
+  def need_online_pay
+    pay_state == PAY_STATE_STRINGS.index('unpaid') && ONLINE_PAY_TYPES.include?(pay_type)
   end
 end

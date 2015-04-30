@@ -7,7 +7,7 @@ module V2
       expose :name
       expose :phone_num
       expose :address
-      expose :commented
+      expose :evaluated
       expose :created_at, format_with: :human_date
       expose :serve_datetime, format_with: :human_date
       expose :order_pay_type, as: :pay_type
@@ -17,8 +17,10 @@ module V2
       expose :model_name
       expose :model_engine_displacement
       expose :model_year_range
+      expose :services_desc
+      expose :need_online_pay
+      expose :parts_detail, as: :parts
       expose :service_types, using: ::V2::Entities::ServiceType
-      expose :parts, using: ::V2::Entities::Part
       expose :engineer, using: ::V2::Entities::Engineer
     end
   end
