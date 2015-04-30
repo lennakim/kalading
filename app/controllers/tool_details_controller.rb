@@ -3,7 +3,7 @@ class ToolDetailsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    criteria = ToolDetail
+    criteria = ToolDetail.order_by(:tool_type_id.asc, :tool_brand_id.asc)
 
     if params[:search].present?
       # '-'.bytes  #=> [45]
