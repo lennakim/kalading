@@ -4,7 +4,7 @@ class ServiceVehiclesController < ApplicationController
   load_resource only: [:tool_assignments]
 
   def index
-    criteria = ServiceVehicle
+    criteria = ServiceVehicle.order_by(:city_name.asc, :number.asc)
 
     if params[:number].present?
       params[:number].strip!

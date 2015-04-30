@@ -5,6 +5,7 @@ class ServiceVehicle
 
   # 车牌号
   field :number, type: String
+  field :city_name, type: String
 
   belongs_to :city
 
@@ -13,7 +14,13 @@ class ServiceVehicle
   validates :number, presence: true
   validates :city_id, presence: true
 
+  before_create :set_city_name
+
   alias_method :name, :number
+
+  def set_city_name
+    self.city_name = city.try(:name)
+  end
 
   def can_be_deleted?
     !ToolAssignment.where(assignee_id: self.id, assignee_type: self.model_name).exists?
