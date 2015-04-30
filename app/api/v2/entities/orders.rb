@@ -9,7 +9,7 @@ module V2
       expose :serve_datetime, format_with: :human_date
       expose :created_at, format_with: :human_date
       expose :calc_price, as: :total_price, format_with: :human_money
-      expose :brand_logo format_with: :null
+      expose :brand_logo
       expose :brand_name
       expose :model_name
       expose :model_engine_displacement
