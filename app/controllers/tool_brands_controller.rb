@@ -3,7 +3,7 @@ class ToolBrandsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @tool_brands = ToolBrand.all
+    @tool_brands = ToolBrand.all.order_by_name
   end
 
   def new

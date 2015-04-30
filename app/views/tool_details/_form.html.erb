@@ -3,11 +3,11 @@
 <%= simple_form_for @tool_detail, html: { class: 'form-horizontal' } do |f| %>
   <% if @tool_detail.new_record? -%>
     <%= f.association :tool_type, collection: ToolType.order_by_category_and_name, label_method: :identification, prompt: :translate %>
-    <%= f.association :tool_brand, collection: ToolBrand.all, label_method: :name, prompt: :translate %>
+    <%= f.association :tool_brand, collection: ToolBrand.all.order_by_name, label_method: :name, prompt: :translate %>
     <%= f.association :tool_supplier, collection: ToolSupplier.all, label_method: :name, prompt: :translate %>
   <% else -%>
     <%= f.association :tool_type, collection: ToolType.order_by_category_and_name, label_method: :identification, disabled: true %>
-    <%= f.association :tool_brand, collection: ToolBrand.all, label_method: :name, disabled: true %>
+    <%= f.association :tool_brand, collection: ToolBrand.all.order_by_name, label_method: :name, disabled: true %>
     <%= f.association :tool_supplier, collection: ToolSupplier.all, label_method: :name, disabled: true %>
   <% end -%>
 

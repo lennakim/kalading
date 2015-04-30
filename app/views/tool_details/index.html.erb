@@ -9,7 +9,7 @@
     <%= form_tag tool_details_path, class: 'form-inline', method: :get do %>
       <%= select_tag 'tool_type_id', options_from_collection_for_select(ToolType.order_by_category_and_name, 'id', 'identification', params[:tool_type_id]),
         prompt: ToolDetail.human_attribute_name('tool_type') %>
-      <%= select_tag 'tool_brand_id', options_from_collection_for_select(ToolBrand.all, 'id', 'name', params[:tool_brand_id]),
+      <%= select_tag 'tool_brand_id', options_from_collection_for_select(ToolBrand.all.order_by_name, 'id', 'name', params[:tool_brand_id]),
         prompt: ToolDetail.human_attribute_name('tool_brand') %>
       <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all, 'id', 'name', params[:tool_supplier_id]),
         prompt: ToolDetail.human_attribute_name('tool_supplier') %>

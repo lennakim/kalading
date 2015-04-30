@@ -31,7 +31,7 @@
             </td>
             <td>
               <%= nf.association :tool_brand, label: false, wrapper: :inline,
-                collection: ToolBrand.all, label_method: :name, prompt: :translate %>
+                collection: ToolBrand.all.order_by_name, label_method: :name, prompt: :translate %>
             </td>
             <td>
               <%= nf.input :batch_quantity, label: false, wrapper: :inline, input_html: { class: 'input-mini'} %>
