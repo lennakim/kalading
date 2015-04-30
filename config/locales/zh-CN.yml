@@ -1151,3 +1151,19 @@ zh-CN:
   created_by: '发起者'
   updated_by: '当前负责人'
   duplicated_part: '配件型号已经存在：%{n}'
+  show_import_order: '导入订单'
+  no_excel: '请选择要导入的Excel'
+  empty_excel: '请不要导入空数据的Excel'
+  import_header_number: "订单编号"
+  import_header_telephone: "联系手机"
+  import_header_city: "城市"
+  import_header_address: "服务地址"
+  import_header_username: "客户姓名"
+  import_header_category: "客户类别"
+  import_header_title: "宝贝标题"
+  import_header_discount: "优惠券"
+  import_header_opinion: "客户意见"
+  import_excel_header_error: "附件头部不符合规范，正确应该是:'订单编号', '联系手机', '城市', '服务地址', '客户姓名', '客户类别', '宝贝标题', '优惠劵', '客户意见'"
+  import_unverified: "导入未审核"
+  import_finish: '导入结果：成功%{success}行，失败%{failure}行'
+  import_error_line: '存在错误所在行：%{lines}'

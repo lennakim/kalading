@@ -148,6 +148,10 @@ class OrdersController < ApplicationController
       @orders = @orders.where(storehouse: Storehouse.find(params[:storehouse]))
     end
 
+    if params[:import].present?
+      @orders = @orders.where(:import_number => Order::IMPORT_FLAG, :state => Order::STATE_STRINGS.index("unverified"))
+    end
+
     respond_to do |format|
       format.html {
         @storehouses = Storehouse.all
@@ -766,6 +770,67 @@ class OrdersController < ApplicationController
     end
   end
 
+  def show_import
+  end
+
+  def import
+    if params[:file].blank?
+      flash.now[:error] = I18n.t(:no_excel)
+      return render :action => :show_import
+    end
+    file   = params[:file].path
+    sheet  = Spreadsheet.open(file, 'rb').worksheet(0)
+    if sheet.row_count <= 1
+      flash.now[:error] = I18n.t(:empty_excel)
+      return render :action => :show_import
+    end
+    header = sheet.rows[0]
+    unless check_import_file_header(header)
+      return render :action => :show_import
+    end
+    cities = {} #city => id
+    error_lines = []
+    (1..(sheet.row_count - 1)).each do |index|
+      row             = sheet.rows[index]
+      order           = Order.new
+      order.phone_num = row[1].to_s.gsub("\s", '').to_i
+      city_name       = row[2].to_s.gsub("\s", '')
+      if cities.has_key? city_name
+        order.city_id = cities[city_name]
+      else
+        city = City.find_by(:name => city_name)
+        if city.blank?
+          error_lines << index + 1
+          next
+        end
+        order.city_id = city.id
+        cities[city_name] = city.id
+      end
+      order.address = row[3].to_s.gsub("\s", '')
+      order.name    = row[4].to_s.gsub("\s", '')
+      order.comments.new(:text => "#{I18n.t(:import_header_number)}:#{row[0]}")
+      order.comments.new(:text => "#{I18n.t(:import_header_title)}:#{row[6]}")
+      discounts             = {}
+      discount_token        = row[7].to_s.gsub("\s", '')
+      if discounts.has_key? discount_token
+        order.discounts << discounts[discount_token]
+      else
+        discount = Discount.find_by(:token => discount_token)
+        if discount.present?
+          order.discounts << discount
+          discounts[discount_token] = discount
+        end
+      end
+      order.client_comment = row[8]
+      order.import_number  = Order::IMPORT_FLAG
+      error_lines << index + 1 unless order.save
+    end
+    success_count  = sheet.row_count - 1 - error_lines.count
+    flash[:notice] = I18n.t(:import_finish, :success => success_count, failure: error_lines.count)
+    flash[:error]  = I18n.t(:import_error_line, :lines => error_lines.join(",")) if error_lines.count > 0
+    redirect_to orders_path(:import => Order::IMPORT_FLAG)
+  end
+
 private
   def _create_auto_maintain_order
     @order = Order.new
@@ -851,5 +916,13 @@ private
     elsif state == 3
       send_sms o.phone_num, '647217', "#order#=#{o.seq}&#engineer#=#{o.engineer.name}&#phone#=#{o.engineer.phone_num}"
     end
+  end
+
+  def check_import_file_header(header)
+    if header != Order::IMPORT_HEADERS
+      flash[:error] = I18n.t(:import_excel_header_error)
+      return false
+    end
+    true
   end
 end

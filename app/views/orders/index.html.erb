@@ -35,20 +35,22 @@
       <% end %>
       <div class="pull-right">
         <%= link_to t('create_order'), new_order_path, :class => 'btn btn-primary' if can? :create, Order %>
+        <%= link_to t('show_import_order'), show_import_orders_path, :class => 'btn btn-danger' if current_user.role_admin? %>
         <%= link_to t('new_complaint'), new_complaint_path, :class => 'btn btn-primary' if can? :create, Complaint %>
       </div>
       </h4>
       <div class="btn-group">
         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><%= t 'list_by_state' %> <span class="caret"></span></button>
         <ul class="dropdown-menu">
+          <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
+          <li class="<%= params[:import].present? ? 'active' : ''%>"><%= link_to "#{t(:import_unverified)} (#{orders.where(:state => Order::STATE_STRINGS.index("unverified"), :import_number => Order::IMPORT_FLAG).count})", orders_path(:import => Order::IMPORT_FLAG) %></li>
           <% Order::STATES.each do |s| %>
-            <% if params[:state].present? && params[:state].to_i == s %>
+            <% if params[:state].present? && params[:state].to_i == s && params[:import].blank?%>
               <li class="active">
             <% else %>
               <li>
             <% end %>
               <% if can? :edit_all, Order %>
-                <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
                 <% if Order::STATE_STRINGS[s] == 'serve_done' %>
                   <%= link_to t(Order::STATE_STRINGS[s]) + ' (' + orders.where(state: s, part_deliver_state: 2).count.to_s + ')', orders_path(state: s, part_deliver_state: 2) %>
                  <% else %>
@@ -76,7 +78,7 @@
               <% end %>
               </li>
           <% end %>
-          
+
           <% orders = (current_user.storehouse_admin? && current_user.city.serve_orders) || Order.all %>
           <% if @orders && params[:part_deliver_state].try(:to_i) == 0 %>
           <li class="active">
@@ -93,7 +95,7 @@
           <% end %>
             <%= link_to t('to_be_backed_orders', n: orders.to_be_backed.count), orders_path(Order.to_be_backed_hash) %>
           </li>
-              
+
           <% if params[:state].present? || params[:states].present? %>
             <li>
           <% else %>
@@ -104,7 +106,7 @@
         </ul>
       </div>
     </div>
-    
+
     <a class="btn btn-link" data-target="#order-search-form" data-toggle="collapse"><%= t(:view_search) %></a>
     <div id="order-search-form" class="collapse">
       <%= form_tag orders_path, :method => 'get', :id => "orders_search", :class => 'form-horizontal' do %>
@@ -133,14 +135,14 @@
             <%= text_field_tag :customer_name, params[:customer_name], class: 'control' %>
           </div>
         </div>
-    
+
         <div class="control-group select">
           <%= label_tag :city, t('cities'), class: 'control-label' %>
           <div class="controls form-inline">
             <%= collection_select(nil, nil, City.asc(:name), :id, :name, {:include_blank => t(:national), :selected => params[:city]}, {:class=>'control', :id => 'select-city-1', :name => 'city'}) %>
           </div>
         </div>
-        
+
         <div class="control-group">
           <%= label_tag :address, t('address'), class: 'control-label' %>
           <div class="controls form-inline">
@@ -211,7 +213,7 @@
             <%= collection_select(nil, nil, UserType.asc(:name), :id, :name, {:include_blank => t(:all), :selected => params[:user_type]}, {:class=>'control', :id => 'user_type', :name => 'user_type'}) %>
           </div>
         </div>
-    
+
         <div class="control-group select">
           <%= label_tag :engineer, t('engineer'), class: 'control-label' %>
           <div class="controls form-inline">
@@ -231,7 +233,7 @@
             </select>
           </div>
         </div>
-    
+
         <div class="control-group select">
           <%= label_tag :dispatcher, t('dispatcher'), class: 'control-label' %>
           <div class="controls form-inline">
@@ -251,13 +253,13 @@
             </select>
           </div>
         </div>
-    
+
         <div class="form-actions">
           <%= submit_tag t(:search), class: 'btn btn-primary' %>
         </div>
       <% end %>
     </div>
-    
+
     <%= render 'popup_map' %>
     <%= render 'serve_areas_map' %>
     <div id="order-list">
@@ -282,7 +284,7 @@
         $('#modal-map').on('hidden', function () {
           if(timer) {
             clearTimeout(timer);
-            timer = null;  
+            timer = null;
           }
         });
         $('#locate-engineer-btn').click(function (e) {

@@ -1,0 +1,7 @@
+= form_tag import_orders_path, :multipart => true do
+  .control-group
+    .controls
+    = file_field_tag :file
+  .control-group
+    .controls
+      = submit_tag "导入", :class => "form-button btn btn-primary", "data-loading-text" => "导入中..."
