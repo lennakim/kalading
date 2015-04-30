@@ -9,7 +9,7 @@ module V2
       expose :serve_datetime, format_with: :human_date
       expose :created_at, format_with: :human_date
       expose :calc_price, as: :total_price, format_with: :human_money
-      expose :brand_logo
+      expose :brand_logo format_with: :null
       expose :brand_name
       expose :model_name
       expose :model_engine_displacement
@@ -17,7 +17,7 @@ module V2
       expose :services_desc
       expose :need_online_pay
       expose :parts_detail, as: :parts
-      expose :calc_service_price, as: :service_price
+      expose :calc_service_price, as: :service_price, format_with: :human_money
       expose :service_types, using: ::V2::Entities::ServiceType
     end
   end
