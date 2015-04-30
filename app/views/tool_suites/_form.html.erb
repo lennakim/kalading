@@ -14,7 +14,7 @@
         <tr class="fields">
           <td>
             <%= nf.association :tool_type, label: false, wrapper: :inline,
-              collection: ToolType.all, label_method: :identification, prompt: :translate %>
+              collection: ToolType.order_by_category_and_name, label_method: :identification, prompt: :translate %>
           </td>
           <td>
             <%= nf.input :quantity, label: false, wrapper: :inline, input_html: { class: 'input-mini' } %>

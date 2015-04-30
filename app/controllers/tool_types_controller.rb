@@ -3,7 +3,7 @@ class ToolTypesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    criteria = ToolType
+    criteria = ToolType.order_by_category_and_name
     if params[:category].present?
       criteria = criteria.where(category: params[:category])
     end

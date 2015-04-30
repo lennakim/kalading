@@ -9,7 +9,7 @@
         <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name', params[:city_id]),
           prompt: Tool.human_attribute_name('city') %>
       <% end -%>
-      <%= select_tag 'tool_type_id', options_from_collection_for_select(ToolType.all, 'id', 'identification', params[:tool_type_id]),
+      <%= select_tag 'tool_type_id', options_from_collection_for_select(ToolType.order_by_category_and_name, 'id', 'identification', params[:tool_type_id]),
         prompt: Tool.human_attribute_name('tool_type') %>
 
       <%= submit_tag t('search'), class: 'btn' %>

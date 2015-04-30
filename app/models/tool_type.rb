@@ -17,6 +17,7 @@ class ToolType
 
   scope :with_engineer, -> { where(category: 'with_engineer') }
   scope :with_vehicle, -> { where(category: 'with_vehicle') }
+  scope :order_by_category_and_name, -> { order_by(:category.asc, :name.asc) }
 
   def self.with_assignee(assignee)
     case assignee.model_name

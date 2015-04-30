@@ -27,7 +27,7 @@
           <tr class="fields">
             <td>
               <%= nf.association :tool_type, label: false, wrapper: :inline,
-                collection: ToolType.with_assignee(@assignee), label_method: :identification, prompt: :translate %>
+                collection: ToolType.with_assignee(@assignee).order_by_category_and_name, label_method: :identification, prompt: :translate %>
             </td>
             <td>
               <%= nf.association :tool_brand, label: false, wrapper: :inline,
