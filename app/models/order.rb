@@ -80,6 +80,8 @@ class Order
   field :balance_pay, type: Money, default: 0.0
   # 价格，仅用于统计
   field :price, type: Money, default: 0.0
+  # 是否为Excel导入
+  field :import_number, type: Integer, default: 0
   # 属于技师
   belongs_to :engineer, class_name: "User", inverse_of: :serve_orders
   # 属于助理技师
@@ -179,6 +181,13 @@ class Order
   # 取消类型：0: 自定义取消原因，1：客户未到场，2：客户改约，3：配件错误。
   CANCEL_TYPES = [0, 1, 2, 3]
   CANCEL_TYPE_STRINGS = %w[custom_reason client_absent client_reschedule part_error]
+
+  IMPORT_HEADERS = [I18n.t("import_header_number"), I18n.t("import_header_telephone"),
+                    I18n.t("import_header_city"), I18n.t("import_header_address"),
+                    I18n.t("import_header_username"), I18n.t("import_header_category"),
+                    I18n.t("import_header_title"),I18n.t("import_header_discount"),
+                    I18n.t("import_header_opinion")]
+  IMPORT_FLAG = 1
 
   scope :from_this_month, -> { between(serve_datetime: (Time.now.beginning_of_month .. Time.now.end_of_month)) }
 

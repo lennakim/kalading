@@ -30,6 +30,7 @@ group :test do
 end
 
 gem "twitter-bootstrap-rails"
+gem "haml"
 gem 'kaminari-bootstrap', '~> 0.1.3'
 gem 'devise'
 gem 'devise-token_authenticatable'

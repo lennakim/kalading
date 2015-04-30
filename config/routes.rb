@@ -60,6 +60,11 @@ Kalading::Application.routes.draw do
 
   resources :orders do
     resources :pictures
+    #/orders/action
+    collection do
+      get :show_import
+      post :import
+    end
   end
 
 
