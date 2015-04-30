@@ -7,6 +7,11 @@ class ToolBatch
   field :warranty_period, type: Integer
   field :price, type: Money
 
+  index({ created_at: -1 })
+  index({ tool_type_id: 1, created_at: -1 })
+  index({ tool_brand_id: 1, created_at: -1 })
+  index({ tool_supplier_id: 1, created_at: -1 })
+
   attr_accessible :quantity, :lifetime, :warranty_period, :price, :tool_detail_id
 
   belongs_to :tool_detail

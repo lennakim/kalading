@@ -3,7 +3,7 @@ class ToolBatchesController < ApplicationController
   load_and_authorize_resource except: [:bulk_create]
 
   def index
-    criteria = ToolBatch
+    criteria = ToolBatch.order_by(:created_at.desc)
     if params[:date_from].present?
       date_from = Date.parse(params[:date_from]).beginning_of_day
       criteria = criteria.where(:created_at.gte => date_from)
