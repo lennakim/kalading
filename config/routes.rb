@@ -110,7 +110,7 @@ Kalading::Application.routes.draw do
 
   resources :tool_suite_assignments, only: [:new, :create]
 
-  resources :tool_suites, only: [:index, :new, :create, :edit, :update, :destroy]
+  resources :tool_suites, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
   resources :tool_assignees, only: [:index]
   resources :tool_brands, only: [:index, :new, :create, :edit, :update, :destroy]

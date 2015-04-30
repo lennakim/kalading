@@ -1,5 +1,5 @@
 <tr>
-  <td><%= tool_suite.name %></td>
+  <td><%= link_to tool_suite.name, tool_suite_path(tool_suite), class: 'underline' %></td>
   <td><%= translate_collection_options(ToolType, :category, tool_suite.tool_type_category) %></td>
   <td>
     <%= link_to t('edit'), edit_tool_suite_path(tool_suite),

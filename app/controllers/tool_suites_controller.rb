@@ -6,6 +6,9 @@ class ToolSuitesController < ApplicationController
     @tool_suites = ToolSuite.all
   end
 
+  def show
+  end
+
   def new
   end
 
@@ -34,7 +37,7 @@ class ToolSuitesController < ApplicationController
       flash[:notice] = '删除成功'
       @tool_suite.destroy
     else
-      flash[:error] = "不能被删除"
+      flash[:error] = "已使用，不能被删除"
     end
     redirect_to tool_suites_path
   end
