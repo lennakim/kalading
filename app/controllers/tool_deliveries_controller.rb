@@ -4,7 +4,7 @@ class ToolDeliveriesController < ApplicationController
   before_filter :find_tool_delivery, only: [:prepare_for_receiving]
 
   def index
-    criteria = ToolDelivery
+    criteria = ToolDelivery.order_by(:id.desc)
 
     if current_user.storehouse_admin?
       criteria = criteria.where(to_city_id: current_user.city_id)
