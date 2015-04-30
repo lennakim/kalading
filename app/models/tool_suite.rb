@@ -69,7 +69,7 @@ class ToolSuite
 
   def whole_requirement
     tool_suite_items.inject({}) do |memo, item|
-      memo[item.tool_type_id] = item.quantity
+      memo[item.tool_type_id] = item
       memo
     end
   end

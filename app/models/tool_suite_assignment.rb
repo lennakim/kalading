@@ -15,7 +15,7 @@ class ToolSuiteAssignment
   belongs_to :tool_suite_inventory
   has_many :tool_assignments
 
-  validates :tool_suite_id, presence: true, uniqueness: { scope: :assignee_id }
+  validates :tool_suite_id, presence: true, uniqueness: { scope: [:assignee_id, :assignee_type] }
   validates_presence_of :city_id, :tool_type_category
   validate :check_and_set_tool_suite_inventory, on: :create
   validate :check_tool_type_category, on: :create
@@ -51,10 +51,14 @@ class ToolSuiteAssignment
     end
   end
 
-  def assign(assignee, assigner)
+  def assign(assignee, assigner, options = {})
     self.assignee = assignee
     self.assigner = assigner
-    save
+    if options[:validate] == false
+      save(validate: false)
+    else
+      save
+    end
   end
 
   def set_tools_for_assigning

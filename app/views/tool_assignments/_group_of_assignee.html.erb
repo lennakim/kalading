@@ -32,3 +32,25 @@
     <% end -%>
   </tbody>
 </table>
+
+<% if lacking_tools.present? -%>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <caption><%= title %> 缺少的工具</caption>
+      <tr>
+        <th><%= ToolSuiteItem.human_attribute_name('tool_type') %></th>
+        <th><%= ToolSuiteItem.human_attribute_name('quantity') %></th>
+        <th><%= ToolSuiteItem.human_attribute_name('required') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% lacking_tools.each do |tool_type_id, suite_item| -%>
+        <tr class="<%= 'warning' if suite_item.required %>">
+          <td><%= suite_item.tool_type.identification %></td>
+          <td><%= suite_item.quantity %></td>
+          <td><%= translate_boolean(suite_item.required) %></td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+<% end -%>

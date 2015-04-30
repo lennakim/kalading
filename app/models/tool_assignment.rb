@@ -75,6 +75,8 @@ class ToolAssignment
       saved_count = 0
     end
 
+    assignee.organize_tools_by_suite
+
     return assignments, saved_count
   end
 
@@ -173,14 +175,20 @@ class ToolAssignment
     return false if discarded?
 
     self.status = 'broken'
-    mark_as_discarded(applicant)
+    if mark_as_discarded(applicant)
+      assignee.organize_tools_by_suite
+      true
+    end
   end
 
   def mark_as_lost(applicant)
     return false if discarded?
 
     self.status = 'lost'
-    mark_as_discarded(applicant)
+    if mark_as_discarded(applicant)
+      assignee.organize_tools_by_suite
+      true
+    end
   end
 
   def approved?
@@ -193,6 +201,11 @@ class ToolAssignment
     self.approved_at = Time.current
     self.approver = approver
     self.save
+  end
+
+  def add_to_suite(suite_assignment)
+    self.update_attribute(:tool_suite_assignment_id, suite_assignment.id)
+    suite_assignment.tool_suite_inventory.tools << self.tool
   end
 
   private

@@ -12,8 +12,11 @@
 
   <% @suite_assignments.each do |suite_assign| -%>
     <%= render partial: 'tool_assignments/group_of_assignee',
-      locals: { title: suite_assign.tool_suite.name, assignments: suite_assign.tool_assignments } %>
+      locals: { title: suite_assign.tool_suite.name,
+                assignments: suite_assign.tool_assignments,
+                lacking_tools: suite_assign.tool_suite_inventory.lacking_tools } %>
   <% end -%>
 
-  <%= render partial: 'tool_assignments/group_of_assignee', locals: { title: '零散工具', assignments: @part_assignments } %>
+  <%= render partial: 'tool_assignments/group_of_assignee',
+    locals: { title: '零散工具', assignments: @part_assignments, lacking_tools: [] } %>
 </div>

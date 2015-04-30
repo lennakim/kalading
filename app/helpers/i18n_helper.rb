@@ -5,4 +5,8 @@ module I18nHelper
   def translate_collection_options(object, method, value = nil)
     t("simple_form.options.#{object.model_name.underscore}.#{method}.#{value || object.send(method)}")
   end
+
+  def translate_boolean(value)
+    t("boolean.#{value}")
+  end
 end

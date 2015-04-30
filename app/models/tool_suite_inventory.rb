@@ -49,7 +49,8 @@ class ToolSuiteInventory
     catch :done do
       while true do
         _tool_ids = []
-        requirement.each do |tool_type_id, quantity|
+        requirement.each do |tool_type_id, suite_item|
+          quantity = suite_item.quantity
           ids = grouped_tools[tool_type_id].slice!(0, quantity) if grouped_tools[tool_type_id].present?
           ids = Array.wrap(ids)
           throw :done if ids.size < quantity
@@ -64,6 +65,22 @@ class ToolSuiteInventory
         new_inventory.tool_ids = _tool_ids
       end
     end
+  end
+
+  # 创建一个空的inventory和suite assignment，稍后往里填充tools
+  def self.assign_empty_inventory(assignee, assigner)
+    inventory = self.new
+    inventory.city_id = assignee.city_id
+    inventory.status = 'assigned'
+    inventory.completeness = 'incomplete'
+    inventory.tool_suite = ToolSuite.with_assignee(assignee).first
+    inventory.save!
+
+    suite_assign = ToolSuiteAssignment.new
+    suite_assign.tool_suite = inventory.tool_suite
+    suite_assign.tool_suite_inventory = inventory
+    suite_assign.assign(assignee, assigner, validate: false)
+    suite_assign
   end
 
   def self.statistics_summary
@@ -120,6 +137,28 @@ class ToolSuiteInventory
     end
 
     total
+  end
+
+  # 检查并修正工具套装的完整性
+  def correct_completeness
+    lacking_suite_items = lacking_tools.values.flatten
+    if lacking_suite_items.size == 0
+      self.completeness = 'whole'
+    else
+      self.completeness = lacking_suite_items.any?(&:required) ? 'incomplete' : 'core'
+    end
+    save(validate: false)
+  end
+
+  def lacking_tools
+    existing_tools = tools.group_by(&:tool_type_id)
+    whole_requirement = tool_suite.whole_requirement
+
+    whole_requirement.each do |tool_type_id, suite_item|
+      suite_item.quantity -= existing_tools[tool_type_id].try(:size).to_i
+    end
+
+    whole_requirement.delete_if {|_, suite_item| suite_item.quantity <= 0}
   end
 
   def set_attrs_by_tool_suite

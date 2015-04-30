@@ -64,6 +64,9 @@ zh-CN:
       model_name: "类别"
       last_used: "上次使用"
       records: "数目"
+  boolean:
+    'true': '是'
+    'false': '不是'
   date:
     formats:
       default: "%Y/%m/%d"
