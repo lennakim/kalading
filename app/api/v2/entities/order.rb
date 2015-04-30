@@ -19,6 +19,7 @@ module V2
       expose :model_year_range
       expose :services_desc
       expose :need_online_pay
+      expose :calc_service_price, as: :service_price
       expose :parts_detail, as: :parts
       expose :service_types, using: ::V2::Entities::ServiceType
       expose :engineer, using: ::V2::Entities::Engineer

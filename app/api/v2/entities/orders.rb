@@ -17,6 +17,7 @@ module V2
       expose :services_desc
       expose :need_online_pay
       expose :parts_detail, as: :parts
+      expose :calc_service_price, as: :service_price
       expose :service_types, using: ::V2::Entities::ServiceType
     end
   end
