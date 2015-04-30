@@ -26,7 +26,7 @@ class EngineersController < ApplicationController
 
     @assignee = @engineer
     @suite_assignments = @assignee.tool_suite_assignments
-    @part_assignments = @assignee.individual_tool_assignments.owned
+    @part_assignments = @assignee.individual_tool_assignments.owned.order_by(:created_at.desc)
     render 'tool_assignments/list_of_assignee'
   end
 

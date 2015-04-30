@@ -13,6 +13,20 @@ class ToolAssignment
   # 批准丢失/损坏申请的时间
   field :approved_at, type: DateTime
 
+  # 已分配工具页面使用
+  index({ assignee_id: 1, tool_suite_assignment_id: 1, approved_at: 1, created_at: -1 })
+  index({ assignee_id: 1, created_at: -1 })
+
+  # 关联查询使用
+  index({ tool_suite_inventory_id: 1 })
+  index({ tool_suite_assignment_id: 1 })
+
+  # 丢失/损坏页面使用
+  index({ discarded: 1, approved_at: 1, applied_at: 1 })
+  index({ city_id: 1, discarded: 1, approved_at: 1, applied_at: 1 })
+  index({ city_id: 1, approved_at: -1 })
+  index({ approved_at: -1 })
+
   attr_accessible :tool_type_id, :tool_brand_id, :batch_quantity, :batch_tool_numbers
   # is_batch_primary为true的话，表示这条记录对应页面上的一条工具分配信息
   # 与之对应的是sibling_assignments，表示根据primary自动创建的分配

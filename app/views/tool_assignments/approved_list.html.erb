@@ -11,9 +11,6 @@
         <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name', params[:city_id]), prompt: t('national') %>
       <% end -%>
 
-      <%= select_tag 'discarded_type', options_for_select(tool_assignment_discarded_type_collection, params[:discarded_type]),
-        prompt: ToolAssignment.human_attribute_name('discarded_type') %>
-
       <%= submit_tag t('search'), class: 'btn' %>
     <% end -%>
   </div>

@@ -4,6 +4,8 @@ class ToolSuiteAssignment
 
   field :tool_type_category, type: String
 
+  index({ assignee_id: 1 })
+
   attr_accessible :tool_suite_id
 
   belongs_to :city

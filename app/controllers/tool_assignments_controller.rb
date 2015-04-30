@@ -8,10 +8,10 @@ class ToolAssignmentsController < ApplicationController
     criteria = ToolAssignment
 
     if params[:status] == 'discarding'
-      criteria = criteria.discarding
+      criteria = criteria.discarding.order_by(:applied_at.asc)
       template = 'discarding_list'
     elsif params[:status] == 'approved'
-      criteria = criteria.approved
+      criteria = criteria.approved.order_by(:approved_at.desc)
       template = 'approved_list'
     end
 
@@ -20,10 +20,6 @@ class ToolAssignmentsController < ApplicationController
     end
     if params[:city_id].present?
       criteria = criteria.where(city_id: params[:city_id])
-    end
-
-    if params[:discarded_type].present?
-      criteria = criteria.where(status: params[:discarded_type])
     end
 
     @assignments = criteria.page(params[:page]).per(20)
@@ -38,7 +34,7 @@ class ToolAssignmentsController < ApplicationController
   def history
     authorize! :read, ToolAssignment
 
-    @tool_assignments = @assignee.tool_assignments.page(params[:page]).per(20)
+    @tool_assignments = @assignee.tool_assignments.order_by(:created_at.desc).page(params[:page]).per(20)
   end
 
   def prepare_for_assigning

@@ -59,6 +59,7 @@ class User
   field :state, :type => Integer, :default => 0
 
   index({"location" => "2d"})
+  index({ _type: 1, city_id: 1, name_pinyin: 1 })
 
   attr_accessible :name, :name_pinyin, :phone_num, :email, :roles, :password, :password_confirmation, :autos_ids, :phone_num2, :remark, :weixin_num, :title, :storehouse_id,
     :location, :battery_level, :city_id, :state
