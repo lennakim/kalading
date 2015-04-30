@@ -274,7 +274,11 @@ class ToolDelivery
   end
 
   def set_suites_for_delivering
-    suites.update_all(tool_delivery_id: id, status: 'delivering') if suite?
+    if suite?
+      inventories = suites
+      inventories.update_all(tool_delivery_id: id, status: 'delivering')
+      Tool.where(:tool_suite_inventory_id.in => inventories.map(&:id)).update_all(tool_delivery_id: id, status: 'delivering')
+    end
   end
 
   def receive(item_attrs, recipient)
@@ -297,12 +301,18 @@ class ToolDelivery
   def set_tools_for_receiving
     return true if suite?
     received_tools.update_all(city_id: to_city_id, status: 'stock')
-    unreceived_tools.update_all(city_id: from_city_id, status: 'stock')
+    unreceived_tools.update_all(city_id: from_city_id, status: 'stock', tool_delivery_id: nil)
   end
 
   def set_suites_for_receiving
     return true if part?
-    received_suites.update_all(city_id: to_city_id, status: 'stock')
-    unreceived_suites.update_all(city_id: from_city_id, status: 'stock')
+
+    received = received_suites
+    received.update_all(city_id: to_city_id, status: 'stock')
+    Tool.where(:tool_suite_inventory_id.in => received.map(&:id)).update_all(city_id: to_city_id, status: 'stock')
+
+    unreceived = unreceived_suites
+    unreceived.update_all(city_id: from_city_id, status: 'stock', tool_delivery_id: nil)
+    Tool.where(:tool_suite_inventory_id.in => unreceived.map(&:id)).update_all(city_id: from_city_id, status: 'stock', tool_delivery_id: nil)
   end
 end
