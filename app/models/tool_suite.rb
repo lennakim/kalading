@@ -74,12 +74,7 @@ class ToolSuite
     end
   end
 
-  # TODO
-  def core_requirement
-  end
-
-  # TODO
   def can_be_deleted?
-    false
+    !ToolSuiteInventory.where(tool_suite_id: id).exists?
   end
 end
