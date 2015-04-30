@@ -18,7 +18,6 @@ class ToolAssignment
   index({ assignee_id: 1, created_at: -1 })
 
   # 关联查询使用
-  index({ tool_suite_inventory_id: 1 })
   index({ tool_suite_assignment_id: 1 })
 
   # 丢失/损坏页面使用

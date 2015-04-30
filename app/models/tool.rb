@@ -17,6 +17,10 @@ class Tool
   # 统计页面使用
   index({ city_id: 1, tool_suite_inventory_id: 1, tool_type_id: 1, tool_brand_id: 1 })
   index({ tool_type_id: 1, tool_suite_inventory_id: 1, city_id: 1, tool_brand_id: 1 })
+  # 关联查询使用
+  index({ tool_batch_id: 1 })
+  index({ tool_delivery_id: 1 })
+  index({ tool_suite_inventory_id: 1 })
 
   attr_accessible :tool_batch_id
 

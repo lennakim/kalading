@@ -15,6 +15,8 @@ class ToolSuiteInventory
 
   # 统计页面使用
   index({ status: 1, completeness: 1, city_id: 1 })
+  # 关联查询使用
+  index({ tool_delivery_id: 1 })
 
   belongs_to :city
   belongs_to :tool_delivery

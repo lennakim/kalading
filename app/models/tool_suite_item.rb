@@ -5,6 +5,9 @@ class ToolSuiteItem
   field :quantity, type: Integer
   field :required, type: Boolean
 
+  # 关联查询使用
+  index({ tool_suite_id: 1 })
+
   attr_accessible :quantity, :required, :tool_type_id
 
   belongs_to :tool_suite
