@@ -444,7 +444,7 @@ class OrdersController < ApplicationController
     @order.update_attributes params[:info]
     @order.car_num.upcase!
     @order.save!
-    render json: {result: 'succeeded', seq: @order.seq }
+    render json: {result: 'succeeded', seq: @order.seq, id: @order.id }
   end
 
   # no auto submodel, no parts
