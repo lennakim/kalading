@@ -99,7 +99,7 @@ class Tool
   end
 
   def self.statistics_with_city_and_tool_type(options)
-    match = {}
+    match = {tool_suite_inventory_id: nil}
     if options[:city_id].present?
       match[:city_id] = Moped::BSON::ObjectId(options[:city_id])
     end
@@ -115,13 +115,9 @@ class Tool
     }
 
     group = {
-      _id: {city_id: '$city_id', tool_type_id: '$tool_type_id'},
+      _id: {city_id: '$city_id', tool_type_id: '$tool_type_id', tool_brand_id: '$tool_brand_id'},
       total: {'$sum' => 1}
     }
-    # 如果既选了城市又选了工具类型，则查询细分到工具品牌
-    if options[:city_id].present? && options[:tool_type_id].present?
-      group[:_id].merge!(tool_brand_id: '$tool_brand_id')
-    end
 
     %w[stock delivering assigned].each do |status|
       group[status] = {

@@ -1,7 +1,7 @@
 <div class="span10 offset1">
   <%= render 'tool_types/nav' %>
 
-  <h3>库存统计</h3>
+  <h3>库存统计（零散工具）</h3>
 
   <div>
     <%= form_tag tool_statistics_path, class: 'form-inline', method: :get do %>
@@ -31,15 +31,9 @@
     <tbody>
       <% Array.wrap(@result).each do |item| %>
         <tr>
-          <td><%= link_to item.city.name, tool_statistics_path(city_id: item.city.id) %></td>
+          <td><%= item.city.name %></td>
           <td><%= item.tool_type.identification %></td>
-
-          <% if @show_tool_brand -%>
-            <td><%= item.tool_brand.name %></td>
-          <% else -%>
-            <td><%= link_to '查看', tool_statistics_path(city_id: item.city.id, tool_type_id: item.tool_type.id) %></td>
-          <% end -%>
-
+          <td><%= item.tool_brand.name %></td>
           <td><%= item.assigned %></td>
           <td><%= item.delivering %></td>
           <td><%= item.stock %></td>

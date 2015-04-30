@@ -15,7 +15,6 @@ class ToolStatisticsController < ApplicationController
 
     data = Tool.statistics_with_city_and_tool_type(params)
     @result = Concerns::ToolStatistics.statistics_to_objects(data)
-    @show_tool_brand = @result.first.try(:tool_brand).present?
   end
 
   def summary
