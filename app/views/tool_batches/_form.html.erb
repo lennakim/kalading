@@ -36,7 +36,7 @@
     <label for="tool_supplier_id">
       <%= ToolBatch.human_attribute_name('tool_supplier') %>
     </label>
-    <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all, 'id', 'name', params[:tool_supplier_id]),
+    <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all.order_by_name, 'id', 'name', params[:tool_supplier_id]),
       prompt: t('helpers.select.prompt') %>
 
     <label for="tool_detail_search">

@@ -3,7 +3,7 @@ class ToolSuppliersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @tool_suppliers = ToolSupplier.all
+    @tool_suppliers = ToolSupplier.all.order_by_name
   end
 
   def new

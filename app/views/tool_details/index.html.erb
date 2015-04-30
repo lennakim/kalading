@@ -11,7 +11,7 @@
         prompt: ToolDetail.human_attribute_name('tool_type') %>
       <%= select_tag 'tool_brand_id', options_from_collection_for_select(ToolBrand.all.order_by_name, 'id', 'name', params[:tool_brand_id]),
         prompt: ToolDetail.human_attribute_name('tool_brand') %>
-      <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all, 'id', 'name', params[:tool_supplier_id]),
+      <%= select_tag 'tool_supplier_id', options_from_collection_for_select(ToolSupplier.all.order_by_name, 'id', 'name', params[:tool_supplier_id]),
         prompt: ToolDetail.human_attribute_name('tool_supplier') %>
 
       <%= submit_tag t('search'), class: 'btn' %>
