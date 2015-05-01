@@ -4,8 +4,8 @@ class AutoBrandsController < ApplicationController
   before_filter :set_default_operator
   # API test for Jason
   load_and_authorize_resource :except => [:index, :show, :auto_sms, :auto_sms_with_pm25]
-  caches_action :index, :if => Proc.new { request.format.json? && params[:all] }
-  caches_action :auto_sms, :auto_sms_with_pm25
+  caches_action :index, :if => Proc.new { request.format.json? && params[:all] }, :cache_path => Proc.new { |c| c.params }
+  caches_action :auto_sms, :auto_sms_with_pm25, :cache_path => Proc.new { |c| c.params }
   
   # GET /auto_brands
   # GET /auto_brands.json
