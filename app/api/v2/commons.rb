@@ -51,7 +51,7 @@ module V2
     get "/haiwanshiyou_remain_capacity" do
       user_type = UserType.find_by(name: I18n.t(:haiwanshiyou))
       orders = Order.where(:user_type => user_type, :created_at.gte => Date.today.beginning_of_day, :created_at.lte => Date.today.end_of_day).not_in(state: [1, 8, 10])
-      if orders.size >= 50
+      if orders.size >= 40 
         present :msg, I18n.t(:haiwanshiyou_orders_out_tip)
         present :code, 3001
       else
