@@ -28,8 +28,24 @@
                 <% end %>
               <% elsif k == 'part_ids' %>
                 <% v.each do |p| %>
-                  <%= Part.find(p).try(:number) + ' ' %>
+                  <%= Part.find(p).try(:number) + ', ' %>
                 <% end %>
+              <% elsif k == 'part_delivered_counts' %>
+                <ul>
+                  <% v.each do |p, c| %>
+                    <% if ht.original[k][p] != c %>
+                    <li><%= "#{Part.find(p).try(:number)}: #{c}" %></li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              <% elsif k == 'part_counts' %>
+                <ul>
+                  <% v.each do |p, c| %>
+                    <% if ht.original[k][p] != c %>
+                    <li><%= "#{Part.find(p).try(:number)}: #{c}" %></li>
+                    <% end %>
+                  <% end %>
+                </ul>
               <% else %>
                 <%= v %>
               <% end %>

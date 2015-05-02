@@ -417,11 +417,54 @@ class Order
     Hash[Order.valid.between(:serve_datetime => d1..d2).map_reduce(map, reduce).out(inline: true).map { |data| [data['_id'].to_s, data['value'].to_i] }]
   end
   
+  # 统计某种配件的出库量
+  def self.part_deliver_stats_by_type pt
+    map = %Q{
+      function() {
+        for( var part_id in this.part_delivered_counts) {
+          if (this.part_delivered_counts.hasOwnProperty(part_id)) {
+            c = parseInt(this.part_delivered_counts[part_id]);
+            if (!isNaN(c) && c > 0)
+              emit(part_id, c);
+          }
+        }
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        return Array.sum(values);
+      }
+    }
+    part_ids = Part.where(part_type: pt).map {|p| p.id }
+    # 两个Hash:按规格和按品牌
+    h1 = {}
+    h2 = {}
+    Order.valid.where(:part_ids.in => part_ids).map_reduce(map, reduce).out(inline: true).select{|data| part_ids.include?(Moped::BSON::ObjectId(data['_id']))}.each do |data|
+      p = Part.find data['_id']
+      k2 = p.part_brand.name
+      k = k2 + ' ' + p.spec
+      h1[k] ||= 0
+      h1[k] += data['value'] * p.capacity
+      h2[k2] ||= 0
+      h2[k2] += data['value'] * p.capacity
+    end
+    total = h1.sum {|k, v| v}
+    h3 = {}
+    h4 = {}
+    h1.each do |k, v|
+      h3[k + ', ' + (v * 100 / total).to_i.to_s + '%'] = v
+    end
+    h2.each do |k, v|
+      h4[k + ', ' + (v * 100 / total).to_i.to_s + '%'] = v
+    end
+    [h3, h4]
+  end
+
   track_history :track_create   =>  false,
                 :track_update   =>  true,
                 :track_destroy  =>  false,
                 :on => [:state, :address, :phone_num, :name, :serve_datetime, :registration_date, :car_location, :car_num, :discount_num, :pay_type, :cancel_reason, :incoming_call_num, :engineer, :engineer2, :dispatcher,
-                        :auto_submodel, :service_type_ids, :part_ids, :engine_num, :vin, :part_deliver_state, :auto_owner_name]
+                        :auto_submodel, :service_type_ids, :part_ids, :engine_num, :vin, :part_deliver_state, :auto_owner_name, :part_delivered_counts, :part_counts]
 
   # api
   def license_plate

@@ -1,5 +1,7 @@
 Kalading::Application.routes.draw do
 
+  devise_for :clients
+
   resources :part_transfers
 
 
@@ -146,6 +148,7 @@ Kalading::Application.routes.draw do
   get 'orders/:id/send_sms_notify' => 'orders#send_sms_notify', :as => :order_send_sms_notify
   get 'daily_orders' => 'orders#daily_orders', :as => :daily_orders
   get 'order_stats' => 'orders#order_stats', :as => :order_stats
+  get 'part_usage_stats' => 'orders#part_usage_stats', :as => :part_usage_stats
   get 'orders/:id/parts_auto_deliver' => 'orders#order_parts_auto_deliver', :as => :order_parts_auto_deliver
   get 'orders/:id/history' => 'orders#history', :as => :order_history
 

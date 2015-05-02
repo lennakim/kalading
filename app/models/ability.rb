@@ -13,7 +13,7 @@ class Ability
       can :manage, :all
       can :access, :rails_admin   # grant access to rails_admin
       can :dashboard              # grant access to the dashboard
-      can [:edit_all, :order_stats], Order
+      can [:edit_all, :order_stats, :part_usage_stats], Order
       can :view, Video
     end
 

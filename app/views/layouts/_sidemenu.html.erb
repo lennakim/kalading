@@ -39,6 +39,7 @@
           <li><%= link_to t('cities'), cities_path if can? :read, City %></li>
           <li><%= link_to t('order_stats'), order_stats_path(:disable_sidebar => 1) if can? :order_stats, Order %></li>
           <li><%= link_to t('valid_order_stats'), order_stats_path(:disable_sidebar => 1, :all => 1) if can? :order_stats, Order %></li>
+          <li><%= link_to t('jiyou_stats'), part_usage_stats_path(:disable_sidebar => 1, :name => t(:engine_oil)) if can? :part_usage_stats, Order %></li>
           <li><%= link_to t('complaint_menu'), complaints_path if can? :read, Complaint %></li>
           <li><%= link_to t('employees_menu'), users_path if can? :read, User %></li>
           <li><%= link_to t('service_types'), service_types_path if can? :read, ServiceType %></li>

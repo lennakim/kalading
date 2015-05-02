@@ -2,7 +2,33 @@
 class Client
   include Mongoid::Document
   include Mongoid::Timestamps
-  
+  Devise::Models::TokenAuthenticatable
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable
+
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :email, :password, :password_confirmation, :remember_me
+
+  ## Database authenticatable
+  field :email,              type: String, default: ""
+  field :encrypted_password, type: String, default: ""
+
+  ## Recoverable
+  field :reset_password_token,   type: String
+  field :reset_password_sent_at, type: Time
+
+  ## Rememberable
+  field :remember_created_at, type: Time
+
+  ## Trackable
+  field :sign_in_count,      type: Integer, default: 0
+  field :current_sign_in_at, type: Time
+  field :last_sign_in_at,    type: Time
+  field :current_sign_in_ip, type: String
+  field :last_sign_in_ip,    type: String
+
   # 手机号
   field :phone_num, type: String
   # 账户余额
@@ -20,5 +46,4 @@ class Client
     h[:balance] = self.balance.to_f
     h
   end
-
 end

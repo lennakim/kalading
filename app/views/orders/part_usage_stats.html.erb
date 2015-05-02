@@ -1,0 +1,6 @@
+<h4>
+  <%= t(:part_usage_stats) + ' - ' + @pt.name + '(' + @pt.unit + ')' %>
+</h4>
+<%= javascript_include_tag "highcharts", "chartkick" %>
+<%= pie_chart(@part_stats) %>
+<%= pie_chart(@part_brand_stats) %>

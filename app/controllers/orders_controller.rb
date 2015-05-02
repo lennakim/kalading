@@ -745,6 +745,19 @@ class OrdersController < ApplicationController
     end
   end
 
+  def part_usage_stats
+    @pt = PartType.find_by(name: params[:name])
+    s = Order.part_deliver_stats_by_type @pt
+    @part_stats = s[0]
+    @part_brand_stats = s[1]
+    @part_stats.each do |k, v|
+      
+    end
+    respond_to do |format|
+      format.html
+    end
+  end
+  
   def order_parts_auto_deliver
     @order = Order.find(params[:id])
     if @order.parts_auto_deliver == 1
